@@ -1,0 +1,142 @@
+[
+  {
+    "objectID": "posts/hello_world/index.html",
+    "href": "posts/hello_world/index.html",
+    "title": "Hello World",
+    "section": "",
+    "text": "Just testing whether Latex is working correctly: \\[\\frac{1}{2}\\left( \\int \\exp\\left\\{ -\\frac{x^2}{2}\\right\\} \\, dx \\right)^2 \\approx 22/7\\]"
+  },
+  {
+    "objectID": "posts/index_blog.html",
+    "href": "posts/index_blog.html",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "Blogposts (vaguely) related to research, notes for students, announcements, things I would like to write down to understand better and/or not forget, etc… Comments, corrections, suggestions are welcome!\n\n\n\n\n\n\n\n\n\n\nDate\n\n\nTitle\n\n\nCategories\n\n\n\n\n\n\n06-06-2023\n\n\nHello World\n\n\ntesting\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "publications/index_pubs.html#theory-methods",
+    "href": "publications/index_pubs.html#theory-methods",
+    "title": "Alexandre Thiéry",
+    "section": "THEORY & METHODS:",
+    "text": "THEORY & METHODS:\n\n\n\n Computational Doob’s H-transforms for Online Filtering of Discretely Observed Diffusions   Nicolas Chopin, Andras Fulop, Jeremy Heng, Alexandre H. Thiery, (2023)   International Conference on Machine Learning (ICML) 2023    (Arxiv) \n\n\n Conditional sequential Monte Carlo in high dimensions   Axel Finke and Alexandre H. Thiery, (2023)   Annals of Statistics 2023, In Press    (Arxiv) \n\n\n Pretrained equivariant features improve unsupervised landmark discovery   Rahul Rahaman, Atin Ghosh and Alexandre H. Thiery, (2022)   International Conference of Pattern Recognition (ICPR) 2022    (Arxiv) \n\n\n Manifold lifting: scaling MCMC to the vanishing noise regime   Khai Xiang Au, Matthew Graham, Alexandre H. Thiery, (2022)   JRSSB 2022    (Arxiv)   (Journal)  \n\n\n A discrete Bouncy Particle Sampler   Chris Sherlock and Alexandre H. Thiery, (2022)   Biometrika, Volume 109, Issue 2 (2022)    (Arxiv)   (Journal)  \n\n\n A Generalized & Robust Framework For Timestamp Supervision in Temporal Action Segmentation   Rahul Rahaman, Dipika Singhania, Alexandre H. Thiery, Angela Yao, (2022)   European Conference on Computer Vision (ECCV) 2022    (Journal)  \n\n\n Manifold Markov chain Monte Carlo methods for Bayesian inference in a wide class of diffusion models   Matthew Graham, Alexandre H. Thiery, Alex Beskos, (2022)   JRSSB, Volume 84 (4), 2022    (Arxiv)   (Journal)  \n\n\n Sequential Ensemble Transform for Bayesian Inverse Problems   Aaron Myers, Alexandre H. Thiery, Kainan Wang and Tan Bui-Tanh, (2021)   Journal of Computational Physics, Volume 427 (2021)    (Arxiv)   (Journal)  \n\n\n On Data-Augmentation and Consistency-Based Semi-Supervised Learning   Atin Ghosh and Alexandre H. Thiery, (2021)   ICLR 2021    (Arxiv) \n\n\n Uncertainty Quantification and Deep Ensembles   Rahul Rahaman and Alexandre H. Thiery, (2021)   NeuRIPS 2021    (Arxiv) \n\n\n On importance-weighted autoencoders   Axel Finke and Alexandre H. Thiery, (2019)   Tech Report    (Arxiv) \n\n\n A scalable optimal-transport based local particle filter   Matthew Graham and Alexandre H. Thiery, (2019)   Tech Report    (Arxiv) \n\n\n Particle Filter efficiency under limited communication   Deborshee Sen and Alexandre H. Thiery, (2019)   Tech Report    (Arxiv) \n\n\n Error Bounds for Sequential Monte Carlo Samplers for Multimodal Distributions   Daniel Paulin, Ajay Jasra and Alexandre H. Thiery, (2019)   Bernoulli, Volume 25, Number 1 (2019)    (Arxiv)   (Journal)  \n\n\n Asymptotic Analysis of the Random-Walk Metropolis Algorithm on Ridged Densities   Alex Beskos, Gareth Roberts, Alexandre H. Thiery and Natesh Pillai, (2018)   Annals of Applied Probability, Volume 28, Number 5 (2018)    (Arxiv)   (Journal)  \n\n\n On Coupling Particle Filter Trajectories   Deborshee Sen, Alexandre H. Thiery, Ajay Jasra, (2018)   Statistics and Computing, Volume 28, Number 2 (2018)    (Arxiv)   (Journal)  \n\n\n Levy statistics of interacting Rydberg gases   Thibault Vogt, Jingshan Han, Alexandre H. Thiery, Wenhui Li, (2017)   Physical Review A, Volume 95, Number 5 (2017)    (Arxiv)   (Journal)  \n\n\n Pseudo-marginal Metropolis–Hastings using averages of unbiased estimators   Chris Sherlock, Alexandre H. Thiery and Anthony Lee, (2017)   Biometrika, Volume 104, Number 3 (2017)    (Arxiv)   (Journal)  \n\n\n On the Convergence of Adaptive Sequential Monte Carlo Methods   Alex Beskos, Ajay Jasra, Nikolas Kantas, Alexandre H. Thiery, (2016)   Annals of Applied Probability, Volume 26, Number 2 (2016)    (Arxiv)   (Journal)  \n\n\n Consistency and fluctuations for stochastic gradient Langevin dynamics   Yee Whye Teh, Alexandre H. Thiery, Sebastian Vollmer, (2016)   Journal of Machine Learning Research, Volume 17 (2016)    (Arxiv)   (Journal)  \n\n\n On the efficiency of pseudo-marginal random walk Metropolis algorithms   Chris Sherlock, Alexandre H. Thiery, Gareth Roberts, Jeff Rosenthal, (2015)   Annals of Statistics, Volume 43, Number 1 (2015)    (Arxiv)   (Journal)  \n\n\n On non-negative unbiased estimators   Pierre Jacob, Alexandre H. Thiery, (2015)   Annals of Statistics, Volume 43, Number 2 (2015)    (Arxiv)   (Journal)  \n\n\n Efficiency of delayed-acceptance random walk Metropolis algorithms   Chris Sherlock, Alexandre H. Thiery and Andrew Golightly, (2015)   Annals of Statistics (In Press)    (Arxiv)   (Journal)  \n\n\n Noisy gradient flow from a random walk in Hilbert space   Natesh Pillai, Andrew Stuart, Alexandre H. Thiery, (2014)   Stochastic Partial Differential Equations: Analysis and Computations, Volume 2, Number 2 (2014)    (Arxiv)   (Journal)  \n\n\n Optimal Scaling and Diffusion Limits for the Langevin Algorithm in High Dimensions   Natesh Pillai, Andrew Stuart, Alexandre H. Thiery, (2012)   Annals of Applied Probability, Volume 22, Number 6 (2012)    (Arxiv)   (Journal)  \n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "publications/index_pubs.html#applications",
+    "href": "publications/index_pubs.html#applications",
+    "title": "Alexandre Thiéry",
+    "section": "APPLICATIONS",
+    "text": "APPLICATIONS\n\n\n\n Towards Label-Free 3D Segmentation of Optical Coherence Tomography Images of the Optic Nerve Head Using Deep Learning   Devalla,S.K., Pham, T.H., Panda, S.K, Zhang,L., Subramanian,G., Swaminathan,A., Chin,Z.Y, Rajan,M., Mohan,S., Krishnadas,R., Senthil,V., Leon,J.M, Tun,T.A., Cheng,C.Y., Schmetterer, L., Perera,S., Aung,T., Thiery,A.H., Girard,M.J.A., (2023)   Biomedical Optics Express, Vol. 11, Issue 11    (Arxiv)   (Journal)  \n\n\n Geometric Deep Learning to Identify the Critical 3D Structural Features of the Optic Nerve Head for Glaucoma Diagnosis   Braeu, F., Thiery, A.H, Tun, T.A., Kadziauskiene, A., Barbastathis, G., Aung, T., and Girard. M.J.A., (2023)   American Journal of Ophthalmology, 2023    (Arxiv)   (Journal)  \n\n\n Medical Application of Geometric Deep Learning for the Diagnosis of Glaucoma   Thiery, A.H, Braeu, F., Tun, T.A., Aung, T., Girard. M.J.A., (2023)   Translational Vision Science and Technology, 2023    (Arxiv)   (Journal)  \n\n\n Detection of m6A from direct RNA sequencing using a Multiple Instance Learning framework   Hendra C, Pratanwanich PN, Wan YK, Goh WS, Thiery A, Göke J+., (2022)   Nature Methods (2022)    (Arxiv)   (Journal)  \n\n\n Describing the Structural Phenotype of the Glaucomatous Optic Nerve Head Using Artificial Intelligence   Panda, S.K., Cheong, H., Tun,T.A., Devella, S.K., Krishnadas, R., Buist, M.L., Perera, S., Cheng, C-Y., Aung, T., Thiery A.H., Girard, M.J.A., (2022)   American Journal of Ophthalmology, 2022    (Arxiv)   (Journal)  \n\n\n The Three-Dimensional Structural Configuration of the Central Retinal Vessel Trunk and Branches as a Glaucoma Biomarker   Satish K Panda, Haris Cheong, Tin A Tun, Thanadet Chuangsuwanich, Aiste Kadziauskiene, Vijayalakshmi Senthil, Ramaswami Krishnadas, Martin L Buist, Shamira Perera, Ching-Yu Cheng, Tin Aung, Alexandre H Thiery, Michaël JA Girard, (2022)   American Journal of Ophthalmology, 2022    (Journal)  \n\n\n Deep Learning Algorithms to Isolate and Quantify the Structures of the Anterior Segment in Optical Coherence Tomography Images   Pham, T.H, Devalla,S.K., Ang, A., Da,S.Z., Thiery,A.H., Boote,C., Cheng,C.Y., Koh,V., Girard, M.J.A., (2021)   British Journal of Ophthalmology    (Arxiv)   (Journal)  \n\n\n Identification of differential RNA modifications from nanopore direct RNA sequencing with xPore   Ploy N. Pratanwanich, Fei Yao, Ying Chen, Casslynn W.Q. Koh, Christopher Hendra, Polly Poon, Yeek Teck Goh, Phoebe M. L. Yap, Choi Jing Yuan, Wee Joo Chng, Sarah Ng, Alexandre Thiery, W.S. Sho Goh, Jonathan Goeke, (2021)   Nature Biotechnology, 2021    (Arxiv)   (Journal)  \n\n\n Beyond quadratic error: Case-study of a multiple criteria approach to the performance assessment of numerical forecasts of solar irradiance in the tropics   Verbois, H., Blanc, P., Huva, R., Saint-Drenan, Y-M, Rusydi, A.. Thiery, A., (2020)   Renewable and Sustainable Energy Reviews, Volume 117, (2020)    (Journal)  \n\n\n NanoVar: Accurate Characterization of Patients Genomic Structural Variants Using Low-Depth Nanopore Sequencing   Tham, C.Y, Tirado-Magallanes, R., Goh, Y., Fullwood, M. J., Koh, B.T.H. , Wang, W., Ng, C.H, Chng, W.J., Thiery, A.H., Tenen, D.G, Benoukraf, (2020)   Genome Biology (2020)    (Arxiv)   (Journal)  \n\n\n DeshadowGAN: A Deep Learning Approach to Remove Shadows from Optical Coherence Tomography Images   Cheong, H., Devalla, S.K., Pham, T.H., Liang, Z., Tun, T.A., Wang, X., Perera, S., Schmetterer, L., Tin, A., Boote, C., Thiery, A.H., Girard, M.J.A., (2020)   Translational Vision Science & Technology    (Arxiv)   (Journal)  \n\n\n Deep Learning Algorithms to Isolate and Quantify the Structures of the Anterior Segment in Optical Coherence Tomography Images   Pham, T.H, Devalla,S.K., Ang, A., Da, S.Z., Thiery, A.H., Boote,C., Cheng,C.Y., Koh,V., Girard, M.J.A, (2020)   British Journal of Ophthalmology, 2020    (Arxiv)   (Journal)  \n\n\n A Deep Learning Approach to Denoise Optical Coherence Tomography Images of the Optic Nerve Head   Devalla SK, Subramanian G, Pham TH, Wang X, Perera S, Tun TA, Aung T, Schmetterer L, Thiery A.H., Girard MJA, (2019)   Scientific Reports (2019)    (Arxiv)   (Journal)  \n\n\n Glaucoma management in the era of artificial intelligence   Devalla S.K., Liang Z., Pham T.H., Boote, C., Strouthidis, N.G., Thiery A.H., Girard M.J.A., (2019)   British Journal of Ophthalmology (2019)    (Journal)  \n\n\n DRUNET: A Dilated-Residual U-Net Deep Learning Network to Digitally Stain Optic Nerve Head Tissues in Optical Coherence Tomography Images   Devalla SK, Renukanand PK, Sreedhar BK, Perera SA, Mari JM, Chin KS, Tun TA, Strouthidis N, Aung T, Thiery A.H., Girard MJA, (2018)   Biomedical Optics Express, Vol. 9, Issue 7 (2018)    (Arxiv)   (Journal)  \n\n\n Probabilistic forecasting of day-ahead solar irradiance using quantile gradient boosting   Verbois, H., Rusydi, A., Thiery, A.H., (2018)   Solar Energy 173, 313-327 (2018)    (Journal)  \n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about/about.html",
+    "href": "about/about.html",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "Email: a.h.thiery [at] nus.edu.sg\nOffice: Building S16, Office #06-113"
+  },
+  {
+    "objectID": "about/about.html#address",
+    "href": "about/about.html#address",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "Email: a.h.thiery [at] nus.edu.sg\nOffice: Building S16, Office #06-113"
+  },
+  {
+    "objectID": "about/about.html#qualifications",
+    "href": "about/about.html#qualifications",
+    "title": "Alexandre Thiéry",
+    "section": "Qualifications",
+    "text": "Qualifications\n\nPh.D., Probability & Statistics, Warwick University, 2009-2013.\nEcole Normale Superieure of Paris, Mathematics, 2005-2009\n\nResearch Assistant, Statslab (Cambridge, UK)\nMSc (Probability & Finance), University of Paris VI\nMSc (Partial Differential Equations & Modeling), University of Paris VI"
+  },
+  {
+    "objectID": "about/about.html#employment-history",
+    "href": "about/about.html#employment-history",
+    "title": "Alexandre Thiéry",
+    "section": "Employment history",
+    "text": "Employment history\n\nAssociate Professor, Department of Statistics & Data Sciences, NUS, 2020–present.\nAffiliate, NUS Centre for Data Science and Machine Learning, 2021–present\nAffiliate, NUS Institute of Data Science, 2028–present\nAffiliate, NUS Graduate School for Integrative Sciences and Engineering, 2017–present\nAssistant Professor, Department of Statistics & Probability, NUS, 2014–2019.\nResearch Fellow, Department of Statistics & Probability, NUS, 2013"
+  },
+  {
+    "objectID": "about/about.html#leadership",
+    "href": "about/about.html#leadership",
+    "title": "Alexandre Thiéry",
+    "section": "Leadership",
+    "text": "Leadership\n\nDeputy Director of the Institute for Mathematical Sciences (IMS), 2020–2023"
+  },
+  {
+    "objectID": "about/about.html#service",
+    "href": "about/about.html#service",
+    "title": "Alexandre Thiéry",
+    "section": "Service",
+    "text": "Service\n\nArea Chair for AISTAT (2023), NeurIPS (2023)\nAssociate Editor for Statistics & Computing (2020–2022)"
+  },
+  {
+    "objectID": "about/about.html#awards-and-honours",
+    "href": "about/about.html#awards-and-honours",
+    "title": "Alexandre Thiéry",
+    "section": "Awards and honours",
+    "text": "Awards and honours\n\nNUS Faculty of Sciences Dean’s Chair Associate Professor, 2022–2025\nNUS Faculty Teaching Excellence Award, 2022\nNUS Faculty Teaching Excellence Award, 2019\nNUS Faculty Teaching Excellence Award, 2018\nNUS Young Scientist Award. (Faculty of Science: 1 awardee per year), 2017\nNUS Young Investigator Award. (Faculty of Science: 3 awardees per year), 2016\nJohn Copas prize for the best PhD dissertation, 2013"
+  },
+  {
+    "objectID": "about/about.html#industrial-activities",
+    "href": "about/about.html#industrial-activities",
+    "title": "Alexandre Thiéry",
+    "section": "Industrial Activities",
+    "text": "Industrial Activities\n\nCo-founder of Abyss Processing, start-up developing AI solutions for ophthalmology\nConsulting in the finance and health-care industries"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "Google-Scholar\n  \n  \n    \n     Arxiv\n  \n  \n    \n     twitter\n  \n\n      \nAssociate Professor\nDepartment of Statistics & Data Science\nNational University of Singapore\n\n\n\nComputational Statistics & Machine Learning\nMonte-Carlo methods\nUncertainty Quantification\nInverse problems\n\n\n\n\nOffice: Building S16, Office #06-113\nEmail: a.h.thiery [at] nus.edu.sg"
+  },
+  {
+    "objectID": "index.html#research-interests",
+    "href": "index.html#research-interests",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "Computational Statistics & Machine Learning\nMonte-Carlo methods\nUncertainty Quantification\nInverse problems"
+  },
+  {
+    "objectID": "index.html#contact",
+    "href": "index.html#contact",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "Office: Building S16, Office #06-113\nEmail: a.h.thiery [at] nus.edu.sg"
+  },
+  {
+    "objectID": "teaching/teaching.html",
+    "href": "teaching/teaching.html",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "DSA4212: Large Scale optimization, NUS (2017 – 2022)\nYSC4236: Optimization for Large Scale Inference, Yale-NUS, (2022)\nYSC3252: Computational Statistics, Yale-NUS, (2022)\nDSA5843: Learning from Data: Neural Networks, NUS (2020–2021)\nST3233: Applied Times Series, NUS, (2016, 2019, 2021)\nST4240: Data Mining, NUS, (2014–2017)\nST4231: Computationally Intensive Statistics, NUS (2014–2015)\nMultivariable Calculus II, Chennai (CMI), (2018)"
+  },
+  {
+    "objectID": "people/index_people.html",
+    "href": "people/index_people.html",
+    "title": "Research team",
+    "section": "",
+    "text": "Woon Hao Xuan PhD (2023–Now): Uncertainty Quantification for High-Dimensional dynamical systems."
+  },
+  {
+    "objectID": "people/index_people.html#phdpostdoc-co-supervision",
+    "href": "people/index_people.html#phdpostdoc-co-supervision",
+    "title": "Research team",
+    "section": "",
+    "text": "Woon Hao Xuan PhD (2023–Now): Uncertainty Quantification for High-Dimensional dynamical systems."
+  },
+  {
+    "objectID": "people/index_people.html#alumni",
+    "href": "people/index_people.html#alumni",
+    "title": "Research team",
+    "section": "Alumni",
+    "text": "Alumni\n\nChristopher Hendra PhD (2019-2022): Genomics, Nanopore sequencing – co-supervised by Jonathan Göke (GIS). Chris is now a Senior Scientist at MSD.\nKhai Xiang Au PhD (2019-2023): PDE constrained Bayesian inverse problems, uncertainty quanification, variational inference. Khai is now working as a data scientist at American Express.\nRahul Rahaman PhD(2018-2022): Bayesian inference, Uncertainty Quantification, Deep-Learning. Rahul is now an Applied Research Scientist at Amazon.\nAtin Ghosh PhD (2017-2021): Deep Learning for Glaucoma Understanding, representation learning, generative models, semi-supervised learning. Atin is now an Applied Research Scientist at Amazon.\nSe-In Jang Research Fellow (2019-2021): Computer vision and application to ophthalmology. Se-In is now a research fellow in the Center for Advanced Medical Computing and Analysis and the Gordon Center for Medical Imaging, Massachusetts General Hospital (MGH) and Harvard Medical School.\nAxel Finke Research Fellow (2017-2020): Sequential Monte Carlo, MCMC, algorithms for high-dimensional problems; applications in finance, economics, ecology and molecular biology. Axel is now an assistant professor at Loughborough University (UK).\nZuozhu Liu Research Fellow (2019-2020): Bayesian inference, deep generative models, 3D vision and medical applications. Zuozhu is now Assistant Professor at the Zhejiang University-University of Illinois at Urbana-Champaign Institute.\nMatt Graham Research Fellow (2017-2020): Approximate inference methods, MCMC, approximate Bayesian computation, numerical simulation. Matt is now a research data scientist in the Advanced Research Computing Centre at University College London.\nWillem van den Boom Research Fellow (2018-2019): Willem is now a Senior Research Fellow in the Division of Biomedical Data Science at the Yong Loo Lin School of Medicine of the National University of Singapore.\nKhai Sing Chin Research Associate (2017-2018): Khai Sing is now working in the finance industry.\nDeborshee Sen PhD (NUS, 2014-2017). Winner of the 2017 DSAP NUS best researcher award. After a postdoc at Duke University and a position as an assistant Professor at Bath University, Deborshee now works as a Research Scientist at Amazon.\nDaniel Paulin Research Fellow (NUS, 2014-2015). Daniel is now an Assistant Professor at the School of Mathematics at the University of Edinburgh.\nEge Muzaffer PhD (NUS, 2016): Bayesian inverse problems and Sequential Monte Carlo. Ege is now a Machine Learning EngineerMachine Learning Engineer Ubisoft RedLynx"
+  },
+  {
+    "objectID": "people/index_people.html#msc",
+    "href": "people/index_people.html#msc",
+    "title": "Research team",
+    "section": "MSc",
+    "text": "MSc\n\nQuang Huy Nguyen MSc (2018-2019): representation learning, robust models for image segmentation.\nAugustin Hoff (NUS, 2016-2017). Deep Neural Networks and Features Extraction. Augustin is now a Senior Data Scientist at MAIF.\nMajdi Rabia (NUS, 2016-2017). Numerical Method for Backward-Stochastic-Differential-Equations. Majdi is Co-founder and CTO @Fairphonic.\nBenjamin Scellier (NUS, 2015). Deep Learning. After his MSc at NUS, Benjamin joined Yoshua Bengio’s Group as a PhD. He is now a principal research scientist at Rain"
+  }
+]
