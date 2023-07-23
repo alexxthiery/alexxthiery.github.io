@@ -2,198 +2,214 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2023-06-19T03:06:21.515Z</lastmod>
+    <lastmod>2023-07-23T05:19:08.061Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/posts/hello_world/index.html</loc>
-    <lastmod>2023-06-19T03:06:21.814Z</lastmod>
+    <lastmod>2023-07-23T05:19:08.347Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/posts/index_blog.html</loc>
-    <lastmod>2023-06-19T03:06:22.125Z</lastmod>
+    <lastmod>2023-07-23T05:19:08.667Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/index_pubs.html</loc>
-    <lastmod>2023-06-19T03:06:23.421Z</lastmod>
+    <lastmod>2023-07-23T05:19:10.081Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2019_Deep_Learning_Approach_to_Denoise_Optical_Coherence_Tomography_Images_of_the_Optic_Nerve_Head.html</loc>
-    <lastmod>2023-06-19T03:06:23.678Z</lastmod>
+    <lastmod>2023-07-23T05:19:10.402Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2018_Probabilistic_forecasting_of_day_ahead_solar_irradiance_using_quantile_gradient_boosting.html</loc>
-    <lastmod>2023-06-19T03:06:23.918Z</lastmod>
+    <lastmod>2023-07-23T05:19:10.690Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2021_Deep_Learning_Algorithms_to_Isolate_and_Quantify_the_Structures_of_the_Anterior_Segment_in_Optical_Coherence_Tomography_Images.html</loc>
-    <lastmod>2023-06-19T03:06:24.190Z</lastmod>
+    <lastmod>2023-07-23T05:19:11.014Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_Beyond_quadratic_error_Case_study_of_a_multiple_criteria_approach_to_the_performance_assessment_of_numerical_forecasts_of_solar_irradiance_in_the_tropics.html</loc>
-    <lastmod>2023-06-19T03:06:24.447Z</lastmod>
+    <lastmod>2023-07-23T05:19:11.281Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2019_Glaucoma_management_in_the_era_of_artificial_intelligence.html</loc>
-    <lastmod>2023-06-19T03:06:24.688Z</lastmod>
+    <lastmod>2023-07-23T05:19:11.540Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Towards_Label-Free_3D_Segmentation_of_Optical_Coherence_Tomography_Images_of_the_Optic_Nerve_Head_Using_Deep_Learning.html</loc>
-    <lastmod>2023-06-19T03:06:24.938Z</lastmod>
+    <lastmod>2023-07-23T05:19:11.798Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_Detection_of_m6A_from_direct_RNA_sequencing.html</loc>
-    <lastmod>2023-06-19T03:06:25.184Z</lastmod>
+    <lastmod>2023-07-23T05:19:12.070Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_Describing_the_Structural_Phenotype_of_the_Glaucomatous_Optic_Nerve_Head_Using_Artificial_Intelligence.html</loc>
-    <lastmod>2023-06-19T03:06:25.444Z</lastmod>
+    <lastmod>2023-07-23T05:19:12.330Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_NanoVar_Accurate_Characterization_of_Patients_Genomic_Structural_Variants.html</loc>
-    <lastmod>2023-06-19T03:06:25.693Z</lastmod>
+    <lastmod>2023-07-23T05:19:12.610Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Geometric_Deep_Learning_to_Identify_the_Critical_3D_Structural_Features_of_the_Optic_Nerve_Head_for_Glaucoma_Diagnosis.html</loc>
-    <lastmod>2023-06-19T03:06:25.941Z</lastmod>
+    <lastmod>2023-07-23T05:19:12.881Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_DeshadowGAN_A_Deep_Learning_Approach_to_Remove_Shadows_from_Optical_Coherence_Tomography_Images.html</loc>
-    <lastmod>2023-06-19T03:06:26.191Z</lastmod>
+    <lastmod>2023-07-23T05:19:13.152Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_The_Three-Dimensional_Structural_Configuration_of_the_Central_Retinal_Vessel_Trunk_and_Branches_as_a_Glaucoma_Biomarker.html</loc>
-    <lastmod>2023-06-19T03:06:26.442Z</lastmod>
+    <lastmod>2023-07-23T05:19:13.416Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2018_DRUNET_A_Dilated_Residual_U_Net_Deep_Learning_Network_to_Digitally_Stain_Optic_Nerve_Head_Tissues_in_Optical_Coherence_Tomography_Images.html</loc>
-    <lastmod>2023-06-19T03:06:26.701Z</lastmod>
+    <lastmod>2023-07-23T05:19:13.687Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_Deep_Learning_Algorithms_to_Isolate_and_Quantify_the_Structures_of_the_Anterior_Segment.html</loc>
-    <lastmod>2023-06-19T03:06:26.951Z</lastmod>
+    <lastmod>2023-07-23T05:19:13.959Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2021_Identification_of_differential_RNA_modifications_from_nanopore_direct_RNA_sequencing_with_xPore.html</loc>
-    <lastmod>2023-06-19T03:06:27.210Z</lastmod>
+    <lastmod>2023-07-23T05:19:14.299Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Medical_Application_of_Geometric_Deep_Learning_for_the_Diagnosis_of_Glaucoma.html</loc>
-    <lastmod>2023-06-19T03:06:27.526Z</lastmod>
+    <lastmod>2023-07-23T05:19:14.560Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_On_Importance_Weighted_Autoencoders.html</loc>
-    <lastmod>2023-06-19T03:06:27.762Z</lastmod>
+    <lastmod>2023-07-23T05:19:14.806Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_Sequential_Ensemble_Transform.html</loc>
-    <lastmod>2023-06-19T03:06:28.005Z</lastmod>
+    <lastmod>2023-07-23T05:19:15.239Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_On_The_Efficiency_Of_Pseudo_Marginal_Random_Walk_Metropolis_Algorithms.html</loc>
-    <lastmod>2023-06-19T03:06:28.249Z</lastmod>
+    <lastmod>2023-07-23T05:19:15.536Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2014_Gradient_Flow_From_A_Random_Walk_In_Hilbert_Space.html</loc>
-    <lastmod>2023-06-19T03:06:28.508Z</lastmod>
+    <lastmod>2023-07-23T05:19:15.838Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_scalable_optimal_transport_based_local_particle_filter.html</loc>
-    <lastmod>2023-06-19T03:06:28.766Z</lastmod>
+    <lastmod>2023-07-23T05:19:16.121Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_On_Data_Augmentation.html</loc>
-    <lastmod>2023-06-19T03:06:28.997Z</lastmod>
+    <lastmod>2023-07-23T05:19:16.371Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2018_Asymptotic_Analysis_of_the_Random_Walk_Metropolis_Algorithm_on_Ridged_Densities.html</loc>
-    <lastmod>2023-06-19T03:06:29.243Z</lastmod>
+    <lastmod>2023-07-23T05:19:16.675Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_Uncertainty_Quantification_Deep_Ensembles.html</loc>
-    <lastmod>2023-06-19T03:06:29.480Z</lastmod>
+    <lastmod>2023-07-23T05:19:16.945Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2012_Optimal_Scaling_and_Diffusion_Limits_for_the_Langevin_Algorithm_in_High_Dimensions.html</loc>
-    <lastmod>2023-06-19T03:06:29.722Z</lastmod>
+    <lastmod>2023-07-23T05:19:17.194Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Pretrained_Equivariant_Features.html</loc>
-    <lastmod>2023-06-19T03:06:29.968Z</lastmod>
+    <lastmod>2023-07-23T05:19:17.447Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_On_Non_Negative_Unbiased_Estimators.html</loc>
-    <lastmod>2023-06-19T03:06:30.212Z</lastmod>
+    <lastmod>2023-07-23T05:19:17.726Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Manifold_Lifting.html</loc>
-    <lastmod>2023-06-19T03:06:30.451Z</lastmod>
+    <lastmod>2023-07-23T05:19:17.997Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2017_Levy_statistics_of_interacting_Rydberg_gases.html</loc>
-    <lastmod>2023-06-19T03:06:30.712Z</lastmod>
+    <lastmod>2023-07-23T05:19:18.252Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_Computational_Doobs_H_Transforms.html</loc>
-    <lastmod>2023-06-19T03:06:30.959Z</lastmod>
+    <lastmod>2023-07-23T05:19:18.503Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_Conditional_Sequential_Monte_Carlo.html</loc>
-    <lastmod>2023-06-19T03:06:31.197Z</lastmod>
+    <lastmod>2023-07-23T05:19:18.759Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_Efficiency_of_delayed_acceptance_random_walk_Metropolis_algorithms.html</loc>
-    <lastmod>2023-06-19T03:06:31.443Z</lastmod>
+    <lastmod>2023-07-23T05:19:19.030Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2018_On_Coupling_Particle_Filter_Trajectories.html</loc>
-    <lastmod>2023-06-19T03:06:31.687Z</lastmod>
+    <lastmod>2023-07-23T05:19:19.308Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2016_On_The_Convergence_Of_Adaptive_Sequential_Monte_Carlo_Methods.html</loc>
-    <lastmod>2023-06-19T03:06:31.938Z</lastmod>
+    <lastmod>2023-07-23T05:19:19.563Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2016_Consistency_and_Fluctuations_for_Stochastic_Gradient_Langevin_Dynamics.html</loc>
-    <lastmod>2023-06-19T03:06:32.185Z</lastmod>
+    <lastmod>2023-07-23T05:19:19.825Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_A_discrete_Bouncy_Particle_Sampler.html</loc>
-    <lastmod>2023-06-19T03:06:32.419Z</lastmod>
+    <lastmod>2023-07-23T05:19:20.071Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Generalized_Robust_Framework.html</loc>
-    <lastmod>2023-06-19T03:06:32.668Z</lastmod>
+    <lastmod>2023-07-23T05:19:20.336Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_Particle_Filter_efficiency_under_limited_communication.html</loc>
-    <lastmod>2023-06-19T03:06:32.901Z</lastmod>
+    <lastmod>2023-07-23T05:19:20.646Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2017_Pseudo_marginal_Metropolis_Hastings_using_averages_of_unbiased_estimators.html</loc>
-    <lastmod>2023-06-19T03:06:33.145Z</lastmod>
+    <lastmod>2023-07-23T05:19:20.965Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Manifold_Markov_Chain_Monte_Carlo_Methods.html</loc>
-    <lastmod>2023-06-19T03:06:33.400Z</lastmod>
+    <lastmod>2023-07-23T05:19:21.219Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_Error_Bounds_for_Sequential_Monte_Carlo_Samplers_for_Multimodal_Distributions.html</loc>
-    <lastmod>2023-06-19T03:06:33.643Z</lastmod>
+    <lastmod>2023-07-23T05:19:21.472Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/about/about.html</loc>
-    <lastmod>2023-06-19T03:06:33.952Z</lastmod>
+    <lastmod>2023-07-23T05:19:21.762Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/index.html</loc>
-    <lastmod>2023-06-19T03:06:34.206Z</lastmod>
+    <lastmod>2023-07-23T05:19:22.033Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/stats_basics/natural_gradients.html</loc>
+    <lastmod>2023-07-23T05:19:22.295Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
+    <lastmod>2023-07-23T05:19:22.719Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
+    <lastmod>2023-07-23T05:19:22.972Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
+    <lastmod>2023-07-23T05:19:23.419Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/teaching.html</loc>
-    <lastmod>2023-06-19T03:06:34.468Z</lastmod>
+    <lastmod>2023-07-23T05:19:23.676Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/people/index_people.html</loc>
-    <lastmod>2023-06-19T03:06:34.768Z</lastmod>
+    <lastmod>2023-07-23T05:19:23.989Z</lastmod>
   </url>
 </urlset>

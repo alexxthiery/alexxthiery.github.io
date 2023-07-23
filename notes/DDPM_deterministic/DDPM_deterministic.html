@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Hello World</title>
+<title>Alexandre Thiéry - From Denoising Diffusion to ODEs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,10 +81,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Hello World">
+<meta property="og:title" content="Alexandre Thiéry - From Denoising Diffusion to ODEs">
 <meta property="og:description" content="">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Hello World">
+<meta name="twitter:title" content="Alexandre Thiéry - From Denoising Diffusion to ODEs">
 <meta name="twitter:description" content="">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -148,9 +148,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Hello World</h1>
+      <h1 class="title">From Denoising Diffusion to ODEs</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">testing</div>
+                <div class="quarto-category">DDPM</div>
               </div>
                   </div>
   </div>
@@ -162,16 +162,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">06 06 2023</p>
+        <p class="date">02 07 2023</p>
       </div>
     </div>
     
-      <div>
-      <div class="quarto-title-meta-heading">Modified</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date-modified">07 06 2023</p>
-      </div>
-    </div>
       
     </div>
     
@@ -180,7 +174,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#setting-goals" id="toc-setting-goals" class="nav-link active" data-scroll-target="#setting-goals">Setting &amp; Goals</a></li>
+  <li><a href="#the-diffusion-ode-trick" id="toc-the-diffusion-ode-trick" class="nav-link" data-scroll-target="#the-diffusion-ode-trick">The diffusion-ODE trick</a></li>
+  <li><a href="#the-diffusion-ode-trick-application-to-ddpm" id="toc-the-diffusion-ode-trick-application-to-ddpm" class="nav-link" data-scroll-target="#the-diffusion-ode-trick-application-to-ddpm">The diffusion-ODE trick: application to DDPM</a></li>
+  <li><a href="#likelihood-computation" id="toc-likelihood-computation" class="nav-link" data-scroll-target="#likelihood-computation">Likelihood computation</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -188,20 +191,108 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<p>Just testing whether Latex is working correctly: <span class="math display">\[\frac{1}{2}\left( \int \exp\left\{ -\frac{x^2}{2}\right\} \, dx \right)^2 \approx 22/7\]</span></p>
-<p>Here is a reference <span class="citation" data-cites="mackay2003information">(<a href="#ref-mackay2003information" role="doc-biblioref">MacKay 2003</a>)</span> and below is an animation:</p>
+<section id="setting-goals" class="level3">
+<h3 class="anchored" data-anchor-id="setting-goals">Setting &amp; Goals</h3>
+<p>Consider an empirical data distribution <span class="math inline">\(\pi_{\mathrm{data}}\)</span>. In order to simulate approximate samples from <span class="math inline">\(\pi_{\mathrm{data}}\)</span>, <a href="../../notes/DDPM/DDPM.html">Denoising Diffusion Probabilistic Models</a> (DDPM) simulate a forward diffusion process <span class="math inline">\(\{X_t\}_{[0,T]}\)</span> on an interval <span class="math inline">\([0,T]\)</span>. The diffusion is initialized at the data distribution, i.e.&nbsp;<span class="math inline">\(X_0 \sim \pi_{\mathrm{data}}\)</span>, and is chosen so that that the distribution of <span class="math inline">\(X_T\)</span> is very close to a known and tractable reference distribution <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>, e.g.&nbsp;a Gaussian distribution. Denote by <span class="math inline">\(p_t(dx)\)</span> the marginal distribution at time <span class="math inline">\(0 \leq t \leq T\)</span>, i.e.&nbsp;<span class="math inline">\(\mathop{\mathrm{P}}(X_t \in dx) = p_t(dx)\)</span>. By choosing the forward distribution with simple and tractable transition probabilities, e.g.&nbsp;an Ornstein-Uhlenbeck, it is relatively easy to estimate <span class="math inline">\(\nabla \log p_t(x)\)</span> from simulated data: this can be formulated as a simple regression problem. This allows one to simulate the diffusion backward in time and generate approximate samples from <span class="math inline">\(\pi_{\mathrm{data}}\)</span>. Why this is useful is another question…</p>
+<p>The fact that the mapping from data-samples at time <span class="math inline">\(t=0\)</span> to (approximate) Gaussian samples at time <span class="math inline">\(t=T\)</span> is stochastic and described by diffusion processes is cumbersome. This would be much more convenient to build a deterministic mapping between the data-distribution <span class="math inline">\(\pi_{\mathrm{data}}\)</span> and the Gaussian reference distribution <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>: this would allows one to associate a likelihood to data samples and to easily “encode”/“decode” data-samples. To so this, one can try to replace diffusion by Ordinary Differential Equations.</p>
+</section>
+<section id="the-diffusion-ode-trick" class="level3">
+<h3 class="anchored" data-anchor-id="the-diffusion-ode-trick">The diffusion-ODE trick</h3>
+<p>Consider an arbitrary diffusion process <span class="math inline">\(dX = \mu(t,X) \, dt + dB\)</span> with associated distribution <span class="math inline">\(p_t(dx)\)</span> at time <span class="math inline">\(t\)</span>. The <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation that describes the evolution of <span class="math inline">\(p_t\)</span> reads</p>
+<p><span class="math display">\[
+\partial_t p_t = -\mathop{\mathrm{div}}( p_t \, \mu) + \frac12 \, \Delta p_t
+\]</span></p>
+<p>If there were no diffusion term <span class="math inline">\(dB\)</span> and <span class="math inline">\(X\)</span> was describing instead the evolution of differential equation <span class="math inline">\(dX/dt = F(t,X)\)</span>, the associated evolution of the density of <span class="math inline">\(X\)</span> would simply read</p>
+<p><span id="eq-continuity"><span class="math display">\[
+\partial_t p_t = -\mathop{\mathrm{div}}( p_t \, F).
+\tag{1}\]</span></span></p>
+<p>If one can find a vector field <span class="math inline">\(F(t,x)\)</span> such that</p>
+<p><span class="math display">\[
+-\mathop{\mathrm{div}}( p_t \, \mu) + \frac12 \, \Delta p_t
+=
+-\mathop{\mathrm{div}}( p_t \, F),
+\]</span></p>
+<p>then one can basically replace diffusions by ODEs. The diffusion-ODE trick is the simple remark that</p>
+<p><span class="math display">\[
+F(t,x) = \mu(t,x) \; {\color{red} - \frac12 \, \nabla_x \log p_t(x)}
+\]</span></p>
+<p>does exactly this, as algebra immediately shows it. The additional term <span class="math inline">\({\color{red} - \frac12 \, \nabla_x \log p_t(x)}\)</span> is intuitive. The coefficient <span class="math inline">\({\color{blue} 1/2}\)</span> is because one is trying to match the term <span class="math inline">\({\color{blue} (1/2)} \, \Delta p_t\)</span> in the Fokker-Planck equation. And the overall term <span class="math inline">\({\color{red} - \frac12 \, \nabla_x \log p_t(x)}\)</span> is just driving the ODE in direction where the probability density <span class="math inline">\(p_t\)</span> is small, i.e.&nbsp;it follows the negative gradient of the log-density: it is exactly trying to imitate the diffusion term <span class="math inline">\(dB\)</span>.</p>
+<p>What this means is that a diffusion process <span class="math inline">\(dX = \mu(t,X) \, dt + dB\)</span> started from <span class="math inline">\(X_0 \sim p_0\)</span> and marginal distribution <span class="math inline">\(X_t \sim p_t(dx)\)</span> can be imitated by an ODE process <span class="math inline">\(dY/dt = \mu(t,Y) - \frac12 \, \nabla \log p_t(Y)\)</span> started from <span class="math inline">\(p_0\)</span>. At any time <span class="math inline">\(t&gt;0\)</span>, the marginal distributions of <span class="math inline">\(X_t\)</span> and <span class="math inline">\(Y_t\)</span> both exactly equal <span class="math inline">\(p_t(dx)\)</span>.</p>
+</section>
+<section id="the-diffusion-ode-trick-application-to-ddpm" class="level3">
+<h3 class="anchored" data-anchor-id="the-diffusion-ode-trick-application-to-ddpm">The diffusion-ODE trick: application to DDPM</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><video src="particles_bouncing.mp4" class="img-fluid" style="width:80.0%" controls=""><a href="particles_bouncing.mp4">Video</a></video></p>
+<p><video src="sine_reverse_ODE.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="sine_reverse_ODE.mp4">Video</a></video></p>
 </figure>
 </div>
+<p>Consider a DDPM with forward dynamics given by an Ornstein-Uhlenbeck (OU) process</p>
+<p><span class="math display">\[
+d\overrightarrow{X} = -\frac12 \, \overrightarrow{X} \, dt + dB
+\]</span></p>
+<p>and initial condition <span class="math inline">\(X_0 \sim p_0 \equiv \pi_{\mathrm{data}}\)</span>. As explained in these <a href="../../notes/DDPM/DDPM.html">notes</a>, it is relatively straightforward to estimate the score function</p>
+<p><span class="math display">\[
+\mathcal{S}(t,x_t) \; = \; \nabla \log p_t(x_t)
+\]</span></p>
+<p>from data. This means that the forward OU process can be replaced by the forward ODE</p>
+<p><span class="math display">\[
+\frac{d}{dt} \overrightarrow{Y_t} = -\frac12 \, \overrightarrow{Y_t}  - \frac12 \mathcal{S}(t,\overrightarrow{Y_t}) = F(t,Y_t)
+\]</span></p>
+<p>with <span class="math inline">\(F(t,x) = -\tfrac{1}{2} x -\tfrac{1}{2} \mathcal{S}(t,x)\)</span>. Similarly, the reverse diffusion (i.e.&nbsp;the “denoising” diffusion) defined as <span class="math inline">\(\overleftarrow{X}_s = X_{T-s}\)</span> follows the dynamics</p>
+<p><span class="math display">\[d\overleftarrow{X}_s = \frac12 \overleftarrow{X}_s \, ds + \mathcal{S}(T-s,\overleftarrow{X}_s) + dW.\]</span></p>
+<p>As described for the first time in the beautiful article <span class="citation" data-cites="song2020score">(<a href="#ref-song2020score" role="doc-biblioref">Song et al. 2020</a>)</span>, the diffusion-ODE trick now shows that the denoising diffusion can be replaced by a denoising ODE with dynamics</p>
+<p><span class="math display">\[
+\begin{align}
+\frac{d}{ds} \overleftarrow{Y_s} &amp;= \frac12 \overleftarrow{Y_s} \, ds + \mathcal{S}(T-s,\overleftarrow{Y_s}) - \frac12 \, \mathcal{S}(T-s,\overleftarrow{X}_s)\\
+&amp;=
+\frac12 \overleftarrow{Y_s} \, ds + \frac12 \, \mathcal{S}(T-s,\overleftarrow{Y_s}) = -F(T-s, \overleftarrow{Y_s}).
+\end{align}
+\]</span></p>
+<p>Interestingly [and I do not know whether there was an obvious way of seeing this from the start], this shows that the forward and backward ODE are actually the same but run forward and backward in time. They corresponds to the ODE described by the vector field</p>
+<p><span id="eq-vector-field"><span class="math display">\[
+F(t,x) \; = \; -\frac{1}{2} x -\frac{1}{2} \mathcal{S}(t,x).
+\tag{2}\]</span></span></p>
+<p>The animation belows display the denoising ODE and the associated vector field <a href="#eq-vector-field">Equation&nbsp;2</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><video src="sine_reverse_vector_field.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="sine_reverse_vector_field.mp4">Video</a></video></p>
+</figure>
+</div>
+</section>
+<section id="likelihood-computation" class="level2">
+<h2 class="anchored" data-anchor-id="likelihood-computation">Likelihood computation</h2>
+<p>With the diffusion-ODE trick, we have just seen that it is possible to build a vector fields <span class="math inline">\(F[0,T] \times \mathbb{R}^d \to \mathbb{R}^d\)</span> such that the <em>forward</em> ODE</p>
+<p><span id="eq-forward-ODE"><span class="math display">\[
+\frac{d}{dt} \overrightarrow{Y_t} =
+F(t,\overrightarrow{Y_t})
+\qquad \textrm{initialized at} \qquad
+\overrightarrow{Y}_0 \sim \pi_{\mathrm{data}}
+\tag{3}\]</span></span></p>
+<p>and the <em>backward</em> ODE defined as</p>
+<p><span class="math display">\[
+\frac{d}{ds} \overleftarrow{Y_s} =
+-F(T-s,\overleftarrow{Y_s})
+\qquad \textrm{initialized at} \qquad
+\overleftarrow{Y}_0 \sim \pi_{\mathrm{ref}}
+\]</span></p>
+<p>are such that <span class="math inline">\(\overrightarrow{Y}_T \approx \pi_{\mathrm{ref}}\)</span> and <span class="math inline">\(\overleftarrow{Y}_T \approx \pi_{\mathrm{data}}\)</span>.</p>
+<p>In general, consider a vector field <span class="math inline">\(F(t,x)\)</span> and a bunch of particles distributed according to a distribution <span class="math inline">\(p_t\)</span> at time <span class="math inline">\(t\)</span>. If each particle follows the vector field for an amount of time <span class="math inline">\(\delta \ll 1\)</span>, the particles that were in the vicinity of some <span class="math inline">\(x \in \mathbb{R}^d\)</span> at time <span class="math inline">\(t\)</span> end up in the vicinity of <span class="math inline">\(x + F(x,t) \, \delta\)</span> at time <span class="math inline">\(t+\delta\)</span>. At the same time, a volume element <span class="math inline">\(dx\)</span> around <span class="math inline">\(x \in \mathbb{R}^d\)</span> gets stretch by a factor <span class="math inline">\(1+\delta \, \mathop{\mathrm{Tr}}[\mathop{\mathrm{\mathrm{Jac}}}F(x,t)] = 1 + \delta \mathop{\mathrm{div}}F(x,t)\)</span> while following the vector field <span class="math inline">\(F\)</span>, which means that the density of particles at time <span class="math inline">\(t+\delta\)</span> and around <span class="math inline">\(x + F(x,t) \, \delta\)</span> equals <span class="math inline">\(p_t(x) / [1 + \delta \mathop{\mathrm{div}}F(x,t)]\)</span>. In other words <span class="math inline">\(\log p_{t+\delta}(x + F(x,t) \, \delta) \approx \log p_t(x) - \delta \, \mathop{\mathrm{div}}F(x,t)\)</span>. This means that if we follows a trajectory of <span class="math inline">\(\tfrac{d}{dt} X_t = F(t,X_t)\)</span> one gets</p>
+<p><span class="math display">\[
+\log p_T(X_T) = \log p_0(X_0) - \int_{t=0}^{T} \mathop{\mathrm{div}}F(X_t,t) \, dt.
+\]</span></p>
+<p>That is the Lagrangian description of the density <span class="math inline">\(p_t\)</span> of particles. Indeed, one could directly get this identity by differentiating <span class="math inline">\(p_t(X_t)\)</span> with respect to time while using the continuity <a href="#eq-continuity">Equation&nbsp;1</a>. When applied to the DDPM, this gives a way to assign likelihood the data samples, namely</p>
+<p><span class="math display">\[
+\log \pi_{\mathrm{data}}(x) = \log \pi_{\mathrm{ref}}(\overrightarrow{Y_T}) + \int_{t=0}^{T} \mathop{\mathrm{div}}F(t, \overrightarrow{Y_t})\, dt
+\]</span></p>
+<p>where <span class="math inline">\(\overrightarrow{Y_t}\)</span> is trajectory of the forward ODE <a href="#eq-forward-ODE">Equation&nbsp;3</a> initialized as <span class="math inline">\(\overrightarrow{Y_0} = x\)</span>. Note that in high-dimensional setting, it may be computationally expensive to compute the divergence term <span class="math inline">\(\mathop{\mathrm{div}}F(t, \overrightarrow{Y_t})\)</span> since it typically is <span class="math inline">\(d\)</span> times slower that a gradient computation; for this reason, it is often advocated to use the Hutchinson trace estimator to get an unbiased estimate of it at a much lower computational cost.</p>
 
 
 
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-mackay2003information" class="csl-entry" role="listitem">
-MacKay, David JC. 2003. <em>Information Theory, Inference and Learning Algorithms</em>. Cambridge university press.
+<div id="ref-song2020score" class="csl-entry" role="listitem">
+Song, Yang, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole. 2020. <span>“Score-Based Generative Modeling Through Stochastic Differential Equations.”</span> <em><span>ICLR</span> 2021</em>. <a href="https://arxiv.org/abs/2011.13456">https://arxiv.org/abs/2011.13456</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -436,8 +527,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

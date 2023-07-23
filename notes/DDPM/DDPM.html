@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Alexandre Thiéry - Denoising Diffusion Probabilistic Models (DDPM)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Denoising Diffusion Probabilistic Models (DDPM)">
+<meta property="og:description" content="">
+<meta property="og:site-name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry - Denoising Diffusion Probabilistic Models (DDPM)">
+<meta name="twitter:description" content="">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
+ <span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
+ <span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts/index_blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
+ <span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Denoising Diffusion Probabilistic Models (DDPM)</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">DDPM</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">02 07 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#setting-goals" id="toc-setting-goals" class="nav-link active" data-scroll-target="#setting-goals">Setting &amp; Goals</a></li>
+  <li><a href="#ornsteinuhlenbeck-noising-process" id="toc-ornsteinuhlenbeck-noising-process" class="nav-link" data-scroll-target="#ornsteinuhlenbeck-noising-process">Ornstein–Uhlenbeck Noising process</a></li>
+  <li><a href="#the-reverse-diffusion" id="toc-the-reverse-diffusion" class="nav-link" data-scroll-target="#the-reverse-diffusion">The reverse diffusion</a></li>
+  <li><a href="#denoising-to-estimating-the-score" id="toc-denoising-to-estimating-the-score" class="nav-link" data-scroll-target="#denoising-to-estimating-the-score">Denoising to estimating the score</a></li>
+  <li><a href="#denoiser-practical-parametrization-and-training" id="toc-denoiser-practical-parametrization-and-training" class="nav-link" data-scroll-target="#denoiser-practical-parametrization-and-training">Denoiser: practical parametrization and training</a></li>
+  <li><a href="#the-denoising-diffusion" id="toc-the-denoising-diffusion" class="nav-link" data-scroll-target="#the-denoising-diffusion">The “denoising” diffusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="setting-goals" class="level3">
+<h3 class="anchored" data-anchor-id="setting-goals">Setting &amp; Goals</h3>
+<p>Consider <span class="math inline">\(N\)</span> samples <span class="math inline">\(\mathcal{D}\equiv \{x_i\}_{i=1}^N\)</span> in <span class="math inline">\(\mathbb{R}^D\)</span> from an unknown data distribution <span class="math inline">\(\pi_{\mathrm{data}}(dx)\)</span>. We would like to build an mechanism that can generate other samples from this data distribution. Implicitly, this means that we will be fitting a statistical model to this finite set of samples and have an algorithmic procedure to generate samples from the fitted probabilistic model. This type of models that directly define a stochastic procedure that generates data are called <em>implicit probabilistic models</em> in the ML literature.</p>
+</section>
+<section id="ornsteinuhlenbeck-noising-process" class="level3">
+<h3 class="anchored" data-anchor-id="ornsteinuhlenbeck-noising-process">Ornstein–Uhlenbeck Noising process</h3>
+<p>DDPMs work as follows. Consider a diffusion process <span class="math inline">\(\{ X_t \}_{t=0}^T\)</span> that starts from the data distribution <span class="math inline">\(p_0(dx) \equiv \pi_{\mathrm{data}}(dx)\)</span> at time <span class="math inline">\(t=0\)</span>. The notation <span class="math inline">\(p_t(dx)\)</span> refers to the marginal distribution of the diffusion at time <span class="math inline">\(0 \leq t \leq T\)</span>. Assume furthermore that at time <span class="math inline">\(t=T\)</span>, the marginal distribution is (very close to) a reference distribution <span class="math inline">\(p_T(dx) = \pi_{\mathrm{ref}}(dx)\)</span> that is straightforward to sample from. Typically, <span class="math inline">\(\pi_{\mathrm{ref}}(dx)\)</span> is an isotropic Gaussian distribution. This diffusion process is often called the <em>noising</em> process since it transform the data distribution into a reference measure that can be thought of as “pure noise”. It is often chosen as an <a href="https://en.wikipedia.org/wiki/Ornstein–Uhlenbeck_process">Ornstein–Uhlenbeck</a> (OU) diffusion,</p>
+<p><span id="eq-OU"><span class="math display">\[
+dX = - \frac12 X \, dt + dW.
+\tag{1}\]</span></span></p>
+<p>This diffusion is reversible with respect to, and quickly converges to, the reference distribution <span class="math inline">\(\pi_{\mathrm{ref}} = \mathcal{N}(0, I)\)</span> and has the good taste of having simple transition densities: the law of <span class="math inline">\(X_{t+s}\)</span> given that <span class="math inline">\(X_t = x_t\)</span> is the same as <span class="math inline">\(e^{-s/2} x_t + \sqrt{1-e^{-s}} \, \mathbf{n}\)</span>, which we write as</p>
+<p><span class="math display">\[
+\alpha_s x + \sigma_s \, \mathbf{n}\qquad \text{with} \qquad
+\left\{
+\begin{aligned}
+\alpha_s &amp;= \sqrt{1-\sigma_s^2}\\
+\sigma^2_s &amp;= 1-e^{-s}
+\end{aligned}
+\right.
+\]</span></p>
+<p>for isotropic Gaussian noise term <span class="math inline">\(\mathbf{n}\sim \pi_{\mathrm{ref}} = \mathcal{N}(0,I)\)</span>. We have:</p>
+<p><span id="eq-OU-forward"><span class="math display">\[
+F(s,x,y) \equiv \mathop{\mathrm{P}}(X_{t+s} \in dy \, | \, X_t = x )
+\; \propto \;
+\exp {\left\{ -\frac{(y - \alpha_s \, x)^2}{2 \, \sigma^2_s} \right\}} .
+\tag{2}\]</span></span></p>
+<p>where the notation <span class="math inline">\(F(s,x,y)\)</span> designates the forward transition from <span class="math inline">\(x\)</span> to <span class="math inline">\(y\)</span> in “<span class="math inline">\(s\)</span>” amount of time. This also means that one can directly generate samples from <span class="math inline">\(p_t(dx)\)</span> by first choosing a data samples <span class="math inline">\(x_i\)</span> from the data distribution <span class="math inline">\(p_{\mathrm{data}} \equiv p_0\)</span> and blend it with noise by setting <span class="math inline">\(x_i^{(t)} = \alpha_t \, x_i + \sigma_t \, \mathbf{n}\)</span>.</p>
+</section>
+<section id="the-reverse-diffusion" class="level3">
+<h3 class="anchored" data-anchor-id="the-reverse-diffusion">The reverse diffusion</h3>
+<p>In order to generate samples from the data distribution, the DDPM strategy consists in sampling from the Gaussian reference measure <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> at time <span class="math inline">\(t=T\)</span> and simulate the OU process backward in time. In other words, one would like to simulate from the <em>reverse process</em> <span class="math inline">\(\overleftarrow{X}_t\)</span> defined as</p>
+<p><span class="math display">\[\overleftarrow{X}_s = X_{T-s}.\]</span></p>
+<p>In other words, the reverse process is distributed as <span class="math inline">\(\overleftarrow{X}_0 \sim \pi_{\mathrm{ref}}\)</span> at time <span class="math inline">\(t=0\)</span> and, crucially, we have that <span class="math inline">\(\overleftarrow{X}_T \sim \pi_{\mathrm{data}}\)</span>. Furthermore, and as explained in this <a href="../../posts/reverse_and_tweedie/reverse_and_tweedie.html">blogpost</a>, the reverse diffusion follows the dynamics</p>
+<p><span id="eq-OU-rev"><span class="math display">\[
+d\overleftarrow{X}_t = {\color{red} + }\frac12 \overleftarrow{X}_t \, dt
+\; {\color{red} + \nabla \log p_{T-t}(\overleftarrow{X}_t) \, dt} \;
++ dB
+\tag{3}\]</span></span></p>
+<p>where <span class="math inline">\(B\)</span> is another Wiener process. I have used the notation <span class="math inline">\(B\)</span> to emphasize that there is no link between this Wiener process and the one used to simulate the forward process. Note that if the initial data distribution <span class="math inline">\(p_0 \equiv \pi_{\mathrm{data}}\)</span> were equal to the reference measure <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>, i.e.&nbsp;<span class="math inline">\(p_0 = p_T = \pi_{\mathrm{ref}}\)</span> then it is easy to see that the reverse diffusion would have exactly teh same dynamics as the forward diffusion. In order to simulate the reverse diffusion, one needs to be able to estimate the new term <span class="math inline">\({\color{red}\nabla \log p_{T-t}(x)}\)</span> called the <em>score</em>. If one can estimate the score, it is straightforward to simulate the reverse process <span class="math inline">\(\overleftarrow{X}_t\)</span> all the way to <span class="math inline">\(t=T\)</span> and obtain samples from the data distribution.</p>
+</section>
+<section id="denoising-to-estimating-the-score" class="level3">
+<h3 class="anchored" data-anchor-id="denoising-to-estimating-the-score">Denoising to estimating the score</h3>
+<p>In practice, the score is unknown and one has to build an approximation of it</p>
+<p><span class="math display">\[\mathcal{S}(t,x) \; \approx \; \nabla_x \log p_t(x).\]</span></p>
+<p>The approximate score <span class="math inline">\(\mathcal{S}(t,x)\)</span> is often parametrized by a neural network. Since the forward transitions are available and</p>
+<p><span class="math display">\[
+\log p_t(x) \; = \; \log \int \; F(t, x_0, x)\; \pi_{\mathrm{data}}(d x_0)
+\]</span></p>
+<p>the analytical expression of <span class="math inline">\(F(t, x_0, x)\)</span> given in <a href="#eq-OU-forward">Equation&nbsp;2</a> readily gives that</p>
+<p><span id="eq-score-denoising"><span class="math display">\[
+\nabla_x \log p_t(x) \; = \; -\frac{x - \alpha_t \, \widehat{x}_0(x,t)}{\sigma_t^2}
+\tag{4}\]</span></span></p>
+<p>where <span class="math inline">\(\widehat{x}_0(x,t)\)</span> is a “denoising” estimate of the initial position <span class="math inline">\(x_0\)</span> given a noisy estimate <span class="math inline">\(X_t=x\)</span> at time <span class="math inline">\(t\)</span>,</p>
+<p><span class="math display">\[
+\widehat{x}_0(x,t) \; = \; \mathop{\mathrm{E}}[X_0  \; \mid \; X_t = x].
+\]</span></p>
+<p>For simplifying notation, I will often write <span class="math inline">\(\widehat{x}_0(x_t, t)\)</span> as <span class="math inline">\(\widehat{x}_0(x_t)\)</span> when it is clear that <span class="math inline">\(x_t\)</span> is a sample obtained at time <span class="math inline">\(0 \leq t \leq T\)</span>. <a href="#eq-score-denoising">Equation&nbsp;4</a> means that to estimate the score, one only needs to train a denoising function</p>
+<p><span class="math display">\[
+\widehat{x}_0(\cdots): [0,T] \times \mathbb{R}^d \to \mathbb{R}^d.
+\]</span></p>
+<p>It is a simple regression problem: take a bunch of pairs <span class="math inline">\((X_0, X_t)\)</span> that can be generated as</p>
+<p><span class="math display">\[
+X_0 \sim \pi_{\mathrm{data}}
+\qquad \textrm{and} \qquad
+X_t = \alpha_t X_0 + \sigma_t \, \mathbf{n}
+\]</span></p>
+<p>with <span class="math inline">\(\mathbf{n}\sim \mathcal{N}(0,I)\)</span> and minimize the Mean Squared Error (MSE) loss, i.e.</p>
+<p><span class="math display">\[
+\mathop{\mathrm{E}}\|X_0 - \widehat{x}_0(t, X_t)\|^2,
+\]</span></p>
+<p>with stochastic gradient descent or any other stochastic optimization procedure. The score is then defined as</p>
+<p><span class="math display">\[
+\mathcal{S}(t,x) \; = \; -\frac{x - \alpha_t \, \widehat{x}_0(t,x)}{\sigma^2_t}.
+\]</span></p>
+</section>
+<section id="denoiser-practical-parametrization-and-training" class="level3">
+<h3 class="anchored" data-anchor-id="denoiser-practical-parametrization-and-training">Denoiser: practical parametrization and training</h3>
+<p>In practice, it may not be efficient, or stable, to try to directly parametrize the denoiser <span class="math inline">\(\widehat{x}_0(\cdots)\)</span> with a neural network and simply descend the loss</p>
+<p><span class="math display">\[
+\mathop{\mathrm{E}}\|X_0 - \widehat{x}_0(t, X_t)\|^2.
+\]</span></p>
+<p>For example, for <span class="math inline">\(t \approx 0\)</span>, we have that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t \approx X_0\)</span> so that it is very easy to reconstruct <span class="math inline">\(X_0\)</span> from <span class="math inline">\(X_t\)</span>. On the contrary, for large <span class="math inline">\(t\)</span>, there is almost no information contained within <span class="math inline">\(X_t\)</span> to reconstruct <span class="math inline">\(X_0\)</span>. This means that the typical value of the loss depends widely on <span class="math inline">\(t\)</span>, which makes it difficult to optimize: with this parametrization, since large values of the loss will be typically concentrated to large values of <span class="math inline">\(t\)</span>, the denoiser will not be accurate for <span class="math inline">\(t \approx 0\)</span>, leading to sub-optimal results. Since <span class="math inline">\(X_t = \alpha_t \, X_0 + \sigma_t \, \mathbf{n}\)</span>, one can defined the Signal-to-Noise-Ratio as</p>
+<p><span class="math display">\[\mathrm{SNR}(t) = \frac{\alpha_t}{\sigma_t}\]</span></p>
+<p>and, in order to normalize by the reconstruction difficulty, it makes more sense to train a denoiser by minimizing the loss:</p>
+<p><span class="math display">\[
+\mathop{\mathrm{E}} {\left[  \mathrm{SNR}^2(t) \times \|X_0 - \widehat{x}_0(t, X_t)\|^2  \right]} .
+\]</span></p>
+<p>It turns out that it is entirely equivalent to minimizing the loss</p>
+<p><span class="math display">\[
+\mathop{\mathrm{E}} {\left[  \| \mathbf{n}- \widehat{\mathbf{n}}(t, X_t)\|^2  \right]} .
+\]</span></p>
+<p>where <span class="math inline">\(X_t = \alpha_t \, X_0 + \sigma_t \, \mathbf{n}\)</span> while the denoiser <span class="math inline">\(\widehat{x}_0(\ldots)\)</span> and noise estimator <span class="math inline">\(\widehat{\mathbf{n}}(\ldots)\)</span> are parametrized so that</p>
+<p><span class="math display">\[
+X_t = \alpha_t \, \widehat{x}_0(t, X_t) + \sigma_t \, \widehat{\mathbf{n}}(t,X_t).
+\]</span></p>
+<p>That is one of the reasons why most of the papers on DDPM are parametrizing the denoiser <span class="math inline">\(\widehat{x}_0(\ldots)\)</span> by building instead a “noise estimator” <span class="math inline">\(\widehat{\mathbf{n}}(\ldots)\)</span> with a neural network and setting</p>
+<p><span class="math display">\[
+\widehat{x}_0(t,X_t) = \frac{X_t - \sigma_t \, \widehat{\mathbf{n}}(t,X_T)}{\alpha_t}.
+\]</span></p>
+<p>Since <span class="math inline">\(\alpha_t \to 1\)</span> and <span class="math inline">\(\sigma_t \to 0\)</span> for <span class="math inline">\(t \ll 1\)</span>, this also implicitly ensures that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t\)</span> for <span class="math inline">\(t \ll 1\)</span>, as required.</p>
+<!-- This also means that the estimated score function is given by
+
+$$
+\cS(t,x) 
+\; = \; -\frac{x - \alpha_t \, \widehat{x}_0(t,x)}{\sigma^2_t} \; = \; - \frac{\widehat{\bfn}(t,x)}{\sigma_t}.
+$$ -->
+</section>
+<section id="the-denoising-diffusion" class="level3">
+<h3 class="anchored" data-anchor-id="the-denoising-diffusion">The “denoising” diffusion</h3>
+<p>Once the denoiser <span class="math inline">\(\widehat{x}_0(\ldots)\)</span> has been trained, the reverse diffusion defined <span class="math inline">\(\overleftarrow{X}_s = X_{T-s}\)</span> as to be simulated. Plugging <a href="#eq-score-denoising">Equation&nbsp;4</a> back in the expression of the dynamics of the reverse diffusion shows that</p>
+<p><span id="eq-reverse-diff"><span class="math display">\[
+d\overleftarrow{X}_s =
+-\frac12 \, \frac{1}{\tanh((T-s)/2)} \,
+{\left(  \overleftarrow{X}_s - \frac{\widehat{x}_0(\overleftarrow{X}_s)}{\cosh((T-s)/2)}  \right)}
+\; + \;
+dB
+\tag{5}\]</span></span></p>
+<p>This dynamics is intuitive: as <span class="math inline">\(s \to T\)</span> we have <span class="math inline">\(\cosh((T-s)/2) \to 1\)</span> and <span class="math inline">\(\varepsilon^2 \equiv \tanh((T-s)/2) \sim (T-s)/2 \to 0\)</span> so that the dynamics is similar to</p>
+<p><span class="math display">\[
+d\overleftarrow{X}_s =
+-\frac12 \, \frac{1}{\varepsilon^2} \,
+{\left(  \overleftarrow{X}_s - \widehat{x}_0 \right)}
+\; + \;
+dB
+\]</span></p>
+<p>which is OU process that converges quickly, i.e.&nbsp;on time-scale of order <span class="math inline">\(\mathcal{O}(\varepsilon^2)\)</span>, towards a Gaussian distribution with mean <span class="math inline">\(\widehat{x}_0\)</span> (i.e.&nbsp;the denoised estimate) and variance <span class="math inline">\(\varepsilon^2\)</span>.</p>
+<p>To discretize the reverse dynamics <a href="#eq-reverse-diff">Equation&nbsp;5</a> on a small interval <span class="math inline">\([\overline{s}, \overline{s}+\delta]\)</span>, one can for example consider the slightly simplified (linear) dynamics</p>
+<p><span class="math display">\[
+d\overleftarrow{X}_s =
+-\frac12 \, \frac{1}{\tanh((T-s)/2)} \,
+{\left(  \overleftarrow{X}_s - \mu \right)} .
+\; + \;
+dB
+\]</span></p>
+<p>Here, <span class="math inline">\(\mu = \widehat{x}_0(\overleftarrow{X}_{\overline{s}}) / \cosh((T-\overline{s})/2)\)</span> with <span class="math inline">\(\overleftarrow{X}_{\overline{s}} = \overleftarrow{x}_{\overline{s}}\)</span>. Algebra gives that, conditioned upon <span class="math inline">\(\overleftarrow{X}_{\overline{s}} = \overleftarrow{x}_{\overline{s}}\)</span>, we have</p>
+<p><span class="math display">\[
+\left\{
+\begin{aligned}
+\mathop{\mathrm{E}}[ \overleftarrow{X}_{\overline{s} + \delta} ]
+\quad &amp;= \quad \mu + \lambda \, (\overleftarrow{x}_{\overline{s}} - \mu)\\
+\mathop{\mathrm{Var}}[ \overleftarrow{X}_{\overline{s} + \delta} ]
+\quad &amp;= \quad
+\tanh {\left( \frac{T-\overline{s}-\delta}{2} \right)}  \, (1-\lambda^2)
+\end{aligned}
+\right.
+\]</span></p>
+<p>where the coefficient <span class="math inline">\(0&lt;\lambda&lt;1\)</span> is given by</p>
+<p><span class="math display">\[
+\lambda = \frac{\sinh(T-\overline{s}-\delta)}{\sinh(T-\overline{s})}.
+\]</span></p>
+<p>This discretization is more stable and efficient than a naive Euler-Maruyama approach since the drift term can get large as <span class="math inline">\(s \to T\)</span>. WIth the above discretization, one can easily simulate the reverse diffusion on <span class="math inline">\([0,T]\)</span> and generate approximate samples from <span class="math inline">\(\pi_{\mathrm{data}}\)</span>.</p>
+<p>In the animation below, the method described in these notes was used. This very small example trains in less than a minute on an old laptop without a GPU. The noise estimator was parametrized with an MLP with <span class="math inline">\(\mathrm{elu}(\ldots)\)</span> non-linearity and two hidden-layers with size <span class="math inline">\(H=128\)</span>. It was very useful to add a few Fourier features as input of the network, I could not make this work properly without.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><video src="sine_reverse.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="sine_reverse.mp4">Video</a></video></p>
+</figure>
+</div>
+<p>The literature on DDPM is <a href="https://github.com/heejkoo/Awesome-Diffusion-Models">enormous and still growing</a>!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
