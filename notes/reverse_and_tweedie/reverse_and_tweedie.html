@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - From Denoising Diffusion to ODEs</title>
+<title>Alexandre Thiéry - Reverse diffusions, Score &amp; Tweedie</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,13 +81,15 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - From Denoising Diffusion to ODEs">
+<meta property="og:title" content="Alexandre Thiéry - Reverse diffusions, Score &amp; Tweedie">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/reverse_and_tweedie/maurice_tweedie.gif">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - From Denoising Diffusion to ODEs">
+<meta name="twitter:title" content="Alexandre Thiéry - Reverse diffusions, Score &amp; Tweedie">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/reverse_and_tweedie/maurice_tweedie.gif">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -144,9 +146,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">From Denoising Diffusion to ODEs</h1>
+      <h1 class="title">Reverse diffusions, Score &amp; Tweedie</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">DDPM</div>
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">Generative-Model</div>
               </div>
                   </div>
   </div>
@@ -158,10 +161,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">02 07 2023</p>
+        <p class="date">12 06 2023</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">12 06 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -174,10 +183,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#setting-goals" id="toc-setting-goals" class="nav-link active" data-scroll-target="#setting-goals">Setting &amp; Goals</a></li>
-  <li><a href="#the-diffusion-ode-trick" id="toc-the-diffusion-ode-trick" class="nav-link" data-scroll-target="#the-diffusion-ode-trick">The diffusion-ODE trick</a></li>
-  <li><a href="#the-diffusion-ode-trick-application-to-ddpm" id="toc-the-diffusion-ode-trick-application-to-ddpm" class="nav-link" data-scroll-target="#the-diffusion-ode-trick-application-to-ddpm">The diffusion-ODE trick: application to DDPM</a></li>
-  <li><a href="#likelihood-computation" id="toc-likelihood-computation" class="nav-link" data-scroll-target="#likelihood-computation">Likelihood computation</a></li>
+  <li><a href="#reversing-a-diffusion" id="toc-reversing-a-diffusion" class="nav-link active" data-scroll-target="#reversing-a-diffusion">Reversing a diffusion</a></li>
+  <li><a href="#denoising-score-matching-tweedie-formula" id="toc-denoising-score-matching-tweedie-formula" class="nav-link" data-scroll-target="#denoising-score-matching-tweedie-formula">Denoising Score Matching &amp; Tweedie formula</a></li>
   </ul>
 </nav>
     </div>
@@ -187,108 +194,89 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<section id="setting-goals" class="level3">
-<h3 class="anchored" data-anchor-id="setting-goals">Setting &amp; Goals</h3>
-<p>Consider an empirical data distribution <span class="math inline">\(\pi_{\mathrm{data}}\)</span>. In order to simulate approximate samples from <span class="math inline">\(\pi_{\mathrm{data}}\)</span>, <a href="../../notes/DDPM/DDPM.html">Denoising Diffusion Probabilistic Models</a> (DDPM) simulate a forward diffusion process <span class="math inline">\(\{X_t\}_{[0,T]}\)</span> on an interval <span class="math inline">\([0,T]\)</span>. The diffusion is initialized at the data distribution, i.e.&nbsp;<span class="math inline">\(X_0 \sim \pi_{\mathrm{data}}\)</span>, and is chosen so that that the distribution of <span class="math inline">\(X_T\)</span> is very close to a known and tractable reference distribution <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>, e.g.&nbsp;a Gaussian distribution. Denote by <span class="math inline">\(p_t(dx)\)</span> the marginal distribution at time <span class="math inline">\(0 \leq t \leq T\)</span>, i.e.&nbsp;<span class="math inline">\(\mathop{\mathrm{P}}(X_t \in dx) = p_t(dx)\)</span>. By choosing the forward distribution with simple and tractable transition probabilities, e.g.&nbsp;an Ornstein-Uhlenbeck, it is relatively easy to estimate <span class="math inline">\(\nabla \log p_t(x)\)</span> from simulated data: this can be formulated as a simple regression problem. This allows one to simulate the diffusion backward in time and generate approximate samples from <span class="math inline">\(\pi_{\mathrm{data}}\)</span>. Why this is useful is another question…</p>
-<p>The fact that the mapping from data-samples at time <span class="math inline">\(t=0\)</span> to (approximate) Gaussian samples at time <span class="math inline">\(t=T\)</span> is stochastic and described by diffusion processes is cumbersome. This would be much more convenient to build a deterministic mapping between the data-distribution <span class="math inline">\(\pi_{\mathrm{data}}\)</span> and the Gaussian reference distribution <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>: this would allows one to associate a likelihood to data samples and to easily “encode”/“decode” data-samples. To so this, one can try to replace diffusion by Ordinary Differential Equations.</p>
-</section>
-<section id="the-diffusion-ode-trick" class="level3">
-<h3 class="anchored" data-anchor-id="the-diffusion-ode-trick">The diffusion-ODE trick</h3>
-<p>Consider an arbitrary diffusion process <span class="math inline">\(dX = \mu(t,X) \, dt + dB\)</span> with associated distribution <span class="math inline">\(p_t(dx)\)</span> at time <span class="math inline">\(t\)</span>. The <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation that describes the evolution of <span class="math inline">\(p_t\)</span> reads</p>
-<p><span class="math display">\[
-\partial_t p_t = -\mathop{\mathrm{div}}( p_t \, \mu) + \frac12 \, \Delta p_t
-\]</span></p>
-<p>If there were no diffusion term <span class="math inline">\(dB\)</span> and <span class="math inline">\(X\)</span> was describing instead the evolution of differential equation <span class="math inline">\(dX/dt = F(t,X)\)</span>, the associated evolution of the density of <span class="math inline">\(X\)</span> would simply read</p>
-<p><span id="eq-continuity"><span class="math display">\[
-\partial_t p_t = -\mathop{\mathrm{div}}( p_t \, F).
-\tag{1}\]</span></span></p>
-<p>If one can find a vector field <span class="math inline">\(F(t,x)\)</span> such that</p>
-<p><span class="math display">\[
--\mathop{\mathrm{div}}( p_t \, \mu) + \frac12 \, \Delta p_t
-=
--\mathop{\mathrm{div}}( p_t \, F),
-\]</span></p>
-<p>then one can basically replace diffusions by ODEs. The diffusion-ODE trick is the simple remark that</p>
-<p><span class="math display">\[
-F(t,x) = \mu(t,x) \; {\color{red} - \frac12 \, \nabla_x \log p_t(x)}
-\]</span></p>
-<p>does exactly this, as algebra immediately shows it. The additional term <span class="math inline">\({\color{red} - \frac12 \, \nabla_x \log p_t(x)}\)</span> is intuitive. The coefficient <span class="math inline">\({\color{blue} 1/2}\)</span> is because one is trying to match the term <span class="math inline">\({\color{blue} (1/2)} \, \Delta p_t\)</span> in the Fokker-Planck equation. And the overall term <span class="math inline">\({\color{red} - \frac12 \, \nabla_x \log p_t(x)}\)</span> is just driving the ODE in direction where the probability density <span class="math inline">\(p_t\)</span> is small, i.e.&nbsp;it follows the negative gradient of the log-density: it is exactly trying to imitate the diffusion term <span class="math inline">\(dB\)</span>.</p>
-<p>What this means is that a diffusion process <span class="math inline">\(dX = \mu(t,X) \, dt + dB\)</span> started from <span class="math inline">\(X_0 \sim p_0\)</span> and marginal distribution <span class="math inline">\(X_t \sim p_t(dx)\)</span> can be imitated by an ODE process <span class="math inline">\(dY/dt = \mu(t,Y) - \frac12 \, \nabla \log p_t(Y)\)</span> started from <span class="math inline">\(p_0\)</span>. At any time <span class="math inline">\(t&gt;0\)</span>, the marginal distributions of <span class="math inline">\(X_t\)</span> and <span class="math inline">\(Y_t\)</span> both exactly equal <span class="math inline">\(p_t(dx)\)</span>.</p>
-</section>
-<section id="the-diffusion-ode-trick-application-to-ddpm" class="level3">
-<h3 class="anchored" data-anchor-id="the-diffusion-ode-trick-application-to-ddpm">The diffusion-ODE trick: application to DDPM</h3>
+<section id="reversing-a-diffusion" class="level2">
+<h2 class="anchored" data-anchor-id="reversing-a-diffusion">Reversing a diffusion</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><video src="sine_reverse_ODE.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="sine_reverse_ODE.mp4">Video</a></video></p>
+<p><video src="reverse_cropped.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="reverse_cropped.mp4">Video</a></video></p>
 </figure>
 </div>
-<p>Consider a DDPM with forward dynamics given by an Ornstein-Uhlenbeck (OU) process</p>
+<p>Imagine a scalar diffusion process <span class="math inline">\(\{X_t\}_{t=0}^T\)</span> defined on the interval <span class="math inline">\([0,T]\)</span>,</p>
+<p><span class="math display">\[dX = \mu(X) \, dt + \sigma \, dW\]</span></p>
+<p>where <span class="math inline">\(\mu(X)\)</span> is the drift term, <span class="math inline">\(\sigma\)</span> is the diffusion coefficient, and <span class="math inline">\(dW\)</span> is a Wiener process. Denote the distribution of this process at time <span class="math inline">\(t\)</span> (<span class="math inline">\(0 \leq t \leq T\)</span>) as <span class="math inline">\(p_t(dx)\)</span> with an initial distribution of <span class="math inline">\(p_0(dx)\)</span>. Now, what happens if we reverse time and examine the process backward? In other words, consider the time-reversed process <span class="math inline">\(\overleftarrow{X}\)</span> defined as</p>
+<p><span class="math display">\[\overleftarrow{X}_s = X_{T-s}.\]</span></p>
+<p>Intuitively, the process <span class="math inline">\(\overleftarrow{X}\)</span> is also a diffusion on the interval <span class="math inline">\([0, T]\)</span>, but with an initial distribution <span class="math inline">\(\overleftarrow{X}_0 \sim p_T(dx)\)</span>. To gain intuition, consider an Euler discretization of the forward process:</p>
+<p><span id="eq-rev-wrong"><span class="math display">\[X_{t+\delta} = X_{t} + \mu(X_t)\, \delta + \sigma \, \sqrt{\delta} \, \mathbf{n} \tag{1}\]</span></span></p>
+<p>where <span class="math inline">\(\mathbf{n}\sim \mathcal{N}(0,1)\)</span> represents a noise term independent from <span class="math inline">\(X_{t}\)</span>, and <span class="math inline">\(\delta \ll 1\)</span> is a time increment. Re-arranging terms and making the approximation <span class="math inline">\(\mu(X_t) \approx \mu(X_{t+\delta})\)</span> gives that</p>
+<p><span id="eq-rev-euler-wrong"><span class="math display">\[X_{t} \approx X_{t+\delta} - \mu(X_{t+\delta})\, \delta + \sigma \, \sqrt{\delta} \, (-\mathbf{n}). \tag{2}\]</span></span></p>
+<p>This seems to suggest that the time-reversed process follows the dynamics <span class="math inline">\(d\overleftarrow{X} = -\mu(\overleftarrow{X}) \, dt + \sigma \, dW\)</span> started from <span class="math inline">\(\overleftarrow{X}_0 \sim p_T(dx)\)</span>. However, this conclusion is incorrect because this would suggest that the time-reversed of a standard Brownian motion (where <span class="math inline">\(\mu(x) \equiv 0\)</span>) starting at zero is also a Brownian motion starting at <span class="math inline">\(p_T(dx) = \mathcal{N}(0,T)\)</span>, which is clearly not the case. The flaw in this argument lies in assuming that the noise term <span class="math inline">\(Z\)</span> is independent of <span class="math inline">\(X_{t+\delta}\)</span>, which is not true, rendering the Euler discretization argument invalid.</p>
+<p>Deriving the dynamics of the backward process in a rigorous manner is not straightforward <span class="citation" data-cites="anderson1982reverse">(<a href="#ref-anderson1982reverse" role="doc-biblioref">Anderson 1982</a>)</span> <span class="citation" data-cites="haussmann1986time">(<a href="#ref-haussmann1986time" role="doc-biblioref">Haussmann and Pardoux 1986</a>)</span>. What follows is a heuristic derivation that proceeds by estimating the mean and variance of <span class="math inline">\(X_{t}\)</span> given <span class="math inline">\(X_{t+\delta} = x_{t+\delta}\)</span>, assuming <span class="math inline">\(\delta \ll 1\)</span>. Here, <span class="math inline">\(x_{t+\delta}\)</span> is treated as a fixed and constant value, and we are only interested in the conditional distribution of <span class="math inline">\(X_t\)</span> given <span class="math inline">\(x_{t+\delta}\)</span>. Bayes’ law gives</p>
+<p><span class="math display">\[\mathbb{P}(X_t \in dx | x_{t+\delta}) \propto p_t(x) \, \exp\left\{ -\frac{\left( x_{t+\delta} - [x + \mu(x) \, \delta] \right)^2}{2 \sigma^2 \, \delta} \right\},\]</span></p>
+<p>where the exponential term corresponds to the transition of the forward diffusion for <span class="math inline">\(\delta \ll 1\)</span>. Using the 1st order approximation</p>
+<p><span class="math display">\[p_t(x) \approx p_t(x_{t+\delta}) \,\exp\left( \langle \nabla \log p_t(x_{t+\delta}), (x-x_{t+\delta})\rangle\right),\]</span></p>
+<p>eliminating multiplicative constants and higher-order error terms, we obtain:</p>
+<p><span class="math display">\[\mathbb{P}(X_t \in dx | x_{t+\delta})
+\propto
+\exp\left\{ -\frac{\left( x - [x_{t+\delta} - \mu(x_{t+\delta}) \delta
++ {\color{red} \sigma^2 \, \nabla \log p_t(x_{t+\delta}) \, \delta} ] \right)^2}{2 \sigma^2 \, \delta} \right\}.\]</span></p>
+<p>For <span class="math inline">\(\delta \ll 1\)</span>, this is transition of the reverse diffusion</p>
 <p><span class="math display">\[
-d\overrightarrow{X} = -\frac12 \, \overrightarrow{X} \, dt + dB
+d\overleftarrow{X}_t = -\mu(\overleftarrow{X}_t) \, dt \; + {\color{red} \sigma^2 \, \nabla \log p_{T-t}(\overleftarrow{X}_t) \, dt} \; + \; \sigma \, dB.
 \]</span></p>
-<p>and initial condition <span class="math inline">\(X_0 \sim p_0 \equiv \pi_{\mathrm{data}}\)</span>. As explained in these <a href="../../notes/DDPM/DDPM.html">notes</a>, it is relatively straightforward to estimate the score function</p>
-<p><span class="math display">\[
-\mathcal{S}(t,x_t) \; = \; \nabla \log p_t(x_t)
-\]</span></p>
-<p>from data. This means that the forward OU process can be replaced by the forward ODE</p>
-<p><span class="math display">\[
-\frac{d}{dt} \overrightarrow{Y_t} = -\frac12 \, \overrightarrow{Y_t}  - \frac12 \mathcal{S}(t,\overrightarrow{Y_t}) = F(t,Y_t)
-\]</span></p>
-<p>with <span class="math inline">\(F(t,x) = -\tfrac{1}{2} x -\tfrac{1}{2} \mathcal{S}(t,x)\)</span>. Similarly, the reverse diffusion (i.e.&nbsp;the “denoising” diffusion) defined as <span class="math inline">\(\overleftarrow{X}_s = X_{T-s}\)</span> follows the dynamics</p>
-<p><span class="math display">\[d\overleftarrow{X}_s = \frac12 \overleftarrow{X}_s \, ds + \mathcal{S}(T-s,\overleftarrow{X}_s) + dW.\]</span></p>
-<p>As described for the first time in the beautiful article <span class="citation" data-cites="song2020score">(<a href="#ref-song2020score" role="doc-biblioref">Song et al. 2020</a>)</span>, the diffusion-ODE trick now shows that the denoising diffusion can be replaced by a denoising ODE with dynamics</p>
-<p><span class="math display">\[
-\begin{align}
-\frac{d}{ds} \overleftarrow{Y_s} &amp;= \frac12 \overleftarrow{Y_s} \, ds + \mathcal{S}(T-s,\overleftarrow{Y_s}) - \frac12 \, \mathcal{S}(T-s,\overleftarrow{X}_s)\\
-&amp;=
-\frac12 \overleftarrow{Y_s} \, ds + \frac12 \, \mathcal{S}(T-s,\overleftarrow{Y_s}) = -F(T-s, \overleftarrow{Y_s}).
-\end{align}
-\]</span></p>
-<p>Interestingly [and I do not know whether there was an obvious way of seeing this from the start], this shows that the forward and backward ODE are actually the same but run forward and backward in time. They corresponds to the ODE described by the vector field</p>
-<p><span id="eq-vector-field"><span class="math display">\[
-F(t,x) \; = \; -\frac{1}{2} x -\frac{1}{2} \mathcal{S}(t,x).
-\tag{2}\]</span></span></p>
-<p>The animation belows display the denoising ODE and the associated vector field <a href="#eq-vector-field">Equation&nbsp;2</a>.</p>
+<p>The notation <span class="math inline">\(B\)</span> is used to emphasize that this Brownian motion is distinct from the one used in the forward diffusion. The additional drift term, denoted as <span class="math inline">\({\color{red} \sigma^2 \, \nabla \log p_t(\overleftarrow{X})}\)</span>, is intuitive: it pushes the reverse diffusion toward regions where the forward diffusion spent a significant amount of time, i.e., where <span class="math inline">\(p_t(dx)\)</span> is large. The popular “denoising diffusion models” <span class="citation" data-cites="ho2020denoising">(<a href="#ref-ho2020denoising" role="doc-biblioref">Ho, Jain, and Abbeel 2020</a>)</span> can be seen as discretizations of this backward process, employing various techniques to estimate the additional drift term from data.</p>
+</section>
+<section id="denoising-score-matching-tweedie-formula" class="level2">
+<h2 class="anchored" data-anchor-id="denoising-score-matching-tweedie-formula">Denoising Score Matching &amp; Tweedie formula</h2>
+<div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><video src="sine_reverse_vector_field.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="sine_reverse_vector_field.mp4">Video</a></video></p>
+<p><a href="https://en.wikipedia.org/wiki/Maurice_Tweedie"><img src="maurice_tweedie.gif" class="img-fluid figure-img" style="width:35.0%"></a></p>
+<figcaption class="figure-caption">Maurice Tweedie (1919–1996)</figcaption>
 </figure>
 </div>
-</section>
-<section id="likelihood-computation" class="level2">
-<h2 class="anchored" data-anchor-id="likelihood-computation">Likelihood computation</h2>
-<p>With the diffusion-ODE trick, we have just seen that it is possible to build a vector fields <span class="math inline">\(F[0,T] \times \mathbb{R}^d \to \mathbb{R}^d\)</span> such that the <em>forward</em> ODE</p>
-<p><span id="eq-forward-ODE"><span class="math display">\[
-\frac{d}{dt} \overrightarrow{Y_t} =
-F(t,\overrightarrow{Y_t})
-\qquad \textrm{initialized at} \qquad
-\overrightarrow{Y}_0 \sim \pi_{\mathrm{data}}
+</div>
+<p>The previous section shows that a quantity often referred to as the “score” in machine learning (ML) literature, i.e.&nbsp;<span class="math inline">\(\mathcal{S}_t(x) \equiv \nabla_x \log p_t(x)\)</span>, naturally arises when a diffusion process runs backward in time. Interestingly, it is worth noting that since the beginning of times statisticians have been using the term <a href="https://en.wikipedia.org/wiki/Score_(statistics)">“score”</a> to refer to the other derivative, i.e.&nbsp;the derivative with respect to a model’s parameter, which is a completely different object!</p>
+<p>Consider a Brownian diffusion process <span class="math inline">\(dX = \sigma \, dW\)</span> initiated from a distribution <span class="math inline">\(\mu(dx) = p_0(dx)\)</span>. If this process is ran forward for a duration <span class="math inline">\(\delta&gt;0\)</span>, we have:</p>
+<p><span class="math display">\[X_{\delta} = X_0 + \mathcal{N}(0, \sigma^2 \, \delta)\]</span></p>
+<p>where <span class="math inline">\(X_0 \sim \mu(dx)\)</span>. Now, focusing on a specific sample <span class="math inline">\(y = X_{\delta}\)</span>, the backward dynamics <span class="math inline">\(d\overleftarrow{X} = \sigma^2 \, \nabla \log p_t(\overleftarrow{X}) , dt + \sigma \, dB\)</span> suggests that for sufficiently small <span class="math inline">\(\delta\)</span>, the following approximation holds:</p>
+<p><span id="eq-rev-tweedie"><span class="math display">\[
+\mathbb{E}[X_0 \, | X_{\delta} = y] \; { \color{\red} \approx} \; y + \nabla \log p_{\delta}(y) \, \sigma^2 \delta.
 \tag{3}\]</span></span></p>
-<p>and the <em>backward</em> ODE defined as</p>
+<p>Maybe surprisingly, in the case of Brownian dynamics (no drift), this relationship holds exactly, even for arbitrarily large time increments <span class="math inline">\(\delta&gt;0\)</span>. This observation attributed in <span class="citation" data-cites="efron2011tweedie">(<a href="#ref-efron2011tweedie" role="doc-biblioref">Efron 2011</a>)</span> to <a href="https://en.wikipedia.org/wiki/Maurice_Tweedie">Maurice Tweedie (1919–1996)</a> has a straightforward proof. Specifically, if <span class="math inline">\(X \sim \mu(dx)\)</span>, then <span class="math inline">\(Y = X + \mathcal{N}(0, \Gamma^2)\)</span> has a density given by:</p>
 <p><span class="math display">\[
-\frac{d}{ds} \overleftarrow{Y_s} =
--F(T-s,\overleftarrow{Y_s})
-\qquad \textrm{initialized at} \qquad
-\overleftarrow{Y}_0 \sim \pi_{\mathrm{ref}}
+p_Y(dy) = \int \mu(x) \, \rho_{\Gamma}(y-x) \, dx
 \]</span></p>
-<p>are such that <span class="math inline">\(\overrightarrow{Y}_T \approx \pi_{\mathrm{ref}}\)</span> and <span class="math inline">\(\overleftarrow{Y}_T \approx \pi_{\mathrm{data}}\)</span>.</p>
-<p>In general, consider a vector field <span class="math inline">\(F(t,x)\)</span> and a bunch of particles distributed according to a distribution <span class="math inline">\(p_t\)</span> at time <span class="math inline">\(t\)</span>. If each particle follows the vector field for an amount of time <span class="math inline">\(\delta \ll 1\)</span>, the particles that were in the vicinity of some <span class="math inline">\(x \in \mathbb{R}^d\)</span> at time <span class="math inline">\(t\)</span> end up in the vicinity of <span class="math inline">\(x + F(x,t) \, \delta\)</span> at time <span class="math inline">\(t+\delta\)</span>. At the same time, a volume element <span class="math inline">\(dx\)</span> around <span class="math inline">\(x \in \mathbb{R}^d\)</span> gets stretch by a factor <span class="math inline">\(1+\delta \, \mathop{\mathrm{Tr}}[\mathop{\mathrm{\mathrm{Jac}}}F(x,t)] = 1 + \delta \mathop{\mathrm{div}}F(x,t)\)</span> while following the vector field <span class="math inline">\(F\)</span>, which means that the density of particles at time <span class="math inline">\(t+\delta\)</span> and around <span class="math inline">\(x + F(x,t) \, \delta\)</span> equals <span class="math inline">\(p_t(x) / [1 + \delta \mathop{\mathrm{div}}F(x,t)]\)</span>. In other words <span class="math inline">\(\log p_{t+\delta}(x + F(x,t) \, \delta) \approx \log p_t(x) - \delta \, \mathop{\mathrm{div}}F(x,t)\)</span>. This means that if we follows a trajectory of <span class="math inline">\(\tfrac{d}{dt} X_t = F(t,X_t)\)</span> one gets</p>
+<p>where <span class="math inline">\(\rho_{\Gamma}(z) \propto \exp[-z^2/(2 \Gamma^2)]\)</span> is a centred Gaussian with variance <span class="math inline">\(\Gamma^2\)</span>. It follows that</p>
 <p><span class="math display">\[
-\log p_T(X_T) = \log p_0(X_0) - \int_{t=0}^{T} \mathop{\mathrm{div}}F(X_t,t) \, dt.
+\frac{ \mathbb{E}[X \, | Y = y]-y}{\Gamma^2} = \frac{ \int \left( \frac {x-y }{\Gamma^2} \right)\, \mu(x) \, \rho_{\Gamma}(y-x) \, dx }{\int \mu(x) \, \rho_{\Gamma}(y-x) \, dx}
+=
+\nabla_y \log \left\{ \int \mu(x) \, \rho_{\Gamma}(y-x) \, dx \right\}
 \]</span></p>
-<p>That is the Lagrangian description of the density <span class="math inline">\(p_t\)</span> of particles. Indeed, one could directly get this identity by differentiating <span class="math inline">\(p_t(X_t)\)</span> with respect to time while using the continuity <a href="#eq-continuity">Equation&nbsp;1</a>. When applied to the DDPM, this gives a way to assign likelihood the data samples, namely</p>
+<p>since <span class="math inline">\(\nabla_y \rho_{\Gamma}(y-x) = (x-y)/\Gamma^2\)</span>. This leads to Tweedie’s formula:</p>
 <p><span class="math display">\[
-\log \pi_{\mathrm{data}}(x) = \log \pi_{\mathrm{ref}}(\overrightarrow{Y_T}) + \int_{t=0}^{T} \mathop{\mathrm{div}}F(t, \overrightarrow{Y_t})\, dt
+\mathbb{E}[X \, | Y = y] \; {\color{red} =} \; y + \Gamma^2 \, \nabla \log p_Y(y),
 \]</span></p>
-<p>where <span class="math inline">\(\overrightarrow{Y_t}\)</span> is trajectory of the forward ODE <a href="#eq-forward-ODE">Equation&nbsp;3</a> initialized as <span class="math inline">\(\overrightarrow{Y_0} = x\)</span>. Note that in high-dimensional setting, it may be computationally expensive to compute the divergence term <span class="math inline">\(\mathop{\mathrm{div}}F(t, \overrightarrow{Y_t})\)</span> since it typically is <span class="math inline">\(d\)</span> times slower that a gradient computation; for this reason, it is often advocated to use the Hutchinson trace estimator to get an unbiased estimate of it at a much lower computational cost.</p>
+<p>which is exactly the same as <a href="#eq-rev-tweedie">Equation&nbsp;3</a> but with an equality sign: no approximation needed! Interestingly, this is what Machine-Learners often refer to as “denoising score matching” <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref">Vincent 2011</a>)</span>: if we have access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, where <span class="math inline">\(X_i \sim \mu(dx)\)</span> and <span class="math inline">\(Y_i = X_i + \mathcal{N}(0, \Gamma^2)\)</span>, and fit a regression model <span class="math inline">\(F_{\theta}\)</span> by minimizing the mean-squared error <span class="math inline">\(\theta \mapsto \mathbb{E} \|X - F_{\theta}(Y)\|^2\)</span>, then Tweedie formula shows that in the limit of infinite samples and with sufficient flexibility in the regression model <span class="math inline">\(F_{\theta_\star}(y) = y + \Gamma^2 \nabla \log p_Y(y)\)</span>. This allows one to estimate <span class="math inline">\(\nabla \log p_Y\)</span> from data, which is often a good approximation of <span class="math inline">\(\nabla \log \mu\)</span> if the variance <span class="math inline">\(\Gamma^2\)</span> of the added noise is not too large. Indeed, things can go bad if <span class="math inline">\(\Gamma^2\)</span> is very small and the number of training data is not large, no free lunch!</p>
 
 
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-song2020score" class="csl-entry" role="listitem">
-Song, Yang, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole. 2020. <span>“Score-Based Generative Modeling Through Stochastic Differential Equations.”</span> <em><span>ICLR</span> 2021</em>. <a href="https://arxiv.org/abs/2011.13456">https://arxiv.org/abs/2011.13456</a>.
+<div id="ref-anderson1982reverse" class="csl-entry" role="listitem">
+Anderson, Brian DO. 1982. <span>“Reverse-Time Diffusion Equation Models.”</span> <em>Stochastic Processes and Their Applications</em> 12 (3): 313–26.
+</div>
+<div id="ref-efron2011tweedie" class="csl-entry" role="listitem">
+Efron, Bradley. 2011. <span>“Tweedie’s Formula and Selection Bias.”</span> <em>Journal of the American Statistical Association</em> 106 (496): 1602–14.
+</div>
+<div id="ref-haussmann1986time" class="csl-entry" role="listitem">
+Haussmann, Ulrich G, and Etienne Pardoux. 1986. <span>“Time Reversal of Diffusions.”</span> <em>The Annals of Probability</em>, 1188–1205.
+</div>
+<div id="ref-ho2020denoising" class="csl-entry" role="listitem">
+Ho, Jonathan, Ajay Jain, and Pieter Abbeel. 2020. <span>“Denoising Diffusion Probabilistic Models.”</span> <em>Advances in Neural Information Processing Systems</em> 33: 6840–51.
+</div>
+<div id="ref-vincent2011connection" class="csl-entry" role="listitem">
+Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoising Autoencoders.”</span> <em>Neural Computation</em> 23 (7): 1661–74.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
