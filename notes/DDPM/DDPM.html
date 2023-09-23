@@ -206,7 +206,7 @@ F(s,x,y) \equiv \mathop{\mathrm{P}}(X_{t+s} \in dy \, | \, X_t = x )
 <h3 class="anchored" data-anchor-id="the-reverse-diffusion">The reverse diffusion</h3>
 <p>In order to generate samples from the data distribution, the DDPM strategy consists in sampling from the Gaussian reference measure <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> at time <span class="math inline">\(t=T\)</span> and simulate the OU process backward in time. In other words, one would like to simulate from the <em>reverse process</em> <span class="math inline">\(\overleftarrow{X}_t\)</span> defined as</p>
 <p><span class="math display">\[\overleftarrow{X}_s = X_{T-s}.\]</span></p>
-<p>In other words, the reverse process is distributed as <span class="math inline">\(\overleftarrow{X}_0 \sim \pi_{\mathrm{ref}}\)</span> at time <span class="math inline">\(t=0\)</span> and, crucially, we have that <span class="math inline">\(\overleftarrow{X}_T \sim \pi_{\mathrm{data}}\)</span>. Furthermore, and as explained in this <a href="../../posts/reverse_and_tweedie/reverse_and_tweedie.html">blogpost</a>, the reverse diffusion follows the dynamics</p>
+<p>In other words, the reverse process is distributed as <span class="math inline">\(\overleftarrow{X}_0 \sim \pi_{\mathrm{ref}}\)</span> at time <span class="math inline">\(t=0\)</span> and, crucially, we have that <span class="math inline">\(\overleftarrow{X}_T \sim \pi_{\mathrm{data}}\)</span>. Furthermore, and as explained in this <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">note</a>, the reverse diffusion follows the dynamics</p>
 <p><span id="eq-OU-rev"><span class="math display">\[
 d\overleftarrow{X}_t = {\color{red} + }\frac12 \overleftarrow{X}_t \, dt
 \; {\color{red} + \nabla \log p_{T-t}(\overleftarrow{X}_t) \, dt} \;
@@ -569,6 +569,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 
