@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Devalla SK, Renukanand PK, Sreedhar BK, Perera SA, Mari JM, Chin KS, Tun TA, Strouthidis N, Aung T, Thiery A.H., Girard MJA">
 
-<title>Alexandre Thiéry - DRUNET: A Dilated-Residual U-Net Deep Learning Network to Digitally Stain Optic Nerve Head Tissues in Optical Coherence Tomography Images</title>
+<title>Alexandre Thiéry - Information Theory: Entropy</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -59,13 +58,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - DRUNET: A Dilated-Residual U-Net Deep Learning Network to Digitally Stain Optic Nerve Head Tissues in Optical Coherence Tomography Images">
+<meta property="og:title" content="Alexandre Thiéry - Information Theory: Entropy">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_basics/shannon_destruction.gif">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - DRUNET: A Dilated-Residual U-Net Deep Learning Network to Digitally Stain Optic Nerve Head Tissues in Optical Coherence Tomography Images">
+<meta name="twitter:title" content="Alexandre Thiéry - Information Theory: Entropy">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_basics/shannon_destruction.gif">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -122,9 +127,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">DRUNET: A Dilated-Residual U-Net Deep Learning Network to Digitally Stain Optic Nerve Head Tissues in Optical Coherence Tomography Images</h1>
+      <h1 class="title">Information Theory: Entropy</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">Ophthalmology</div>
+                <div class="quarto-category">information_theory</div>
               </div>
                   </div>
   </div>
@@ -132,17 +137,11 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   
   <div class="quarto-title-meta">
 
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Devalla SK, Renukanand PK, Sreedhar BK, Perera SA, Mari JM, Chin KS, Tun TA, Strouthidis N, Aung T, Thiery A.H., Girard MJA </p>
-            </div>
-    </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">25 06 2018</p>
+        <p class="date">23 09 2023</p>
       </div>
     </div>
     
@@ -154,7 +153,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#shannon-entropy-compression" id="toc-shannon-entropy-compression" class="nav-link active" data-scroll-target="#shannon-entropy-compression">Shannon Entropy &amp; Compression</a></li>
+  <li><a href="#asymptotic-equipartition-property" id="toc-asymptotic-equipartition-property" class="nav-link" data-scroll-target="#asymptotic-equipartition-property">Asymptotic Equipartition Property</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -162,8 +168,62 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="shannon_destruction.gif" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<section id="shannon-entropy-compression" class="level3">
+<h3 class="anchored" data-anchor-id="shannon-entropy-compression">Shannon Entropy &amp; Compression</h3>
+<p>If Alice chooses a number <span class="math inline">\(X\)</span> uniformly at random from the set <span class="math inline">\(\{1,2, \ldots, N\}\)</span>, Bob can use a simple “dichotomy” strategy to ask Alice <span class="math inline">\(\log_2(N)\)</span> binary Yes/No questions and correctly identify the number. This result can be generalized to non-uniform distributions (eg. using the <a href="https://en.wikipedia.org/wiki/Kraft–McMillan_inequality">Kraft-McMillan inequality</a>). If Alice chooses a number <span class="math inline">\(X\)</span> from <span class="math inline">\(\{1,2, \ldots, N\}\)</span> with probabilities <span class="math inline">\(\mathop{\mathrm{P}}(X=k) = p_k\)</span>, Bob can design a deterministic strategy to find the answer using, on average, approximately</p>
+<p><span id="eq-OU"><span class="math display">\[
+H(X) = - \sum_{k=1}^N p_k \, \log_2(p_k)
+\tag{1}\]</span></span></p>
+<p>binary questions, ie. bits. He cannot achieve this with fewer questions. The quantity <span class="math inline">\(H(X)\)</span> defined in <a href="#eq-OU">Equation&nbsp;1</a>, known as the <strong>Shannon Entropy</strong> of the distribution <span class="math inline">\((p_1, \ldots, p_N)\)</span>, also implies that the strategy can encode each integer <span class="math inline">\(1 \leq x \leq N\)</span> as a binary string of length <span class="math inline">\(L(x)\)</span> (i.e.&nbsp;with <span class="math inline">\(L(x)\)</span> bits), with the expected length <span class="math inline">\(\mathop{\mathrm{E}}[L(X)]\)</span> approximately equal to <span class="math inline">\(H(X)\)</span>.</p>
+<p>This remark can be used for compression. Imagine a very long sequence <span class="math inline">\((X_1, \ldots, X_T)\)</span> of iid samples from <span class="math inline">\(X\)</span>. Encoding each <span class="math inline">\(X_i\)</span> with <span class="math inline">\(L(X_i)\)</span>, one should be able to encode the resulting sequence with</p>
+<p><span class="math display">\[
+L(X_1) + \ldots + L(X_T) \approx T \, \mathop{\mathrm{E}}[L(X)] \approx T \cdot H(X)
+\]</span></p>
+<p>bits. Can the usual <strong>zip compression</strong> algorithm do this? To test this, choose a probability distribution on <span class="math inline">\(\{1, \ldots, N\}\)</span>, generate an iid sequence of length <span class="math inline">\(T \gg 1\)</span>, compress this using the <span class="math inline">\(\texttt{gzip}(\ldots)\)</span> command, and finally look at the size of the resulting file (in bits). I have done that a few times, with a few different values of <span class="math inline">\(16 \leq N \leq 256\)</span> and a few random distributions on <span class="math inline">\(\{1, \ldots, N\}\)</span>, and with <span class="math inline">\(T = 10^6\)</span>. The plot of size of the compressed files versus the Shannon entropy <span class="math inline">\(H\)</span> looks as below:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="shannon_vs_zip.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<p>Seems like the zip-algorithm works almost optimally for compressing iid sequences.</p>
+<p>Now consider a pair of discrete random variables <span class="math inline">\((X,Y)\)</span>. If Alice draws samples from this pair of rvs, one can ask <span class="math inline">\(H(X,Y)\)</span> binary questions on average to exactly find out these values. To do that, one can ask <span class="math inline">\(H(X)\)</span> questions to estimate <span class="math inline">\(X\)</span>, and once <span class="math inline">\(X=x\)</span> is estimated, one can then ask about <span class="math inline">\(H(Y|X=x) = -\sum_y \mathop{\mathrm{P}}(Y=y|X=x) \, \log_2(\mathop{\mathrm{P}}(Y=y|X=x))\)</span> to estimate <span class="math inline">\(Y\)</span>. This strategy requires on average <span class="math inline">\(H(X) + \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span> binary questions and is actually optimal, showing that</p>
+<p><span class="math display">\[
+H(X,Y) = H(X) + H(Y | X)
+\]</span></p>
+<p>where we have defined <span class="math inline">\(H(Y | X) = \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span>. Iterating this argument shows the trajectory <span class="math inline">\(X_{1:T} \equiv (X_1, \ldots, X_N)\)</span> of a stationary Markov chain can be estimated on average with</p>
+<p><span class="math display">\[
+\begin{align}
+H(X_{1:T})
+&amp;= H(X_1) + H(X_2|X_1) + \ldots + H(X_{T} | X_{t-1})\\
+&amp;\approx T \, H(X_{k+1} | X_k)\\
+&amp;= - T \, \sum_x \pi(x) \, \sum_{y} p(x \to y) \, \log_2[p(x \to y)]
+\end{align}
+\]</span></p>
+<p>where <span class="math inline">\(\pi\)</span> is the equilibrium distribution of the Markov chain <span class="math inline">\(p(x \to y)\)</span> are the transition probabilities.</p>
+<p>Can <span class="math inline">\(\texttt{gzip}(\ldots)\)</span> compress Markovian trajectories and roughly achieve that level of compression? Indeed, one can test this by generating random Markov transition matrices (that are, with very high probability, ergodic with respect to an equilibrium distribution <span class="math inline">\(\pi\)</span>). Doing this with trajectories of length <span class="math inline">\(10^4\)</span> (ie. quite short because it is quite slow to) on <span class="math inline">\(\{1, \ldots, N\}\)</span> with <span class="math inline">\(2 \leq N \leq 64\)</span>, one get the following results:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="shannon_vs_zip_markov.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<p>In red is the entropy estimated without using the Markovian structure and assuming that the <span class="math inline">\(X_i\)</span> are iid samples. One can clearly see that the dependencies between successive samples are exploited for better compression. Nevertheless, the optimal compression rate given by the Shannon entropy is not reached. Indeed, <span class="math inline">\(\texttt{gzip}(\ldots)\)</span> is not an optimal algorithm – it cannot even compress well enough the sequence <span class="math inline">\((1,2,3,1,2,3,1,2,3,\ldots)\)</span>!</p>
+</section>
+<section id="asymptotic-equipartition-property" class="level3">
+<h3 class="anchored" data-anchor-id="asymptotic-equipartition-property">Asymptotic Equipartition Property</h3>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -398,6 +458,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 
