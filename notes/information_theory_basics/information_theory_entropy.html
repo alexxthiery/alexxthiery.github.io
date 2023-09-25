@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Information Theory: Entropy</title>
+<title>Alexandre Thiéry - Information Theory: Entropy and Basic Definitions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -62,11 +62,11 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Information Theory: Entropy">
+<meta property="og:title" content="Alexandre Thiéry - Information Theory: Entropy and Basic Definitions">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_basics/shannon_destruction.gif">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Information Theory: Entropy">
+<meta name="twitter:title" content="Alexandre Thiéry - Information Theory: Entropy and Basic Definitions">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_basics/shannon_destruction.gif">
 <meta name="twitter:creator" content="@alexxthiery">
@@ -127,7 +127,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Information Theory: Entropy</h1>
+      <h1 class="title">Information Theory: Entropy and Basic Definitions</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">information_theory</div>
               </div>
@@ -159,6 +159,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <ul>
   <li><a href="#shannon-entropy-compression" id="toc-shannon-entropy-compression" class="nav-link active" data-scroll-target="#shannon-entropy-compression">Shannon Entropy &amp; Compression</a></li>
   <li><a href="#asymptotic-equipartition-property" id="toc-asymptotic-equipartition-property" class="nav-link" data-scroll-target="#asymptotic-equipartition-property">Asymptotic Equipartition Property</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -199,16 +200,16 @@ L(X_1) + \ldots + L(X_T) \approx T \, \mathop{\mathrm{E}}[L(X)] \approx T \cdot 
 <p><span class="math display">\[
 H(X,Y) = H(X) + H(Y | X)
 \]</span></p>
-<p>where we have defined <span class="math inline">\(H(Y | X) = \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span>. Iterating this argument shows the trajectory <span class="math inline">\(X_{1:T} \equiv (X_1, \ldots, X_N)\)</span> of a stationary Markov chain can be estimated on average with</p>
+<p>where we have defined <span class="math inline">\(H(Y | X) = \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span>. Iterating this argument shows the trajectory <span class="math inline">\(X_{1:T} \equiv (X_1, \ldots, X_N)\)</span> of a stationary ergodic Markov chain can be estimated on average with <span class="math inline">\(H(X_{1:T})\)</span> binary questions where</p>
 <p><span class="math display">\[
 \begin{align}
 H(X_{1:T})
 &amp;= H(X_1) + H(X_2|X_1) + \ldots + H(X_{T} | X_{t-1})\\
 &amp;\approx T \, H(X_{k+1} | X_k)\\
-&amp;= - T \, \sum_x \pi(x) \, \sum_{y} p(x \to y) \, \log_2[p(x \to y)]
+&amp;= - T \, \sum_x \pi(x) \, \sum_{y} p(x \to y) \, \log_2[p(x \to y)].
 \end{align}
 \]</span></p>
-<p>where <span class="math inline">\(\pi\)</span> is the equilibrium distribution of the Markov chain <span class="math inline">\(p(x \to y)\)</span> are the transition probabilities.</p>
+<p>Here, <span class="math inline">\(\pi(dx)\)</span> is the equilibrium distribution of the Markov chain and <span class="math inline">\(p(x \to y)\)</span> are the transition probabilities.</p>
 <p>Can <span class="math inline">\(\texttt{gzip}(\ldots)\)</span> compress Markovian trajectories and roughly achieve that level of compression? Indeed, one can test this by generating random Markov transition matrices (that are, with very high probability, ergodic with respect to an equilibrium distribution <span class="math inline">\(\pi\)</span>). Doing this with trajectories of length <span class="math inline">\(10^4\)</span> (ie. quite short because it is quite slow to) on <span class="math inline">\(\{1, \ldots, N\}\)</span> with <span class="math inline">\(2 \leq N \leq 64\)</span>, one get the following results:</p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
@@ -221,6 +222,11 @@ H(X_{1:T})
 </section>
 <section id="asymptotic-equipartition-property" class="level3">
 <h3 class="anchored" data-anchor-id="asymptotic-equipartition-property">Asymptotic Equipartition Property</h3>
+<p>TODO</p>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<p>TODO</p>
 
 
 </section>
