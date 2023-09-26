@@ -170,9 +170,9 @@
   {
     "objectID": "notes/index_notes.html",
     "href": "notes/index_notes.html",
-    "title": "\nNotes\n",
+    "title": "Notes Index",
     "section": "",
-    "text": "Notes\n\nNotes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!\n\n\nDenoising Diffusion Probabilistic Models\n\nNoising and Reverse Ornstein-Uhlenbeck\nFrom Denoising Diffusion to ODEs\nReverse diffusions, Score & Tweedie\n\n\n\nInformation Theory\n\nEntropy and Basic Definitions"
+    "text": "Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!\n\n\nDenoising Diffusion Probabilistic Models\n\nNoising and Reverse Ornstein-Uhlenbeck\nFrom Denoising Diffusion to ODEs\nReverse diffusions, Score & Tweedie\n\n\n\nInformation Theory\n\nEntropy and Basic Definitions\n\n\nAll notes by categories."
   },
   {
     "objectID": "notes/information_theory_basics/information_theory_entropy.html",
@@ -243,5 +243,19 @@
     "title": "Research Fellow positions: Data-Assimilation",
     "section": "",
     "text": "Two Postdoctoral Research Fellow positions are currently open in the Department of Statistics & Data Science at the National University of Singapore (NUS). These are two-year contracts, with the possibility of renewal upon review.\nWhile the research themes are flexible, our primary interest lies in the design and analysis of statistical methods for data-assimilation of high-dimensional time-series data. We anticipate applying tools from reinforcement learning, Koopman operators, and unsupervised representation learning, supplementing the more conventional techniques in state-space modeling (particle filters, EnKF, variational approaches, etc…)\n\nDetails:\n\nStart Date: Immediate\nDuration: 2 years (Renewable for up to an additional year)\nSalary Range: S$ 70k-100k / Year, plus benefits (Health Insurance / etc…)\nTravel: Generous budget for attending conferences\n\n\n\nRequirements:\nIdeal candidates should have:\n\na Ph.D. in Statistics, Computer Science, Physics, or a closely related field.\n\nstrong experience in Python programming.\n\nexperience with at least one deep-learning framework\na demonstrated record of academic publications\n\nresearch experience that aligns with the core focus of the research programme.\n\n\n\nContact:\nQueries about this post should be addressed to Alex Thiery at a.h.thiery@nus.edu.sg. We highly encourage prospective applicants to get in touch informally to discuss further details about the position first. This project is in collaboration with Jeremy Heng.\nThe positions will remain open until we find the right candidates."
+  },
+  {
+    "objectID": "notes/index_blog.html",
+    "href": "notes/index_blog.html",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "Blogposts (vaguely) related to research, notes for students, announcements, things I would like to write down to understand better and/or not forget, etc… Comments, corrections, suggestions are welcome!\n\n\n\n\n\n\n\n\n\n\nDate\n\n\nTitle\n\n\nCategories\n\n\n\n\n\n\n23-09-2023\n\n\nInformation Theory: Entropy and Basic Definitions\n\n\ninformation_theory\n\n\n\n\n02-07-2023\n\n\nFrom Denoising Diffusion to ODEs\n\n\nDDPM\n\n\n\n\n02-07-2023\n\n\nDenoising Diffusion Probabilistic Models (DDPM)\n\n\nDDPM\n\n\n\n\n12-06-2023\n\n\nNatural Gradients\n\n\ngradient\n\n\n\n\n12-06-2023\n\n\nReverse diffusions, Score & Tweedie\n\n\nSDE,Generative-Model\n\n\n\n\n01-01-2023\n\n\nDenoising Diffusion Probabilistic Models\n\n\nindex\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "notes/index_notes_as_list.html",
+    "href": "notes/index_notes_as_list.html",
+    "title": "Alexandre Thiéry",
+    "section": "",
+    "text": "Date\n\n\nTitle\n\n\nCategories\n\n\n\n\n\n\n23-09-2023\n\n\nInformation Theory: Entropy and Basic Definitions\n\n\ninfoTheory\n\n\n\n\n02-07-2023\n\n\nFrom Denoising Diffusion to ODEs\n\n\nDDPM,score\n\n\n\n\n02-07-2023\n\n\nDenoising Diffusion Probabilistic Models (DDPM)\n\n\nDDPM,score\n\n\n\n\n12-06-2023\n\n\nReverse diffusions, Score & Tweedie\n\n\nSDE,score\n\n\n\n\n01-01-2023\n\n\nNotes Index\n\n\nindex\n\n\n\n\n\n\nNo matching items"
   }
 ]
