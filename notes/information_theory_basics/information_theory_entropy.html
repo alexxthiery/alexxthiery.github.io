@@ -158,8 +158,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#shannon-entropy-compression" id="toc-shannon-entropy-compression" class="nav-link active" data-scroll-target="#shannon-entropy-compression">Shannon Entropy &amp; Compression</a></li>
-  <li><a href="#asymptotic-equipartition-property" id="toc-asymptotic-equipartition-property" class="nav-link" data-scroll-target="#asymptotic-equipartition-property">Asymptotic Equipartition Property</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#asymptotic-equipartition-property-aep" id="toc-asymptotic-equipartition-property-aep" class="nav-link" data-scroll-target="#asymptotic-equipartition-property-aep">Asymptotic Equipartition Property (AEP)</a></li>
   </ul>
 </nav>
     </div>
@@ -173,6 +172,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="shannon_destruction.gif" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">Claude Shannon (1916 – 2001)</figcaption>
 </figure>
 </div>
 </div>
@@ -220,13 +220,13 @@ H(X_{1:T})
 </div>
 <p>In red is the entropy estimated without using the Markovian structure and assuming that the <span class="math inline">\(X_i\)</span> are iid samples. One can clearly see that the dependencies between successive samples are exploited for better compression. Nevertheless, the optimal compression rate given by the Shannon entropy is not reached. Indeed, <span class="math inline">\(\texttt{gzip}(\ldots)\)</span> is not an optimal algorithm – it cannot even compress well enough the sequence <span class="math inline">\((1,2,3,1,2,3,1,2,3,\ldots)\)</span>!</p>
 </section>
-<section id="asymptotic-equipartition-property" class="level3">
-<h3 class="anchored" data-anchor-id="asymptotic-equipartition-property">Asymptotic Equipartition Property</h3>
-<p>TODO</p>
-</section>
-<section id="references" class="level3">
-<h3 class="anchored" data-anchor-id="references">References</h3>
-<p>TODO</p>
+<section id="asymptotic-equipartition-property-aep" class="level3">
+<h3 class="anchored" data-anchor-id="asymptotic-equipartition-property-aep">Asymptotic Equipartition Property (AEP)</h3>
+<p>The AEP is simple remark that gives a convenient way of reasoning about long sequences random variables <span class="math inline">\(X_{1:T} = (X_1, \ldots, X_T)\)</span> with <span class="math inline">\(T \gg 1\)</span>. For example, assuming that the random variables <span class="math inline">\(X_i\)</span> are independent and distributed as the random variable <span class="math inline">\(X\)</span>, the law of large numbers (LLN) gives that</p>
+<p><span class="math display">\[
+\frac{1}{T} \, \log_2(X_{1:T}) = \frac{1}{T} \, \sum \log_2 p(X_i) \approx -H(X).
+\]</span></p>
+<p>This means that <strong>any</strong> “typical” sequence has a probability about <span class="math inline">\(2^{-T \, H(X)}\)</span> of occurring, which also means that there are about <span class="math inline">\(2^{T \, H(X)}\)</span> such “typical” sequences. Indeed, one could use the LLN for Markov chains and obtain a similar statement for Markovian sequences. All this can be made much more rigorous with large deviation theory for example. This also establishes the link with the “statistical physics” definition of entropy as the logarithm of the number of configurations…</p>
 
 
 </section>

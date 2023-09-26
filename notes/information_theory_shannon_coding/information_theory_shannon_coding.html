@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Notes Index</title>
+<title>Alexandre Thiéry - Shannon Source Coding Theorem</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,21 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,15 +77,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Notes Index">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Shannon Source Coding Theorem">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Notes Index">
+<meta name="twitter:title" content="Alexandre Thiéry - Shannon Source Coding Theorem">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -76,7 +99,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -86,29 +109,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html" rel="" target="">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -123,9 +146,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes Index</h1>
+      <h1 class="title">Shannon Source Coding Theorem</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">infoTheory</div>
               </div>
                   </div>
   </div>
@@ -137,10 +160,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">26 09 2026</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">26 09 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -153,8 +182,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theory" id="toc-information-theory" class="nav-link" data-scroll-target="#information-theory">Information Theory</a></li>
+  <li><a href="#derivation" id="toc-derivation" class="nav-link active" data-scroll-target="#derivation">Derivation</a></li>
+  <li><a href="#experiments" id="toc-experiments" class="nav-link" data-scroll-target="#experiments">Experiments</a></li>
   </ul>
 </nav>
     </div>
@@ -164,31 +193,48 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-</ul>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="shannon.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Claude Shannon (1916 – 2001)</figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a scenario involving a “noisy channel,” where a message <span class="math inline">\((x_1 x_2 \ldots)\)</span> expressed in an alphabet <span class="math inline">\(\mathcal{X}\equiv \{1,2, \ldots, q\}\)</span> is transmitted before being received as a potentially different and corrupted message <span class="math inline">\((y_1 y_2 \ldots)\)</span> expressed using a potentially different alphabet <span class="math inline">\(\mathcal{Y}\)</span>.</p>
+<p>Now, imagine I have a text that needs to be transmitted through this channel. Assume that the text is represented using <span class="math inline">\(N\)</span> bits. My goal is to encode it in a way that introduces redundancy, utilizing the alphabet <span class="math inline">\(\mathcal{X}\)</span>, so that it can be transmitted through the noisy channel. Eventually, I want it to be successfully decoded, allowing the original message to be recovered with minimal errors.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="transmission.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">A Mathematical Theory of Communication</figcaption>
+</figure>
+</div>
+</div>
+<p>If transmitting each letter from the alphabet <span class="math inline">\(\mathcal{X}\)</span> takes <span class="math inline">\(1\)</span> unit of time, I need to estimate the overall time it will take to transmit the entire text of <span class="math inline">\(N\)</span> bits. In cases where the channel does not completely destroy the information, one can use about any non-idiotic encoding and transmit the same text multiple times to increase the chances of accurately recovering the original message. This can be achieved by employing techniques such as majority voting to decode the received messages, which are all distorted versions of the original text.</p>
+<p>The transmission rate represents the inverse of the time required to transfer a single bit of information:</p>
+<p><span class="math display">\[
+\textrm{R = (Transmission Rate)} = \frac{1}{\textrm{(average time it takes to transfer one bit)}}.
+\]</span></p>
+<p>In other words, it takes about <span class="math inline">\(N \times R\)</span> unit of times to transfer a text of <span class="math inline">\(N\)</span> bits. Moreover, the error rate refers to the percentage of errors in the decoded message, indicating the fraction of erroneous bits among the <span class="math inline">\(N\)</span> decoded bits. Naturally, there exists a tradeoff, and it is evident that one can reach a vanishing error rate if one is willing to allow an arbitrarily slow transmission rate (eg. majority voting after transmitting a very large number of times the same text). For example, if <span class="math inline">\(\mathcal{X}= \mathcal{Y}= \{0,1\}\)</span> and bits are flipped with probability <span class="math inline">\(\varepsilon\ll 1\)</span>, transmitting the text <span class="math inline">\((2K+1)\)</span> times would lead to a transmission rate of <span class="math inline">\(R = 1/(2K+1)\)</span> and an error rate approximately equal to <span class="math inline">\(\varepsilon^{K+1}\)</span>.</p>
+<p>The groundbreaking discovery made by Shannon is that it is possible to achieve a vanishing error rate even when transmitting at a finite transmission rate. He also managed to identify this optimal transmission rate. Shannon’s paper <span class="citation" data-cites="shannon1948mathematical">(<a href="#ref-shannon1948mathematical" role="doc-biblioref">Shannon 1948</a>)</span> is beautifully written and surprisingly readable for a text written more than 50 years ago.</p>
+<section id="derivation" class="level3">
+<h3 class="anchored" data-anchor-id="derivation">Derivation</h3>
+<p>TODO</p>
 </section>
-<section id="information-theory" class="level3">
-<h3 class="anchored" data-anchor-id="information-theory">Information Theory</h3>
-<ul>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-</ul>
-<hr>
-<p>All notes by <a href="../notes/index_notes_as_list.html">categories</a>.</p>
+<section id="experiments" class="level3">
+<h3 class="anchored" data-anchor-id="experiments">Experiments</h3>
+<p>TODO</p>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-shannon1948mathematical" class="csl-entry" role="listitem">
+Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.”</span> <em>The Bell System Technical Journal</em> 27 (3). Nokia Bell Labs: 379–423.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

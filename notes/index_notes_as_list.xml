@@ -10,7 +10,59 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Fri, 22 Sep 2023 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 25 Sep 2026 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Shannon Source Coding Theorem</title>
+  <link>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Claude Shannon (1916 – 2001)</figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a scenario involving a “noisy channel,” where a message <img src="https://latex.codecogs.com/png.latex?(x_1%20x_2%20%5Cldots)"> expressed in an alphabet <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D%5Cequiv%20%5C%7B1,2,%20%5Cldots,%20q%5C%7D"> is transmitted before being received as a potentially different and corrupted message <img src="https://latex.codecogs.com/png.latex?(y_1%20y_2%20%5Cldots)"> expressed using a potentially different alphabet <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BY%7D">.</p>
+<p>Now, imagine I have a text that needs to be transmitted through this channel. Assume that the text is represented using <img src="https://latex.codecogs.com/png.latex?N"> bits. My goal is to encode it in a way that introduces redundancy, utilizing the alphabet <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D">, so that it can be transmitted through the noisy channel. Eventually, I want it to be successfully decoded, allowing the original message to be recovered with minimal errors.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/information_theory_shannon_coding/transmission.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">A Mathematical Theory of Communication</figcaption>
+</figure>
+</div>
+</div>
+<p>If transmitting each letter from the alphabet <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D"> takes <img src="https://latex.codecogs.com/png.latex?1"> unit of time, I need to estimate the overall time it will take to transmit the entire text of <img src="https://latex.codecogs.com/png.latex?N"> bits. In cases where the channel does not completely destroy the information, one can use about any non-idiotic encoding and transmit the same text multiple times to increase the chances of accurately recovering the original message. This can be achieved by employing techniques such as majority voting to decode the received messages, which are all distorted versions of the original text.</p>
+<p>The transmission rate represents the inverse of the time required to transfer a single bit of information:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextrm%7BR%20=%20(Transmission%20Rate)%7D%20=%20%5Cfrac%7B1%7D%7B%5Ctextrm%7B(average%20time%20it%20takes%20to%20transfer%20one%20bit)%7D%7D.%0A"></p>
+<p>In other words, it takes about <img src="https://latex.codecogs.com/png.latex?N%20%5Ctimes%20R"> unit of times to transfer a text of <img src="https://latex.codecogs.com/png.latex?N"> bits. Moreover, the error rate refers to the percentage of errors in the decoded message, indicating the fraction of erroneous bits among the <img src="https://latex.codecogs.com/png.latex?N"> decoded bits. Naturally, there exists a tradeoff, and it is evident that one can reach a vanishing error rate if one is willing to allow an arbitrarily slow transmission rate (eg. majority voting after transmitting a very large number of times the same text). For example, if <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D=%20%5Cmathcal%7BY%7D=%20%5C%7B0,1%5C%7D"> and bits are flipped with probability <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cll%201">, transmitting the text <img src="https://latex.codecogs.com/png.latex?(2K+1)"> times would lead to a transmission rate of <img src="https://latex.codecogs.com/png.latex?R%20=%201/(2K+1)"> and an error rate approximately equal to <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7BK+1%7D">.</p>
+<p>The groundbreaking discovery made by Shannon is that it is possible to achieve a vanishing error rate even when transmitting at a finite transmission rate. He also managed to identify this optimal transmission rate. Shannon’s paper <span class="citation" data-cites="shannon1948mathematical">(Shannon 1948)</span> is beautifully written and surprisingly readable for a text written more than 50 years ago.</p>
+<section id="derivation" class="level3">
+<h3 class="anchored" data-anchor-id="derivation">Derivation</h3>
+<p>TODO</p>
+</section>
+<section id="experiments" class="level3">
+<h3 class="anchored" data-anchor-id="experiments">Experiments</h3>
+<p>TODO</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-shannon1948mathematical" class="csl-entry">
+Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.”</span> <em>The Bell System Technical Journal</em> 27 (3). Nokia Bell Labs: 379–423.
+</div>
+</div></section></div> ]]></description>
+  <category>infoTheory</category>
+  <guid>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</guid>
+  <pubDate>Fri, 25 Sep 2026 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Information Theory: Entropy and Basic Definitions</title>
   <link>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</link>
@@ -23,6 +75,7 @@
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/information_theory_basics/shannon_destruction.gif" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">Claude Shannon (1916 – 2001)</figcaption>
 </figure>
 </div>
 </div>
@@ -57,13 +110,11 @@
 </div>
 <p>In red is the entropy estimated without using the Markovian structure and assuming that the <img src="https://latex.codecogs.com/png.latex?X_i"> are iid samples. One can clearly see that the dependencies between successive samples are exploited for better compression. Nevertheless, the optimal compression rate given by the Shannon entropy is not reached. Indeed, <img src="https://latex.codecogs.com/png.latex?%5Ctexttt%7Bgzip%7D(%5Cldots)"> is not an optimal algorithm – it cannot even compress well enough the sequence <img src="https://latex.codecogs.com/png.latex?(1,2,3,1,2,3,1,2,3,%5Cldots)">!</p>
 </section>
-<section id="asymptotic-equipartition-property" class="level3">
-<h3 class="anchored" data-anchor-id="asymptotic-equipartition-property">Asymptotic Equipartition Property</h3>
-<p>TODO</p>
-</section>
-<section id="references" class="level3">
-<h3 class="anchored" data-anchor-id="references">References</h3>
-<p>TODO</p>
+<section id="asymptotic-equipartition-property-aep" class="level3">
+<h3 class="anchored" data-anchor-id="asymptotic-equipartition-property-aep">Asymptotic Equipartition Property (AEP)</h3>
+<p>The AEP is simple remark that gives a convenient way of reasoning about long sequences random variables <img src="https://latex.codecogs.com/png.latex?X_%7B1:T%7D%20=%20(X_1,%20%5Cldots,%20X_T)"> with <img src="https://latex.codecogs.com/png.latex?T%20%5Cgg%201">. For example, assuming that the random variables <img src="https://latex.codecogs.com/png.latex?X_i"> are independent and distributed as the random variable <img src="https://latex.codecogs.com/png.latex?X">, the law of large numbers (LLN) gives that</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B1%7D%7BT%7D%20%5C,%20%5Clog_2(X_%7B1:T%7D)%20=%20%5Cfrac%7B1%7D%7BT%7D%20%5C,%20%5Csum%20%5Clog_2%20p(X_i)%20%5Capprox%20-H(X).%0A"></p>
+<p>This means that <strong>any</strong> “typical” sequence has a probability about <img src="https://latex.codecogs.com/png.latex?2%5E%7B-T%20%5C,%20H(X)%7D"> of occurring, which also means that there are about <img src="https://latex.codecogs.com/png.latex?2%5E%7BT%20%5C,%20H(X)%7D"> such “typical” sequences. Indeed, one could use the LLN for Markov chains and obtain a similar statement for Markovian sequences. All this can be made much more rigorous with large deviation theory for example. This also establishes the link with the “statistical physics” definition of entropy as the logarithm of the number of configurations…</p>
 
 
 </section>
@@ -361,6 +412,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
 <h3 class="anchored" data-anchor-id="information-theory">Information Theory</h3>
 <ul>
 <li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
+<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
 </ul>
 <hr>
 <p>All notes by <a href="../notes/index_notes_as_list.html">categories</a>.</p>

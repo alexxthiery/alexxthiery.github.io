@@ -67,6 +67,7 @@
   {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
+      "/notes/information_theory_shannon_coding/information_theory_shannon_coding.html",
       "/notes/information_theory_basics/information_theory_entropy.html",
       "/notes/DDPM_deterministic/DDPM_deterministic.html",
       "/notes/DDPM/DDPM.html",
