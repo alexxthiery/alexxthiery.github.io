@@ -52,5 +52,26 @@
       "/publications/pub_list_applications/2018_DRUNET_A_Dilated_Residual_U_Net_Deep_Learning_Network_to_Digitally_Stain_Optic_Nerve_Head_Tissues_in_Optical_Coherence_Tomography_Images.html",
       "/publications/pub_list_applications/2018_Probabilistic_forecasting_of_day_ahead_solar_irradiance_using_quantile_gradient_boosting.html"
     ]
+  },
+  {
+    "listing": "/notes/index_blog.html",
+    "items": [
+      "/notes/information_theory_basics/information_theory_entropy.html",
+      "/notes/DDPM_deterministic/DDPM_deterministic.html",
+      "/notes/DDPM/DDPM.html",
+      "/notes/stats_basics/natural_gradients.html",
+      "/notes/reverse_and_tweedie/reverse_and_tweedie.html",
+      "/notes/index_notes.html"
+    ]
+  },
+  {
+    "listing": "/notes/index_notes_as_list.html",
+    "items": [
+      "/notes/information_theory_basics/information_theory_entropy.html",
+      "/notes/DDPM_deterministic/DDPM_deterministic.html",
+      "/notes/DDPM/DDPM.html",
+      "/notes/reverse_and_tweedie/reverse_and_tweedie.html",
+      "/notes/index_notes.html"
+    ]
   }
 ]
