@@ -83,11 +83,11 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Alexandre Thiéry - Shannon Source Coding Theorem">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_fano/robert_fano.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
 <meta name="twitter:title" content="Alexandre Thiéry - Shannon Source Coding Theorem">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_fano/robert_fano.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -197,8 +197,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="shannon.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Claude Shannon (1916 – 2001)</figcaption>
+<p><img src="./robert_fano.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Robert Fano (1917 – 2016)</figcaption>
 </figure>
 </div>
 </div>
@@ -229,7 +229,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <p><span id="eq-encode"><span class="math display">\[
 t^{[i]} \; \longrightarrow \; \text{Enc}(t^{[i]}) = x^{[i]} = (x^{[i]}_1, \ldots, x^{[i]}_K) \in \mathcal{X}^K.
 \tag{1}\]</span></span></p>
-<p>To transmit a block of <span class="math inline">\(N\)</span> letters from the original text, this block is first encoded using the encoder <span class="math inline">\(\text{Enc}(\ldots)\)</span> into a message of length <span class="math inline">\(K\)</span> in the alphabet <span class="math inline">\(\mathcal{X}\)</span>. This encoded version is then sent through the noisy channel, resulting in a received message <span class="math inline">\((y_1, \ldots, y_K) \in \mathcal{Y}^K\)</span>. The objective is to have enough redundancy in the encoding that one can reconstruct the original message. The transmission rate is consequently <span class="math inline">\(R = \frac{N}{K}\)</span> as transmitting a binary text of length <span class="math inline">\(N\)</span> takes <span class="math inline">\(K\)</span> units of time.</p>
+<p>To transmit a block of <span class="math inline">\(N\)</span> letters from the original text, this block is transformed into its associated codeword of length <span class="math inline">\(K\)</span> expressed in the alphabet <span class="math inline">\(\mathcal{X}\)</span> thanks to the encoder mapping <span class="math inline">\(\text{Enc}(\ldots)\)</span>. This codeword is then sent through the noisy channel, resulting in a received message <span class="math inline">\((y_1, \ldots, y_K) \in \mathcal{Y}^K\)</span>. The objective is to have enough redundancy in the choice of the codewords so that one can reconstruct the original codeword from the received message <span class="math inline">\((y_1, \ldots, y_K)\)</span>: the higher the ratio <span class="math inline">\(K/N\)</span>, the larger the redundancy and the easier it should be to achieve this goal. The transmission rate is defined as <span class="math inline">\(R = \frac{N}{K}\)</span> since transmitting a binary text of length <span class="math inline">\(N\)</span> with vanishing errors would take <span class="math inline">\(K\)</span> units of time.</p>
 <p>For the encoding in <a href="#eq-encode">Equation&nbsp;1</a>, Shannon adopted a simple approach: generate all the <span class="math inline">\(x^{[i]}_k\)</span> for <span class="math inline">\(1 \leq i \leq 2^N\)</span> and <span class="math inline">\(1 \leq k \leq K\)</span> independently at random from some (encoding) distribution <span class="math inline">\(p_{\text{code}}(dx)\)</span> on the alphabet <span class="math inline">\(\mathcal{X}\)</span>. The choice of this encoding distribution will be optimized at a later stage.</p>
 <p>The law of large numbers, or the <a href="../../notes/information_theory_basics/information_theory_entropy.html">Asymptotic Equipartition Property (AEP)</a>, allows one to exploit the fact that the <span class="math inline">\(x^{[i]}_k\)</span> are chosen independently and identically distributed (iid). For the encoding to be effective, it is necessary that, for any typical received message (ie. obtained by passing a code through the noisy channel), there exists only one code <span class="math inline">\(x^{[i]} = (x^{[i]}_1, \ldots, x^{[i]}_K)\)</span> likely to have originated it. In terms of the AEP, given a fixed typical pair <span class="math inline">\((x^{[i]}, y_{\star})\)</span>, one needs all other pairs <span class="math inline">\((x^{[j]}, y_{\star})\)</span> for <span class="math inline">\(1 \leq i \neq j \leq 2^N\)</span> to <strong>not</strong> be typical. There is about <span class="math inline">\(2^{K \, H(X|Y)}\)</span> typical inputs that could have generated <span class="math inline">\(y_\star\)</span>. Furthermore, since the codes were generated approximately uniformly at random among the <span class="math inline">\(2^{K \, H(X)}\)</span> typical possible codes, the probability that a given code did not generate <span class="math inline">\(y_\star\)</span> is about <span class="math display">\[1-2^{-K \, [H(X) - H(X|Y)]} = 1 - 2^{-K \, I(X;Y)}\]</span></p>
 <p>where the the mutual information is defined as</p>
