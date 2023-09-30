@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -145,6 +164,12 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">27 09 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -158,7 +183,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#shannon-entropy-compression" id="toc-shannon-entropy-compression" class="nav-link active" data-scroll-target="#shannon-entropy-compression">Shannon Entropy &amp; Compression</a></li>
+  <li><a href="#sequence-of-random-variables" id="toc-sequence-of-random-variables" class="nav-link" data-scroll-target="#sequence-of-random-variables">Sequence of random variables</a></li>
   <li><a href="#asymptotic-equipartition-property-aep" id="toc-asymptotic-equipartition-property-aep" class="nav-link" data-scroll-target="#asymptotic-equipartition-property-aep">Asymptotic Equipartition Property (AEP)</a></li>
+  <li><a href="#mutual-information" id="toc-mutual-information" class="nav-link" data-scroll-target="#mutual-information">Mutual information</a></li>
   </ul>
 </nav>
     </div>
@@ -196,11 +223,15 @@ L(X_1) + \ldots + L(X_T) \approx T \, \mathop{\mathrm{E}}[L(X)] \approx T \cdot 
 </div>
 </div>
 <p>Seems like the zip-algorithm works almost optimally for compressing iid sequences.</p>
+</section>
+<section id="sequence-of-random-variables" class="level3">
+<h3 class="anchored" data-anchor-id="sequence-of-random-variables">Sequence of random variables</h3>
 <p>Now consider a pair of discrete random variables <span class="math inline">\((X,Y)\)</span>. If Alice draws samples from this pair of rvs, one can ask <span class="math inline">\(H(X,Y)\)</span> binary questions on average to exactly find out these values. To do that, one can ask <span class="math inline">\(H(X)\)</span> questions to estimate <span class="math inline">\(X\)</span>, and once <span class="math inline">\(X=x\)</span> is estimated, one can then ask about <span class="math inline">\(H(Y|X=x) = -\sum_y \mathop{\mathrm{P}}(Y=y|X=x) \, \log_2(\mathop{\mathrm{P}}(Y=y|X=x))\)</span> to estimate <span class="math inline">\(Y\)</span>. This strategy requires on average <span class="math inline">\(H(X) + \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span> binary questions and is actually optimal, showing that</p>
-<p><span class="math display">\[
+<p><span id="eq-chain-rule"><span class="math display">\[
 H(X,Y) = H(X) + H(Y | X)
-\]</span></p>
-<p>where we have defined <span class="math inline">\(H(Y | X) = \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span>. Iterating this argument shows the trajectory <span class="math inline">\(X_{1:T} \equiv (X_1, \ldots, X_N)\)</span> of a stationary ergodic Markov chain can be estimated on average with <span class="math inline">\(H(X_{1:T})\)</span> binary questions where</p>
+\tag{2}\]</span></span></p>
+<p>where we have defined <span class="math inline">\(H(Y | X) = \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span>.</p>
+<p>Indeed, one can generalize these concepts to more than two random variables. Iterating <a href="#eq-chain-rule">Equation&nbsp;2</a> shows that the trajectory <span class="math inline">\(X_{1:T} \equiv (X_1, \ldots, X_N)\)</span> of a stationary ergodic Markov chain can be estimated on average with <span class="math inline">\(H(X_{1:T})\)</span> binary questions where</p>
 <p><span class="math display">\[
 \begin{align}
 H(X_{1:T})
@@ -222,16 +253,60 @@ H(X_{1:T})
 </section>
 <section id="asymptotic-equipartition-property-aep" class="level3">
 <h3 class="anchored" data-anchor-id="asymptotic-equipartition-property-aep">Asymptotic Equipartition Property (AEP)</h3>
-<p>The AEP is simple remark that gives a convenient way of reasoning about long sequences random variables <span class="math inline">\(X_{1:T} = (X_1, \ldots, X_T)\)</span> with <span class="math inline">\(T \gg 1\)</span>. For example, assuming that the random variables <span class="math inline">\(X_i\)</span> are independent and distributed as the random variable <span class="math inline">\(X\)</span>, the law of large numbers (LLN) gives that</p>
+<p>The AEP is simple remark that gives a convenient way of reasoning about long sequences random variables <span class="math inline">\(X_{1:T} = (X_1, \ldots, X_T)\)</span> with <span class="math inline">\(T \gg 1\)</span>. For example, assuming that the random variables <span class="math inline">\(X_i\)</span> are independent and identically distributed as the random variable <span class="math inline">\(X\)</span>, the law of large numbers (LLN) gives that</p>
 <p><span class="math display">\[
-\frac{1}{T} \, \log_2(X_{1:T}) = \frac{1}{T} \, \sum \log_2 p(X_i) \approx -H(X).
+-\frac{1}{T} \, \log_2(X_{1:T}) = -\frac{1}{T} \, \sum \log_2 p(X_i) \approx H(X).
 \]</span></p>
-<p>This means that <strong>any</strong> “typical” sequence has a probability about <span class="math inline">\(2^{-T \, H(X)}\)</span> of occurring, which also means that there are about <span class="math inline">\(2^{T \, H(X)}\)</span> such “typical” sequences. Indeed, one could use the LLN for Markov chains and obtain a similar statement for Markovian sequences. All this can be made much more rigorous with large deviation theory for example. This also establishes the link with the “statistical physics” definition of entropy as the logarithm of the number of configurations…</p>
+<p>This means that <strong>any</strong> “typical” sequence has a probability about <span class="math inline">\(2^{-T \, H(X)}\)</span> of occurring, which also means that there are about <span class="math inline">\(2^{T \, H(X)}\)</span> such “typical” sequences. Indeed, one could use the LLN for Markov chains and obtain a similar statement for Markovian sequences. All this can be made rigorous with large deviation theory, for example. This also establishes the link with the “statistical physics” definition of entropy as the logarithm of the number of configurations… Set of the type</p>
+<p><span class="math display">\[
+A_{\varepsilon} = \left\{ x_{1:T} \; : \; \left| -\frac{1}{T} \, \log_2(x_{1:T}) - H(X)\right| &lt; \varepsilon\right\}
+\]</span></p>
+<p>are usually called <strong>typical set</strong>: for any <span class="math inline">\(\varepsilon&gt; 0\)</span>, the probability of <span class="math inline">\(X_{1:T}\)</span> to belongs to <span class="math inline">\(A_{\varepsilon}\)</span> goes to one as <span class="math inline">\(T \to \infty\)</span>. For these reasons, it is often a good heuristic to think of a draw of <span class="math inline">\((X_1, \ldots, X_T)\)</span> as a uniformly distributed on the associated typical set. For example, if <span class="math inline">\((X_1, \ldots, X_N)\)</span> are <span class="math inline">\(N\)</span> iid draws from a Bernoulli distribution with <span class="math inline">\(\mathop{\mathrm{P}}(X=1) = 1-\mathop{\mathrm{P}}(X=0) =p\)</span>, the set <span class="math inline">\(A \subset \{0,1\}^N\)</span> of sequences such that <span class="math inline">\(x_1 + \ldots + x_N = Np\)</span> has <span class="math inline">\(\binom{N}{Np} \approx 2^{N \, h_2(q)}\)</span> elements where <span class="math inline">\(h_2(q) = -[q \, \log_2(q) + (1-q) \, \log_2(q)]\)</span> is the entropy of a <span class="math inline">\(\text{Bern}(q)\)</span> random variable.</p>
+</section>
+<section id="mutual-information" class="level3">
+<h3 class="anchored" data-anchor-id="mutual-information">Mutual information</h3>
+<p>Consider a pair of random variables <span class="math inline">\((X,Y)\)</span>. Assuming that <span class="math inline">\(X\)</span> stores (on average) <span class="math inline">\(H(X)\)</span> bits of useful information, how much of it is still contained in <span class="math inline">\(Y\)</span>? If <span class="math inline">\(Y\)</span> is independent from <span class="math inline">\(X\)</span>, everything has been lost and, on the contrary, if <span class="math inline">\(X=Y\)</span>, nothing has been lost. If one knows <span class="math inline">\(Y\)</span>, one needs on average <span class="math inline">\(H(X|Y)\)</span> binary questions (ie. bits of information) in order to determine <span class="math inline">\(X\)</span> certainly and recovered all the information contained in <span class="math inline">\(X\)</span>. This means that the knowledge of <span class="math inline">\(Y\)</span> still contains <span class="math inline">\(H(X) - H(X|Y)\)</span> useful bits of information! This quantity is called the <strong>mutual information</strong> of the two random variable <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, and it has the good taste of being symmetric:</p>
+<p><span class="math display">\[
+\begin{align}
+I(X;Y) &amp;= H(X) - H(X|Y) \\
+&amp;= H(X) + H(Y) - H(X,Y) \\
+&amp;= H(Y;X).
+\end{align}
+\]</span></p>
+<p>This diagram from <span class="citation" data-cites="mackay2003information">(<a href="#ref-mackay2003information" role="doc-biblioref">MacKay 2003</a>)</span> nicely illustrate the different fundamental quantities <span class="math inline">\(H(X)\)</span> and <span class="math inline">\(H(X,Y)\)</span> and <span class="math inline">\(H(Y|X)\)</span> and <span class="math inline">\(I(X;Y)\)</span> and <span class="math inline">\(H(X,Y)\)</span>:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./entropies.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">From: <a href="http://www.inference.org.uk/mackay/itila/book.html">Information Theory, Inference, and Learning Algorithms</a></figcaption>
+</figure>
+</div>
+</div>
+<p>Naturally, if one considers three random variables <span class="math inline">\(X \mapsto Y \mapsto Z\)</span> forming a “Markov chain”, we have the so-called <strong>data-processing</strong> inequality,</p>
+<p><span class="math display">\[
+I(X;Z) \leq I(X;Y)
+\qquad \text{and} \qquad
+I(X;Z) \leq I(Y;Z).
+\]</span></p>
+<p>The first inequality is clear since all the useful information contained in <span class="math inline">\(Z\)</span> must be coming from <span class="math inline">\(Y\)</span>, and <span class="math inline">\(Y\)</span> only contains <span class="math inline">\(I(X;Y)\)</span> bits about <span class="math inline">\(X\)</span>. For the second inequality, note that if <span class="math inline">\(Z\)</span> contains <span class="math inline">\(I(Y;Z)\)</span> bits about <span class="math inline">\(Y\)</span>, and <span class="math inline">\(Y\)</span> contains <span class="math inline">\(H(Y;X)\)</span> bits about <span class="math inline">\(X\)</span>, then <span class="math inline">\(Z\)</span> cannot contain more than <span class="math inline">\(I(Y;Z)\)</span> bits of <span class="math inline">\(X\)</span>:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./mutual.jpg" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">Data Processing Inequality</figcaption>
+</figure>
+</div>
+</div>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-mackay2003information" class="csl-entry" role="listitem">
+MacKay, David JC. 2003. <em>Information Theory, Inference and Learning Algorithms</em>. Cambridge university press.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

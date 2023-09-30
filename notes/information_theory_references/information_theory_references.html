@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Shannon Source Coding Theorem</title>
+<title>Alexandre Thiéry - Information Theory: References and Readings</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,26 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -77,19 +58,13 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Shannon Source Coding Theorem">
-<meta property="og:description" content="">
-<meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
+<meta property="og:title" content="Alexandre Thiéry - Information Theory: References and Readings">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Shannon Source Coding Theorem">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
+<meta name="twitter:title" content="Alexandre Thiéry - Information Theory: References and Readings">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed">
@@ -146,7 +121,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Shannon Source Coding Theorem</h1>
+      <h1 class="title">Information Theory: References and Readings</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">infoTheory</div>
               </div>
@@ -160,14 +135,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">26 09 2026</p>
+        <p class="date">30 09 2026</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">26 09 2023</p>
+        <p class="date-modified">30 09 2023</p>
       </div>
     </div>
       
@@ -182,9 +157,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#transmission-through-a-noisy-channel" id="toc-transmission-through-a-noisy-channel" class="nav-link active" data-scroll-target="#transmission-through-a-noisy-channel">Transmission through a noisy channel</a></li>
-  <li><a href="#vanishing-error-rate-at-finite-transmission-rate" id="toc-vanishing-error-rate-at-finite-transmission-rate" class="nav-link" data-scroll-target="#vanishing-error-rate-at-finite-transmission-rate">Vanishing error rate at finite transmission rate?</a></li>
-  <li><a href="#experiments" id="toc-experiments" class="nav-link" data-scroll-target="#experiments">Experiments</a></li>
+  <li><a href="#books" id="toc-books" class="nav-link active" data-scroll-target="#books">Books</a></li>
+  <li><a href="#lecture-notes-articles" id="toc-lecture-notes-articles" class="nav-link" data-scroll-target="#lecture-notes-articles">Lecture Notes &amp; Articles</a></li>
   </ul>
 </nav>
     </div>
@@ -194,70 +168,26 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="shannon.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Claude Shannon (1916 – 2001)</figcaption>
-</figure>
-</div>
-</div>
-<section id="transmission-through-a-noisy-channel" class="level3">
-<h3 class="anchored" data-anchor-id="transmission-through-a-noisy-channel">Transmission through a noisy channel</h3>
-<p>Consider a scenario involving a “noisy channel,” where a message <span class="math inline">\((x_1,x_2, \ldots)\)</span> expressed in an alphabet <span class="math inline">\(\mathcal{X}\)</span> is transmitted before being received as a potentially different and corrupted message <span class="math inline">\((y_1, y_2,\ldots)\)</span> expressed using a potentially different alphabet <span class="math inline">\(\mathcal{Y}\)</span>. One can assume that letter <span class="math inline">\(x \in \mathcal{X}\)</span> is transformed into <span class="math inline">\(y \in \mathcal{Y}\)</span> with probability <span class="math inline">\(p(x \to y)\)</span> so that the matrix <span class="math inline">\(M_{x,y} = [p(x \to y)]_{(x,y) \in \mathcal{X}\times \mathcal{Y}}\)</span> has rows summing-up to one, and that the “letters” of the message <span class="math inline">\((x_1 x_2 \ldots)\)</span> are transmitted one by one and independently from each other (ie. there is no memory effect in the channel).</p>
-<p>Now, imagine I have a text that needs to be transmitted through this channel. Assume that the text is represented using <span class="math inline">\(N\)</span> bits. My goal is to encode it in a way that introduces redundancy, utilizing the alphabet <span class="math inline">\(\mathcal{X}\)</span>, so that it can be transmitted through the noisy channel. Eventually, I want it to be successfully decoded, allowing the original message to be recovered with minimal errors.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="transmission.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">A Mathematical Theory of Communication</figcaption>
-</figure>
-</div>
-</div>
-<p>If transmitting each letter from the alphabet <span class="math inline">\(\mathcal{X}\)</span> takes <span class="math inline">\(1\)</span> unit of time, I need to estimate the overall time it will take to transmit the entire text of <span class="math inline">\(N\)</span> bits. In cases where the channel does not completely destroy the information, one can use about any non-idiotic encoding and transmit the same text multiple times to increase the chances of accurately recovering the original message. This can be achieved by employing techniques such as majority voting to decode the received messages, which are all distorted versions of the original text.</p>
-<p>The transmission rate represents the inverse of the time required to transfer a single bit of information:</p>
-<p><span class="math display">\[
-\textrm{R = (Transmission Rate)} = \frac{1}{\textrm{(average time it takes to transfer one bit)}}.
-\]</span></p>
-<p>In other words, it takes about <span class="math inline">\(N \times R\)</span> unit of times to transfer a text of <span class="math inline">\(N\)</span> bits. Moreover, the error rate refers to the percentage of errors in the decoded message, indicating the fraction of erroneous bits among the <span class="math inline">\(N\)</span> decoded bits. Naturally, there exists a tradeoff, and it is evident that one can reach a vanishing error rate if one is willing to allow an arbitrarily slow transmission rate (eg. majority voting after transmitting a very large number of times the same text). For example, if <span class="math inline">\(\mathcal{X}= \mathcal{Y}= \{0,1\}\)</span> and bits are flipped with probability <span class="math inline">\(p_{\text{flip}} \ll 1\)</span>, transmitting the text <span class="math inline">\((2K+1)\)</span> times would lead to a transmission rate of <span class="math inline">\(R = 1/(2K+1)\)</span> and an error rate approximately equal to <span class="math inline">\(p_{\text{flip}}^{K+1}\)</span>.</p>
-<p>The groundbreaking discovery made by Shannon is that it is possible to achieve a vanishing error rate even when transmitting at a finite transmission rate. He also managed to identify this optimal transmission rate. Shannon’s paper <span class="citation" data-cites="shannon1948mathematical">(<a href="#ref-shannon1948mathematical" role="doc-biblioref">Shannon 1948</a>)</span> is beautifully written and surprisingly readable for a text written more than 50 years ago.</p>
+<section id="books" class="level3">
+<h3 class="anchored" data-anchor-id="books">Books</h3>
+<ul>
+<li>“Elements of information theory” by T. M. Cover and J. A. Thomas – <em>perfect intro book to the topic.</em></li>
+<li>“<a href="https://www.inference.org.uk/mackay/itila/">Information Theory, Inference, and Learning Algorithms</a>” by David J.C. MacKay</li>
+<li>“<a href="http://www.stat.yale.edu/~yw562/ln.html">Information Theory From Coding to Learning</a>” by Yury Polyanskiy and Yihong Wu</li>
+</ul>
 </section>
-<section id="vanishing-error-rate-at-finite-transmission-rate" class="level3">
-<h3 class="anchored" data-anchor-id="vanishing-error-rate-at-finite-transmission-rate">Vanishing error rate at finite transmission rate?</h3>
-<p>Suppose that information is encoded in <span class="math inline">\(X\)</span>, sent through a noisy channel, and message <span class="math inline">\(Y\)</span> is received: how much information was actually transmitted? Knowing <span class="math inline">\(Y\)</span>, one needs <span class="math inline">\(H(X|Y)\)</span> additional bits on average to reconstruct <span class="math inline">\(X\)</span>, and <span class="math inline">\(X\)</span> contains <span class="math inline">\(H(X)\)</span> bits of information on average. This means if <span class="math inline">\(H(X)\)</span> bits of useful information is encoded in <span class="math inline">\(X\)</span>, the correlated random variable <span class="math inline">\(Y\)</span> still contains <span class="math inline">\(I(X;Y)\)</span> bits of it. Recall that <span class="math inline">\(I(X;Y)\)</span> is usually called the <a href="../../notes/information_theory_basics/information_theory_entropy.html">mutual information</a> of the two random variable <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. In a noisy channel that transmit one “letter” at the time, the conditional probabilities <span class="math inline">\(p(x \to y)\)</span> are fixed, but one can optimize the distribution of the incoming messages. The discussion above shows that, one average, transmitting <span class="math inline">\(N\)</span> symbols through the channel can provide up to <span class="math inline">\(N \times C\)</span> bits of information where <span class="math inline">\(C = \max I(X;Y)\)</span> where the maximization is over the marginal distribution of <span class="math inline">\(X\)</span> while keeping the conditional <span class="math inline">\(p(x \to y)\)</span> fixed. This seems to imply that such a noisy channel cannot transmit information at a rate higher than <span class="math inline">\(C\)</span>. Shannon exactly proved this, and proved that this transmission rate can be achieved.</p>
-<p>Shannon’s idea to prove that this rate is achievable was to simultaneously encode blocks of letters. To put it simply, consider the <span class="math inline">\(2^N\)</span> feasible blocks <span class="math inline">\(\{ t^{[1]}, \ldots, t^{[2^N]} \}\)</span> of <span class="math inline">\(N\)</span> letters of a binary text. Each block <span class="math inline">\(t^{[i]} \in \{0,1\}^N\)</span> has <span class="math inline">\(N\)</span> binary letters, <span class="math inline">\(t^{[i]} = (t_1^{[i]}, \ldots, t_N^{[i]})\)</span>. Associate to each of these blocks a <strong>codeword</strong> of size <span class="math inline">\(K\)</span> in the alphabet <span class="math inline">\(\mathcal{X}\)</span>,</p>
-<p><span id="eq-encode"><span class="math display">\[
-t^{[i]} \; \longrightarrow \; \text{Enc}(t^{[i]}) = x^{[i]} = (x^{[i]}_1, \ldots, x^{[i]}_K) \in \mathcal{X}^K.
-\tag{1}\]</span></span></p>
-<p>To transmit a block of <span class="math inline">\(N\)</span> letters from the original text, this block is first encoded using the encoder <span class="math inline">\(\text{Enc}(\ldots)\)</span> into a message of length <span class="math inline">\(K\)</span> in the alphabet <span class="math inline">\(\mathcal{X}\)</span>. This encoded version is then sent through the noisy channel, resulting in a received message <span class="math inline">\((y_1, \ldots, y_K) \in \mathcal{Y}^K\)</span>. The objective is to have enough redundancy in the encoding that one can reconstruct the original message. The transmission rate is consequently <span class="math inline">\(R = \frac{N}{K}\)</span> as transmitting a binary text of length <span class="math inline">\(N\)</span> takes <span class="math inline">\(K\)</span> units of time.</p>
-<p>For the encoding in <a href="#eq-encode">Equation&nbsp;1</a>, Shannon adopted a simple approach: generate all the <span class="math inline">\(x^{[i]}_k\)</span> for <span class="math inline">\(1 \leq i \leq 2^N\)</span> and <span class="math inline">\(1 \leq k \leq K\)</span> independently at random from some (encoding) distribution <span class="math inline">\(p_{\text{code}}(dx)\)</span> on the alphabet <span class="math inline">\(\mathcal{X}\)</span>. The choice of this encoding distribution will be optimized at a later stage.</p>
-<p>The law of large numbers, or the <a href="../../notes/information_theory_basics/information_theory_entropy.html">Asymptotic Equipartition Property (AEP)</a>, allows one to exploit the fact that the <span class="math inline">\(x^{[i]}_k\)</span> are chosen independently and identically distributed (iid). For the encoding to be effective, it is necessary that, for any typical received message (ie. obtained by passing a code through the noisy channel), there exists only one code <span class="math inline">\(x^{[i]} = (x^{[i]}_1, \ldots, x^{[i]}_K)\)</span> likely to have originated it. In terms of the AEP, given a fixed typical pair <span class="math inline">\((x^{[i]}, y_{\star})\)</span>, one needs all other pairs <span class="math inline">\((x^{[j]}, y_{\star})\)</span> for <span class="math inline">\(1 \leq i \neq j \leq 2^N\)</span> to <strong>not</strong> be typical. There is about <span class="math inline">\(2^{K \, H(X|Y)}\)</span> typical inputs that could have generated <span class="math inline">\(y_\star\)</span>. Furthermore, since the codes were generated approximately uniformly at random among the <span class="math inline">\(2^{K \, H(X)}\)</span> typical possible codes, the probability that a given code did not generate <span class="math inline">\(y_\star\)</span> is about <span class="math display">\[1-2^{-K \, [H(X) - H(X|Y)]} = 1 - 2^{-K \, I(X;Y)}\]</span></p>
-<p>where the the mutual information is defined as</p>
-<p><span class="math display">\[
-I(X;Y) = H(X) + H(Y) - H(X,Y).
-\]</span></p>
-<p>Consequently, the probability that none of the other <span class="math inline">\(2^K-1\)</span> other codes was likely to have originated <span class="math inline">\(y_\star\)</span> is about</p>
-<p><span class="math display">\[
-(1 - 2^{-K \, I(X;Y)})^{2^N-1} \approx (1 - 2^{-K \, I(X;Y)})^{2^{KR}}
-\]</span></p>
-<p>which converges to one as soon as <span class="math inline">\(R &lt; I(X;Y)\)</span> as <span class="math inline">\(N \to \infty\)</span>. Furthermore, remembering that one were free to optimize the encoding distribution <span class="math inline">\(p_{\text{code}}(dx)\)</span>, a vanishing error rate is possible as soon as the transmission rate is lower than</p>
-<p><span class="math display">\[
-\text{(Channel Capacity)} = C \equiv \max_{p_{\text{code}}} \; I(X;Y).
-\]</span></p>
-</section>
-<section id="experiments" class="level3">
-<h3 class="anchored" data-anchor-id="experiments">Experiments</h3>
-<p>Consider the Binary Symmetric Channel that takes binary inputs <span class="math inline">\(\mathcal{X}= \{0,1\}\)</span> and flips each bit with probability <span class="math inline">\(0&lt;q&lt;1/2\)</span>. To compute the capacity of this</p>
-
+<section id="lecture-notes-articles" class="level3">
+<h3 class="anchored" data-anchor-id="lecture-notes-articles">Lecture Notes &amp; Articles</h3>
+<ul>
+<li>“<a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">A Mathematical Theory of Communication</a>” by C. Shannon (2948) – <em>entertaining and readable, even 70+ years later!</em></li>
+<li>“<a href="https://web.stanford.edu/class/stats311/book.html">Lecture Notes on Statistics and Information Theory</a>” by John Duchi</li>
+<li>“<a href="http://www.stat.yale.edu/~yw562/teaching/598/handouts.html">Information-theoretic methods for high-dimensional statistics</a>” by Yihong Wu</li>
+</ul>
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-shannon1948mathematical" class="csl-entry" role="listitem">
-Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.”</span> <em>The Bell System Technical Journal</em> 27 (3). Nokia Bell Labs: 379–423.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

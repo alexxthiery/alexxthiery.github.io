@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Shannon Source Coding Theorem</title>
+<title>Alexandre Thiéry - Information Theory: Entropy and Basic Definitions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,13 +81,13 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Shannon Source Coding Theorem">
+<meta property="og:title" content="Alexandre Thiéry - Information Theory: Entropy and Basic Definitions">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_references/shannon_destruction.gif">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Shannon Source Coding Theorem">
+<meta name="twitter:title" content="Alexandre Thiéry - Information Theory: Entropy and Basic Definitions">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_references/shannon_destruction.gif">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -146,7 +146,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Shannon Source Coding Theorem</h1>
+      <h1 class="title">Information Theory: Entropy and Basic Definitions</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">infoTheory</div>
               </div>
@@ -160,14 +160,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">26 09 2026</p>
+        <p class="date">23 09 2023</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">26 09 2023</p>
+        <p class="date-modified">27 09 2023</p>
       </div>
     </div>
       
@@ -182,9 +182,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#transmission-through-a-noisy-channel" id="toc-transmission-through-a-noisy-channel" class="nav-link active" data-scroll-target="#transmission-through-a-noisy-channel">Transmission through a noisy channel</a></li>
-  <li><a href="#vanishing-error-rate-at-finite-transmission-rate" id="toc-vanishing-error-rate-at-finite-transmission-rate" class="nav-link" data-scroll-target="#vanishing-error-rate-at-finite-transmission-rate">Vanishing error rate at finite transmission rate?</a></li>
-  <li><a href="#experiments" id="toc-experiments" class="nav-link" data-scroll-target="#experiments">Experiments</a></li>
+  <li><a href="#shannon-entropy-compression" id="toc-shannon-entropy-compression" class="nav-link active" data-scroll-target="#shannon-entropy-compression">Shannon Entropy &amp; Compression</a></li>
+  <li><a href="#sequence-of-random-variables" id="toc-sequence-of-random-variables" class="nav-link" data-scroll-target="#sequence-of-random-variables">Sequence of random variables</a></li>
+  <li><a href="#asymptotic-equipartition-property-aep" id="toc-asymptotic-equipartition-property-aep" class="nav-link" data-scroll-target="#asymptotic-equipartition-property-aep">Asymptotic Equipartition Property (AEP)</a></li>
+  <li><a href="#mutual-information" id="toc-mutual-information" class="nav-link" data-scroll-target="#mutual-information">Mutual information</a></li>
   </ul>
 </nav>
     </div>
@@ -197,65 +198,113 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="shannon.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="shannon_destruction.gif" class="img-fluid figure-img" style="width:90.0%"></p>
 <figcaption class="figure-caption">Claude Shannon (1916 – 2001)</figcaption>
 </figure>
 </div>
 </div>
-<section id="transmission-through-a-noisy-channel" class="level3">
-<h3 class="anchored" data-anchor-id="transmission-through-a-noisy-channel">Transmission through a noisy channel</h3>
-<p>Consider a scenario involving a “noisy channel,” where a message <span class="math inline">\((x_1,x_2, \ldots)\)</span> expressed in an alphabet <span class="math inline">\(\mathcal{X}\)</span> is transmitted before being received as a potentially different and corrupted message <span class="math inline">\((y_1, y_2,\ldots)\)</span> expressed using a potentially different alphabet <span class="math inline">\(\mathcal{Y}\)</span>. One can assume that letter <span class="math inline">\(x \in \mathcal{X}\)</span> is transformed into <span class="math inline">\(y \in \mathcal{Y}\)</span> with probability <span class="math inline">\(p(x \to y)\)</span> so that the matrix <span class="math inline">\(M_{x,y} = [p(x \to y)]_{(x,y) \in \mathcal{X}\times \mathcal{Y}}\)</span> has rows summing-up to one, and that the “letters” of the message <span class="math inline">\((x_1 x_2 \ldots)\)</span> are transmitted one by one and independently from each other (ie. there is no memory effect in the channel).</p>
-<p>Now, imagine I have a text that needs to be transmitted through this channel. Assume that the text is represented using <span class="math inline">\(N\)</span> bits. My goal is to encode it in a way that introduces redundancy, utilizing the alphabet <span class="math inline">\(\mathcal{X}\)</span>, so that it can be transmitted through the noisy channel. Eventually, I want it to be successfully decoded, allowing the original message to be recovered with minimal errors.</p>
+<section id="shannon-entropy-compression" class="level3">
+<h3 class="anchored" data-anchor-id="shannon-entropy-compression">Shannon Entropy &amp; Compression</h3>
+<p>If Alice chooses a number <span class="math inline">\(X\)</span> uniformly at random from the set <span class="math inline">\(\{1,2, \ldots, N\}\)</span>, Bob can use a simple “dichotomy” strategy to ask Alice <span class="math inline">\(\log_2(N)\)</span> binary Yes/No questions and correctly identify the number. This result can be generalized to non-uniform distributions (eg. using the <a href="https://en.wikipedia.org/wiki/Kraft–McMillan_inequality">Kraft-McMillan inequality</a>). If Alice chooses a number <span class="math inline">\(X\)</span> from <span class="math inline">\(\{1,2, \ldots, N\}\)</span> with probabilities <span class="math inline">\(\mathop{\mathrm{P}}(X=k) = p_k\)</span>, Bob can design a deterministic strategy to find the answer using, on average, approximately</p>
+<p><span id="eq-OU"><span class="math display">\[
+H(X) = - \sum_{k=1}^N p_k \, \log_2(p_k)
+\tag{1}\]</span></span></p>
+<p>binary questions, ie. bits. He cannot achieve this with fewer questions. The quantity <span class="math inline">\(H(X)\)</span> defined in <a href="#eq-OU">Equation&nbsp;1</a>, known as the <strong>Shannon Entropy</strong> of the distribution <span class="math inline">\((p_1, \ldots, p_N)\)</span>, also implies that the strategy can encode each integer <span class="math inline">\(1 \leq x \leq N\)</span> as a binary string of length <span class="math inline">\(L(x)\)</span> (i.e.&nbsp;with <span class="math inline">\(L(x)\)</span> bits), with the expected length <span class="math inline">\(\mathop{\mathrm{E}}[L(X)]\)</span> approximately equal to <span class="math inline">\(H(X)\)</span>.</p>
+<p>This remark can be used for compression. Imagine a very long sequence <span class="math inline">\((X_1, \ldots, X_T)\)</span> of iid samples from <span class="math inline">\(X\)</span>. Encoding each <span class="math inline">\(X_i\)</span> with <span class="math inline">\(L(X_i)\)</span>, one should be able to encode the resulting sequence with</p>
+<p><span class="math display">\[
+L(X_1) + \ldots + L(X_T) \approx T \, \mathop{\mathrm{E}}[L(X)] \approx T \cdot H(X)
+\]</span></p>
+<p>bits. Can the usual <strong>zip compression</strong> algorithm do this? To test this, choose a probability distribution on <span class="math inline">\(\{1, \ldots, N\}\)</span>, generate an iid sequence of length <span class="math inline">\(T \gg 1\)</span>, compress this using the <span class="math inline">\(\texttt{gzip}(\ldots)\)</span> command, and finally look at the size of the resulting file (in bits). I have done that a few times, with a few different values of <span class="math inline">\(16 \leq N \leq 256\)</span> and a few random distributions on <span class="math inline">\(\{1, \ldots, N\}\)</span>, and with <span class="math inline">\(T = 10^6\)</span>. The plot of size of the compressed files versus the Shannon entropy <span class="math inline">\(H\)</span> looks as below:</p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="transmission.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">A Mathematical Theory of Communication</figcaption>
+<p><img src="shannon_vs_zip.png" class="img-fluid figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 </div>
-<p>If transmitting each letter from the alphabet <span class="math inline">\(\mathcal{X}\)</span> takes <span class="math inline">\(1\)</span> unit of time, I need to estimate the overall time it will take to transmit the entire text of <span class="math inline">\(N\)</span> bits. In cases where the channel does not completely destroy the information, one can use about any non-idiotic encoding and transmit the same text multiple times to increase the chances of accurately recovering the original message. This can be achieved by employing techniques such as majority voting to decode the received messages, which are all distorted versions of the original text.</p>
-<p>The transmission rate represents the inverse of the time required to transfer a single bit of information:</p>
-<p><span class="math display">\[
-\textrm{R = (Transmission Rate)} = \frac{1}{\textrm{(average time it takes to transfer one bit)}}.
-\]</span></p>
-<p>In other words, it takes about <span class="math inline">\(N \times R\)</span> unit of times to transfer a text of <span class="math inline">\(N\)</span> bits. Moreover, the error rate refers to the percentage of errors in the decoded message, indicating the fraction of erroneous bits among the <span class="math inline">\(N\)</span> decoded bits. Naturally, there exists a tradeoff, and it is evident that one can reach a vanishing error rate if one is willing to allow an arbitrarily slow transmission rate (eg. majority voting after transmitting a very large number of times the same text). For example, if <span class="math inline">\(\mathcal{X}= \mathcal{Y}= \{0,1\}\)</span> and bits are flipped with probability <span class="math inline">\(p_{\text{flip}} \ll 1\)</span>, transmitting the text <span class="math inline">\((2K+1)\)</span> times would lead to a transmission rate of <span class="math inline">\(R = 1/(2K+1)\)</span> and an error rate approximately equal to <span class="math inline">\(p_{\text{flip}}^{K+1}\)</span>.</p>
-<p>The groundbreaking discovery made by Shannon is that it is possible to achieve a vanishing error rate even when transmitting at a finite transmission rate. He also managed to identify this optimal transmission rate. Shannon’s paper <span class="citation" data-cites="shannon1948mathematical">(<a href="#ref-shannon1948mathematical" role="doc-biblioref">Shannon 1948</a>)</span> is beautifully written and surprisingly readable for a text written more than 50 years ago.</p>
+<p>Seems like the zip-algorithm works almost optimally for compressing iid sequences.</p>
 </section>
-<section id="vanishing-error-rate-at-finite-transmission-rate" class="level3">
-<h3 class="anchored" data-anchor-id="vanishing-error-rate-at-finite-transmission-rate">Vanishing error rate at finite transmission rate?</h3>
-<p>Suppose that information is encoded in <span class="math inline">\(X\)</span>, sent through a noisy channel, and message <span class="math inline">\(Y\)</span> is received: how much information was actually transmitted? Knowing <span class="math inline">\(Y\)</span>, one needs <span class="math inline">\(H(X|Y)\)</span> additional bits on average to reconstruct <span class="math inline">\(X\)</span>, and <span class="math inline">\(X\)</span> contains <span class="math inline">\(H(X)\)</span> bits of information on average. This means if <span class="math inline">\(H(X)\)</span> bits of useful information is encoded in <span class="math inline">\(X\)</span>, the correlated random variable <span class="math inline">\(Y\)</span> still contains <span class="math inline">\(I(X;Y)\)</span> bits of it. Recall that <span class="math inline">\(I(X;Y)\)</span> is usually called the <a href="../../notes/information_theory_basics/information_theory_entropy.html">mutual information</a> of the two random variable <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. In a noisy channel that transmit one “letter” at the time, the conditional probabilities <span class="math inline">\(p(x \to y)\)</span> are fixed, but one can optimize the distribution of the incoming messages. The discussion above shows that, one average, transmitting <span class="math inline">\(N\)</span> symbols through the channel can provide up to <span class="math inline">\(N \times C\)</span> bits of information where <span class="math inline">\(C = \max I(X;Y)\)</span> where the maximization is over the marginal distribution of <span class="math inline">\(X\)</span> while keeping the conditional <span class="math inline">\(p(x \to y)\)</span> fixed. This seems to imply that such a noisy channel cannot transmit information at a rate higher than <span class="math inline">\(C\)</span>. Shannon exactly proved this, and proved that this transmission rate can be achieved.</p>
-<p>Shannon’s idea to prove that this rate is achievable was to simultaneously encode blocks of letters. To put it simply, consider the <span class="math inline">\(2^N\)</span> feasible blocks <span class="math inline">\(\{ t^{[1]}, \ldots, t^{[2^N]} \}\)</span> of <span class="math inline">\(N\)</span> letters of a binary text. Each block <span class="math inline">\(t^{[i]} \in \{0,1\}^N\)</span> has <span class="math inline">\(N\)</span> binary letters, <span class="math inline">\(t^{[i]} = (t_1^{[i]}, \ldots, t_N^{[i]})\)</span>. Associate to each of these blocks a <strong>codeword</strong> of size <span class="math inline">\(K\)</span> in the alphabet <span class="math inline">\(\mathcal{X}\)</span>,</p>
-<p><span id="eq-encode"><span class="math display">\[
-t^{[i]} \; \longrightarrow \; \text{Enc}(t^{[i]}) = x^{[i]} = (x^{[i]}_1, \ldots, x^{[i]}_K) \in \mathcal{X}^K.
-\tag{1}\]</span></span></p>
-<p>To transmit a block of <span class="math inline">\(N\)</span> letters from the original text, this block is first encoded using the encoder <span class="math inline">\(\text{Enc}(\ldots)\)</span> into a message of length <span class="math inline">\(K\)</span> in the alphabet <span class="math inline">\(\mathcal{X}\)</span>. This encoded version is then sent through the noisy channel, resulting in a received message <span class="math inline">\((y_1, \ldots, y_K) \in \mathcal{Y}^K\)</span>. The objective is to have enough redundancy in the encoding that one can reconstruct the original message. The transmission rate is consequently <span class="math inline">\(R = \frac{N}{K}\)</span> as transmitting a binary text of length <span class="math inline">\(N\)</span> takes <span class="math inline">\(K\)</span> units of time.</p>
-<p>For the encoding in <a href="#eq-encode">Equation&nbsp;1</a>, Shannon adopted a simple approach: generate all the <span class="math inline">\(x^{[i]}_k\)</span> for <span class="math inline">\(1 \leq i \leq 2^N\)</span> and <span class="math inline">\(1 \leq k \leq K\)</span> independently at random from some (encoding) distribution <span class="math inline">\(p_{\text{code}}(dx)\)</span> on the alphabet <span class="math inline">\(\mathcal{X}\)</span>. The choice of this encoding distribution will be optimized at a later stage.</p>
-<p>The law of large numbers, or the <a href="../../notes/information_theory_basics/information_theory_entropy.html">Asymptotic Equipartition Property (AEP)</a>, allows one to exploit the fact that the <span class="math inline">\(x^{[i]}_k\)</span> are chosen independently and identically distributed (iid). For the encoding to be effective, it is necessary that, for any typical received message (ie. obtained by passing a code through the noisy channel), there exists only one code <span class="math inline">\(x^{[i]} = (x^{[i]}_1, \ldots, x^{[i]}_K)\)</span> likely to have originated it. In terms of the AEP, given a fixed typical pair <span class="math inline">\((x^{[i]}, y_{\star})\)</span>, one needs all other pairs <span class="math inline">\((x^{[j]}, y_{\star})\)</span> for <span class="math inline">\(1 \leq i \neq j \leq 2^N\)</span> to <strong>not</strong> be typical. There is about <span class="math inline">\(2^{K \, H(X|Y)}\)</span> typical inputs that could have generated <span class="math inline">\(y_\star\)</span>. Furthermore, since the codes were generated approximately uniformly at random among the <span class="math inline">\(2^{K \, H(X)}\)</span> typical possible codes, the probability that a given code did not generate <span class="math inline">\(y_\star\)</span> is about <span class="math display">\[1-2^{-K \, [H(X) - H(X|Y)]} = 1 - 2^{-K \, I(X;Y)}\]</span></p>
-<p>where the the mutual information is defined as</p>
+<section id="sequence-of-random-variables" class="level3">
+<h3 class="anchored" data-anchor-id="sequence-of-random-variables">Sequence of random variables</h3>
+<p>Now consider a pair of discrete random variables <span class="math inline">\((X,Y)\)</span>. If Alice draws samples from this pair of rvs, one can ask <span class="math inline">\(H(X,Y)\)</span> binary questions on average to exactly find out these values. To do that, one can ask <span class="math inline">\(H(X)\)</span> questions to estimate <span class="math inline">\(X\)</span>, and once <span class="math inline">\(X=x\)</span> is estimated, one can then ask about <span class="math inline">\(H(Y|X=x) = -\sum_y \mathop{\mathrm{P}}(Y=y|X=x) \, \log_2(\mathop{\mathrm{P}}(Y=y|X=x))\)</span> to estimate <span class="math inline">\(Y\)</span>. This strategy requires on average <span class="math inline">\(H(X) + \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span> binary questions and is actually optimal, showing that</p>
+<p><span id="eq-chain-rule"><span class="math display">\[
+H(X,Y) = H(X) + H(Y | X)
+\tag{2}\]</span></span></p>
+<p>where we have defined <span class="math inline">\(H(Y | X) = \sum_x \mathop{\mathrm{P}}(X=x) \, H(Y|X=x)\)</span>.</p>
+<p>Indeed, one can generalize these concepts to more than two random variables. Iterating <a href="#eq-chain-rule">Equation&nbsp;2</a> shows that the trajectory <span class="math inline">\(X_{1:T} \equiv (X_1, \ldots, X_N)\)</span> of a stationary ergodic Markov chain can be estimated on average with <span class="math inline">\(H(X_{1:T})\)</span> binary questions where</p>
 <p><span class="math display">\[
-I(X;Y) = H(X) + H(Y) - H(X,Y).
+\begin{align}
+H(X_{1:T})
+&amp;= H(X_1) + H(X_2|X_1) + \ldots + H(X_{T} | X_{t-1})\\
+&amp;\approx T \, H(X_{k+1} | X_k)\\
+&amp;= - T \, \sum_x \pi(x) \, \sum_{y} p(x \to y) \, \log_2[p(x \to y)].
+\end{align}
 \]</span></p>
-<p>Consequently, the probability that none of the other <span class="math inline">\(2^K-1\)</span> other codes was likely to have originated <span class="math inline">\(y_\star\)</span> is about</p>
-<p><span class="math display">\[
-(1 - 2^{-K \, I(X;Y)})^{2^N-1} \approx (1 - 2^{-K \, I(X;Y)})^{2^{KR}}
-\]</span></p>
-<p>which converges to one as soon as <span class="math inline">\(R &lt; I(X;Y)\)</span> as <span class="math inline">\(N \to \infty\)</span>. Furthermore, remembering that one were free to optimize the encoding distribution <span class="math inline">\(p_{\text{code}}(dx)\)</span>, a vanishing error rate is possible as soon as the transmission rate is lower than</p>
-<p><span class="math display">\[
-\text{(Channel Capacity)} = C \equiv \max_{p_{\text{code}}} \; I(X;Y).
-\]</span></p>
+<p>Here, <span class="math inline">\(\pi(dx)\)</span> is the equilibrium distribution of the Markov chain and <span class="math inline">\(p(x \to y)\)</span> are the transition probabilities.</p>
+<p>Can <span class="math inline">\(\texttt{gzip}(\ldots)\)</span> compress Markovian trajectories and roughly achieve that level of compression? Indeed, one can test this by generating random Markov transition matrices (that are, with very high probability, ergodic with respect to an equilibrium distribution <span class="math inline">\(\pi\)</span>). Doing this with trajectories of length <span class="math inline">\(10^4\)</span> (ie. quite short because it is quite slow to) on <span class="math inline">\(\{1, \ldots, N\}\)</span> with <span class="math inline">\(2 \leq N \leq 64\)</span>, one get the following results:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="shannon_vs_zip_markov.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<p>In red is the entropy estimated without using the Markovian structure and assuming that the <span class="math inline">\(X_i\)</span> are iid samples. One can clearly see that the dependencies between successive samples are exploited for better compression. Nevertheless, the optimal compression rate given by the Shannon entropy is not reached. Indeed, <span class="math inline">\(\texttt{gzip}(\ldots)\)</span> is not an optimal algorithm – it cannot even compress well enough the sequence <span class="math inline">\((1,2,3,1,2,3,1,2,3,\ldots)\)</span>!</p>
 </section>
-<section id="experiments" class="level3">
-<h3 class="anchored" data-anchor-id="experiments">Experiments</h3>
-<p>Consider the Binary Symmetric Channel that takes binary inputs <span class="math inline">\(\mathcal{X}= \{0,1\}\)</span> and flips each bit with probability <span class="math inline">\(0&lt;q&lt;1/2\)</span>. To compute the capacity of this</p>
+<section id="asymptotic-equipartition-property-aep" class="level3">
+<h3 class="anchored" data-anchor-id="asymptotic-equipartition-property-aep">Asymptotic Equipartition Property (AEP)</h3>
+<p>The AEP is simple remark that gives a convenient way of reasoning about long sequences random variables <span class="math inline">\(X_{1:T} = (X_1, \ldots, X_T)\)</span> with <span class="math inline">\(T \gg 1\)</span>. For example, assuming that the random variables <span class="math inline">\(X_i\)</span> are independent and identically distributed as the random variable <span class="math inline">\(X\)</span>, the law of large numbers (LLN) gives that</p>
+<p><span class="math display">\[
+-\frac{1}{T} \, \log_2(X_{1:T}) = -\frac{1}{T} \, \sum \log_2 p(X_i) \approx H(X).
+\]</span></p>
+<p>This means that <strong>any</strong> “typical” sequence has a probability about <span class="math inline">\(2^{-T \, H(X)}\)</span> of occurring, which also means that there are about <span class="math inline">\(2^{T \, H(X)}\)</span> such “typical” sequences. Indeed, one could use the LLN for Markov chains and obtain a similar statement for Markovian sequences. All this can be made much more rigorous with large deviation theory for example. This also establishes the link with the “statistical physics” definition of entropy as the logarithm of the number of configurations… Set of the type</p>
+<p><span class="math display">\[
+A_{\varepsilon} = \left\{ x_{1:T} \; : \; \left| -\frac{1}{T} \, \log_2(x_{1:T}) - H(X)\right| &lt; \varepsilon\right\}
+\]</span></p>
+<p>are usually called “typical set”: for any <span class="math inline">\(\varepsilon&gt; 0\)</span>, the probability of <span class="math inline">\(X_{1:T}\)</span> to belongs to <span class="math inline">\(A_{\varepsilon}\)</span> goes to one as <span class="math inline">\(T \to \infty\)</span>.</p>
+</section>
+<section id="mutual-information" class="level3">
+<h3 class="anchored" data-anchor-id="mutual-information">Mutual information</h3>
+<p>Another important question is: assuming that <span class="math inline">\(X\)</span> stores (on average) <span class="math inline">\(H(X)\)</span> bits of useful information, how much useful information is still contained in <span class="math inline">\(Y\)</span>? If <span class="math inline">\(Y\)</span> is independent from <span class="math inline">\(X\)</span>, everything has been lost and if <span class="math inline">\(X=Y\)</span>, nothing has been lost. If one knows <span class="math inline">\(Y\)</span>, we need on average <span class="math inline">\(H(X|Y)\)</span> binary questions (ie. bits of information) in order to determine <span class="math inline">\(X\)</span> and recovered all the information contained in <span class="math inline">\(X\)</span>. This means that the knowledge of <span class="math inline">\(Y\)</span> still contains <span class="math inline">\(H(X) - H(X|Y)\)</span> useful bits of information! This quantity is called the <strong>mutual information</strong> of the two random variable <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, and it has the good taste of being symmetric:</p>
+<p><span class="math display">\[
+\begin{align}
+I(X;Y) &amp;= H(X) - H(X|Y) \\
+&amp;= H(X) + H(Y) - H(X,Y) \\
+&amp;= H(Y;X).
+\end{align}
+\]</span></p>
+<p>This diagram from <span class="citation" data-cites="mackay2003information">(<a href="#ref-mackay2003information" role="doc-biblioref">MacKay 2003</a>)</span> nicely illustrate the different fundamental quantities <span class="math inline">\(H(X)\)</span> and <span class="math inline">\(H(Y|X)\)</span> and <span class="math inline">\(I(X;Y)\)</span> and <span class="math inline">\(H(X,Y)\)</span>:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./entropies.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">From: <a href="http://www.inference.org.uk/mackay/itila/book.html">Information Theory, Inference, and Learning Algorithms</a></figcaption>
+</figure>
+</div>
+</div>
+<p>Naturally, if one consider three random variables <span class="math inline">\(X \mapsto Y \mapsto Z\)</span> forming a “Markov chain”, we have the so-called <strong>data-processing</strong> inequality,</p>
+<p><span class="math display">\[
+I(X;Z) \leq I(X;Y)
+\qquad \text{and} \qquad
+I(X;Z) \leq I(Y;Z).
+\]</span></p>
+<p>The first inequality is quite intuitive since all the useful information contained in <span class="math inline">\(Z\)</span> must be coming from <span class="math inline">\(Y\)</span>. The second inequality, note that if <span class="math inline">\(Z\)</span> contains <span class="math inline">\(I(Y;Z)\)</span> bits of <span class="math inline">\(Y\)</span>, and <span class="math inline">\(Y\)</span> contains <span class="math inline">\(H(Y;X)\)</span> bits of <span class="math inline">\(X\)</span>, then <span class="math inline">\(Z\)</span> cannot contain more than <span class="math inline">\(I(Y;Z)\)</span> bits of <span class="math inline">\(X\)</span>:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./mutual.jpg" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">Data Processing Inequality</figcaption>
+</figure>
+</div>
+</div>
 
 
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-shannon1948mathematical" class="csl-entry" role="listitem">
-Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.”</span> <em>The Bell System Technical Journal</em> 27 (3). Nokia Bell Labs: 379–423.
+<div id="ref-mackay2003information" class="csl-entry" role="listitem">
+MacKay, David JC. 2003. <em>Information Theory, Inference and Learning Algorithms</em>. Cambridge university press.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
