@@ -160,7 +160,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">26 09 2026</p>
+        <p class="date">26 09 2023</p>
       </div>
     </div>
     
@@ -185,6 +185,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <li><a href="#transmission-through-a-noisy-channel" id="toc-transmission-through-a-noisy-channel" class="nav-link active" data-scroll-target="#transmission-through-a-noisy-channel">Transmission through a noisy channel</a></li>
   <li><a href="#vanishing-error-rate-shannon-codebooks" id="toc-vanishing-error-rate-shannon-codebooks" class="nav-link" data-scroll-target="#vanishing-error-rate-shannon-codebooks">Vanishing error rate: Shannon Codebooks</a></li>
   <li><a href="#no-vanishing-error-below-the-channel-capacity" id="toc-no-vanishing-error-below-the-channel-capacity" class="nav-link" data-scroll-target="#no-vanishing-error-below-the-channel-capacity">No vanishing error below the channel capacity</a></li>
+  <li><a href="#experiment" id="toc-experiment" class="nav-link" data-scroll-target="#experiment">Experiment</a></li>
   </ul>
 </nav>
     </div>
@@ -231,9 +232,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 \tag{1}\]</span></span></p>
 <p>To transmit a block of <span class="math inline">\(N\)</span> letters from the original text, this block is first transformed into its associated codeword <span class="math inline">\(x=(x_1, \ldots, x_K) \in \mathcal{X}^K\)</span>. This codeword is then sent through the noisy channel, resulting in a received message <span class="math inline">\((y_1, \ldots, y_K) \in \mathcal{Y}^K\)</span>. The objective is to design a codebook with enough redundancy so that one can reconstruct the original codeword from the received message <span class="math inline">\((y_1, \ldots, y_K)\)</span>: the higher the ratio <span class="math inline">\(K/N\)</span>, the larger the redundancy and the easier it should be to achieve this goal. The transmission rate is defined as <span class="math inline">\(R = \frac{N}{K}\)</span> since transmitting a binary text of length <span class="math inline">\(N\)</span> with vanishing errors takes <span class="math inline">\(K\)</span> units of time.</p>
 <p>For generating the codebook in <a href="#eq-encode">Equation&nbsp;1</a>, Shannon adopted a simple approach consisting in generating each <span class="math inline">\(x^{[i]}_k\)</span> for <span class="math inline">\(1 \leq i \leq 2^N\)</span> and <span class="math inline">\(1 \leq k \leq K\)</span> independently at random from some (encoding) distribution <span class="math inline">\(p_{\text{code}}(dx)\)</span>. The choice of this encoding distribution can be optimized at a later stage.</p>
-<p>Consider the codeword <span class="math inline">\(x^{[0]} = (x^{[0]}_1, \ldots, x^{[0]}_K)\)</span>. After being transmitted through the noisy channel, this gives rise to a message <span class="math inline">\(y_{\star}\)</span>. The codeword <span class="math inline">\(x^{[0]}\)</span> can be easily recovered if <span class="math inline">\((x^{[0]}, y_star)\)</span> is typical while all the other pairs <span class="math inline">\((x^{[i]}, y_star)\)</span> for <span class="math inline">\(2 \leq i \leq 2^N\)</span> are atypical. Since there are about <span class="math inline">\(2^{K \, H(X | Y)}\)</span> elements <span class="math inline">\(x \in \mathcal{X}^K\)</span> such that <span class="math inline">\((x, y_\star)\)</span> is typical, and each codeword was chosen approximately uniformly at random within its typical set of size <span class="math inline">\(2^{K \, H(X)}\)</span>, the probability for a random codeword to be atypical is about</p>
+<p>Consider the codeword <span class="math inline">\(x^{[0]} = (x^{[0]}_1, \ldots, x^{[0]}_K)\)</span>. After being transmitted through the noisy channel, this gives rise to a message <span class="math inline">\(y_{\star}\)</span>. The codeword <span class="math inline">\(x^{[0]}\)</span> can be easily recovered if <span class="math inline">\((x^{[0]}, y_\star)\)</span> is typical while all the other pairs <span class="math inline">\((x^{[i]}, y_\star)\)</span> for <span class="math inline">\(2 \leq i \leq 2^N\)</span> are atypical. Since there are about <span class="math inline">\(2^{K \, H(X | Y)}\)</span> elements <span class="math inline">\(x \in \mathcal{X}^K\)</span> such that <span class="math inline">\((x, y_\star)\)</span> is typical, and each codeword was chosen approximately uniformly at random within its typical set of size <span class="math inline">\(2^{K \, H(X)}\)</span>, the probability for a random codeword to be atypical is about</p>
 <p><span class="math display">\[1-2^{-K \, [H(X) - H(X|Y)]} = 1 - 2^{-K \, I(X;Y)}\]</span></p>
-<p>Consequently, the probability that all the other pairs <span class="math inline">\((x^{[i]}, y_star)\)</span> for <span class="math inline">\(2 \leq i \leq 2^N\)</span> are atypical is</p>
+<p>Consequently, the probability that all the other pairs <span class="math inline">\((x^{[i]}, y_\star)\)</span> for <span class="math inline">\(2 \leq i \leq 2^N\)</span> are atypical is</p>
 <p><span class="math display">\[
 p_{\text{success}} = (1 - 2^{-K \, I(X;Y)})^{2^N-1} \approx (1 - 2^{-K \, I(X;Y)})^{2^{KR}}.
 \]</span></p>
@@ -271,9 +272,28 @@ N &amp;= H(M) = H(M | \widehat{M}) + I(M; \widehat{M}) \\
 N \leq 1 + N \, p_E + K \, C.
 \]</span></p>
 <p>This reveals that for the probability of error to go to zero, i.e.&nbsp;<span class="math inline">\(p_E \rightarrow 0\)</span> as <span class="math inline">\(N \rightarrow \infty\)</span>, the transmission rate <span class="math inline">\(N/K\)</span> must be lower than <span class="math inline">\(C\)</span>.</p>
-<!-- ### Experiment
-
-Consider a Binary Symmetric Channel that does random flips $0 \mapsto 1$ and $1 \mapsto 0$ with equal probability $q$. The capacity of this channel equal $C = 1 - h_2(q)$. For a flipping rate of $q=10$ the channel capacity equals $C=0.53$. It is relatively easy to simulate the scheme described in the proof of Shannon's theorem. For block of sizes $N=15$ and codewords of length $K = N/R$ generated by flipping $K$ independent $\text{Bern}(1/2)$, one can simulate the error rate as a function of $R$. -->
+</section>
+<section id="experiment" class="level3">
+<h3 class="anchored" data-anchor-id="experiment">Experiment</h3>
+<p>Consider the <a href="https://en.wikipedia.org/wiki/Binary_symmetric_channel">Binary Symmetric Channel (BSC)</a> that randomly flips <span class="math inline">\(0 \mapsto 1\)</span> and <span class="math inline">\(1 \mapsto 0\)</span> with equal probability <span class="math inline">\(0&lt;q&lt;1\)</span>. The capacity of this channel is easily computed and equals <span class="math inline">\(C = 1 - h_2(q)\)</span> where <span class="math inline">\(h_2(q) = -[q \, \log_2(q) + (1-q) \, \log_2(1-q)]\)</span> is the binary entropy function: the optimal encoding distribution is</p>
+<p><span class="math display">\[p_{\text{code}}(0) = p_{\text{code}}(2) = 1/2.\]</span></p>
+<p>For a flipping rate of <span class="math inline">\(q=0.1\)</span> the channel capacity equals <span class="math inline">\(C=0.53\)</span>. To estimate the performance of the random Shannon codebook strategy, I chose <span class="math inline">\(N=13\)</span> and several values of <span class="math inline">\(K \geq N\)</span>. This means generating a random codebook <span class="math inline">\(\mathcal{C}= \{x^{[1]}, \ldots, x^{[2^N]}\}\)</span> of size <span class="math inline">\(2^{13} = 8192\)</span> consisting of random binary vectors of size <span class="math inline">\(K\)</span>. For a randomly chosen codeword <span class="math inline">\(x^{[i]}\)</span>, a received message <span class="math inline">\(y_\star\)</span> is generated by flipping each of the <span class="math inline">\(K\)</span> coordinates of <span class="math inline">\(x^{[i]}\)</span> independently with probability <span class="math inline">\(q\)</span>. In the BSC setting, it is easily seen that the codeword of <span class="math inline">\(\mathcal{C}\)</span> that was the most likely to have originated <span class="math inline">\(y_{\star}\)</span> is</p>
+<p><span class="math display">\[
+x_\star \; = \; \mathop{\mathrm{argmin}}_{x \in \mathcal{C}} \; \|x - y_\star\|_{L^2}.
+\]</span></p>
+<p>The nearest neighbor <span class="math inline">\(x_\star\)</span> can be relatively efficiently computed with a nearest-neighbor routine (eg. <a href="https://github.com/facebookresearch/faiss/wiki">FAISS</a>). The figure below reports the probability of error (i.e.&nbsp;“Block Error Rate”),</p>
+<p><span class="math display">\[
+\text{(Block Error Rate)} \; = \; \mathop{\mathrm{P}}(x_\star \neq x^{[i]})
+\]</span></p>
+<p>when the codeword <span class="math inline">\(x^{[i]}\)</span> is chosen uniformly at random within the codebook.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./shannon_code.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+<p>It can be seen that, although the error rate does go to zero for low transmission rate, the choice of <span class="math inline">\(K = N / C\)</span> where <span class="math inline">\(C\)</span> is the channel capacity still yields a relatively large block error rate. This indicates that the block size <span class="math inline">\(N=13\)</span> is still far too low for the “law of large number” arguments presented in the previous section to kick-in. I did try for <span class="math inline">\(N=20\)</span> and a codebook of <span class="math inline">\(2^{20} \approx 10^6\)</span> and the performace was still not impressive. This shows that even though the Shannon codebook approaches is an elegant construction, it is far from being practically useful. It requires a very large codebook of size <span class="math inline">\(2^N\)</span> and decoding requires doing a nearest-neighbors search that can become slow as <span class="math inline">\(N\)</span> increases.</p>
 
 
 
