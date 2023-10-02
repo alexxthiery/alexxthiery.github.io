@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/stats_basics/natural_gradients.html</loc>
-    <lastmod>2023-10-01T13:30:29.356Z</lastmod>
+    <lastmod>2023-10-02T15:29:16.089Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/index_pubs.html</loc>
@@ -198,31 +198,31 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
-    <lastmod>2023-10-01T13:30:29.877Z</lastmod>
+    <lastmod>2023-10-02T15:29:16.558Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2023-10-01T13:30:30.342Z</lastmod>
+    <lastmod>2023-10-02T15:29:17.044Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2023-10-01T13:30:30.625Z</lastmod>
+    <lastmod>2023-10-02T15:29:17.343Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</loc>
-    <lastmod>2023-10-01T13:30:31.478Z</lastmod>
+    <lastmod>2023-10-02T15:29:18.496Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</loc>
-    <lastmod>2023-10-01T13:30:31.943Z</lastmod>
+    <lastmod>2023-10-02T15:29:18.953Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2023-10-01T13:30:32.339Z</lastmod>
+    <lastmod>2023-10-02T15:29:19.345Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
-    <lastmod>2023-10-01T13:30:32.774Z</lastmod>
+    <lastmod>2023-10-02T15:29:19.764Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/teaching.html</loc>
@@ -238,7 +238,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</loc>
-    <lastmod>2023-10-01T13:30:30.961Z</lastmod>
+    <lastmod>2023-10-02T15:29:17.670Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_references.html</loc>
@@ -250,10 +250,14 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</loc>
-    <lastmod>2023-10-01T13:30:33.056Z</lastmod>
+    <lastmod>2023-10-02T15:29:20.047Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_basics copy/information_theory_fano.html</loc>
     <lastmod>2023-09-30T03:55:57.017Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</loc>
+    <lastmod>2023-10-02T15:29:18.013Z</lastmod>
   </url>
 </urlset>

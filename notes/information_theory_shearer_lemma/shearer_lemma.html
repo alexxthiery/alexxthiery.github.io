@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Information Theory: References and Readings</title>
+<title>Alexandre Thiéry - Shearer’s lemma</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -58,11 +77,15 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Information Theory: References and Readings">
+<meta property="og:title" content="Alexandre Thiéry - Shearer’s lemma">
+<meta property="og:description" content="">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Information Theory: References and Readings">
+<meta name="twitter:title" content="Alexandre Thiéry - Shearer’s lemma">
+<meta name="twitter:description" content="">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
 </head>
@@ -121,7 +144,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Information Theory: References and Readings</h1>
+      <h1 class="title">Shearer’s lemma</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">infoTheory</div>
               </div>
@@ -135,16 +158,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">30 09 2023</p>
+        <p class="date">02 10 2023</p>
       </div>
     </div>
     
-      <div>
-      <div class="quarto-title-meta-heading">Modified</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date-modified">30 09 2023</p>
-      </div>
-    </div>
       
     </div>
     
@@ -157,8 +174,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#books" id="toc-books" class="nav-link active" data-scroll-target="#books">Books</a></li>
-  <li><a href="#lecture-notes-articles" id="toc-lecture-notes-articles" class="nav-link" data-scroll-target="#lecture-notes-articles">Lecture Notes &amp; Articles</a></li>
+  <li><a href="#application-projection-on-hyperplanes" id="toc-application-projection-on-hyperplanes" class="nav-link active" data-scroll-target="#application-projection-on-hyperplanes">Application: projection on hyperplanes</a></li>
   </ul>
 </nav>
     </div>
@@ -168,26 +184,47 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<section id="books" class="level3">
-<h3 class="anchored" data-anchor-id="books">Books</h3>
-<ul>
-<li>“Elements of information theory” by T. M. Cover and J. A. Thomas – <em>perfect intro book to the topic.</em></li>
-<li>“<a href="https://www.inference.org.uk/mackay/itila/">Information Theory, Inference, and Learning Algorithms</a>” by David J.C. MacKay</li>
-<li>“<a href="http://www.stat.yale.edu/~yw562/ln.html">Information Theory From Coding to Learning</a>” by Yury Polyanskiy and Yihong Wu</li>
-</ul>
+<p>The <a href="https://en.wikipedia.org/wiki/Shearer%27s_inequality">Shearer’s lemma</a> <span class="citation" data-cites="chung1986some">(<a href="#ref-chung1986some" role="doc-biblioref">Chung et al. 1986</a>)</span> is concerned with a generalization of the sub-additivity of the Shannon Entropy,</p>
+<p><span class="math display">\[
+H(X_1, \ldots, X_N) \; \leq \; H(X_1) + \ldots + H(X_N).
+\]</span></p>
+<p>Instead, consider an integer <span class="math inline">\(t \geq 1\)</span> and a family <span class="math inline">\(S_1, \ldots, S_K\)</span> of subsets of <span class="math inline">\(\{1, \ldots, N\}\)</span> such that any index <span class="math inline">\(1 \leq n \leq N\)</span> appears in at least <span class="math inline">\(t\)</span> of these subsets. Note that for a subset <span class="math inline">\(S_i = \{ \alpha_1, \ldots, \alpha_{r_i}\}\)</span> with <span class="math inline">\(\alpha_1 &lt; \ldots &lt; \alpha_{r_i}\)</span> we have</p>
+<p><span id="eq-add"><span class="math display">\[
+\begin{align}
+H(X_{S_i}) &amp;\equiv H(X_{\alpha_1}, \ldots, X_{\alpha_{r_i}})\\
+&amp;= H(X_{\alpha_1}) + H(X_{\alpha_2} | X_{\alpha_1}) + \ldots + H(X_{\alpha_{r_i}} | X_{\alpha_{r_i-1}}, \ldots, X_{\alpha_1} ) \\
+&amp;\geq H(X_{\alpha_1}) + H(X_{\alpha_2} | X_{1:(\alpha_2-1)}) + \ldots + H(X_{\alpha_{r_i}} | X_{1:\alpha_{r_i}-1}).
+\end{align}
+\tag{1}\]</span></span></p>
+<p>Since each index appears in at least <span class="math inline">\(t\)</span> of the subsets, summing <a href="#eq-add">Equation&nbsp;1</a> over all the subset <span class="math inline">\(S_i\)</span> yields</p>
+<p><span class="math display">\[
+\sum_{i=1}^K H(X_{S_k}) \geq t \, \sum_{i=1}^N H(X_i \, | X_{1:(i-1)}) = t \, H(X).
+\]</span></p>
+<p>This means that the following inequality holds,</p>
+<p><span class="math display">\[
+H(X) \leq \frac{1}{t} \, \sum_{k=1}^K H(X_{S_k})
+\]</span></p>
+<p>Indeed, the standard sub-additivity property of the entropy corresponds to the set <span class="math inline">\(S_k = [k]\)</span> for <span class="math inline">\(1 \leq k \leq N\)</span> and <span class="math inline">\(t=1\)</span>.</p>
+<section id="application-projection-on-hyperplanes" class="level3">
+<h3 class="anchored" data-anchor-id="application-projection-on-hyperplanes">Application: projection on hyperplanes</h3>
+<p>Consider a measurable set <span class="math inline">\(A \subset \mathbb{R}^n\)</span> and call <span class="math inline">\(A_k\)</span> the projection of <span class="math inline">\(A\)</span> on the hyperplane <span class="math inline">\(\{x=(x_1, \ldots, x_n) \in \mathbb{R}^n \, : \, x_k=0\}\)</span>. A Theorem of Loomis and Whitney <span class="citation" data-cites="loomis1949inequality">(<a href="#ref-loomis1949inequality" role="doc-biblioref">Loomis and Whitney 1949</a>)</span> states that the lebesgue measure <span class="math inline">\(|A|\)</span> of the set <span class="math inline">\(A\)</span> satisfies</p>
+<p><span class="math display">\[
+|A| \; \leq \; \prod_{k=1}^n |A_k|^{1/(n-1)}.
+\]</span></p>
+<p>In other words, if all the projections <span class="math inline">\(A_k\)</span> of the set <span class="math inline">\(A\)</span> are small then, necessarily, the set <span class="math inline">\(A\)</span> itself is small. To proceed, one can approximate this set <span class="math inline">\(A\)</span> with the union <span class="math inline">\(A_{\varepsilon}\)</span> of small cubes of side <span class="math inline">\(\varepsilon\)</span> centred on <span class="math inline">\(\varepsilon\, \mathbb{Z}^n\)</span>. If one can prove the statement for <span class="math inline">\(A_{\varepsilon}\)</span>, the results follows from a standard approximation argument (ie. outer measure). Now, each cube can be indexed with a <span class="math inline">\(n\)</span>-uple of integers <span class="math inline">\((x_1, \ldots, x_n) \in \mathbb{Z}^n\)</span>, and one can consider the random variable <span class="math inline">\(X=(X_1, \ldots, X_n)\)</span> that is uniformly distributed on the set of cubes coordinates. Because <span class="math inline">\(2^{H(X)} = |A_{\varepsilon}| / \varepsilon^n\)</span>, choosing the subsets <span class="math inline">\(S_i=[1:n] \setminus \{i\}\)</span> and <span class="math inline">\(t = (n-1)\)</span> in Shearer’s Lemma immediately gives the conclusion.</p>
+
+
+
 </section>
-<section id="lecture-notes-articles" class="level3">
-<h3 class="anchored" data-anchor-id="lecture-notes-articles">Lecture Notes &amp; Articles</h3>
-<ul>
-<li>“<a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">A Mathematical Theory of Communication</a>” by C. Shannon (2948) – <em>entertaining and readable, even 70+ years later!</em></li>
-<li>“<a href="https://web.stanford.edu/class/stats311/book.html">Lecture Notes on Statistics and Information Theory</a>” by John Duchi</li>
-<li>“<a href="http://www.stat.yale.edu/~yw562/teaching/598/handouts.html">Information-theoretic methods for high-dimensional statistics</a>” by Yihong Wu</li>
-</ul>
 
-
-</section>
-
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-chung1986some" class="csl-entry" role="listitem">
+Chung, Fan RK, Ronald L Graham, Peter Frankl, and James B Shearer. 1986. <span>“Some Intersection Theorems for Ordered Sets and Graphs.”</span> <em>Journal of Combinatorial Theory, Series A</em> 43 (1). Academic Press: 23–37.
+</div>
+<div id="ref-loomis1949inequality" class="csl-entry" role="listitem">
+Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the Isoperimetric Inequality.”</span>
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
