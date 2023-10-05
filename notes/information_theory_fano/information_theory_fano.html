@@ -164,6 +164,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#fanos-inequality" id="toc-fanos-inequality" class="nav-link active" data-scroll-target="#fanos-inequality">Fano’s inequality</a></li>
+  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications">Applications:</a></li>
   </ul>
 </nav>
     </div>
@@ -196,14 +197,20 @@ X \mapsto Y \mapsto \widehat{X}
 <p><span class="math display">\[
 E = \mathbf{1} {\left( \widehat{X} \neq X \right)} .
 \]</span></p>
-<p>The probability of error is <span class="math inline">\(p_E = \mathop{\mathrm{P}}(\widehat{X} \neq X)\)</span> and <span class="math inline">\(E = \text{Bern}(p_E)\)</span>. To estimate <span class="math inline">\(X\)</span> from <span class="math inline">\(\widehat{X}\)</span>, we can start by learning if <span class="math inline">\(\widehat{X}\)</span> equals <span class="math inline">\(X\)</span>, which costs us <span class="math inline">\(H(E | \widehat{X}) \leq H(E) = h_2(p_E)\)</span> ‘bits’ of information. If it turns out that <span class="math inline">\(E=0\)</span>, we are done asking. If we find that <span class="math inline">\(E=1\)</span>, however, we need to ask additional <span class="math inline">\(H(X | \widehat{X}, E)\)</span> questions. Crucially, <span class="math inline">\(H(X | \widehat{X}, E) \leq H(X)\)</span>, but also <span class="math inline">\(H(X | \widehat{X}, E) \leq \log_2(|\mathcal{X}|-1)\)</span> since <span class="math inline">\(X\)</span> can take any value in <span class="math inline">\(\mathcal{X}\)</span> except <span class="math inline">\(\widehat{X}\)</span> when <span class="math inline">\(E=1\)</span>. Writing this reasoning quantitatively gives that</p>
-<p><span class="math display">\[
+<p>The probability of error is <span class="math inline">\(p_E = \mathop{\mathrm{P}}(\widehat{X} \neq X)\)</span> and <span class="math inline">\(E = \text{Bern}(p_E)\)</span>. To estimate <span class="math inline">\(X\)</span> from <span class="math inline">\(\widehat{X}\)</span>, we can start by learning if <span class="math inline">\(\widehat{X}\)</span> equals <span class="math inline">\(X\)</span>, which costs us <span class="math inline">\(H(E | \widehat{X}) \leq H(E) = h_2(p_E)\)</span> ‘bits’ of information. If it turns out that <span class="math inline">\(E=0\)</span>, we are done asking. If we find that <span class="math inline">\(E=1\)</span>, however, we need to ask additional <span class="math inline">\(H(X | \widehat{X}, E)\)</span> questions. Crucially, <span class="math inline">\(H(X | \widehat{X}, E) \leq H(X)\)</span>, but also <span class="math inline">\(H(X | \widehat{X}, E) \leq \log_2(|\mathcal{X}|-1)\)</span> since <span class="math inline">\(X\)</span> can take any value in <span class="math inline">\(\mathcal{X}\)</span> except <span class="math inline">\(\widehat{X}\)</span> when <span class="math inline">\(E=1\)</span>. Writing this reasoning quantitatively gives <a href="https://en.wikipedia.org/wiki/Fano%27s_inequality">Fano’s inequality</a>:</p>
+<p><span id="eq-fano"><span class="math display">\[
 \begin{align}
 H(X | \widehat{X})
 &amp;\leq h_2(p_E) + p_E \, \log_2(|\mathcal{X}|-1).
 \end{align}
-\]</span></p>
-<p>In words: a large <span class="math inline">\(H(X | \widehat{X})\)</span> means that <span class="math inline">\(\widehat{X}\)</span> offers insufficient information about <span class="math inline">\(X\)</span>, and as a result, the probability of error <span class="math inline">\(p_E\)</span> must be high.</p>
+\tag{2}\]</span></span></p>
+<p>Apparently, this inequality was first derived by <a href="https://en.wikipedia.org/wiki/Robert_Fano">Robert Fano</a> in the 50s while teaching a Ph.D.&nbsp;seminar at MIT. In words: a large <span class="math inline">\(H(X | \widehat{X})\)</span> means that <span class="math inline">\(\widehat{X}\)</span> offers insufficient information about <span class="math inline">\(X\)</span>, and as a result, the probability of error <span class="math inline">\(p_E\)</span> must be high.</p>
+</section>
+<section id="applications" class="level3">
+<h3 class="anchored" data-anchor-id="applications">Applications:</h3>
+<ul>
+<li>Converse of <a href="../../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon’s coding theorem</a></li>
+</ul>
 
 
 </section>
