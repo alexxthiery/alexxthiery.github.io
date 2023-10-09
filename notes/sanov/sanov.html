@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Sanov Theorem</title>
+<title>Alexandre Thiéry - Sanov’s Theorem</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -62,13 +62,19 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Sanov Theorem">
+<meta property="og:title" content="Alexandre Thiéry - Sanov’s Theorem">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/sanov/boltzman.png">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Sanov Theorem">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:width" content="1800">
+<meta name="twitter:title" content="Alexandre Thiéry - Sanov’s Theorem">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/sanov/boltzman.png">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:image-height" content="1200">
+<meta name="twitter:image-width" content="1800">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -125,7 +131,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Sanov Theorem</h1>
+      <h1 class="title">Sanov’s Theorem</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">LargeDeviation</div>
               </div>
@@ -139,14 +145,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">05 10 2023</p>
+        <p class="date">09 10 2023</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">05 10 2023</p>
+        <p class="date-modified">09 10 2023</p>
       </div>
     </div>
       
@@ -161,11 +167,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#statement" id="toc-statement" class="nav-link active" data-scroll-target="#statement">Statement</a></li>
-  <li><a href="#importance-sampling-and-tilting" id="toc-importance-sampling-and-tilting" class="nav-link" data-scroll-target="#importance-sampling-and-tilting">Importance Sampling and Tilting</a></li>
-  <li><a href="#markov-chain" id="toc-markov-chain" class="nav-link" data-scroll-target="#markov-chain">Markov Chain</a></li>
-  <li><a href="#conditional-boltzman-distribution" id="toc-conditional-boltzman-distribution" class="nav-link" data-scroll-target="#conditional-boltzman-distribution">Conditional &amp; Boltzman distribution</a></li>
-  <li><a href="#link-with-entropy" id="toc-link-with-entropy" class="nav-link" data-scroll-target="#link-with-entropy">Link with entropy</a></li>
+  <li><a href="#sanovs-theorem" id="toc-sanovs-theorem" class="nav-link active" data-scroll-target="#sanovs-theorem">Sanov’s Theorem</a></li>
+  <li><a href="#rare-events-happen-in-the-least-unlikely-manner" id="toc-rare-events-happen-in-the-least-unlikely-manner" class="nav-link" data-scroll-target="#rare-events-happen-in-the-least-unlikely-manner">Rare events happen in the least unlikely manner</a></li>
+  <li><a href="#example-averaging-uniforms" id="toc-example-averaging-uniforms" class="nav-link" data-scroll-target="#example-averaging-uniforms">Example: averaging uniforms…</a></li>
   </ul>
 </nav>
     </div>
@@ -175,29 +179,84 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<section id="statement" class="level3">
-<h3 class="anchored" data-anchor-id="statement">Statement</h3>
-</section>
-<section id="importance-sampling-and-tilting" class="level3">
-<h3 class="anchored" data-anchor-id="importance-sampling-and-tilting">Importance Sampling and Tilting</h3>
-</section>
-<section id="markov-chain" class="level3">
-<h3 class="anchored" data-anchor-id="markov-chain">Markov Chain</h3>
-</section>
-<section id="conditional-boltzman-distribution" class="level3">
-<h3 class="anchored" data-anchor-id="conditional-boltzman-distribution">Conditional &amp; Boltzman distribution</h3>
-</section>
-<section id="link-with-entropy" class="level3">
-<h3 class="anchored" data-anchor-id="link-with-entropy">Link with entropy</h3>
-<p>Consider <span class="math inline">\(N\)</span> non-interacting particles <span class="math inline">\(x=(x_1, \ldots, x_N)\)</span> with <span class="math inline">\(x_i \sim \mathop{\mathrm{P}}(dx)\)</span>. The total energy of this system of particles is given by</p>
+<section id="sanovs-theorem" class="level3">
+<h3 class="anchored" data-anchor-id="sanovs-theorem">Sanov’s Theorem</h3>
+<p>Consider a random variable <span class="math inline">\(X\)</span> on the finite alphabet <span class="math inline">\(\{a_1, \ldots, a_K\}\)</span> with <span class="math inline">\(\mathop{\mathrm{P}}(X=a_k) = p_k\)</span>. For <span class="math inline">\(N \gg 1\)</span>, consider a sequence <span class="math inline">\((x_1, \ldots, x_N)\)</span> obtained by sampling <span class="math inline">\(N\)</span> times independently from <span class="math inline">\(X\)</span> and set</p>
 <p><span class="math display">\[
-E(x) = \Phi(x_1) + \ldots + \Phi(x_N).
+\widehat{p}_k = \frac{1}{N} \, \sum_{i=1}^N \, \mathbf{1} {\left( x_i = a_k \right)}
 \]</span></p>
-<p>We assume further that the total energy is known to be equal to <span class="math inline">\(E_0\)</span> so that the particles are distributed according to <span class="math inline">\(\mathop{\mathrm{P}}^{\otimes N}(dx)\)</span> restricted to the set</p>
+<p>the proportion of <span class="math inline">\(a_k\)</span> within this sequence. In other words, the empirical distribution obtained from the samples <span class="math inline">\((x_1, \ldots, x_N)\)</span> reads</p>
 <p><span class="math display">\[
-A = \Big\{ \, x : E_0 - \varepsilon&lt; E(x) &lt; E_0 + \varepsilon\, \Big\}.
+\widehat{p} = \sum_{k=1}^K \, \widehat{p}_k \, \delta_{a_k}.
 \]</span></p>
-<p>For a large number of particles, it is equivalent to sampling the particles independently from the tilted distribution [TODO]</p>
+<p>Indeed, the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">LLN</a> indicates that <span class="math inline">\(\widehat{p}_k \to p_k\)</span> as <span class="math inline">\(N \to \infty\)</span>, and it is important to estimate the probability that <span class="math inline">\(\widehat{p}_k\)</span> significantly deviates from <span class="math inline">\(p_k\)</span>. To this end, note that for another probability vector <span class="math inline">\(q=(q_1, \ldots, q_K)\)</span> the probability that</p>
+<p><span class="math display">\[
+(\widehat{p}_1, \ldots, \widehat{p}_K) \; = \; (q_1, \ldots, q_K)
+\]</span></p>
+<p>is straightforward to compute and reads</p>
+<p><span class="math display">\[
+\mathop{\mathrm{P}}(\widehat{p} = q) \; = \; \binom{N}{N q_1, \ldots, N q_K} \, p_1^{N q_1} \ldots p_R^{N q_K}.
+\]</span></p>
+<p><a href="https://en.wikipedia.org/wiki/Stirling%27s_approximation">Stirling’s approximation</a> <span class="math inline">\(m! \asymp m \, \ln(m)\)</span> then gives that</p>
+<p><span class="math display">\[
+\mathop{\mathrm{P}}(\widehat{p} = q) \; \asymp \;
+\exp {\left( -N \cdot \mathop{\mathrm{D_{\text{KL}}}}(q,p) \right)}
+\]</span></p>
+<p>where <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(q,p) = \sum_{k=1}^K q_k \, \log[q_k / p_k]\)</span> is the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback–Leibler divergence</a> of <span class="math inline">\(q\)</span> from <span class="math inline">\(p\)</span>. In other words, as soon as <span class="math inline">\(q \neq p\)</span>, the probability of observing <span class="math inline">\(\widehat{p} \approx q\)</span> falls exponentially quickly to zero. With the language of <a href="https://en.wikipedia.org/wiki/Large_deviations_theory">Large Deviations</a>, one can make this statement slightly more precise, rigorous and general, but it is essentially the content of <a href="https://en.wikipedia.org/wiki/Sanov%27s_theorem">Sanov’s Theorem</a>.</p>
+</section>
+<section id="rare-events-happen-in-the-least-unlikely-manner" class="level3">
+<h3 class="anchored" data-anchor-id="rare-events-happen-in-the-least-unlikely-manner">Rare events happen in the least unlikely manner</h3>
+<p>Given a list of mutually exclusive events <span class="math inline">\(E_1, \ldots, E_R\)</span> and the knowledge that at least one of these events has taken place, the probability that the event <span class="math inline">\(E_k\)</span> was the one that happened is <span class="math inline">\(\mathop{\mathrm{P}}(E_k) / [\mathop{\mathrm{P}}(E_1) + \ldots + \mathop{\mathrm{P}}(E_R)]\)</span>. The implication is that if all the events are rare, that is <span class="math inline">\(p_k \approx e^{-N \, I_k} \ll 1\)</span>, and it is known that one event has indeed occurred, there is a high probability that the event with the smallest <span class="math inline">\(I_k\)</span> value was the one that happened: the rare event took place in the least unlikely manner.</p>
+<p>Consider an iid sequence <span class="math inline">\((X_1, \ldots, X_N)\)</span> of <span class="math inline">\(N \gg 1\)</span> discrete real-valued random variables with <span class="math inline">\(\mathop{\mathrm{P}}(X = a_k) = p_k\)</span> and mean <span class="math inline">\(\mathop{\mathrm{E}}(X) \in \mathbb{R}\)</span>. Suppose one observes the rare event</p>
+<p><span id="eq-rare"><span class="math display">\[
+\frac{1}{N} \sum_{i=1}^N x_i  \geq \mu
+\tag{1}\]</span></span></p>
+<p>for some level <span class="math inline">\(\mu\)</span> significantly above <span class="math inline">\(\mathop{\mathrm{E}}(X)\)</span>. Naturally, the least unlikely way for this to happen is if <span class="math inline">\((x_1 + \ldots + x_N) / N \, \approx \, \mu\)</span>. Furthermore, one may be interested in the empirical distribution <span class="math inline">\(\widehat{p}\)</span> associated to the sequence <span class="math inline">\((x_1, \ldots, x_N)\)</span> when the rare event <a href="#eq-rare">Equation&nbsp;1</a> does happen. The least unlikely empirical distribution is the one that minimizes <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> under the constraint that</p>
+<p><span id="eq-contraint"><span class="math display">\[
+\sum_{i=1}^K a_k \, \widehat{p}_k = \mu.
+\tag{2}\]</span></span></p>
+<p>The function <span class="math inline">\(\widehat{p} \mapsto \mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> is convex and the introduction of Lagrange multipliers shows that the solution to this constraint minimization problem is given by the Boltzmann distribution <span class="math inline">\(p_{\beta_\mu}\)</span> defined as</p>
+<p><span id="eq-boltz"><span class="math display">\[
+p_{\beta_\mu}(a_k) = \frac{ p_k \, e^{-\beta_{\mu} \, a_k} }{Z(\beta_{\mu})}.
+\tag{3}\]</span></span></p>
+<p>The parameter <span class="math inline">\(\beta_{\mu} \in \mathbb{R}\)</span> is chosen so that the constraint <a href="#eq-contraint">Equation&nbsp;2</a> be satisfied and the minus sign is to follow the “physics” convention. Note in passing that, in fact, the joint function <span class="math inline">\((\widehat{p},p) \mapsto \mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> is convex! As usual, if one defines the log-partition function as <span class="math inline">\(\Phi(\beta) = -\log Z(\beta)\)</span>, with</p>
+<p><span class="math display">\[
+Z(\beta) \; = \; \sum_{k=1}^K \, p_k \, e^{-\beta \, a_k},
+\]</span></p>
+<p>one obtains that the constraint is equivalent to requiring <span class="math inline">\(\mu = \frac{d}{d \beta} \Phi(\beta) \mid_{\beta = \beta_\mu}\)</span>. Furthermore, since <span class="math inline">\(\Phi\)</span> is smooth and strictly concave, so is the function <span class="math inline">\(\beta \mapsto \left&lt; \mu, \beta \right&gt; - \Phi(\beta)\)</span>, so that the condition <span class="math inline">\(\mu = \frac{d}{d \beta} \Phi(\beta) \mid_{\beta = \beta_\mu}\)</span> is equivalent to setting</p>
+<p><span class="math display">\[
+\beta_{\mu} \; = \; \mathop{\mathrm{argmin}}_{\beta \in \mathbb{R}} \; \left&lt; \mu, \beta \right&gt; - \Phi(\beta).
+\]</span></p>
+<p>Naturally, one can now also estimate the probability of the event <span class="math inline">\(\mathop{\mathrm{P}}[(X_1 + \ldots + X_N)/N \approx \alpha]\)</span> happening since one now knows that it is equivalent (on a log scale) to <span class="math inline">\(\exp[-N \, \mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p)]\)</span>. Algebra gives</p>
+<p><span class="math display">\[
+\begin{align}
+\mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p)
+&amp;= \Phi(\beta_\mu) - \left&lt; \mu, \beta_\mu \right&gt;\\
+&amp;= \max_{\beta \in \mathbb{R}} \; \Phi(\beta) - \left&lt; \mu, \beta \right&gt;.
+\end{align}
+\]</span></p>
+<p>As a sanity check, note that since <span class="math inline">\(\Phi(0)=0\)</span>, we have that <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p) \geq 0\)</span>, as required. The statement that</p>
+<p><span class="math display">\[
+\frac{1}{N} \, \log \mathop{\mathrm{P}} {\left\{ \frac{X_1 + \ldots + X_N}{N} \; \approx \; \mu \right\}}  \; = \; - I(\mu)
+\]</span></p>
+<p>with a (Large Deviation) rate function given by</p>
+<p><span class="math display">\[
+I(\mu) \; = \; \max_{\beta \in \mathbb{R}} \; \Phi(\beta) - \left&lt; \mu, \beta \right&gt;
+\]</span></p>
+<p>is more or less the content of <a href="https://en.wikipedia.org/wiki/Cramér%27s_theorem_(large_deviations)">Cramer’s Theorem</a>. The rate function <span class="math inline">\(I(\mu)\)</span> and the function <span class="math inline">\(\log Z( \textcolor{red}{-}\beta)\)</span> are related by a <a href="https://en.wikipedia.org/wiki/Legendre_transformation">Legendre transform</a>.</p>
+</section>
+<section id="example-averaging-uniforms" class="level3">
+<h3 class="anchored" data-anchor-id="example-averaging-uniforms">Example: averaging uniforms…</h3>
+<p>Now, to illustrate the above discussion, consider <span class="math inline">\(N=10\)</span> iid uniform random variables on the interval <span class="math inline">\([0,1]\)</span>. It is straightforward to simulate these <span class="math inline">\(N=10\)</span> uniforms conditioned on the event that their mean exceeds the level <span class="math inline">\(\mu = 0.7\)</span>, which is a relatively rare event. When this is done repetitively and the empirical distribution is plotted, the resulting distribution is as follows:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./boltzman.png" class="img-fluid figure-img" style="width:95.0%"></p>
+<figcaption class="figure-caption">Mean of <span class="math inline">\(10\)</span> uniforms conditioned on being larger than <span class="math inline">\(\mu = 0.7\)</span></figcaption>
+</figure>
+</div>
+</div>
+<p>Indeed, the distribution in blue is (very close to) the Boltzmann distribution with density <span class="math inline">\(\mathcal{D}_{\beta}(x) = e^{-\beta \, x} / Z(\beta)\)</span> with <span class="math inline">\(\beta \in \mathbb{R}\)</span> chosen so that <span class="math inline">\(\int_{0}^{1} x \, \mathcal{D}_{\beta}(dx) = \mu\)</span>.</p>
 
 
 </section>
