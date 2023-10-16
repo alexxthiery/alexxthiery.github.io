@@ -204,7 +204,7 @@ p_{\delta_t}(dx) \; \approx \; \frac{1}{N} \sum_{i=1}^N \, \delta_{X_{\delta_t}^
 \]</span></p>
 <p>approximate <span class="math inline">\(p_{\delta_t}(x)\)</span> where</p>
 <p><span id="eq-fokker"><span class="math display">\[
-\frac{p_{\delta_t}(x)- p_0(x)}{\delta_t} \; = \; -\partial_x  {\left[ \mu(x) \, p_0(x) \right]}
+\frac{p_{\delta_t}(x)- p_0(x)}{\delta_t} \; = \; -\nabla \cdot  {\left[ \mu(x) \, p_0(x) \right]}
 \tag{1}\]</span></span></p>
 <p>How should the drift function <span class="math inline">\(\mu: \mathbb{R}^D \to \mathbb{R}^D\)</span> be chosen so that <span class="math inline">\(p_{\delta_t}\)</span> approximates <span class="math inline">\(\pi\)</span> best? One can try to optimize the drift function so that it minimizes</p>
 <p><span class="math display">\[
@@ -222,7 +222,7 @@ p_{\delta_t}(dx) \; \approx \; \frac{1}{N} \sum_{i=1}^N \, \delta_{X_{\delta_t}^
 \]</span></p>
 <p>Using the approximations <a href="#eq-fokker">Equation&nbsp;1</a> and <a href="#eq-wass">Equation&nbsp;2</a>, this can be approximated as</p>
 <p><span class="math display">\[
--\int \partial_x \Big\{  \textcolor{red}{[\delta_t \mu]}(x) \, p_0(x) \Big\} \, \log  {\left\{  \frac{p_0(x)}{\pi(x)}  \right\}} \, dx \, + \, \frac{1}{2 \varepsilon} \, \int p_0(x) \, \|  \textcolor{red}{[\delta_t \, \mu]}(x) \|^2 \, dx.
+-\int \nabla \cdot \Big\{  \textcolor{red}{[\delta_t \mu]}(x) \, p_0(x) \Big\} \, \log  {\left\{  \frac{p_0(x)}{\pi(x)}  \right\}} \, dx \, + \, \frac{1}{2 \varepsilon} \, \int p_0(x) \, \|  \textcolor{red}{[\delta_t \, \mu]}(x) \|^2 \, dx.
 \]</span></p>
 <p>An integration and a straightforward pointwise minimization shows that the optimal drift function reads</p>
 <p><span class="math display">\[
@@ -243,7 +243,7 @@ dX \; = \; -\nabla \log \pi(X) \, dt \; + \; \sqrt{2} \, dW
 \]</span></p>
 <p>for some function <span class="math inline">\(\Phi: (0, \infty) \to \mathbb{R}\)</span> leads to choosing a drift function <span class="math inline">\(\mu\)</span> minimizing</p>
 <p><span class="math display">\[
-\int - \partial_x \Big\{  \textcolor{red}{[\delta_t \, \mu]}(x) \, p(x) \Big\} \Phi'[p(x)] \, \mu(dx)
+\int -\nabla \cdot \Big\{  \textcolor{red}{[\delta_t \, \mu]}(x) \, p(x) \Big\} \Phi'[p(x)] \, \mu(dx)
 \, + \, \frac{1}{2 \varepsilon} \, \int p_0(x) \, \|  \textcolor{red}{[\delta_t \, \mu]}(x) \|^2 \, dx.
 \]</span></p>
 <p>This can be approached identically to what as been done in the case of minimizing <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(p, \pi)\)</span>.</p>
