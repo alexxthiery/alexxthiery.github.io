@@ -10,7 +10,62 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Sun, 08 Oct 2023 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 15 Oct 2023 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Wasserstein Gradients &amp; Langevin Diffusions</title>
+  <link>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/wasserstein_langevin/langevin.gif" class="img-fluid figure-img" style="width:95.0%"></p>
+<figcaption class="figure-caption">Overdamped Langevin Diffusion</figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a target probability density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED"> possibly known up to a normalization constant <img src="https://latex.codecogs.com/png.latex?Z%20%3E%200">. Now, consider another density <img src="https://latex.codecogs.com/png.latex?p_0(x)"> that we would like to slightly “update” to approximate the target distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi"> better. For example, imagine <img src="https://latex.codecogs.com/png.latex?N%20%5Cgg%201"> particles <img src="https://latex.codecogs.com/png.latex?X_0%5E1,%20%5Cldots,%20X_0%5EN%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> whose empirical distribution approximate <img src="https://latex.codecogs.com/png.latex?p_0(dx)">,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ap_0(dx)%20%5C;%20%5Capprox%20%5C;%20%5Cfrac%7B1%7D%7BN%7D%20%5Csum_%7Bi=1%7D%5EN%20%5C,%20%5Cdelta_%7BX_0%5Ei%7D(dx)%0A"></p>
+<p>and set <img src="https://latex.codecogs.com/png.latex?X_%7B%5Cdelta%7D%5Ei%20=%20X_0%5Ei%20+%20%5Cdelta_t%20%5C,%20%5Cmu(X_0%5Ei)"> for a time discretization parameter <img src="https://latex.codecogs.com/png.latex?%5Cdelta_t%20%5Cll%201"> and a drift function <img src="https://latex.codecogs.com/png.latex?%5Cmu:%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5ED">. The <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation shows that the resulting empirical distribution</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ap_%7B%5Cdelta_t%7D(dx)%20%5C;%20%5Capprox%20%5C;%20%5Cfrac%7B1%7D%7BN%7D%20%5Csum_%7Bi=1%7D%5EN%20%5C,%20%5Cdelta_%7BX_%7B%5Cdelta_t%7D%5Ei%7D(dx)%0A"></p>
+<p>approximate <img src="https://latex.codecogs.com/png.latex?p_%7B%5Cdelta_t%7D(x)"> where</p>
+<p><span id="eq-fokker"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bp_%7B%5Cdelta_t%7D(x)-%20p_0(x)%7D%7B%5Cdelta_t%7D%20%5C;%20=%20%5C;%20-%5Cpartial_x%20%20%7B%5Cleft%5B%20%5Cmu(x)%20%5C,%20p_0(x)%20%5Cright%5D%7D%0A%5Ctag%7B1%7D"></span></p>
+<p>How should the drift function <img src="https://latex.codecogs.com/png.latex?%5Cmu:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5ED"> be chosen so that <img src="https://latex.codecogs.com/png.latex?p_%7B%5Cdelta_t%7D"> approximates <img src="https://latex.codecogs.com/png.latex?%5Cpi"> best? One can try to optimize the drift function so that it minimizes</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p_%7B%5Cdelta_t%7D,%20%5Cpi)%0A=%0A%5Cint%20p_%7B%5Cdelta_t%7D(x)%20%5C,%20%5Clog%20%7B%5Cleft%5C%7B%20%5Cfrac%7Bp_%7B%5Cdelta_t%7D(x)%7D%7B%5Cpi(x)%7D%20%5Cright%5C%7D%7D%20%20%5C,%20dx.%0A"></p>
+<p>under the constraint that <img src="https://latex.codecogs.com/png.latex?p_%7B%5Cdelta_t%7D"> is not “too far” from <img src="https://latex.codecogs.com/png.latex?p_0">. For example, one can constrain the <img src="https://latex.codecogs.com/png.latex?L%5E2"> <a href="https://en.wikipedia.org/wiki/Wasserstein_metric">Wasserstein distance</a> and require that</p>
+<p><span id="eq-wass"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BWass%7D%7D%7D%7D(p_%7B0%7D,%20p_%7B%5Cdelta_t%7D)%20%5Capprox%20%5Cint%20p_0(x)%20%5C,%20%5C%7C%20%5Cdelta_t%20%5C,%20%5Cmu(x)%20%5C%7C%5E2%20%5C,%20dx%20%5Cleq%20%5Cvarepsilon.%0A%5Ctag%7B2%7D"></span></p>
+<p>In this case and more pragmatically, it is easier to optimize the drift function <img src="https://latex.codecogs.com/png.latex?%5Cmu"> so as to minimize the joint objective</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmu%20%5C;%20%5Cmapsto%20%5C;%20%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p_%7B%5Cdelta_t%7D,%20%5Cpi)%20+%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C,%20%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BWass%7D%7D%7D%7D(p_%7B0%7D,%20p_%7B%5Cdelta_t%7D).%0A"></p>
+<p>Using the approximations Equation&nbsp;1 and Equation&nbsp;2, this can be approximated as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A-%5Cint%20%5Cpartial_x%20%5CBig%5C%7B%20%20%5Ctextcolor%7Bred%7D%7B%5B%5Cdelta_t%20%5Cmu%5D%7D(x)%20%5C,%20p_0(x)%20%5CBig%5C%7D%20%5C,%20%5Clog%20%20%7B%5Cleft%5C%7B%20%20%5Cfrac%7Bp_0(x)%7D%7B%5Cpi(x)%7D%20%20%5Cright%5C%7D%7D%20%5C,%20dx%20%5C,%20+%20%5C,%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C,%20%5Cint%20p_0(x)%20%5C,%20%5C%7C%20%20%5Ctextcolor%7Bred%7D%7B%5B%5Cdelta_t%20%5C,%20%5Cmu%5D%7D(x)%20%5C%7C%5E2%20%5C,%20dx.%0A"></p>
+<p>An integration and a straightforward pointwise minimization shows that the optimal drift function reads</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmu(x)%20%5C;%20=%20%5C;%20-%20%7B%5Cleft(%20%20%5Cfrac%7B%5Cvarepsilon%7D%7B%5Cdelta_t%7D%20%20%5Cright)%7D%20%20%5C,%20%5Cnabla%20%5Clog%20%20%7B%5Cleft%5C%7B%20%20%5Cfrac%7Bp_0%7D%7B%5Cpi%7D%20%20%5Cright%5C%7D%7D%20.%0A"></p>
+<p>In other words, the drift function should be chosen proportional to <img src="https://latex.codecogs.com/png.latex?-%5Cnabla%20%5Clog%5Bp_0(x)%20/%20%5Cpi(x)%5D">. Iterating this scheme means sampling <img src="https://latex.codecogs.com/png.latex?N%20%5Cgg%201"> particles <img src="https://latex.codecogs.com/png.latex?X_0%5Ei%20%5Csim%20p_0(dx)"> and evolving each one of them through the dynamics</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%7D%7Bdt%7D%20X_t%5Ei%20%5C;%20=%20%5C;%20-%20%5Cnabla%20%5Clog%5Bp_t(X_t%5Ei)%20/%20%5Cpi(X_t%5Ei)%5D%0A"></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?p_t"> is the density of particle at time <img src="https://latex.codecogs.com/png.latex?t">. It is the usual <a href="../../notes/DDPM_deterministic/DDPM_deterministic.html">diffusion-ODE trick</a> for describing the overdamped Langevin diffusion</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AdX%20%5C;%20=%20%5C;%20-%5Cnabla%20%5Clog%20%5Cpi(X)%20%5C,%20dt%20%5C;%20+%20%5C;%20%5Csqrt%7B2%7D%20%5C,%20dW%0A"></p>
+<p>as writing the associated Fokker-Planck equation immediately shows it. This (very) informal discussion shows that minimizing <img src="https://latex.codecogs.com/png.latex?p%20%5Cmapsto%20%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p,%20%5Cpi)"> by implementing a gradient descent on the space of probability distributions endowed with the Wasserstein metric leads to a standard <a href="https://en.wikipedia.org/wiki/Brownian_dynamics">overdamped Langevin diffusion</a>. Making this argument rigorous is far from trivial: the constructive proof in <span class="citation" data-cites="jordan1998variational">(Jordan, Kinderlehrer, and Otto 1998)</span> is known as the JKO scheme.</p>
+<p>The above derivation shows that using the Wasserstein distance plays particularly well with minimizing functionals of the space of probability distributions. Indeed, the same argument shows that minimizing</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BF%7D(p)%20%5C;%20=%20%5C;%20%5Cint%20%5CPhi%5Bp(x)%5D%20%5C,%20%5Cmu(dx)%0A"></p>
+<p>for some function <img src="https://latex.codecogs.com/png.latex?%5CPhi:%20(0,%20%5Cinfty)%20%5Cto%20%5Cmathbb%7BR%7D"> leads to choosing a drift function <img src="https://latex.codecogs.com/png.latex?%5Cmu"> minimizing</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cint%20-%20%5Cpartial_x%20%5CBig%5C%7B%20%20%5Ctextcolor%7Bred%7D%7B%5B%5Cdelta_t%20%5C,%20%5Cmu%5D%7D(x)%20%5C,%20p(x)%20%5CBig%5C%7D%20%5CPhi'%5Bp(x)%5D%20%5C,%20%5Cmu(dx)%0A%5C,%20+%20%5C,%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C,%20%5Cint%20p_0(x)%20%5C,%20%5C%7C%20%20%5Ctextcolor%7Bred%7D%7B%5B%5Cdelta_t%20%5C,%20%5Cmu%5D%7D(x)%20%5C%7C%5E2%20%5C,%20dx.%0A"></p>
+<p>This can be approached identically to what as been done in the case of minimizing <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p,%20%5Cpi)">.</p>
+
+
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-jordan1998variational" class="csl-entry">
+Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variational Formulation of the Fokker–Planck Equation.”</span> <em>SIAM Journal on Mathematical Analysis</em> 29 (1). SIAM: 1–17.
+</div>
+</div></section></div> ]]></description>
+  <category>diffusion</category>
+  <guid>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</guid>
+  <pubDate>Sun, 15 Oct 2023 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Sanov’s Theorem</title>
   <link>https://alexxthiery.github.io/notes/sanov/sanov.html</link>
@@ -764,6 +819,8 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
 <h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
 <ul>
 <li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
+<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
+<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
 </ul>
 
 

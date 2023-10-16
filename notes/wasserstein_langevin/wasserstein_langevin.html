@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Notes</title>
+<title>Alexandre Thiéry - Wasserstein Gradients &amp; Langevin Diffusions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,21 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,15 +77,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Notes">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Wasserstein Gradients &amp; Langevin Diffusions">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/wasserstein_langevin/langevin.gif">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Notes">
+<meta name="twitter:title" content="Alexandre Thiéry - Wasserstein Gradients &amp; Langevin Diffusions">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/wasserstein_langevin/langevin.gif">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -76,7 +99,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -86,29 +109,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html" rel="" target="">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -123,9 +146,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
+      <h1 class="title">Wasserstein Gradients &amp; Langevin Diffusions</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">diffusion</div>
               </div>
                   </div>
   </div>
@@ -137,10 +160,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">16 10 2023</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">16 10 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -149,15 +178,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theory" id="toc-information-theory" class="nav-link" data-scroll-target="#information-theory">Information Theory</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -165,43 +186,76 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">categories</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-</ul>
-</section>
-<section id="information-theory" class="level3">
-<h3 class="anchored" data-anchor-id="information-theory">Information Theory</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-</ul>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./langevin.gif" class="img-fluid figure-img" style="width:95.0%"></p>
+<figcaption class="figure-caption">Overdamped Langevin Diffusion</figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a target probability density <span class="math inline">\(\pi(x)\)</span> on <span class="math inline">\(\mathbb{R}^D\)</span> possibly known up to a normalization constant <span class="math inline">\(Z &gt; 0\)</span>. Now, consider another density <span class="math inline">\(p_0(x)\)</span> that we would like to slightly “update” to approximate the target distribution <span class="math inline">\(\pi\)</span> better. For example, imagine <span class="math inline">\(N \gg 1\)</span> particles <span class="math inline">\(X_0^1, \ldots, X_0^N \in \mathbb{R}^D\)</span> whose empirical distribution approximate <span class="math inline">\(p_0(dx)\)</span>,</p>
+<p><span class="math display">\[
+p_0(dx) \; \approx \; \frac{1}{N} \sum_{i=1}^N \, \delta_{X_0^i}(dx)
+\]</span></p>
+<p>and set <span class="math inline">\(X_{\delta}^i = X_0^i + \delta_t \, \mu(X_0^i)\)</span> for a time discretization parameter <span class="math inline">\(\delta_t \ll 1\)</span> and a drift function <span class="math inline">\(\mu:\mathbb{R}^D \to \mathbb{R}^D\)</span>. The <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation shows that the resulting empirical distribution</p>
+<p><span class="math display">\[
+p_{\delta_t}(dx) \; \approx \; \frac{1}{N} \sum_{i=1}^N \, \delta_{X_{\delta_t}^i}(dx)
+\]</span></p>
+<p>approximate <span class="math inline">\(p_{\delta_t}(x)\)</span> where</p>
+<p><span id="eq-fokker"><span class="math display">\[
+\frac{p_{\delta_t}(x)- p_0(x)}{\delta_t} \; = \; -\partial_x  {\left[ \mu(x) \, p_0(x) \right]}
+\tag{1}\]</span></span></p>
+<p>How should the drift function <span class="math inline">\(\mu: \mathbb{R}^D \to \mathbb{R}^D\)</span> be chosen so that <span class="math inline">\(p_{\delta_t}\)</span> approximates <span class="math inline">\(\pi\)</span> best? One can try to optimize the drift function so that it minimizes</p>
+<p><span class="math display">\[
+\mathop{\mathrm{D_{\text{KL}}}}(p_{\delta_t}, \pi)
+=
+\int p_{\delta_t}(x) \, \log {\left\{ \frac{p_{\delta_t}(x)}{\pi(x)} \right\}}  \, dx.
+\]</span></p>
+<p>under the constraint that <span class="math inline">\(p_{\delta_t}\)</span> is not “too far” from <span class="math inline">\(p_0\)</span>. For example, one can constrain the <span class="math inline">\(L^2\)</span> <a href="https://en.wikipedia.org/wiki/Wasserstein_metric">Wasserstein distance</a> and require that</p>
+<p><span id="eq-wass"><span class="math display">\[
+\mathop{\mathrm{D_{\text{Wass}}}}(p_{0}, p_{\delta_t}) \approx \int p_0(x) \, \| \delta_t \, \mu(x) \|^2 \, dx \leq \varepsilon.
+\tag{2}\]</span></span></p>
+<p>In this case and more pragmatically, it is easier to optimize the drift function <span class="math inline">\(\mu\)</span> so as to minimize the joint objective</p>
+<p><span class="math display">\[
+\mu \; \mapsto \; \mathop{\mathrm{D_{\text{KL}}}}(p_{\delta_t}, \pi) + \frac{1}{2 \varepsilon} \, \mathop{\mathrm{D_{\text{Wass}}}}(p_{0}, p_{\delta_t}).
+\]</span></p>
+<p>Using the approximations <a href="#eq-fokker">Equation&nbsp;1</a> and <a href="#eq-wass">Equation&nbsp;2</a>, this can be approximated as</p>
+<p><span class="math display">\[
+-\int \partial_x \Big\{  \textcolor{red}{[\delta_t \mu]}(x) \, p_0(x) \Big\} \, \log  {\left\{  \frac{p_0(x)}{\pi(x)}  \right\}} \, dx \, + \, \frac{1}{2 \varepsilon} \, \int p_0(x) \, \|  \textcolor{red}{[\delta_t \, \mu]}(x) \|^2 \, dx.
+\]</span></p>
+<p>An integration and a straightforward pointwise minimization shows that the optimal drift function reads</p>
+<p><span class="math display">\[
+\mu(x) \; = \; - {\left(  \frac{\varepsilon}{\delta_t}  \right)}  \, \nabla \log  {\left\{  \frac{p_0}{\pi}  \right\}} .
+\]</span></p>
+<p>In other words, the drift function should be chosen proportional to <span class="math inline">\(-\nabla \log[p_0(x) / \pi(x)]\)</span>. Iterating this scheme means sampling <span class="math inline">\(N \gg 1\)</span> particles <span class="math inline">\(X_0^i \sim p_0(dx)\)</span> and evolving each one of them through the dynamics</p>
+<p><span class="math display">\[
+\frac{d}{dt} X_t^i \; = \; - \nabla \log[p_t(X_t^i) / \pi(X_t^i)]
+\]</span></p>
+<p>where <span class="math inline">\(p_t\)</span> is the density of particle at time <span class="math inline">\(t\)</span>. It is the usual <a href="../../notes/DDPM_deterministic/DDPM_deterministic.html">diffusion-ODE trick</a> for describing the overdamped Langevin diffusion</p>
+<p><span class="math display">\[
+dX \; = \; -\nabla \log \pi(X) \, dt \; + \; \sqrt{2} \, dW
+\]</span></p>
+<p>as writing the associated Fokker-Planck equation immediately shows it. This (very) informal discussion shows that minimizing <span class="math inline">\(p \mapsto \mathop{\mathrm{D_{\text{KL}}}}(p, \pi)\)</span> by implementing a gradient descent on the space of probability distributions endowed with the Wasserstein metric leads to a standard <a href="https://en.wikipedia.org/wiki/Brownian_dynamics">overdamped Langevin diffusion</a>. Making this argument rigorous is far from trivial: the constructive proof in <span class="citation" data-cites="jordan1998variational">(<a href="#ref-jordan1998variational" role="doc-biblioref">Jordan, Kinderlehrer, and Otto 1998</a>)</span> is known as the JKO scheme.</p>
+<p>The above derivation shows that using the Wasserstein distance plays particularly well with minimizing functionals of the space of probability distributions. Indeed, the same argument shows that minimizing</p>
+<p><span class="math display">\[
+\mathcal{F}(p) \; = \; \int \Phi[p(x)] \, \mu(dx)
+\]</span></p>
+<p>for some function <span class="math inline">\(\Phi: (0, \infty) \to \mathbb{R}\)</span> leads to choosing a drift function <span class="math inline">\(\mu\)</span> minimizing</p>
+<p><span class="math display">\[
+\int - \partial_x \Big\{  \textcolor{red}{[\delta_t \, \mu]}(x) \, p(x) \Big\} \Phi'[p(x)] \, \mu(dx)
+\, + \, \frac{1}{2 \varepsilon} \, \int p_0(x) \, \|  \textcolor{red}{[\delta_t \, \mu]}(x) \|^2 \, dx.
+\]</span></p>
+<p>This can be approached identically to what as been done in the case of minimizing <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(p, \pi)\)</span>.</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-jordan1998variational" class="csl-entry" role="listitem">
+Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variational Formulation of the Fokker–Planck Equation.”</span> <em>SIAM Journal on Mathematical Analysis</em> 29 (1). SIAM: 1–17.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
