@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Notes</title>
+<title>Alexandre Thiéry - Deriving Langevin MCMC</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,21 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,15 +77,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Notes">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Deriving Langevin MCMC">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes_DRAFT/on_Langevin_MCMC/besag.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Notes">
+<meta name="twitter:title" content="Alexandre Thiéry - Deriving Langevin MCMC">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes_DRAFT/on_Langevin_MCMC/besag.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -76,7 +99,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -86,29 +109,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html" rel="" target="">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -120,95 +143,102 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">index</div>
-              </div>
-                  </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theory" id="toc-information-theory" class="nav-link" data-scroll-target="#information-theory">Information Theory</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Deriving Langevin MCMC</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">MCMC</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">03 10 2023</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">03 10 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./besag.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Julian Besag (1945 – 2010)</figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a target density <span class="math inline">\(\pi(x)\)</span> in <span class="math inline">\(\mathbb{R}^D\)</span>. Since the Langevin diffusion</p>
+<p><span id="eq-langevin"><span class="math display">\[
+dX_t = \nabla \log \pi(X_t) \, dt + \sqrt{2} \, dW
+\tag{1}\]</span></span></p>
+<p>is reversible with respect to <span class="math inline">\(\pi\)</span>, it is natural to use a <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler-Maruyama</a> discretization of <a href="#eq-langevin">Equation&nbsp;1</a> to build MCMC proposals: in a MCMC simluation and for a time discretization parameter <span class="math inline">\(\varepsilon&gt; 0\)</span>, if the current position is <span class="math inline">\(x \in \mathbb{R}^D\)</span>, a proposal <span class="math inline">\(y \in \mathbb{R}^D\)</span> can be generated as</p>
+<p><span class="math display">\[
+y = x + \varepsilon\, \nabla \log \pi(X_t) + \sqrt{2 \varepsilon} \, \xi
+\]</span></p>
+<p>with <span class="math inline">\(\xi \sim \mathcal{N}(0,I)\)</span> before being accepted-or-reject according to the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings</a> ratio. This MCMC method, first proposed by <a href="https://en.wikipedia.org/wiki/Julian_Besag">Julian Besag</a> in 1994, is commonly referred to as the <a href="https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm">Metropolis-Adjusted-Langevin-Algorithm</a> (MALA). But how can one come-up with this proposal mechanism without knowing before hand the existence of this reversible Langevin diffusion <a href="#eq-langevin">Equation&nbsp;1</a>? While it is intuitively clear that following the direction of <span class="math inline">\(\nabla \log \pi\)</span> is not such a bad idea, i.e.&nbsp;one would like to move towards areas of “high probability mass”, where does this <span class="math inline">\(\sqrt{2}\)</span> comes from? Naturally, one could look at proposals of the type <span class="math inline">\(y = x + \nabla \log \pi(X_t) \, \varepsilon+ \lambda \, \xi\)</span> for some free parameter <span class="math inline">\(\lambda &gt; 0\)</span> and study the behavior of the Metropolis-Hastings ratio in the regime <span class="math inline">\(\varepsilon\to 0\)</span>: as simple as it sounds, it is not entirely straightforward and requires quite a bit of algebra (do it!). Instead, I very much like the type of approaches described in <span class="citation" data-cites="titsias2018auxiliary">(<a href="#ref-titsias2018auxiliary" role="doc-biblioref">Titsias and Papaspiliopoulos 2018</a>)</span>. To summarize, we would like to generate a MCMC proposal <span class="math inline">\(y \in \mathbb{R}^D\)</span> that stays in the vicinity of the current position <span class="math inline">\(x \in \mathbb{R}^D\)</span> while exploiting the knowledge of <span class="math inline">\(\nabla \log \pi(x)\)</span>. One cannot simply approximate the target distribution as <span class="math inline">\(\pi(x) \approx \pi(x_k) e^{\left&lt; \nabla \log \pi(x_k), x-x_k \right&gt;}\)</span> and sample from this approximation since it is typically not tractable. Instead, consider the following extended target distribution</p>
+<p><span class="math display">\[
+\overline{\pi}(x,z) \, \propto \pi(x) \, \exp {\left\{ -\frac{1}{2\varepsilon}\|z-x\|^2 \right\}} .
+\]</span></p>
+<p>In other words, we consider a Gaussian auxiliary variable <span class="math inline">\(z \in \mathbb{R}^D\)</span> that is centred at <span class="math inline">\(x\)</span> and at distance about <span class="math inline">\(\sqrt{\varepsilon}\)</span> of it. Now, given the current position <span class="math inline">\(x_k\)</span>, to generate a proposal <span class="math inline">\(y_\star\)</span> that stays in the vicinity of <span class="math inline">\(x_k\)</span>, one can proceed in two steps, in the spirit of a Gibbs-sampling approach:</p>
+<ol type="1">
+<li><p>First, generate <span class="math inline">\(z_\star \sim \overline{\pi}(dz | x_k) \sim \mathcal{N}(x_k, \sqrt{\varepsilon}I)\)</span></p></li>
+<li><p>Second, sample from <span class="math inline">\(y_\star \sim \overline{\pi}(dx | z_\star)\)</span>.</p></li>
+</ol>
+<p>Unfortunately, the second step is typically not tractable. Nevertheless, the conditional density <span class="math inline">\(\overline{\pi}(dx | z_\star)\)</span> is concentrated in a <span class="math inline">\(\sqrt{\varepsilon}\)</span>-neighborhood of <span class="math inline">\(z_\star\)</span> and a simple Gaussian approximation around <span class="math inline">\((x_k, z_\star)\)</span> should be enough for our purpose. We have:</p>
+<p><span class="math display">\[
+\begin{align}
+\log \overline{\pi}(dx | z_\star)
+&amp;=
+\log \pi(x) - \frac{1}{2 \varepsilon} \|x - z_\star\|^2 + \textrm{(Cst)}\\
+&amp;\approx
+\left&lt;  \nabla \log \pi(x_k), x-x_k  \right&gt; - \frac{1}{2 \varepsilon} \|x - z_\star\|^2 + \textrm{(Cst)}\\
+&amp;=
+- \frac{1}{2 \varepsilon} \|x - [z_\star + \varepsilon\, \nabla \log \pi(x_k)]\|^2 + \textrm{(Cst)}.
+\end{align}
+\]</span></p>
+<p>This shows that the conditional <span class="math inline">\(\overline{\pi}(dx | z_\star)\)</span> can be approximated by a Gaussian distribution centred at <span class="math inline">\([z_\star + \nabla \log \pi(x_k)]\)</span> and variance <span class="math inline">\(\varepsilon\, I\)</span>. This means that the final proposal <span class="math inline">\(y \in \mathbb{R}^D\)</span> can be generated as <span class="math inline">\(y \sim z_\star + \nabla \log \pi(x_k) + \xi\)</span> where <span class="math inline">\(\xi \sim \mathcal{N}(0,\varepsilon)\)</span>. But that is equivalent to setting</p>
+<p><span class="math display">\[
+y \sim x + \varepsilon\, \nabla \log \pi(x_k) + \sqrt{2 \varepsilon} \, \xi
+\]</span></p>
+<p>with <span class="math inline">\(\xi \sim \mathcal{N}(0,I)\)</span> since <span class="math inline">\(z_\star \sim \mathcal{N}(x, \sqrt{\varepsilon} I)\)</span>. It is exactly the MALA proposal. Naturally, one can also try to slightly more clever and use an extended distribution</p>
+<p><span class="math display">\[
+\overline{\pi}(x,z) \, \propto \, \pi(x) \, \exp {\left\{  -\frac{1}{2\varepsilon} \left&lt; (z-x), M \, (z-x) \right&gt;  \right\}} .
+\]</span></p>
+<p>for some appropriate positive-definite “mass” matrix <span class="math inline">\(M \in \mathbb{R}^{D,D}\)</span>. Indeed, this immediately leads to preconditioned MALA methods. While this derivation is neat, I really like this approach since it can be adapted and generalized to quite a few other situations! More on this later…</p>
 
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">categories</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-</ul>
-</section>
-<section id="information-theory" class="level3">
-<h3 class="anchored" data-anchor-id="information-theory">Information Theory</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-</ul>
-</section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
-<ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-</ul>
-
-
-</section>
-
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-titsias2018auxiliary" class="csl-entry" role="listitem">
+Titsias, Michalis K, and Omiros Papaspiliopoulos. 2018. <span>“Auxiliary Gradient-Based Sampling Algorithms.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 80 (4). Oxford University Press: 749–67.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -441,8 +471,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

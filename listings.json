@@ -58,6 +58,7 @@
     "items": [
       "/notes/wasserstein_langevin/wasserstein_langevin.html",
       "/notes/sanov/sanov.html",
+      "/notes/on_Langevin_MCMC/on_Langevin_MCMC.html",
       "/notes/auxiliary_variable_trick/auxiliary_variable_trick.html",
       "/notes/information_theory_shearer_lemma/shearer_lemma.html",
       "/notes/information_theory_references/information_theory_references.html",
