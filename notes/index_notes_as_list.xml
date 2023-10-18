@@ -10,7 +10,54 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Sun, 15 Oct 2023 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 18 Oct 2023 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Deriving Langevin MCMC</title>
+  <link>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/on_Langevin_MCMC/besag.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Julian Besag (1945 – 2010)</figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a target density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED">. Since the Langevin diffusion</p>
+<p><span id="eq-langevin"><img src="https://latex.codecogs.com/png.latex?%0AdX_t%20=%20%5Cnabla%20%5Clog%20%5Cpi(X_t)%20%5C,%20dt%20+%20%5Csqrt%7B2%7D%20%5C,%20dW%0A%5Ctag%7B1%7D"></span></p>
+<p>is reversible with respect to <img src="https://latex.codecogs.com/png.latex?%5Cpi">, it is natural to use a <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler-Maruyama</a> discretization of Equation&nbsp;1 to build MCMC proposals: in a MCMC simulation and for a time discretization parameter <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%3E%200">, if the current position is <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5ED">, a proposal <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> can be generated as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ay%20=%20x%20+%20%5Cvarepsilon%5C,%20%5Cnabla%20%5Clog%20%5Cpi(X_t)%20+%20%5Csqrt%7B2%20%5Cvarepsilon%7D%20%5C,%20%5Cxi%0A"></p>
+<p>with <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,I)"> before being accepted-or-reject according to the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings</a> ratio. This MCMC method, first proposed by <a href="https://en.wikipedia.org/wiki/Julian_Besag">Julian Besag</a> in 1994, is commonly referred to as the <a href="https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm">Metropolis-Adjusted-Langevin-Algorithm</a> (MALA). But how can one come-up with this proposal mechanism without knowing before hand the existence of this reversible Langevin diffusion Equation&nbsp;1? While it is intuitively clear that following the direction of <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20%5Cpi"> is not such a bad idea, i.e.&nbsp;one would like to move towards areas of “high probability mass”, where does this <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7B2%7D"> comes from? Naturally, one could look at proposals of the type <img src="https://latex.codecogs.com/png.latex?y%20=%20x%20+%20%5Cnabla%20%5Clog%20%5Cpi(X_t)%20%5C,%20%5Cvarepsilon+%20%5Clambda%20%5C,%20%5Cxi"> for some free parameter <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%3E%200"> and study the behavior of the Metropolis-Hastings ratio in the regime <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200">: as simple as it sounds, it is not entirely straightforward and requires quite a bit of algebra (do it!). Instead, I very much like the type of approaches described in <span class="citation" data-cites="titsias2018auxiliary">(Titsias and Papaspiliopoulos 2018)</span>. To summarize, we would like to generate a MCMC proposal <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> that stays in the vicinity of the current position <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> while exploiting the knowledge of <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20%5Cpi(x)">. One cannot simply approximate the target distribution as <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%20%5Capprox%20%5Cpi(x_k)%20e%5E%7B%5Cleft%3C%20%5Cnabla%20%5Clog%20%5Cpi(x_k),%20x-x_k%20%5Cright%3E%7D"> and sample from this approximation since it is typically not tractable. Instead, consider the following extended target distribution</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Coverline%7B%5Cpi%7D(x,z)%20%5C,%20%5Cpropto%20%5Cpi(x)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20-%5Cfrac%7B1%7D%7B2%5Cvarepsilon%7D%5C%7Cz-x%5C%7C%5E2%20%5Cright%5C%7D%7D%20.%0A"></p>
+<p>In other words, we consider a Gaussian auxiliary variable <img src="https://latex.codecogs.com/png.latex?z%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> that is centred at <img src="https://latex.codecogs.com/png.latex?x"> and at distance about <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7B%5Cvarepsilon%7D"> of it. Now, given the current position <img src="https://latex.codecogs.com/png.latex?x_k">, to generate a proposal <img src="https://latex.codecogs.com/png.latex?y_%5Cstar"> that stays in the vicinity of <img src="https://latex.codecogs.com/png.latex?x_k">, one can proceed in two steps, in the spirit of a Gibbs-sampling approach:</p>
+<ol type="1">
+<li><p>First, generate <img src="https://latex.codecogs.com/png.latex?z_%5Cstar%20%5Csim%20%5Coverline%7B%5Cpi%7D(dz%20%7C%20x_k)%20%5Csim%20%5Cmathcal%7BN%7D(x_k,%20%5Csqrt%7B%5Cvarepsilon%7DI)"></p></li>
+<li><p>Second, sample from <img src="https://latex.codecogs.com/png.latex?y_%5Cstar%20%5Csim%20%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)">.</p></li>
+</ol>
+<p>Unfortunately, the second step is typically not tractable. Nevertheless, the conditional density <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)"> is concentrated in a <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7B%5Cvarepsilon%7D">-neighborhood of <img src="https://latex.codecogs.com/png.latex?z_%5Cstar"> and a simple Gaussian approximation around <img src="https://latex.codecogs.com/png.latex?(x_k,%20z_%5Cstar)"> should be enough for our purpose. We have:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Clog%20%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)%0A&amp;=%0A%5Clog%20%5Cpi(x)%20-%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C%7Cx%20-%20z_%5Cstar%5C%7C%5E2%20+%20%5Ctextrm%7B(Cst)%7D%5C%5C%0A&amp;%5Capprox%0A%5Cleft%3C%20%20%5Cnabla%20%5Clog%20%5Cpi(x_k),%20x-x_k%20%20%5Cright%3E%20-%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C%7Cx%20-%20z_%5Cstar%5C%7C%5E2%20+%20%5Ctextrm%7B(Cst)%7D%5C%5C%0A&amp;=%0A-%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C%7Cx%20-%20%5Bz_%5Cstar%20+%20%5Cvarepsilon%5C,%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%5D%5C%7C%5E2%20+%20%5Ctextrm%7B(Cst)%7D.%0A%5Cend%7Balign%7D%0A"></p>
+<p>This shows that the conditional <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)"> can be approximated by a Gaussian distribution centred at <img src="https://latex.codecogs.com/png.latex?%5Bz_%5Cstar%20+%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%5D"> and variance <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5C,%20I">. This means that the final proposal <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> can be generated as <img src="https://latex.codecogs.com/png.latex?y%20%5Csim%20z_%5Cstar%20+%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%20+%20%5Cxi"> where <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,%5Cvarepsilon)">. But that is equivalent to setting</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ay%20%5Csim%20x%20+%20%5Cvarepsilon%5C,%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%20+%20%5Csqrt%7B2%20%5Cvarepsilon%7D%20%5C,%20%5Cxi%0A"></p>
+<p>with <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,I)"> since <img src="https://latex.codecogs.com/png.latex?z_%5Cstar%20%5Csim%20%5Cmathcal%7BN%7D(x,%20%5Csqrt%7B%5Cvarepsilon%7D%20I)">. It is exactly the MALA proposal. Naturally, one can also try to slightly more clever and use an extended distribution</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Coverline%7B%5Cpi%7D(x,z)%20%5C,%20%5Cpropto%20%5C,%20%5Cpi(x)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20%20-%5Cfrac%7B1%7D%7B2%5Cvarepsilon%7D%20%5Cleft%3C%20(z-x),%20M%20%5C,%20(z-x)%20%5Cright%3E%20%20%5Cright%5C%7D%7D%20.%0A"></p>
+<p>for some appropriate positive-definite “mass” matrix <img src="https://latex.codecogs.com/png.latex?M%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD,D%7D">. Indeed, this immediately leads to preconditioned MALA methods. While this derivation is neat, I really like this approach since it can be adapted and generalized to quite a few other situations!</p>
+
+
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-titsias2018auxiliary" class="csl-entry">
+Titsias, Michalis K, and Omiros Papaspiliopoulos. 2018. <span>“Auxiliary Gradient-Based Sampling Algorithms.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 80 (4). Oxford University Press: 749–67.
+</div>
+</div></section></div> ]]></description>
+  <category>MCMC</category>
+  <guid>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</guid>
+  <pubDate>Wed, 18 Oct 2023 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Wasserstein Gradients &amp; Langevin Diffusions</title>
   <link>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</link>
@@ -128,53 +175,6 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
   <category>LargeDeviation</category>
   <guid>https://alexxthiery.github.io/notes/sanov/sanov.html</guid>
   <pubDate>Sun, 08 Oct 2023 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Deriving Langevin MCMC</title>
-  <link>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/on_Langevin_MCMC/besag.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Julian Besag (1945 – 2010)</figcaption>
-</figure>
-</div>
-</div>
-<p>Consider a target density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED">. Since the Langevin diffusion</p>
-<p><span id="eq-langevin"><img src="https://latex.codecogs.com/png.latex?%0AdX_t%20=%20%5Cnabla%20%5Clog%20%5Cpi(X_t)%20%5C,%20dt%20+%20%5Csqrt%7B2%7D%20%5C,%20dW%0A%5Ctag%7B1%7D"></span></p>
-<p>is reversible with respect to <img src="https://latex.codecogs.com/png.latex?%5Cpi">, it is natural to use a <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler-Maruyama</a> discretization of Equation&nbsp;1 to build MCMC proposals: in a MCMC simulation and for a time discretization parameter <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%3E%200">, if the current position is <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5ED">, a proposal <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> can be generated as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ay%20=%20x%20+%20%5Cvarepsilon%5C,%20%5Cnabla%20%5Clog%20%5Cpi(X_t)%20+%20%5Csqrt%7B2%20%5Cvarepsilon%7D%20%5C,%20%5Cxi%0A"></p>
-<p>with <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,I)"> before being accepted-or-reject according to the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings</a> ratio. This MCMC method, first proposed by <a href="https://en.wikipedia.org/wiki/Julian_Besag">Julian Besag</a> in 1994, is commonly referred to as the <a href="https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm">Metropolis-Adjusted-Langevin-Algorithm</a> (MALA). But how can one come-up with this proposal mechanism without knowing before hand the existence of this reversible Langevin diffusion Equation&nbsp;1? While it is intuitively clear that following the direction of <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20%5Cpi"> is not such a bad idea, i.e.&nbsp;one would like to move towards areas of “high probability mass”, where does this <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7B2%7D"> comes from? Naturally, one could look at proposals of the type <img src="https://latex.codecogs.com/png.latex?y%20=%20x%20+%20%5Cnabla%20%5Clog%20%5Cpi(X_t)%20%5C,%20%5Cvarepsilon+%20%5Clambda%20%5C,%20%5Cxi"> for some free parameter <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%3E%200"> and study the behavior of the Metropolis-Hastings ratio in the regime <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200">: as simple as it sounds, it is not entirely straightforward and requires quite a bit of algebra (do it!). Instead, I very much like the type of approaches described in <span class="citation" data-cites="titsias2018auxiliary">(Titsias and Papaspiliopoulos 2018)</span>. To summarize, we would like to generate a MCMC proposal <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> that stays in the vicinity of the current position <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> while exploiting the knowledge of <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20%5Cpi(x)">. One cannot simply approximate the target distribution as <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%20%5Capprox%20%5Cpi(x_k)%20e%5E%7B%5Cleft%3C%20%5Cnabla%20%5Clog%20%5Cpi(x_k),%20x-x_k%20%5Cright%3E%7D"> and sample from this approximation since it is typically not tractable. Instead, consider the following extended target distribution</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Coverline%7B%5Cpi%7D(x,z)%20%5C,%20%5Cpropto%20%5Cpi(x)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20-%5Cfrac%7B1%7D%7B2%5Cvarepsilon%7D%5C%7Cz-x%5C%7C%5E2%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>In other words, we consider a Gaussian auxiliary variable <img src="https://latex.codecogs.com/png.latex?z%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> that is centred at <img src="https://latex.codecogs.com/png.latex?x"> and at distance about <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7B%5Cvarepsilon%7D"> of it. Now, given the current position <img src="https://latex.codecogs.com/png.latex?x_k">, to generate a proposal <img src="https://latex.codecogs.com/png.latex?y_%5Cstar"> that stays in the vicinity of <img src="https://latex.codecogs.com/png.latex?x_k">, one can proceed in two steps, in the spirit of a Gibbs-sampling approach:</p>
-<ol type="1">
-<li><p>First, generate <img src="https://latex.codecogs.com/png.latex?z_%5Cstar%20%5Csim%20%5Coverline%7B%5Cpi%7D(dz%20%7C%20x_k)%20%5Csim%20%5Cmathcal%7BN%7D(x_k,%20%5Csqrt%7B%5Cvarepsilon%7DI)"></p></li>
-<li><p>Second, sample from <img src="https://latex.codecogs.com/png.latex?y_%5Cstar%20%5Csim%20%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)">.</p></li>
-</ol>
-<p>Unfortunately, the second step is typically not tractable. Nevertheless, the conditional density <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)"> is concentrated in a <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7B%5Cvarepsilon%7D">-neighborhood of <img src="https://latex.codecogs.com/png.latex?z_%5Cstar"> and a simple Gaussian approximation around <img src="https://latex.codecogs.com/png.latex?(x_k,%20z_%5Cstar)"> should be enough for our purpose. We have:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Clog%20%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)%0A&amp;=%0A%5Clog%20%5Cpi(x)%20-%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C%7Cx%20-%20z_%5Cstar%5C%7C%5E2%20+%20%5Ctextrm%7B(Cst)%7D%5C%5C%0A&amp;%5Capprox%0A%5Cleft%3C%20%20%5Cnabla%20%5Clog%20%5Cpi(x_k),%20x-x_k%20%20%5Cright%3E%20-%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C%7Cx%20-%20z_%5Cstar%5C%7C%5E2%20+%20%5Ctextrm%7B(Cst)%7D%5C%5C%0A&amp;=%0A-%20%5Cfrac%7B1%7D%7B2%20%5Cvarepsilon%7D%20%5C%7Cx%20-%20%5Bz_%5Cstar%20+%20%5Cvarepsilon%5C,%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%5D%5C%7C%5E2%20+%20%5Ctextrm%7B(Cst)%7D.%0A%5Cend%7Balign%7D%0A"></p>
-<p>This shows that the conditional <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)"> can be approximated by a Gaussian distribution centred at <img src="https://latex.codecogs.com/png.latex?%5Bz_%5Cstar%20+%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%5D"> and variance <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5C,%20I">. This means that the final proposal <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> can be generated as <img src="https://latex.codecogs.com/png.latex?y%20%5Csim%20z_%5Cstar%20+%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%20+%20%5Cxi"> where <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,%5Cvarepsilon)">. But that is equivalent to setting</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ay%20%5Csim%20x%20+%20%5Cvarepsilon%5C,%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%20+%20%5Csqrt%7B2%20%5Cvarepsilon%7D%20%5C,%20%5Cxi%0A"></p>
-<p>with <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,I)"> since <img src="https://latex.codecogs.com/png.latex?z_%5Cstar%20%5Csim%20%5Cmathcal%7BN%7D(x,%20%5Csqrt%7B%5Cvarepsilon%7D%20I)">. It is exactly the MALA proposal. Naturally, one can also try to slightly more clever and use an extended distribution</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Coverline%7B%5Cpi%7D(x,z)%20%5C,%20%5Cpropto%20%5C,%20%5Cpi(x)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20%20-%5Cfrac%7B1%7D%7B2%5Cvarepsilon%7D%20%5Cleft%3C%20(z-x),%20M%20%5C,%20(z-x)%20%5Cright%3E%20%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>for some appropriate positive-definite “mass” matrix <img src="https://latex.codecogs.com/png.latex?M%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD,D%7D">. Indeed, this immediately leads to preconditioned MALA methods. While this derivation is neat, I really like this approach since it can be adapted and generalized to quite a few other situations!</p>
-
-
-
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-titsias2018auxiliary" class="csl-entry">
-Titsias, Michalis K, and Omiros Papaspiliopoulos. 2018. <span>“Auxiliary Gradient-Based Sampling Algorithms.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 80 (4). Oxford University Press: 749–67.
-</div>
-</div></section></div> ]]></description>
-  <category>MCMC</category>
-  <guid>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</guid>
-  <pubDate>Mon, 02 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Auxiliary variable trick</title>
