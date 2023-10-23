@@ -10,7 +10,62 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Wed, 18 Oct 2023 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 22 Oct 2023 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Gaussian Assimilation</title>
+  <link>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="ensemble-kalman-updates" class="level2">
+<h2 class="anchored" data-anchor-id="ensemble-kalman-updates">Ensemble Kalman Updates</h2>
+<p>Assume a prior Gaussian prior distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi_0%20%5Cequiv%20%5Cmathcal%7BN%7D(m_0,P_0)"> and a noisy observation <img src="https://latex.codecogs.com/png.latex?y_%5Cstar%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD_y%7D"> with</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ay_%5Cstar%20=%20H%20x%20+%20%5Cxi%0A%5Cqquad%20%5Ctext%7Bwith%7D%20%5Cqquad%0A%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,R)%0A"></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD_x%7D"> is an unkown quantity of interest. The posterior distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi%20%5Cequiv%20%5Cmathcal%7BN%7D(m,P)"> is Gaussian and is given by</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0Am%20&amp;=%20m_0%20+%20P_0%20H%5E%5Ctop%20%20%7B%5Cleft(%20H%20P_0%20H%5E%5Ctop%20+%20R%20%5Cright)%7D%20%5E%7B-1%7D(y_%5Cstar%20-%20H%20m)%5C%5C%0AP%20&amp;=%20P_0%20-%20P_0%20H%5E%5Ctop%20%20%7B%5Cleft(%20H%20P_0%20H%5E%5Ctop%20+%20R%20%5Cright)%7D%20%5E%7B-1%7D%20%5C,%20H%20P_0,%0A%5Cend%7Baligned%7D%0A%5Cright.%0A%5Cend%7Balign%7D%0A"></p>
+<p>as standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution">Gaussian conditioning</a> shows it. This can also be written as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0Am%20&amp;=%20m_0%20+%20K%20%5C,%20(y_%5Cstar%20-%20H%20m_0)%5C%5C%0AP%20&amp;=%20(I%20-%20K%20%5C,%20H)%20P_0,%0A%5Cend%7Baligned%7D%0A%5Cright.%0A%5Cend%7Balign%7D%0A"></p>
+<p>for <strong><a href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman</a> Gain Matrix</strong> <img src="https://latex.codecogs.com/png.latex?K%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD_x,D_y%7D"> defined as</p>
+<p><span id="eq-kalman"><img src="https://latex.codecogs.com/png.latex?%0AK%20%5C;%20=%20%5C;%20P_0%20H%5E%5Ctop%20%20%7B%5Cleft(%20H%20P_0%20H%5E%5Ctop%20+%20R%20%5Cright)%7D%20%5E%7B-1%7D.%0A%5Ctag%7B1%7D"></span></p>
+<p>The important remark is that the posterior covariance matrix <img src="https://latex.codecogs.com/png.latex?P%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD_x,D_x%7D"> and the posterior mean <img src="https://latex.codecogs.com/png.latex?m%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD_x%7D"> can also be expressed as</p>
+<p><span id="eq-gain"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0Am%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B(I%20-%20K%20%5C,%20H)%7D%20%5C,%20m_0%20+%20%20%5Ctextcolor%7Bblue%7D%7BK%7D%20%5C,%20y_%5Cstar%5C%5C%0AP%20&amp;=%20%5C;%20%20%5Ctextcolor%7Bred%7D%7B(I%20-%20K%20%5C,%20H)%7D%20%5C,%20P_0%20%5C,%20%20%5Ctextcolor%7Bred%7D%7B(I%20-%20K%20%5C,%20H)%5E%5Ctop%7D%20+%20%20%5Ctextcolor%7Bblue%7D%7BK%7D%20R%20%20%5Ctextcolor%7Bblue%7D%7BK%5E%5Ctop%7D.%0A%5Cend%7Baligned%7D%0A%5Cright.%0A%5Cend%7Balign%7D%0A%5Ctag%7B2%7D"></span></p>
+<p>This shows that <img src="https://latex.codecogs.com/png.latex?P"> is indeed positive semi-definite. More importantly, this gives a mechanism for transforming samples from the prior distributions into samples from the posterior distributions. Indeed, consider <img src="https://latex.codecogs.com/png.latex?N"> iid samples from the prior distribution, <img src="https://latex.codecogs.com/png.latex?x_1,%20%5Cldots,%20x_N%20%5Csim%20%5Cpi_0(dx)">, and set</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cwidetilde%7Bx%7D_i%0A=%0A%5Ctextcolor%7Bred%7D%7B(I%20-%20K%20%5C,%20H)%7D%20%5C,%20x_i%20+%20%20%5Ctextcolor%7Bblue%7D%7BK%7D(y_%5Cstar%20+%20%5Cxi_i)%0A"></p>
+<p>for iid noise terms <img src="https://latex.codecogs.com/png.latex?%5Cxi_i%20%5Csim%20%5Cmathcal%7BN%7D(0,R)">. From Equation&nbsp;2 it is clear that <img src="https://latex.codecogs.com/png.latex?%5Cwidetilde%7Bx%7D_1,%20%5Cldots,%20%5Cwidetilde%7Bx%7D_N"> are iid samples from the Gaussian posterior distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi%20=%20%5Cmathcal%7BN%7D(m,P)">. It is more intuitive to write this as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cwidetilde%7Bx%7D_i%0A=%0Ax_i%20+%20K%20%5C,%20(%20%20%5Ctextcolor%7Bgreen%7D%7B%20%5Cwidetilde%7By%7D_%5Cstar%7D%20-%20H%20%5C,%20x_i)%0A"></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?%5Cwidetilde%7By%7D_%5Cstar%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD_y%7D"> are <strong>fake observations</strong> that are obtained by perturbing the actual observation <img src="https://latex.codecogs.com/png.latex?y_%5Cstar"> with additive Gaussian noise terms with covariance <img src="https://latex.codecogs.com/png.latex?R">,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Cwidetilde%7By%7D_%5Cstar%20%5C,%20=%20%5C,%20y_%5Cstar%20+%20%5Cxi_i%7D.%0A"></p>
+<section id="empirical-version-non-linearity-and-non-gaussianity" class="level3">
+<h3 class="anchored" data-anchor-id="empirical-version-non-linearity-and-non-gaussianity">Empirical version: non-linearity and non-Gaussianity</h3>
+<p>Suppose that we would like to estimate <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD_x%7D"> from the noisy observation</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ay_%5Cstar%20=%20%5Cmathcal%7BH%7D(x)%20+%20%5Cxi%0A%5Cqquad%20%5Ctext%7Bwith%7D%20%5Cqquad%0A%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,R)%0A"></p>
+<p>and possibly-nonlinear observation operator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BH%7D:%20%5Cmathbb%7BR%7D%5E%7BD_x%7D%20%5Cto%20%5Cmathbb%7BR%7D%5E%7BD_y%7D">. Assume that we also have <img src="https://latex.codecogs.com/png.latex?N"> samples <img src="https://latex.codecogs.com/png.latex?x_1,%20%5Cldots,%20x_N"> generated from some (unkown) prior distribution. For example, these samples could come from another numerical procedure. In order to obtain <img src="https://latex.codecogs.com/png.latex?N"> approximate samples from the posterior distribution, one can set</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cwidetilde%7Bx%7D_i%0A=%0Ax_i%20+%20%5Cwidehat%7BK%7D%20%5C,%20%5B%20%20%5Ctextcolor%7Bgreen%7D%7B%20%5Cwidetilde%7By%7D_%5Cstar%7D%20-%20%5Cmathcal%7BH%7D(x_i)%5D%0A"></p>
+<p>for fake observations <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bgreen%7D%7B%5Cwidetilde%7By%7D_%5Cstar%7D%20=%20y_%5Cstar%20+%20%5Cxi_i">. The approximate Kalman gain matrix <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7BK%7D"> is obtained by noting that in Equation&nbsp;1 giving</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AK%20%5C;%20=%20%5C;%20P_0%20H%5E%5Ctop%20%20%7B%5Cleft(%20H%20P_0%20H%5E%5Ctop%20+%20R%20%5Cright)%7D%20%5E%7B-1%7D%0A"></p>
+<p>we have <img src="https://latex.codecogs.com/png.latex?P_0%20H%5E%5Ctop%20=%20%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(X,HX)"> and <img src="https://latex.codecogs.com/png.latex?H%20P_0%20H%5E%5Ctop%20=%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D(HX)"> for <img src="https://latex.codecogs.com/png.latex?X%20%5Csim%20%5Cpi_0">. This means that an approximate Kalman matrix can be obtained using empirical estimates of these covariance matrices:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cwidehat%7BK%7D%20%5C;%20=%20%5C;%20%5Cwidehat%7B%5Cmathop%7B%5Cmathrm%7BCov%7D%7D%7D(%5Bx_i%5D_i,%20%5B%5Cmathcal%7BH%7D(x_i)%5D_i)%20%5C,%20%20%7B%5Cleft(%20%5Cwidehat%7B%5Cmathop%7B%5Cmathrm%7BVar%7D%7D%7D(%5B%5Cmathcal%7BH%7D(x_i)%5D_i)%20+%20R%20%5Cright)%7D%20%5E%7B-1%7D.%0A"></p>
+<p>These updates form the basis of the <a href="https://en.wikipedia.org/wiki/Ensemble_Kalman_filter">Ensemble Kalman filter (EnKF)</a>, and very successful and scalable approach to data-assimilation of high-dimensional dynamical systems. This method is operationally employed across various weather forecasting centers across the globe.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/Gaussian_Assimilation/evensen.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">EnKF Bible by Geir Evensen</figcaption>
+</figure>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>bayes</category>
+  <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</guid>
+  <pubDate>Sun, 22 Oct 2023 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Deriving Langevin MCMC</title>
   <link>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</link>
@@ -43,7 +98,7 @@
 <p>This shows that the conditional <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(dx%20%7C%20z_%5Cstar)"> can be approximated by a Gaussian distribution centred at <img src="https://latex.codecogs.com/png.latex?%5Bz_%5Cstar%20+%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%5D"> and variance <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5C,%20I">. This means that the final proposal <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> can be generated as <img src="https://latex.codecogs.com/png.latex?y%20%5Csim%20z_%5Cstar%20+%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%20+%20%5Cxi"> where <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,%5Cvarepsilon)">. But that is equivalent to setting</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0Ay%20%5Csim%20x%20+%20%5Cvarepsilon%5C,%20%5Cnabla%20%5Clog%20%5Cpi(x_k)%20+%20%5Csqrt%7B2%20%5Cvarepsilon%7D%20%5C,%20%5Cxi%0A"></p>
 <p>with <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,I)"> since <img src="https://latex.codecogs.com/png.latex?z_%5Cstar%20%5Csim%20%5Cmathcal%7BN%7D(x,%20%5Csqrt%7B%5Cvarepsilon%7D%20I)">. It is exactly the MALA proposal. Naturally, one can also try to slightly more clever and use an extended distribution</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Coverline%7B%5Cpi%7D(x,z)%20%5C,%20%5Cpropto%20%5C,%20%5Cpi(x)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20%20-%5Cfrac%7B1%7D%7B2%5Cvarepsilon%7D%20%5Cleft%3C%20(z-x),%20M%20%5C,%20(z-x)%20%5Cright%3E%20%20%5Cright%5C%7D%7D%20.%0A"></p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Coverline%7B%5Cpi%7D(x,z)%20%5C,%20%5Cpropto%20%5C,%20%5Cpi(x)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20%20-%5Cfrac%7B1%7D%7B2%5Cvarepsilon%7D%20%5Cleft%3C%20(z-x),%20M%5E%7B-1%7D%20%5C,%20(z-x)%20%5Cright%3E%20%20%5Cright%5C%7D%7D%20.%0A"></p>
 <p>for some appropriate positive-definite “mass” matrix <img src="https://latex.codecogs.com/png.latex?M%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD,D%7D">. Indeed, this immediately leads to preconditioned MALA methods. While this derivation is neat, I really like this approach since it can be adapted and generalized to quite a few other situations!</p>
 
 
@@ -865,6 +920,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
 <h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
 <ul>
 <li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
+<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation</a></li>
 </ul>
 </section>
 <section id="probability-misc" class="level3">

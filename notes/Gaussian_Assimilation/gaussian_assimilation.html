@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Notes</title>
+<title>Alexandre Thiéry - Gaussian Assimilation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,18 +23,18 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,15 +58,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Notes">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Gaussian Assimilation">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/Gaussian_Assimilation/evensen.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Notes">
+<meta name="twitter:title" content="Alexandre Thiéry - Gaussian Assimilation">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/Gaussian_Assimilation/evensen.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -76,7 +80,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -86,29 +90,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html" rel="" target="">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -123,9 +127,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
+      <h1 class="title">Gaussian Assimilation</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">bayes</div>
               </div>
                   </div>
   </div>
@@ -137,10 +141,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">23 10 2023</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">23 10 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -153,10 +163,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theory" id="toc-information-theory" class="nav-link" data-scroll-target="#information-theory">Information Theory</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
+  <li><a href="#ensemble-kalman-updates" id="toc-ensemble-kalman-updates" class="nav-link active" data-scroll-target="#ensemble-kalman-updates">Ensemble Kalman Updates</a>
+  <ul class="collapse">
+  <li><a href="#empirical-version-non-linearity-and-non-gaussianity" id="toc-empirical-version-non-linearity-and-non-gaussianity" class="nav-link" data-scroll-target="#empirical-version-non-linearity-and-non-gaussianity">Empirical version: non-linearity and non-Gaussianity</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -166,47 +176,101 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">categories</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-</ul>
-</section>
-<section id="information-theory" class="level3">
-<h3 class="anchored" data-anchor-id="information-theory">Information Theory</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-</ul>
-</section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
-<ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-</ul>
+<section id="ensemble-kalman-updates" class="level2">
+<h2 class="anchored" data-anchor-id="ensemble-kalman-updates">Ensemble Kalman Updates</h2>
+<p>Assume a prior Gaussian prior distribution <span class="math inline">\(\pi_0 \equiv \mathcal{N}(m_0,P_0)\)</span> and a noisy observation <span class="math inline">\(y_\star \in \mathbb{R}^{D_y}\)</span> with</p>
+<p><span class="math display">\[
+y_\star = H x + \xi
+\qquad \text{with} \qquad
+\xi \sim \mathcal{N}(0,R)
+\]</span></p>
+<p>where <span class="math inline">\(x \in \mathbb{R}^{D_x}\)</span> is an unkown quantity of interest. The posterior distribution <span class="math inline">\(\pi \equiv \mathcal{N}(m,P)\)</span> is Gaussian and is given by</p>
+<p><span class="math display">\[
+\begin{align}
+\left\{
+\begin{aligned}
+m &amp;= m_0 + P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}(y_\star - H m)\\
+P &amp;= P_0 - P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1} \, H P_0,
+\end{aligned}
+\right.
+\end{align}
+\]</span></p>
+<p>as standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution">Gaussian conditioning</a> shows it. This can also be written as</p>
+<p><span class="math display">\[
+\begin{align}
+\left\{
+\begin{aligned}
+m &amp;= m_0 + K \, (y_\star - H m_0)\\
+P &amp;= (I - K \, H) P_0,
+\end{aligned}
+\right.
+\end{align}
+\]</span></p>
+<p>for <strong><a href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman</a> Gain Matrix</strong> <span class="math inline">\(K \in \mathbb{R}^{D_x,D_y}\)</span> defined as</p>
+<p><span id="eq-kalman"><span class="math display">\[
+K \; = \; P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}.
+\tag{1}\]</span></span></p>
+<p>The important remark is that the posterior covariance matrix <span class="math inline">\(P \in \mathbb{R}^{D_x,D_x}\)</span> and the posterior mean <span class="math inline">\(m \in \mathbb{R}^{D_x}\)</span> can also be expressed as</p>
+<p><span id="eq-gain"><span class="math display">\[
+\begin{align}
+\left\{
+\begin{aligned}
+m &amp;=  \textcolor{red}{(I - K \, H)} \, m_0 +  \textcolor{blue}{K} \, y_\star\\
+P &amp;= \;  \textcolor{red}{(I - K \, H)} \, P_0 \,  \textcolor{red}{(I - K \, H)^\top} +  \textcolor{blue}{K} R  \textcolor{blue}{K^\top}.
+\end{aligned}
+\right.
+\end{align}
+\tag{2}\]</span></span></p>
+<p>This shows that <span class="math inline">\(P\)</span> is indeed positive semi-definite. More importantly, this gives a mechanism for transforming samples from the prior distributions into samples from the posterior distributions. Indeed, consider <span class="math inline">\(N\)</span> iid samples from the prior distribution, <span class="math inline">\(x_1, \ldots, x_N \sim \pi_0(dx)\)</span>, and set</p>
+<p><span class="math display">\[
+\widetilde{x}_i
+=
+\textcolor{red}{(I - K \, H)} \, x_i +  \textcolor{blue}{K}(y_\star + \xi_i)
+\]</span></p>
+<p>for iid noise terms <span class="math inline">\(\xi_i \sim \mathcal{N}(0,R)\)</span>. From <a href="#eq-gain">Equation&nbsp;2</a> it is clear that <span class="math inline">\(\widetilde{x}_1, \ldots, \widetilde{x}_N\)</span> are iid samples from the Gaussian posterior distribution <span class="math inline">\(\pi = \mathcal{N}(m,P)\)</span>. It is more intuitive to write this as</p>
+<p><span class="math display">\[
+\widetilde{x}_i
+=
+x_i + K \, (  \textcolor{green}{ \widetilde{y}_\star} - H \, x_i)
+\]</span></p>
+<p>where <span class="math inline">\(\widetilde{y}_\star \in \mathbb{R}^{D_y}\)</span> are <strong>fake observations</strong> that are obtained by perturbing the actual observation <span class="math inline">\(y_\star\)</span> with additive Gaussian noise terms with covariance <span class="math inline">\(R\)</span>,</p>
+<p><span class="math display">\[
+\textcolor{green}{\widetilde{y}_\star \, = \, y_\star + \xi_i}.
+\]</span></p>
+<section id="empirical-version-non-linearity-and-non-gaussianity" class="level3">
+<h3 class="anchored" data-anchor-id="empirical-version-non-linearity-and-non-gaussianity">Empirical version: non-linearity and non-Gaussianity</h3>
+<p>Suppose that we would like to estimate <span class="math inline">\(x \in \mathbb{R}^{D_x}\)</span> from the noisy observation</p>
+<p><span class="math display">\[
+y_\star = \mathcal{H}(x) + \xi
+\qquad \text{with} \qquad
+\xi \sim \mathcal{N}(0,R)
+\]</span></p>
+<p>and possibly-nonlinear observation operator <span class="math inline">\(\mathcal{H}: \mathbb{R}^{D_x} \to \mathbb{R}^{D_y}\)</span>. Assume that we also have <span class="math inline">\(N\)</span> samples <span class="math inline">\(x_1, \ldots, x_N\)</span> generated from some (unkown) prior distribution. For example, these samples could come from another numerical procedure. In order to obtain <span class="math inline">\(N\)</span> approximate samples from the posterior distribution, one can set</p>
+<p><span class="math display">\[
+\widetilde{x}_i
+=
+x_i + \widehat{K} \, [  \textcolor{green}{ \widetilde{y}_\star} - \mathcal{H}(x_i)]
+\]</span></p>
+<p>for fake observations <span class="math inline">\( \textcolor{green}{\widetilde{y}_\star} = y_\star + \xi_i\)</span>. The approximate Kalman gain matrix <span class="math inline">\(\widehat{K}\)</span> is obtained by noting that in <a href="#eq-kalman">Equation&nbsp;1</a> giving</p>
+<p><span class="math display">\[
+K \; = \; P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}
+\]</span></p>
+<p>we have <span class="math inline">\(P_0 H^\top = \mathop{\mathrm{Cov}}(X,HX)\)</span> and <span class="math inline">\(H P_0 H^\top = \mathop{\mathrm{Var}}(HX)\)</span> for <span class="math inline">\(X \sim \pi_0\)</span>. This means that an approximate Kalman matrix can be obtained using empirical estimates of these covariance matrices:</p>
+<p><span class="math display">\[
+\widehat{K} \; = \; \widehat{\mathop{\mathrm{Cov}}}([x_i]_i, [\mathcal{H}(x_i)]_i) \,  {\left( \widehat{\mathop{\mathrm{Var}}}([\mathcal{H}(x_i)]_i) + R \right)} ^{-1}.
+\]</span></p>
+<p>These updates form the basis of the <a href="https://en.wikipedia.org/wiki/Ensemble_Kalman_filter">Ensemble Kalman filter (EnKF)</a>, and very successful and scalable approach to data-assimilation of high-dimensional dynamical systems. This method is operationally employed across various weather forecasting centers across the globe.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./evensen.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">EnKF Bible by Geir Evensen</figcaption>
+</figure>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

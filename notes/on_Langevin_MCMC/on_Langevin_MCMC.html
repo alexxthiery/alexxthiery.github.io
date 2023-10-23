@@ -229,7 +229,7 @@ y \sim x + \varepsilon\, \nabla \log \pi(x_k) + \sqrt{2 \varepsilon} \, \xi
 \]</span></p>
 <p>with <span class="math inline">\(\xi \sim \mathcal{N}(0,I)\)</span> since <span class="math inline">\(z_\star \sim \mathcal{N}(x, \sqrt{\varepsilon} I)\)</span>. It is exactly the MALA proposal. Naturally, one can also try to slightly more clever and use an extended distribution</p>
 <p><span class="math display">\[
-\overline{\pi}(x,z) \, \propto \, \pi(x) \, \exp {\left\{  -\frac{1}{2\varepsilon} \left&lt; (z-x), M \, (z-x) \right&gt;  \right\}} .
+\overline{\pi}(x,z) \, \propto \, \pi(x) \, \exp {\left\{  -\frac{1}{2\varepsilon} \left&lt; (z-x), M^{-1} \, (z-x) \right&gt;  \right\}} .
 \]</span></p>
 <p>for some appropriate positive-definite “mass” matrix <span class="math inline">\(M \in \mathbb{R}^{D,D}\)</span>. Indeed, this immediately leads to preconditioned MALA methods. While this derivation is neat, I really like this approach since it can be adapted and generalized to quite a few other situations!</p>
 
