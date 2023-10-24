@@ -56,6 +56,7 @@
   {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
+      "/notes/SSM/SSM.html",
       "/notes/Gaussian_Assimilation/gaussian_assimilation.html",
       "/notes/on_Langevin_MCMC/on_Langevin_MCMC.html",
       "/notes/wasserstein_langevin/wasserstein_langevin.html",

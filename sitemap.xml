@@ -198,31 +198,31 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
-    <lastmod>2023-10-23T17:30:22.444Z</lastmod>
+    <lastmod>2023-10-24T02:47:04.142Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2023-10-23T17:30:22.967Z</lastmod>
+    <lastmod>2023-10-24T02:47:04.614Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2023-10-23T17:30:24.415Z</lastmod>
+    <lastmod>2023-10-24T02:47:06.105Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</loc>
-    <lastmod>2023-10-23T17:30:26.124Z</lastmod>
+    <lastmod>2023-10-24T02:47:07.778Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</loc>
-    <lastmod>2023-10-23T17:30:26.594Z</lastmod>
+    <lastmod>2023-10-24T02:47:08.240Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2023-10-23T17:30:27.052Z</lastmod>
+    <lastmod>2023-10-24T02:47:08.692Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
-    <lastmod>2023-10-23T17:30:27.490Z</lastmod>
+    <lastmod>2023-10-24T02:47:09.143Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/teaching.html</loc>
@@ -238,7 +238,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</loc>
-    <lastmod>2023-10-23T17:30:24.795Z</lastmod>
+    <lastmod>2023-10-24T02:47:06.451Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_references.html</loc>
@@ -250,7 +250,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</loc>
-    <lastmod>2023-10-23T17:30:27.764Z</lastmod>
+    <lastmod>2023-10-24T02:47:09.415Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_basics copy/information_theory_fano.html</loc>
@@ -258,11 +258,11 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</loc>
-    <lastmod>2023-10-23T17:30:25.600Z</lastmod>
+    <lastmod>2023-10-24T02:47:07.259Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/auxiliary_variable_trick/auxiliary_variable_trick.html</loc>
-    <lastmod>2023-10-23T17:30:28.144Z</lastmod>
+    <lastmod>2023-10-24T02:47:09.794Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/legendre_transform_entropy/legendre_binary_entropy.html</loc>
@@ -270,11 +270,11 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/sanov/sanov.html</loc>
-    <lastmod>2023-10-23T17:30:23.352Z</lastmod>
+    <lastmod>2023-10-24T02:47:04.988Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</loc>
-    <lastmod>2023-10-23T17:30:24.111Z</lastmod>
+    <lastmod>2023-10-24T02:47:05.788Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/on_Langevin_MCMC/on_Langevin_MCMC.html</loc>
@@ -282,10 +282,14 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</loc>
-    <lastmod>2023-10-23T17:30:25.199Z</lastmod>
+    <lastmod>2023-10-24T02:47:06.866Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</loc>
-    <lastmod>2023-10-23T17:30:23.712Z</lastmod>
+    <lastmod>2023-10-24T02:47:05.416Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/SSM/SSM.html</loc>
+    <lastmod>2023-10-24T02:47:03.646Z</lastmod>
   </url>
 </urlset>
