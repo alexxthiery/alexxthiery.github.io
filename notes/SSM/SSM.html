@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Gaussian Assimilation</title>
+<title>Alexandre Thiéry - Stet Space Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,26 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -77,19 +58,13 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Gaussian Assimilation">
-<meta property="og:description" content="">
-<meta property="og:image" content="https://alexxthiery.github.io/notes/Gaussian_Assimilation/evensen.jpg">
+<meta property="og:title" content="Alexandre Thiéry - Stet Space Models">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Gaussian Assimilation">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://alexxthiery.github.io/notes/Gaussian_Assimilation/evensen.jpg">
+<meta name="twitter:title" content="Alexandre Thiéry - Stet Space Models">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed">
@@ -146,9 +121,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Gaussian Assimilation</h1>
+      <h1 class="title">Stet Space Models</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">bayes</div>
+                <div class="quarto-category">timeSeries</div>
               </div>
                   </div>
   </div>
@@ -160,14 +135,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">23 10 2023</p>
+        <p class="date">24 10 2023</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">23 10 2023</p>
+        <p class="date-modified">24 10 2023</p>
       </div>
     </div>
       
@@ -178,17 +153,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#ensemble-kalman-updates" id="toc-ensemble-kalman-updates" class="nav-link active" data-scroll-target="#ensemble-kalman-updates">Ensemble Kalman Updates</a>
-  <ul class="collapse">
-  <li><a href="#empirical-version-non-linearity-and-non-gaussianity" id="toc-empirical-version-non-linearity-and-non-gaussianity" class="nav-link" data-scroll-target="#empirical-version-non-linearity-and-non-gaussianity">Empirical version: non-linearity and non-Gaussianity</a></li>
-  <li><a href="#derivative-free-optimization" id="toc-derivative-free-optimization" class="nav-link" data-scroll-target="#derivative-free-optimization">Derivative-Free optimization</a></li>
-  </ul></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -196,124 +161,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<section id="ensemble-kalman-updates" class="level2">
-<h2 class="anchored" data-anchor-id="ensemble-kalman-updates">Ensemble Kalman Updates</h2>
-<p>Assume a prior Gaussian prior distribution <span class="math inline">\(\pi_0 \equiv \mathcal{N}(m_0,P_0)\)</span> and a noisy observation <span class="math inline">\(y_\star \in \mathbb{R}^{D_y}\)</span> with</p>
-<p><span class="math display">\[
-y_\star = H x + \xi
-\qquad \text{with} \qquad
-\xi \sim \mathcal{N}(0,R)
-\]</span></p>
-<p>where <span class="math inline">\(x \in \mathbb{R}^{D_x}\)</span> is an unkown quantity of interest. The posterior distribution <span class="math inline">\(\pi \equiv \mathcal{N}(m,P)\)</span> is Gaussian and is given by</p>
-<p><span class="math display">\[
-\begin{align}
-\left\{
-\begin{aligned}
-m &amp;= m_0 + P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}(y_\star - H m)\\
-P &amp;= P_0 - P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1} \, H P_0,
-\end{aligned}
-\right.
-\end{align}
-\]</span></p>
-<p>as standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution">Gaussian conditioning</a> shows it. This can also be written as</p>
-<p><span class="math display">\[
-\begin{align}
-\left\{
-\begin{aligned}
-m &amp;= m_0 + K \, (y_\star - H m_0)\\
-P &amp;= (I - K \, H) P_0,
-\end{aligned}
-\right.
-\end{align}
-\]</span></p>
-<p>for <strong><a href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman</a> Gain Matrix</strong> <span class="math inline">\(K \in \mathbb{R}^{D_x,D_y}\)</span> defined as</p>
-<p><span id="eq-kalman"><span class="math display">\[
-K \; = \; P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}.
-\tag{1}\]</span></span></p>
-<p>The important remark is that the posterior covariance matrix <span class="math inline">\(P \in \mathbb{R}^{D_x,D_x}\)</span> and the posterior mean <span class="math inline">\(m \in \mathbb{R}^{D_x}\)</span> can also be expressed as</p>
-<p><span id="eq-gain"><span class="math display">\[
-\begin{align}
-\left\{
-\begin{aligned}
-m &amp;=  \textcolor{red}{(I - K \, H)} \, m_0 +  \textcolor{blue}{K} \, y_\star\\
-P &amp;= \;  \textcolor{red}{(I - K \, H)} \, P_0 \,  \textcolor{red}{(I - K \, H)^\top} +  \textcolor{blue}{K} R  \textcolor{blue}{K^\top}.
-\end{aligned}
-\right.
-\end{align}
-\tag{2}\]</span></span></p>
-<p>This shows that <span class="math inline">\(P\)</span> is indeed positive semi-definite. More importantly, this gives a mechanism for transforming samples from the prior distributions into samples from the posterior distributions. Indeed, consider <span class="math inline">\(N\)</span> iid samples from the prior distribution, <span class="math inline">\(x_1, \ldots, x_N \sim \pi_0(dx)\)</span>, and set</p>
-<p><span class="math display">\[
-\widetilde{x}_i
-=
-\textcolor{red}{(I - K \, H)} \, x_i +  \textcolor{blue}{K}(y_\star + \xi_i)
-\]</span></p>
-<p>for iid noise terms <span class="math inline">\(\xi_i \sim \mathcal{N}(0,R)\)</span>. From <a href="#eq-gain">Equation&nbsp;2</a> it is clear that <span class="math inline">\(\widetilde{x}_1, \ldots, \widetilde{x}_N\)</span> are iid samples from the Gaussian posterior distribution <span class="math inline">\(\pi = \mathcal{N}(m,P)\)</span>. It is more intuitive to write this as</p>
-<p><span class="math display">\[
-\widetilde{x}_i
-=
-x_i + K \, (  \textcolor{green}{ \widetilde{y}_\star} - H \, x_i)
-\]</span></p>
-<p>where <span class="math inline">\(\widetilde{y}_\star \in \mathbb{R}^{D_y}\)</span> are <strong>fake observations</strong> that are obtained by perturbing the actual observation <span class="math inline">\(y_\star\)</span> with additive Gaussian noise terms with covariance <span class="math inline">\(R\)</span>,</p>
-<p><span class="math display">\[
-\textcolor{green}{\widetilde{y}_\star \, = \, y_\star + \xi_i}.
-\]</span></p>
-<section id="empirical-version-non-linearity-and-non-gaussianity" class="level3">
-<h3 class="anchored" data-anchor-id="empirical-version-non-linearity-and-non-gaussianity">Empirical version: non-linearity and non-Gaussianity</h3>
-<p>Suppose that we would like to estimate <span class="math inline">\(x \in \mathbb{R}^{D_x}\)</span> from the noisy observation</p>
-<p><span class="math display">\[
-y_\star = \mathcal{H}(x) + \xi
-\qquad \text{with} \qquad
-\xi \sim \mathcal{N}(0,R)
-\]</span></p>
-<p>and possibly-nonlinear observation operator <span class="math inline">\(\mathcal{H}: \mathbb{R}^{D_x} \to \mathbb{R}^{D_y}\)</span>. Assume that we also have <span class="math inline">\(N\)</span> samples <span class="math inline">\(x_1, \ldots, x_N\)</span> generated from some (unkown) prior distribution. For example, these samples could come from another numerical procedure. In order to obtain <span class="math inline">\(N\)</span> approximate samples from the posterior distribution, one can set</p>
-<p><span class="math display">\[
-\widetilde{x}_i
-=
-x_i + \widehat{K} \, [  \textcolor{green}{ \widetilde{y}_\star} - \mathcal{H}(x_i)]
-\]</span></p>
-<p>for fake observations <span class="math inline">\( \textcolor{green}{\widetilde{y}_\star} = y_\star + \xi_i\)</span>. The approximate Kalman gain matrix <span class="math inline">\(\widehat{K}\)</span> is obtained by noting that in <a href="#eq-kalman">Equation&nbsp;1</a> giving</p>
-<p><span class="math display">\[
-K \; = \; P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}
-\]</span></p>
-<p>we have <span class="math inline">\(P_0 H^\top = \mathop{\mathrm{Cov}}(X,HX)\)</span> and <span class="math inline">\(H P_0 H^\top = \mathop{\mathrm{Var}}(HX)\)</span> for <span class="math inline">\(X \sim \pi_0\)</span>. This means that an approximate Kalman matrix can be obtained using empirical estimates of these covariance matrices:</p>
-<p><span class="math display">\[
-\widehat{K} \; = \; \widehat{\mathop{\mathrm{Cov}}}([x_i]_i, [\mathcal{H}(x_i)]_i) \,  {\left( \widehat{\mathop{\mathrm{Var}}}([\mathcal{H}(x_i)]_i) + R \right)} ^{-1}.
-\]</span></p>
-<p>These updates form the basis of the <a href="https://en.wikipedia.org/wiki/Ensemble_Kalman_filter">Ensemble Kalman filter (EnKF)</a>, and very successful and scalable approach to data-assimilation of high-dimensional dynamical systems. This method is operationally employed across various weather forecasting centers across the globe.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./evensen.jpg" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption class="figure-caption">EnKF Bible by Geir Evensen</figcaption>
-</figure>
-</div>
-</div>
-</section>
-<section id="derivative-free-optimization" class="level3">
-<h3 class="anchored" data-anchor-id="derivative-free-optimization">Derivative-Free optimization</h3>
-<p>Interestingly enough, the remarks above can be design in a relatively principled manner a derivative free optimizer <span class="citation" data-cites="huang2022efficient">(<a href="#ref-huang2022efficient" role="doc-biblioref">Huang et al. 2022</a>)</span>. For example, assume one would like to minimize a functional of the type</p>
-<p><span class="math display">\[
-\Psi(x) \; = \; \|y_\star - \mathcal{H}(x)\|^2_{R^{-1}}.
-\]</span></p>
-<p>One can start with a cloud of particles <span class="math inline">\(x_1, \ldots, x_N\)</span> and keep updating them by assuming that one assimilates the noisy observation <span class="math inline">\(y_\star\)</span> generated from a postulated observation process</p>
-<p><span class="math display">\[
-y_\star = \mathcal{H}(x) + \varepsilon^{-1} \, \xi
-\]</span></p>
-<p>for <span class="math inline">\(\xi \sim \mathcal{N}(0,R)\)</span> and <span class="math inline">\(\varepsilon\ll 1\)</span> a “step-size”. Each assimilation step steers the cloud of points towards the rights direction. Careful choice of the step-size <span class="math inline">\(\varepsilon\)</span> is often crucial, as in any optimization procedure. It is indeed related to Information-Geometric Optimization Algorithms (IGO): the article <span class="citation" data-cites="ollivier2017information">(<a href="#ref-ollivier2017information" role="doc-biblioref">Ollivier et al. 2017</a>)</span> is beautiful!</p>
 
 
 
-</section>
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-huang2022efficient" class="csl-entry" role="listitem">
-Huang, Daniel Zhengyu, Jiaoyang Huang, Sebastian Reich, and Andrew M Stuart. 2022. <span>“Efficient Derivative-Free Bayesian Inference for Large-Scale Inverse Problems.”</span> <em>Inverse Problems</em> 38 (12). IOP Publishing: 125006.
-</div>
-<div id="ref-ollivier2017information" class="csl-entry" role="listitem">
-Ollivier, Yann, Ludovic Arnold, Anne Auger, and Nikolaus Hansen. 2017. <span>“Information-Geometric Optimization Algorithms: A Unifying Picture via Invariance Principles.”</span> <em>The Journal of Machine Learning Research</em> 18 (1). JMLR. org: 564–628.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

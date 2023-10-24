@@ -10,7 +10,23 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Sun, 22 Oct 2023 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 23 Oct 2023 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Stet Space Models</title>
+  <link>https://alexxthiery.github.io/notes/SSM/SSM.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+
+ ]]></description>
+  <category>timeSeries</category>
+  <guid>https://alexxthiery.github.io/notes/SSM/SSM.html</guid>
+  <pubDate>Mon, 23 Oct 2023 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Gaussian Assimilation</title>
   <link>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</link>
@@ -56,12 +72,28 @@
 </figure>
 </div>
 </div>
+</section>
+<section id="derivative-free-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="derivative-free-optimization">Derivative-Free optimization</h3>
+<p>Interestingly enough, the remarks above can be design in a relatively principled manner a derivative free optimizer <span class="citation" data-cites="huang2022efficient">(Huang et al. 2022)</span>. For example, assume one would like to minimize a functional of the type</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5CPsi(x)%20%5C;%20=%20%5C;%20%5C%7Cy_%5Cstar%20-%20%5Cmathcal%7BH%7D(x)%5C%7C%5E2_%7BR%5E%7B-1%7D%7D.%0A"></p>
+<p>One can start with a cloud of particles <img src="https://latex.codecogs.com/png.latex?x_1,%20%5Cldots,%20x_N"> and keep updating them by assuming that one assimilates the noisy observation <img src="https://latex.codecogs.com/png.latex?y_%5Cstar"> generated from a postulated observation process</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ay_%5Cstar%20=%20%5Cmathcal%7BH%7D(x)%20+%20%5Cvarepsilon%5E%7B-1%7D%20%5C,%20%5Cxi%0A"></p>
+<p>for <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,R)"> and <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cll%201"> a “step-size”. Each assimilation step steers the cloud of points towards the rights direction. Careful choice of the step-size <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon"> is often crucial, as in any optimization procedure. It is indeed related to Information-Geometric Optimization Algorithms (IGO): the article <span class="citation" data-cites="ollivier2017information">(Ollivier et al. 2017)</span> is beautiful!</p>
+
 
 
 </section>
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-huang2022efficient" class="csl-entry">
+Huang, Daniel Zhengyu, Jiaoyang Huang, Sebastian Reich, and Andrew M Stuart. 2022. <span>“Efficient Derivative-Free Bayesian Inference for Large-Scale Inverse Problems.”</span> <em>Inverse Problems</em> 38 (12). IOP Publishing: 125006.
+</div>
+<div id="ref-ollivier2017information" class="csl-entry">
+Ollivier, Yann, Ludovic Arnold, Anne Auger, and Nikolaus Hansen. 2017. <span>“Information-Geometric Optimization Algorithms: A Unifying Picture via Invariance Principles.”</span> <em>The Journal of Machine Learning Research</em> 18 (1). JMLR. org: 564–628.
+</div>
+</div></section></div> ]]></description>
   <category>bayes</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</guid>
   <pubDate>Sun, 22 Oct 2023 16:00:00 GMT</pubDate>
