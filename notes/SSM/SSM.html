@@ -58,13 +58,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Alexandre Thiéry - Stet Space Models">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/SSM/ssm_dalle3_low.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
 <meta name="twitter:title" content="Alexandre Thiéry - Stet Space Models">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/SSM/ssm_dalle3_low.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -161,6 +167,25 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./ssm_dalle3_low.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+<p>Consider a Markov chain <span class="math inline">\((X_t, Y_t)\)</span> with <span class="math inline">\(X_t \in \mathcal{X}\)</span> and <span class="math inline">\(Y_t \in \mathcal{Y}\)</span> with initial distribution <span class="math inline">\(X_0 \in dx_0 = \mu_0(dx_0)\)</span> and described by the dynamics</p>
+<p><span class="math display">\[
+\begin{align}
+\left\{
+\begin{aligned}
+(X_{t+1} \in dx_{t+1}) \mid (X_t = x_t) \; &amp;= \; f(x_t, x_{t+1}) \, dx_{t+1}\\
+(Y_{t} \in dy_{t}) \mid (X_{t} = x_{t}) \; &amp;= \; g(x_{t}, y_{t}) \, dy_{t}
+\end{aligned}
+\right.
+\end{align}
+\]</span></p>
+<p>for some transition “density” <span class="math inline">\(f(\cdot, \cdot)\)</span> and observation density <span class="math inline">\(g(\cdot, \cdot)\)</span>. These functions could be time-dependent but we will assume not for lightening notations.</p>
 
 
 
