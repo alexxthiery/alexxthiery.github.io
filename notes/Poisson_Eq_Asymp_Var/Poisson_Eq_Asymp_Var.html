@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Deborshee Sen and Alexandre H. Thiery">
 
-<title>Alexandre Thiéry - Particle Filter efficiency under limited communication</title>
+<title>Alexandre Thiéry - Asymptotic variance &amp; Poisson Equation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,13 +59,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Particle Filter efficiency under limited communication">
+<meta property="og:title" content="Alexandre Thiéry - Asymptotic variance &amp; Poisson Equation">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/poisson_eq.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Particle Filter efficiency under limited communication">
+<meta name="twitter:title" content="Alexandre Thiéry - Asymptotic variance &amp; Poisson Equation">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/poisson_eq.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -123,10 +128,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Particle Filter efficiency under limited communication</h1>
+      <h1 class="title">Asymptotic variance &amp; Poisson Equation</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">CompStat-ML</div>
-                <div class="quarto-category">Monte-Carlo</div>
+                <div class="quarto-category">markov</div>
               </div>
                   </div>
   </div>
@@ -134,20 +138,20 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   
   <div class="quarto-title-meta">
 
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Deborshee Sen and Alexandre H. Thiery </p>
-            </div>
-    </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2019</p>
+        <p class="date">11 11 2023</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">11 11 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -156,7 +160,13 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#example-ou-process" id="toc-example-ou-process" class="nav-link active" data-scroll-target="#example-ou-process">Example: OU process</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -164,8 +174,79 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./poisson_eq.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+<p>Consider a continuous time Markov process <span class="math inline">\(X_t\)</span> on <span class="math inline">\(\mathbb{R}^D\)</span> that is ergodic with respect to the probability distribution <span class="math inline">\(\pi(dx)\)</span>. A Langevin diffusion is a typical example. Call <span class="math inline">\(\mathcal{L}\)</span> the generator of this process so that for a test function <span class="math inline">\(\varphi: \mathbb{R}^D \to \mathbb{R}\)</span> we have</p>
+<p><span id="eq-martingale"><span class="math display">\[
+\varphi(X_t) = \varphi(X_0) + \int_{s=0}^t \mathcal{L}\varphi(X_s) \, ds + \textrm{($M_t \equiv$ martingale)}.
+\tag{1}\]</span></span></p>
+<p>Now, assume further that <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\varphi(X)] = 0\)</span> and that a Central Limit Theorem holds,</p>
+<p><span class="math display">\[
+\frac{1}{\sqrt{T}} \int_{s=0}^T \varphi(X_s) \, ds \; \to \; \mathcal{N}(0, \sigma^2).
+\]</span></p>
+<p>How can one estimate the asymptotic variance <span class="math inline">\(\sigma^2\)</span>? Under relatively general and mild conditions, since the expectation of <span class="math inline">\(\varphi\)</span> under the invariant distribution <span class="math inline">\(\pi\)</span> is zero and the Markov process is ergodic with respect to <span class="math inline">\(\pi\)</span>, there exists a function <span class="math inline">\(\Phi: \mathbb{R}^D \to \mathbb{R}\)</span> such that</p>
+<p><span id="eq-poisson"><span class="math display">\[
+\mathcal{L}\Phi \; = \; \varphi.
+\tag{2}\]</span></span></p>
+<p><a href="#eq-poisson">Equation&nbsp;2</a> is called a <a href="https://en.wikipedia.org/wiki/Poisson%27s_equation">Poisson Equation</a> since <span class="math inline">\(\mathcal{L}\)</span> is often a Laplacian-like operator (eg. diffusion-type processes). <a href="#eq-martingale">Equation&nbsp;1</a> gives that</p>
+<p><span class="math display">\[
+\frac{1}{\sqrt{T}} \int_{s=0}^T \varphi(X_s) \, ds
+\; = \;
+\frac{M_T}{\sqrt{T}} +  {\left\{  \frac{\Phi(X_T) - \Phi(X_0)}{\sqrt{T}}  \right\}}
+\]</span></p>
+<p>where <span class="math inline">\(M_T\)</span> is the martingale and <span class="math inline">\([\Phi(X_T) - \Phi(X_0)]/\sqrt{T}\)</span> typically vanishes as <span class="math inline">\(T \to \infty\)</span> and can be neglected. For computing the asymptotic variance, it suffices to estimate <span class="math inline">\(\mathop{\mathrm{E}}(M_T^2)\)</span>. And using the martingale property, it equals <span class="math inline">\(\int_{s=0}^T \mathop{\mathrm{E}}(dM_t)^2\)</span>. Also, since <span class="math inline">\(M_t = \varphi(X_t) - \varphi(X_0) - \int_{s=0}^t \mathcal{L}\varphi(X_s) \, ds\)</span>, algebra gives that</p>
+<p><span class="math display">\[
+\frac{1}{\varepsilon} \, \mathop{\mathrm{E}} {\left[  (M_{t+\varepsilon} - M_t)^2  \right]}  \approx 2 \mathop{\mathrm{E}} {\left[  (\Gamma \Phi)(X_t)  \right]}
+\]</span></p>
+<p>where the so-called <strong>carré du champ</strong> <span class="math inline">\((\Gamma \Phi)\)</span> is defined as</p>
+<p><span class="math display">\[
+2 \, (\Gamma \Phi)(X_t)
+\; = \;  {\left(  \mathcal{L}(\Phi^2) - 2 \Phi \mathcal{L}\Phi \right)} (X_t)
+\; = \; \lim_{\varepsilon\to 0} \; \frac{1}{\varepsilon} \mathop{\mathrm{Var}}(\Phi(X_{t+\varepsilon}) \, | \, X_t).
+\]</span></p>
+<p>This shows that the asymptotic variance satisfies</p>
+<p><span class="math display">\[
+\sigma^2
+\; = \;
+\lim_{T \to \infty} \frac{2}{T} \int_{s=0}^T \Gamma \Phi(X_s) \, ds
+\; = \;
+2 \, \int_{x \in \mathbb{R}^D} \Gamma \Phi(x) \, \pi(dx).
+\]</span></p>
+<p>Finally, since <span class="math inline">\(\int (\mathcal{L}\Phi^2)(x) \, \pi(dx) = 0\)</span>, this can equivalently be written as</p>
+<p><span class="math display">\[
+\sigma^2
+\; = \;
+-2 \, \int_{x \in \mathbb{R}^D} \Phi(x) \, \mathcal{L}\Phi(x) \, \pi(dx)
+\; = \; 2 \, \mathcal{D}(\Phi)
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal{D}(\Phi)\)</span> is the so-called Dirichlet form. In summary, we have just shown that the asymptotic variance of the additive functional <span class="math inline">\(T^{-1/2} \, \int_0^T \varphi(X_s) \, ds\)</span> is given by two times the Dirichlet form <span class="math inline">\(\mathcal{D}(\Psi)\)</span> where <span class="math inline">\(\Phi\)</span> is solution to the Poisson equation <span class="math inline">\(\mathcal{L}\Phi = \varphi\)</span>.</p>
+<section id="example-ou-process" class="level3">
+<h3 class="anchored" data-anchor-id="example-ou-process">Example: OU process</h3>
+<p>Consider a OU process that is ergodic with respect to the standard Gaussian density <span class="math inline">\(\pi(x) = e^{-x^2/2} / \sqrt{2\pi}\)</span>,</p>
+<p><span class="math display">\[
+dX
+\; = \;
+-\varepsilon^{-1}X \, dt + \sqrt{2 \, \varepsilon^{-1}} \, dW.
+\]</span></p>
+<p>That’s a standard OU process accelerated by a factor <span class="math inline">\(\varepsilon^{-1} &gt; 0\)</span>. Its generator reads</p>
+<p><span class="math display">\[
+\mathcal{L}\, = \, \varepsilon^{-1} [-x \, \partial_x + \partial_{xx}].
+\]</span></p>
+<p>The function <span class="math inline">\(\varphi(x)=x\)</span> is such that <span class="math inline">\(\pi(\varphi)=0\)</span> and a solution to the Poisson equation <span class="math inline">\(\mathcal{L}\Phi = \varphi\)</span> is <span class="math inline">\(\Phi(x) = -\varepsilon\, x\)</span>. This shows that the asymptotic variance is</p>
+<p><span class="math display">\[
+\sigma^2
+\; = \;
+2 \, \int_{x \in \mathbb{R}^D} \varepsilon x^2 \, \pi(dx) \; = \; 2 \varepsilon.
+\]</span></p>
+<p>As expected, when accelerating the OU process by a factor <span class="math inline">\(\varepsilon^{-1}\)</span> means reducing the variance by a factor <span class="math inline">\(\varepsilon\)</span>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -400,6 +481,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 
