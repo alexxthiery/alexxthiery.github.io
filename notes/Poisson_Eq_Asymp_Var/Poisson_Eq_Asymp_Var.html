@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -45,8 +45,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
@@ -164,7 +163,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#example-ou-process" id="toc-example-ou-process" class="nav-link active" data-scroll-target="#example-ou-process">Example: OU process</a></li>
+  <li><a href="#integral-representation-of-the-poisson-equation" id="toc-integral-representation-of-the-poisson-equation" class="nav-link active" data-scroll-target="#integral-representation-of-the-poisson-equation">Integral representation of the Poisson equation</a></li>
+  <li><a href="#example-ou-process" id="toc-example-ou-process" class="nav-link" data-scroll-target="#example-ou-process">Example: OU process</a></li>
   </ul>
 </nav>
     </div>
@@ -225,6 +225,22 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 \; = \; 2 \, \mathcal{D}(\Phi)
 \]</span></p>
 <p>where <span class="math inline">\(\mathcal{D}(\Phi)\)</span> is the so-called Dirichlet form. In summary, we have just shown that the asymptotic variance of the additive functional <span class="math inline">\(T^{-1/2} \, \int_0^T \varphi(X_s) \, ds\)</span> is given by two times the Dirichlet form <span class="math inline">\(\mathcal{D}(\Psi)\)</span> where <span class="math inline">\(\Phi\)</span> is solution to the Poisson equation <span class="math inline">\(\mathcal{L}\Phi = \varphi\)</span>.</p>
+<section id="integral-representation-of-the-poisson-equation" class="level3">
+<h3 class="anchored" data-anchor-id="integral-representation-of-the-poisson-equation">Integral representation of the Poisson equation</h3>
+<p>It is often useful to think of the generator <span class="math inline">\(\mathcal{L}\)</span> as an infinite dimensional equivalent of a standard negative definite symmetric matrix/operator <span class="math inline">\(M \in \mathbb{R}^{n,n}\)</span>. And since <span class="math inline">\(M^{-1} = -\int_{t=0}^{\infty} \exp(tM) \, dt\)</span> one can expect</p>
+<p><span class="math display">\[
+\mathcal{L}^{-1} \; = \; -\int_{t=0}^{\infty} e^{t \, \mathcal{L}} \, dt.
+\]</span></p>
+<p>This is just another way of writing that the solution <span class="math inline">\(\Phi\)</span> to the Poisson equation <span class="math inline">\(\mathcal{L}\Phi = \varphi\)</span>, with the centering condition <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\Phi(X)]=0\)</span> for picking one solution out of the possible solutions to the Poisson equation, can be expressed</p>
+<p><span id="eq-expansion"><span class="math display">\[
+\Phi(x) \, = \, -\int_{t=0}^{\infty} \mathop{\mathrm{E}}[\varphi(X_t)|X_0=x] \, dt.
+\tag{3}\]</span></span></p>
+<p><a href="#eq-expansion">Equation&nbsp;3</a> is easily proved by writing</p>
+<p><span class="math display">\[
+\Phi(x)-\Phi(X_T) = -\int_{t=0}^\infty \varphi(X_t) \, dt + \textrm{(martingale)},
+\]</span></p>
+<p>and by taking expectation from both sides and noticing that <span class="math inline">\(\mathop{\mathrm{E}}[\Phi(X_T)] \to 0\)</span> thanks to the assumed centering condition <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\Phi(X)]=0\)</span>.</p>
+</section>
 <section id="example-ou-process" class="level3">
 <h3 class="anchored" data-anchor-id="example-ou-process">Example: OU process</h3>
 <p>Consider a OU process that is ergodic with respect to the standard Gaussian density <span class="math inline">\(\pi(x) = e^{-x^2/2} / \sqrt{2\pi}\)</span>,</p>
