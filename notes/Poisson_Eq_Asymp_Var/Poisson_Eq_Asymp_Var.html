@@ -248,12 +248,12 @@ C(r) = \mathop{\mathrm{E}}[\varphi(X_t) \varphi(X_{t+r})],
 2 \, \int_{x \in \mathbb{R}^D} \Gamma \Phi(x) \, \pi(dx).
 \]</span></p>
 <p>Finally, since <span class="math inline">\(\int (\mathcal{L}\Phi^2)(x) \, \pi(dx) = 0\)</span>, this can equivalently be written as</p>
-<p><span class="math display">\[
+<p><span id="eq-asymp-var-poisson"><span class="math display">\[
 \sigma^2
 \; = \;
 -2 \, \int_{x \in \mathbb{R}^D} \Phi(x) \, \mathcal{L}\Phi(x) \, \pi(dx)
 \; = \; 2 \, \mathcal{D}(\Phi)
-\]</span></p>
+\tag{5}\]</span></span></p>
 <p>where <span class="math inline">\(\mathcal{D}(\Phi)\)</span> is the so-called Dirichlet form. In summary, we have just shown that the asymptotic variance of the additive functional <span class="math inline">\(T^{-1/2} \, \int_0^T \varphi(X_s) \, ds\)</span> is given by two times the Dirichlet form <span class="math inline">\(\mathcal{D}(\Psi)\)</span> where <span class="math inline">\(\Phi\)</span> is solution to the Poisson equation <span class="math inline">\(\mathcal{L}\Phi = \varphi\)</span>. Note that this implies that the generator <span class="math inline">\(\Phi\)</span> is a negative operator in the sense that for a test function <span class="math inline">\(\Phi\)</span> we have that</p>
 <p><span class="math display">\[
 \left&lt; \Phi, \mathcal{L}\Phi \right&gt;_{\pi} \; \leq \; 0
@@ -269,12 +269,23 @@ C(r) = \mathop{\mathrm{E}}[\varphi(X_t) \varphi(X_{t+r})],
 <p>That is just another way of writing that the solution <span class="math inline">\(\Phi\)</span> to the Poisson equation <span class="math inline">\(\mathcal{L}\Phi = \varphi\)</span>, with the <strong>centering condition</strong> <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\Phi(X)]=0\)</span> for picking one solution out of the many possible solutions to the Poisson equation differing from each other by an additive constant, can be expressed as</p>
 <p><span id="eq-expansion"><span class="math display">\[
 \Phi(x) \, = \, -\int_{t=0}^{\infty} \mathop{\mathrm{E}}[\varphi(X_t)|X_0=x] \, dt.
-\tag{5}\]</span></span></p>
-<p><a href="#eq-expansion">Equation&nbsp;5</a> is easily proved with <a href="#eq-martingale">Equation&nbsp;1</a> by writing</p>
+\tag{6}\]</span></span></p>
+<p><a href="#eq-expansion">Equation&nbsp;6</a> is easily proved with <a href="#eq-martingale">Equation&nbsp;1</a> by writing</p>
 <p><span class="math display">\[
 \Phi(x)-\Phi(X_T) = -\int_{t=0}^\infty \varphi(X_t) \, dt + \textrm{(martingale)}
 \]</span></p>
-<p>and by taking expectation from both sides and noticing that <span class="math inline">\(\mathop{\mathrm{E}}[\Phi(X_T)] \to 0\)</span> thanks to the assumed centering condition <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\Phi(X)]=0\)</span>.</p>
+<p>and by taking expectation from both sides and noticing that <span class="math inline">\(\mathop{\mathrm{E}}[\Phi(X_T)] \to 0\)</span> thanks to the assumed centering condition <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\Phi(X)]=0\)</span>. Note that this remarks allows to give another derivation of <a href="#eq-asymp-var-poisson">Equation&nbsp;5</a> starting from the integrated autocovariance formulation <a href="#eq-autocov">Equation&nbsp;3</a>. Indeed, note that</p>
+<p><span class="math display">\[
+\begin{align}
+\sigma^2 &amp;= 2 \, \int_{r=0}^{\infty} C(r) \, dr\\
+&amp;=
+2 \, \int_{x \in \mathbb{R}^D} \varphi(x)  {\left\{  \int_{r=0}^{\infty}  \mathop{\mathrm{E}}[\varphi(X_t) | X_0=x] \, dr  \right\}}  \, \pi(dx)\\
+&amp;=
+-2 \, \int_{x \in \mathbb{R}^D} \varphi(x) \Phi(x) \, \pi(dx)
+=
+-2 \left&lt; \Phi, \mathcal{L}\Phi \right&gt;_{\pi}.
+\end{align}
+\]</span></p>
 </section>
 <section id="example-ou-process" class="level3">
 <h3 class="anchored" data-anchor-id="example-ou-process">Example: OU process</h3>
