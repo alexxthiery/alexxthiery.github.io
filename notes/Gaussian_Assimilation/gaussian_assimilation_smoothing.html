@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Notes</title>
+<title>Alexandre Thiéry - Ensemble Kalman Smoother (EnKS)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,21 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -59,12 +78,14 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Notes">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Ensemble Kalman Smoother (EnKS)">
 <meta property="og:description" content="">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Notes">
+<meta name="twitter:title" content="Alexandre Thiéry - Ensemble Kalman Smoother (EnKS)">
 <meta name="twitter:description" content="">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -77,7 +98,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -87,29 +108,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html" rel="" target="">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -124,9 +145,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
+      <h1 class="title">Ensemble Kalman Smoother (EnKS)</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">enkf</div>
+                <div class="quarto-category">data-assimilation</div>
               </div>
                   </div>
   </div>
@@ -138,10 +160,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">18 11 2023</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">19 11 2023</p>
+      </div>
+    </div>
       
     </div>
     
@@ -150,16 +178,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theory" id="toc-information-theory" class="nav-link" data-scroll-target="#information-theory">Information Theory</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -167,52 +186,78 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">categories</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-</ul>
-</section>
-<section id="information-theory" class="level3">
-<h3 class="anchored" data-anchor-id="information-theory">Information Theory</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-</ul>
-</section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
-<ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation &amp; the EnKF</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html">Ensemble Kalman Smoothers</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-<li><a href="../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson Equation &amp; Asymptotic Variance</a></li>
-</ul>
+<p>Consider a linear-Gaussian state space model with <span class="math inline">\(\mathbb{R}^{D_x}\)</span>-valued dynamics <span class="math inline">\(X_{t+1} \sim F \, X_t + \mathcal{N}(0,Q)\)</span> and <span class="math inline">\(\mathbb{R}^{D_y}\)</span>-valued observations <span class="math inline">\(Y_t \sim H X_t + \mathcal{N}(0,R)\)</span>. Assuming a Gaussian initial distribution, the filtering distributions <span class="math inline">\(\mathop{\mathrm{P}}(X_t \in dx \, | Y_{1:t}) \equiv \mathcal{N}(\mu_{t|t}, P_{t|t})\)</span> are Gaussian and can be sequentially computed with the <a href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman Filter</a>. Given observations <span class="math inline">\(y_{1:T}\)</span> and <span class="math inline">\(1 \leq t \leq T\)</span>, the smoothing distributions <span class="math inline">\(\mathop{\mathrm{P}}(X_t \in dx \, | Y_{1:T}) \equiv \mathcal{N}(\mu_{t|T}, P_{t|T})\)</span> can computed by performing a “backward pass”. Since everything is linear and Gaussian, it is just an exercise in Linear Algebra &amp; Gaussian-conditioning, as described by the Rauch-Tung-Striebel <span class="citation" data-cites="rauch1965maximum">(<a href="#ref-rauch1965maximum" role="doc-biblioref">Rauch, Tung, and Striebel 1965</a>)</span> smoothing recursions. At time <span class="math inline">\(T\)</span>, the filtering and smoothing distributions are identical and the backward recursion reads</p>
+<p><span id="eq-RTS"><span class="math display">\[
+\left\{
+\begin{aligned}
+\mu_{t|T}
+&amp;= \mu_{t|t} + B_t \,  {\left( \mu_{t+1|T} - \mu_{t+1|t} \right)} \\
+P_{t|T}
+&amp;=
+P_{t|t} + B_t  {\left(  P_{t+1|T} - P_{t+1|t}  \right)}  B^\top_{t}
+\end{aligned}
+\right.
+\tag{1}\]</span></span></p>
+<p>for predictive mean <span class="math inline">\(\mu_{t+1|t} = F \, \mu_{t|t}\)</span> and covariance <span class="math inline">\(P_{t+1|t} = F \, P_{t|t} \, F^\top + Q\)</span>. The <strong>smoothing gain matrix</strong> is given by</p>
+<p><span class="math display">\[
+\begin{align}
+B_t &amp;=
+\mathop{\mathrm{Cov}}(X_t, X_{t+1} \, | y_{1:t}) \, \mathop{\mathrm{Var}}(X_{t+1} \, | y_{1:t})^{-1} \\
+&amp;=
+P_{t|t} F^\top \,  {\left( F \, P_{t|t} \, F^\top + Q \right)} ^{-1}.
+\end{align}
+\]</span></p>
+<p>Now, we would like to design an “ensemble” version of these updates so that it can be adapted to non-linear dynamics. For this purpose, consider <span class="math inline">\((X^f_t, X^p_{t+1})\)</span> with <span class="math inline">\(X^f_t \sim \mathcal{N}(\mu_{t|t}, P_{t|t})\)</span> and <span class="math inline">\(X^p_{t+1} = F \, X^f_t + \mathcal{N}(0,Q)\)</span>. In other words, the pair <span class="math inline">\((X_t, X_{t+1})\)</span> is obtained by assimilating all the observation <span class="math inline">\(y_{1:t}\)</span> with a standard Kalman filter; <span class="math inline">\(X^f_t\)</span> is distributed according to the filtering at time <span class="math inline">\(t\)</span> while <span class="math inline">\(X^p_{t+1}\)</span> is distributed to the predictive distribution given <span class="math inline">\(y_{1:t}\)</span>. The standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Conditional_distributions">gaussian conditional probabilities</a> give that</p>
+<p><span class="math display">\[
+X^f_t | (X^p_{t+1}=x_{t+1}) \; \sim \; \mu_{t|t} + B_T (x_{t+1} - \mu_{t+1|t}) + \mathcal{N}(0, P_{t|t} - B_t \, P_{t+1|t} \, B_t^\top),
+\]</span></p>
+<p>so that the smoothing gain matrix <span class="math inline">\(B_t\)</span> can be thought of as being obtained by <strong>regressing</strong> <span class="math inline">\(X^f_t\)</span> against <span class="math inline">\(X^p_{t+1}\)</span> (conditioned on <span class="math inline">\(y_{1:t}\)</span>). Now, assume that one can add a stochastic correction term <span class="math inline">\(\Delta_{t+1}\)</span> to <span class="math inline">\(X^f_{t+1}\)</span> by setting</p>
+<p><span class="math display">\[
+X^{s}_{t+1} = X^p_{t+1} + \Delta_{t+1}
+\]</span></p>
+<p>in such a manner that <span class="math inline">\(X^{s}_{t+1}\)</span> is now distributed according to the smoothing distribution, i.e.&nbsp;<span class="math inline">\(X^{s}_{t+1} = \mathcal{N}(\mu_{t|T}, P_{t|T})\)</span>. Let us look at the distribution of the random variable <span class="math inline">\(X^{s}_{t}\)</span> defined as</p>
+<p><span id="eq-RTS-ensemble"><span class="math display">\[
+\begin{align}
+X^{s}_{t}
+&amp;= X^f_t + B_t \, (X^{s}_{t+1} - X^p_{t+1})\\
+&amp;= X^f_t + B_t \, \Delta_{t+1}.
+\end{align}
+\tag{2}\]</span></span></p>
+<p>Informally, the random variable <span class="math inline">\(X^{s}_{t}\)</span> is obtained by “pulling” the correction term <span class="math inline">\(\Delta_{t+1} = X^{s}_{t+1} - X^p_{t+1}\)</span> back to <span class="math inline">\(X^f_t\)</span> through the “regression” smoothing gain matrix <span class="math inline">\(B_t\)</span>. Writing</p>
+<p><span class="math display">\[
+X^f_{t} = \mu_{t|t} + B_t \, (X^p_{t+1} - \mu_{t+1|t}) + \varepsilon_t
+\]</span></p>
+<p>where <span class="math inline">\(\varepsilon_t \sim \mathcal{N}(0, P_{t|t} - B_t \, P_{t+1|t} \, B_t^\top)\)</span> is independent from all other sources of randomness, one immediately obtains that <span class="math inline">\(X^{s}_{t}\)</span> is Gaussian with mean <span class="math inline">\(\mu_{t|t} + B_t \,  {\left( \mu_{t+1|T} - \mu_{t+1|t} \right)} \)</span> and variance <span class="math inline">\(P_{t|t} + B_t  {\left(  P_{t+1|T} - P_{t+1|t}  \right)}  B^\top_{t}\)</span>. Consequently, <a href="#eq-RTS">Equation&nbsp;1</a> shows that <span class="math inline">\(X^{s}_{t}\)</span> is actually distributed according to the smoothing distribution at time <span class="math inline">\(t\)</span>, as we hoped. In other words, <a href="#eq-RTS-ensemble">Equation&nbsp;2</a> describes a mechanism for back-propagating information and recursively construct the smoothing distributions during a backward pass. Furthermore, it is straightforward to adapt the methods to nonlinear scenarios. Run an <a href="../../notes/Gaussian_Assimilation/gaussian_assimilation.html">ensemble Kalman filter</a> (EnKF) with <span class="math inline">\(N\)</span> particles to obtain particle approximations of the filtering and predictive distributions,</p>
+<p><span class="math display">\[
+\left\{
+\begin{align}
+\tfrac{1}{N} \sum_{i=1}^N \delta(x^{f}_{t,i})
+\; &amp;\approx \;
+\mathop{\mathrm{P}}(X_t \in dx \, | y_{1:t})\\
+\tfrac{1}{N} \sum_{i=1}^N \delta(x^{p}_{t,i})
+\; &amp;\approx \;
+\mathop{\mathrm{P}}(X_t \in dx \, | y_{1:t-1}).\\
+\end{align}
+\right.
+\]</span></p>
+<p>These particles can be used to approximate the “regression” smoothing gain matrices</p>
+<p><span class="math display">\[
+\widehat{B}_t = \widehat{\mathop{\mathrm{Cov}}}(X_t, X_{t+1} \, | y_{1:t}) \, \widehat{\mathop{\mathrm{Var}}}(X_{t+1} \, | y_{1:t})^{-1}.
+\]</span></p>
+<p>Finally, the smoothing distributions can be approximating during a backward pass by settings</p>
+<p><span class="math display">\[
+x^{s}_{t,i} \; = \; \widehat{B}_t  {\left(  x^{s}_{t+1,i} - x^{p}_{t+1,i}  \right)} .
+\]</span></p>
+<p>[Experiments: TODO]</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-rauch1965maximum" class="csl-entry" role="listitem">
+Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likelihood Estimates of Linear Dynamic Systems.”</span> <em>AIAA Journal</em> 3 (8): 1445–50.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
