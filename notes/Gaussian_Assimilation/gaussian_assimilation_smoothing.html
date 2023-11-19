@@ -207,15 +207,19 @@ B_t &amp;=
 P_{t|t} F^\top \,  {\left( F \, P_{t|t} \, F^\top + Q \right)} ^{-1}.
 \end{align}
 \]</span></p>
-<p>Now, we would like to design an “ensemble” version of these updates so that it can be adapted to non-linear dynamics. For this purpose, consider <span class="math inline">\((X^f_t, X^p_{t+1})\)</span> with <span class="math inline">\(X^f_t \sim \mathcal{N}(\mu_{t|t}, P_{t|t})\)</span> and <span class="math inline">\(X^p_{t+1} = F \, X^f_t + \mathcal{N}(0,Q)\)</span>. In other words, the pair <span class="math inline">\((X_t, X_{t+1})\)</span> is obtained by assimilating all the observation <span class="math inline">\(y_{1:t}\)</span> with a standard Kalman filter; <span class="math inline">\(X^f_t\)</span> is distributed according to the filtering at time <span class="math inline">\(t\)</span> while <span class="math inline">\(X^p_{t+1}\)</span> is distributed to the predictive distribution given <span class="math inline">\(y_{1:t}\)</span>. The standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Conditional_distributions">gaussian conditional probabilities</a> give that</p>
+<p>Now, we would like to design an “ensemble” version of these updates so that it can be adapted to non-linear dynamics. For this purpose, consider <span class="math inline">\((X^f_t, X^p_{t+1})\)</span> with <span class="math inline">\(X^f_t \sim \mathcal{N}(\mu_{t|t}, P_{t|t})\)</span> and <span class="math inline">\(X^p_{t+1} = F \, X^f_t + \mathcal{N}(0,Q)\)</span>. In other words, the pair <span class="math inline">\((X^f_t, X^p_{t+1})\)</span> is obtained by assimilating all the observation <span class="math inline">\(y_{1:t}\)</span> with a standard Kalman filter; <span class="math inline">\(X^f_t\)</span> is distributed according to the filtering at time <span class="math inline">\(t\)</span> while <span class="math inline">\(X^p_{t+1}\)</span> is distributed to the predictive distribution given <span class="math inline">\(y_{1:t}\)</span>. The standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Conditional_distributions">gaussian conditional probabilities</a> give that</p>
 <p><span class="math display">\[
 X^f_t | (X^p_{t+1}=x_{t+1}) \; \sim \; \mu_{t|t} + B_T (x_{t+1} - \mu_{t+1|t}) + \mathcal{N}(0, P_{t|t} - B_t \, P_{t+1|t} \, B_t^\top),
 \]</span></p>
-<p>so that the smoothing gain matrix <span class="math inline">\(B_t\)</span> can be thought of as being obtained by <strong>regressing</strong> <span class="math inline">\(X^f_t\)</span> against <span class="math inline">\(X^p_{t+1}\)</span> (conditioned on <span class="math inline">\(y_{1:t}\)</span>). Now, assume that one can add a stochastic correction term <span class="math inline">\(\Delta_{t+1}\)</span> to <span class="math inline">\(X^f_{t+1}\)</span> by setting</p>
+<p>so that the smoothing gain matrix <span class="math inline">\(B_t\)</span> can be thought of as being obtained by <strong>regressing</strong> <span class="math inline">\(X^f_t\)</span> against <span class="math inline">\(X^p_{t+1}\)</span>, i.e.&nbsp;it is the matrix that minimizes the MSE</p>
+<p><span class="math display">\[
+\mathop{\mathrm{E}} {\left(  \left\| X^f_t - B (X^p_{t+1} - \mu_{t+1|t}) \right\|^2  \right)} .
+\]</span></p>
+<p>Now, assume that one can add a stochastic correction term <span class="math inline">\(\Delta_{t+1}\)</span> to <span class="math inline">\(X^p_{t+1}\)</span> by setting</p>
 <p><span class="math display">\[
 X^{s}_{t+1} = X^p_{t+1} + \Delta_{t+1}
 \]</span></p>
-<p>in such a manner that <span class="math inline">\(X^{s}_{t+1}\)</span> is now distributed according to the smoothing distribution, i.e.&nbsp;<span class="math inline">\(X^{s}_{t+1} = \mathcal{N}(\mu_{t|T}, P_{t|T})\)</span>. Let us look at the distribution of the random variable <span class="math inline">\(X^{s}_{t}\)</span> defined as</p>
+<p>in such a manner that <span class="math inline">\(X^{s}_{t+1}\)</span> is distributed according to the <strong>smoothing distribution</strong>, i.e.&nbsp;<span class="math inline">\(X^{s}_{t+1} = \mathcal{N}(\mu_{t|T}, P_{t|T})\)</span>. Let us look at the distribution of the random variable <span class="math inline">\(X^{s}_{t}\)</span> defined as</p>
 <p><span id="eq-RTS-ensemble"><span class="math display">\[
 \begin{align}
 X^{s}_{t}
@@ -223,7 +227,7 @@ X^{s}_{t}
 &amp;= X^f_t + B_t \, \Delta_{t+1}.
 \end{align}
 \tag{2}\]</span></span></p>
-<p>Informally, the random variable <span class="math inline">\(X^{s}_{t}\)</span> is obtained by “pulling” the correction term <span class="math inline">\(\Delta_{t+1} = X^{s}_{t+1} - X^p_{t+1}\)</span> back to <span class="math inline">\(X^f_t\)</span> through the “regression” smoothing gain matrix <span class="math inline">\(B_t\)</span>. Writing</p>
+<p>The random variable <span class="math inline">\(X^{s}_{t}\)</span> is obtained by “pulling” the correction term <span class="math inline">\(\Delta_{t+1} = X^{s}_{t+1} - X^p_{t+1}\)</span> back to <span class="math inline">\(X^f_t\)</span> through the “regression” smoothing gain matrix <span class="math inline">\(B_t\)</span>. Writing</p>
 <p><span class="math display">\[
 X^f_{t} = \mu_{t|t} + B_t \, (X^p_{t+1} - \mu_{t+1|t}) + \varepsilon_t
 \]</span></p>
@@ -242,9 +246,9 @@ X^f_{t} = \mu_{t|t} + B_t \, (X^p_{t+1} - \mu_{t+1|t}) + \varepsilon_t
 \]</span></p>
 <p>These particles can be used to approximate the “regression” smoothing gain matrices</p>
 <p><span class="math display">\[
-\widehat{B}_t = \widehat{\mathop{\mathrm{Cov}}}(X_t, X_{t+1} \, | y_{1:t}) \, \widehat{\mathop{\mathrm{Var}}}(X_{t+1} \, | y_{1:t})^{-1}.
+\widehat{B}_t = \mathop{\mathrm{Cov}} {\left(  x^f_{t,i}, x^p_{t+1,i}  \right)}  \, \mathop{\mathrm{Var}} {\left(  x^p_{t+1,i}  \right)} ^{-1}.
 \]</span></p>
-<p>Finally, the smoothing distributions can be approximating during a backward pass by settings</p>
+<p>Finally, the smoothing distributions can be approximating during a backward pass by setting</p>
 <p><span class="math display">\[
 x^{s}_{t,i} \; = \; \widehat{B}_t  {\left(  x^{s}_{t+1,i} - x^{p}_{t+1,i}  \right)} .
 \]</span></p>
