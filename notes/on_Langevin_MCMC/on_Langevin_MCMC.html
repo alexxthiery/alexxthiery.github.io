@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -64,8 +64,7 @@ div.csl-indent {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
@@ -203,11 +202,11 @@ dX_t = \nabla \log \pi(X_t) \, dt + \sqrt{2} \, dW
 <p><span class="math display">\[
 y = x + \varepsilon\, \nabla \log \pi(X_t) + \sqrt{2 \varepsilon} \, \xi
 \]</span></p>
-<p>with <span class="math inline">\(\xi \sim \mathcal{N}(0,I)\)</span> before being accepted-or-reject according to the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings</a> ratio. This MCMC method, first proposed by <a href="https://en.wikipedia.org/wiki/Julian_Besag">Julian Besag</a> in 1994, is commonly referred to as the <a href="https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm">Metropolis-Adjusted-Langevin-Algorithm</a> (MALA). But how can one come-up with this proposal mechanism without knowing before hand the existence of this reversible Langevin diffusion <a href="#eq-langevin">Equation&nbsp;1</a>? While it is intuitively clear that following the direction of <span class="math inline">\(\nabla \log \pi\)</span> is not such a bad idea, i.e.&nbsp;one would like to move towards areas of “high probability mass”, where does this <span class="math inline">\(\sqrt{2}\)</span> comes from? Naturally, one could look at proposals of the type <span class="math inline">\(y = x + \nabla \log \pi(X_t) \, \varepsilon+ \lambda \, \xi\)</span> for some free parameter <span class="math inline">\(\lambda &gt; 0\)</span> and study the behavior of the Metropolis-Hastings ratio in the regime <span class="math inline">\(\varepsilon\to 0\)</span>: as simple as it sounds, it is not entirely straightforward and requires quite a bit of algebra (do it!). Instead, I very much like the type of approaches described in <span class="citation" data-cites="titsias2018auxiliary">(<a href="#ref-titsias2018auxiliary" role="doc-biblioref">Titsias and Papaspiliopoulos 2018</a>)</span>. To summarize, we would like to generate a MCMC proposal <span class="math inline">\(y \in \mathbb{R}^D\)</span> that stays in the vicinity of the current position <span class="math inline">\(x \in \mathbb{R}^D\)</span> while exploiting the knowledge of <span class="math inline">\(\nabla \log \pi(x)\)</span>. One cannot simply approximate the target distribution as <span class="math inline">\(\pi(x) \approx \pi(x_k) e^{\left&lt; \nabla \log \pi(x_k), x-x_k \right&gt;}\)</span> and sample from this approximation since it is typically not tractable. Instead, consider the following extended target distribution</p>
+<p>with <span class="math inline">\(\xi \sim \mathcal{N}(0,I)\)</span> before being accepted-or-reject according to the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings</a> ratio. This MCMC method, first proposed by <a href="https://en.wikipedia.org/wiki/Julian_Besag">Julian Besag</a> in 1994, is commonly referred to as the <a href="https://en.wikipedia.org/wiki/Metropolis-adjusted_Langevin_algorithm">Metropolis-Adjusted-Langevin-Algorithm</a> (MALA). But how can one come-up with this proposal mechanism without knowing before hand the existence of this reversible Langevin diffusion <a href="#eq-langevin">Equation&nbsp;1</a>? While it is intuitively clear that following the direction of <span class="math inline">\(\nabla \log \pi\)</span> is not such a bad idea, i.e.&nbsp;one would like to move towards areas of “high probability mass”, where does this <span class="math inline">\(\sqrt{2}\)</span> comes from? Naturally, one could look at proposals of the type <span class="math inline">\(y = x + \nabla \log \pi(X_t) \, \varepsilon+ \lambda \, \xi\)</span> for some free parameter <span class="math inline">\(\lambda &gt; 0\)</span> and study the behavior of the Metropolis-Hastings ratio in the regime <span class="math inline">\(\varepsilon\to 0\)</span>: as simple as it sounds, it is not entirely straightforward and requires quite a bit of algebra (do it!). Instead, I very much like the type of approaches described in <span class="citation" data-cites="titsias2018auxiliary">(<a href="#ref-titsias2018auxiliary" role="doc-biblioref">Titsias and Papaspiliopoulos 2018</a>)</span>. To summarize, we would like to generate a MCMC proposal <span class="math inline">\(y \in \mathbb{R}^D\)</span> that stays in the vicinity of the current position <span class="math inline">\(x \in \mathbb{R}^D\)</span> while exploiting the knowledge of <span class="math inline">\(\nabla \log \pi(x)\)</span>. One cannot simply approximate the target distribution as <span class="math inline">\(\pi(x) \approx \pi(x_k) e^{\left&lt; \nabla \log \pi(x_k), x-x_k \right&gt;}\)</span> and sample from this approximation since it is typically does not define a probability distribution. Instead, consider the following extended target distribution</p>
 <p><span class="math display">\[
 \overline{\pi}(x,z) \, \propto \pi(x) \, \exp {\left\{ -\frac{1}{2\varepsilon}\|z-x\|^2 \right\}} .
 \]</span></p>
-<p>In other words, we consider a Gaussian auxiliary variable <span class="math inline">\(z \in \mathbb{R}^D\)</span> that is centred at <span class="math inline">\(x\)</span> and at distance about <span class="math inline">\(\sqrt{\varepsilon}\)</span> of it. Now, given the current position <span class="math inline">\(x_k\)</span>, to generate a proposal <span class="math inline">\(y_\star\)</span> that stays in the vicinity of <span class="math inline">\(x_k\)</span>, one can proceed in two steps, in the spirit of a Gibbs-sampling approach:</p>
+<p>In other words, the Gaussian auxiliary variable <span class="math inline">\(z \in \mathbb{R}^D\)</span> is centred at <span class="math inline">\(x\)</span> and at distance about <span class="math inline">\(\sqrt{\varepsilon}\)</span> of it. Now, given the current position <span class="math inline">\(x_k\)</span>, to generate a proposal <span class="math inline">\(y_\star\)</span> that stays in the vicinity of <span class="math inline">\(x_k\)</span>, one can proceed in two steps, in the spirit of a Gibbs-sampling approach:</p>
 <ol type="1">
 <li><p>First, generate <span class="math inline">\(z_\star \sim \overline{\pi}(dz | x_k) \sim \mathcal{N}(x_k, \sqrt{\varepsilon}I)\)</span></p></li>
 <li><p>Second, sample from <span class="math inline">\(y_\star \sim \overline{\pi}(dx | z_\star)\)</span>.</p></li>
@@ -228,11 +227,11 @@ y = x + \varepsilon\, \nabla \log \pi(X_t) + \sqrt{2 \varepsilon} \, \xi
 <p><span class="math display">\[
 y \sim x + \varepsilon\, \nabla \log \pi(x_k) + \sqrt{2 \varepsilon} \, \xi
 \]</span></p>
-<p>with <span class="math inline">\(\xi \sim \mathcal{N}(0,I)\)</span> since <span class="math inline">\(z_\star \sim \mathcal{N}(x, \sqrt{\varepsilon} I)\)</span>. It is exactly the MALA proposal. Naturally, one can also try to slightly more clever and use an extended distribution</p>
+<p>with <span class="math inline">\(\xi \sim \mathcal{N}(0,I)\)</span> since <span class="math inline">\(z_\star \sim \mathcal{N}(x, \sqrt{\varepsilon} I)\)</span>. It is exactly the MALA proposal. Naturally, one can also try to be slightly more clever and use an extended distribution</p>
 <p><span class="math display">\[
-\overline{\pi}(x,z) \, \propto \, \pi(x) \, \exp {\left\{  -\frac{1}{2\varepsilon} \left&lt; (z-x), M^{-1} \, (z-x) \right&gt;  \right\}} .
+\overline{\pi}(x,z) \, \propto \, \pi(x) \, \exp {\left\{  -\frac{1}{2\varepsilon} \left&lt; (z-x), M^{-1} \, (z-x) \right&gt;  \right\}}
 \]</span></p>
-<p>for some appropriate positive-definite “mass” matrix <span class="math inline">\(M \in \mathbb{R}^{D,D}\)</span>. Indeed, this immediately leads to preconditioned MALA methods. While this derivation is neat, I really like this approach since it can be adapted and generalized to quite a few other situations!</p>
+<p>for some appropriate positive-definite “mass” matrix <span class="math inline">\(M \in \mathbb{R}^{D,D}\)</span>. Indeed, this immediately leads to preconditioned MALA methods. I really like this approach since it can be adapted and generalized to quite a few other situations!</p>
 
 
 
