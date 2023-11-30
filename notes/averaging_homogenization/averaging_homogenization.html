@@ -349,7 +349,7 @@ dX =  \textcolor{blue}{I(X) \, dt + \Gamma^{1/2}(X) \, dW^{H}}
 \overline{\mu}(X) \, dt + \overline{\sigma}(X) \, dW^X.
 \]</span></p>
 <p>for two independent Brownian motions <span class="math inline">\(W^X\)</span> and <span class="math inline">\(W^H\)</span>. The volatility terms <span class="math inline">\( \textcolor{blue}{\Gamma(x)}\)</span> comes from the CLT and the drift term <span class="math inline">\( \textcolor{blue}{I(x)}\)</span> comes from the self-interaction term:</p>
-<p><span class="math display">\[
+<p><span id="eq-homogenized-terms"><span class="math display">\[
 \left\{
 \begin{align}
 \Gamma(x)
@@ -359,12 +359,12 @@ I(x)
 &amp;= \lim_{T \to \infty} \; \frac{1}{T} \iint_{0&lt;u&lt;v&lt;T} H(x, Y^{[x]}_u) \, \partial_x H(x, Y^{[x]}_v) \, du \, dv.
 \end{align}
 \right.
-\]</span></p>
+\tag{6}\]</span></span></p>
 <p>For the drift function, the scaling <span class="math inline">\(T^{-1} \int_{0&lt;u&lt;v&lt;T} (\ldots)\)</span> may look a bit surprising at first sight as one may expect <span class="math inline">\(T^{-2} \int_{0&lt;u&lt;v&lt;T} (\ldots)\)</span> instead. Note that since the process <span class="math inline">\(Y^{[x]}\)</span> mixes on a time scale <span class="math inline">\(\mathcal{O}(1)\)</span> and the centering condition <span class="math inline">\(\int H(x, y) \rho_x(dy)=0\)</span> holds, the expectation <span class="math inline">\(\mathop{\mathrm{E}}[H(x, Y^{[x]}_u) \, \partial_x H(x, Y^{[x]}_v)]\)</span> goes to zero as soon as <span class="math inline">\(|u-v| \gg 1\)</span>. This means that only the subset <span class="math inline">\(|u-v| = \mathcal{O}(1)\)</span> of <span class="math inline">\([0,T]^2\)</span> really matters in that double integral, hence the <span class="math inline">\((1/T)\)</span> normalization factor.</p>
 </section>
 <section id="closed-form-solution-poisson-equation" class="level3">
 <h3 class="anchored" data-anchor-id="closed-form-solution-poisson-equation">Closed form solution &amp; Poisson equation:</h3>
-<p>The drift and volatility terms <span class="math inline">\(\Gamma(x)\)</span> and <span class="math inline">\(I(x)\)</span> quantify the mixing properties of the fast process <span class="math inline">\(Y^{[x]}\)</span>. They can also be expressed in terms of solution of appropriate <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson equations</a>.</p>
+<p>The drift and volatility terms <span class="math inline">\(\Gamma(x)\)</span> and <span class="math inline">\(I(x)\)</span> quantify the mixing properties of the fast process <span class="math inline">\(Y^{[x]}\)</span>. While formulas <a href="#eq-homogenized-terms">Equation&nbsp;6</a> are intuitive, they can be difficult to deal with if one needs the exact expressions of the drift and volatility functions. Instead, they can also be expressed in terms of the solution to an appropriate <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson equations</a>.</p>
 <p><span id="eq-poisson"><span class="math display">\[
 \begin{align}
 I(x) &amp;=
@@ -376,12 +376,12 @@ H(x,Y^{[x]}_{v}) \, \partial_x H(x,Y^{[x]}_{u}) \, 1_{v&lt;u}  \, du \, dv \\
 -\int \rho_x(dy) \, H(x,y) \, \partial_{x} \Phi(x,y)\\
 &amp;= -\left&lt; H(x, \cdot), \partial_x \Phi(x, \cdot) \right&gt;_{\rho_x}
 \end{align}
-\tag{6}\]</span></span></p>
+\tag{7}\]</span></span></p>
 <p>where the function <span class="math inline">\(\Phi(x,y)\)</span> is solution to the <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson equation</a></p>
 <p><span class="math display">\[
 \mathcal{L}^{Y^{[x]}} \Phi(x, \cdot) = H(x, \cdot)
 \]</span></p>
-<p>for all <span class="math inline">\(x \in \mathcal{X}\)</span> and <span class="math inline">\(\mathcal{L}^{Y^{[x]}}\)</span> is the generator of the fast process <span class="math inline">\(dY^{[x]}/dt = G(x,Y^{[x]}, W^Y)\)</span>. The last equality in <a href="#eq-poisson">Equation&nbsp;6</a> follows from the <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">integral representation</a> of the Poisson equation. Similarly, and also as explained <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">here</a>, the asymptotic variance term can also be expressed in terms of the function <span class="math inline">\(\Phi\)</span>,</p>
+<p>for all <span class="math inline">\(x \in \mathcal{X}\)</span> and <span class="math inline">\(\mathcal{L}^{Y^{[x]}}\)</span> is the generator of the fast process <span class="math inline">\(dY^{[x]}/dt = G(x,Y^{[x]}, W^Y)\)</span>. The last equality in <a href="#eq-poisson">Equation&nbsp;7</a> follows from the <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">integral representation</a> of the Poisson equation. Similarly, and also as explained <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">here</a>, the asymptotic variance term can also be expressed in terms of the function <span class="math inline">\(\Phi\)</span>,</p>
 <p><span class="math display">\[
 \begin{align}
 \Gamma(x)
@@ -398,17 +398,17 @@ H(x,Y^{[x]}_{v}) \, \partial_x H(x,Y^{[x]}_{u}) \, 1_{v&lt;u}  \, du \, dv \\
 \left\{
 \begin{align}
 dX^{\varepsilon} &amp;= \varepsilon^{-1/2} \, Y^{\varepsilon} \, dt\\
-dY^{\varepsilon} &amp;= -\varepsilon^{-1}\, Y^{\varepsilon} \, dt + \sqrt{2/\varepsilon} \, dW^Y
+dY^{\varepsilon} &amp;= -\lambda \varepsilon^{-1}\, Y^{\varepsilon} \, dt + \sqrt{2 \lambda/\varepsilon} \, dW^Y,
 \end{align}
 \right.
 \]</span></p>
-<p>The fast OU process mixes on time scales of order <span class="math inline">\(\mathcal{O}(\varepsilon)\)</span> and has a standard Gaussian distribution as invariant distribution. Homogenization gives that in the regime <span class="math inline">\(\varepsilon\to 0\)</span>, the slow process can be approximated as <span class="math inline">\(dX = \sqrt{2} \, dW\)</span> since the asymptotic variance is</p>
+<p>where <span class="math inline">\(\lambda &gt; 0\)</span> is just a fixed time-scaling parameter. The fast OU process mixes on time scales of order <span class="math inline">\(\mathcal{O}(\varepsilon)\)</span> and has a standard Gaussian distribution as invariant distribution. Homogenization gives that in the regime <span class="math inline">\(\varepsilon\to 0\)</span>, the slow process can be approximated as <span class="math inline">\(dX = \sqrt{2/\lambda} \, dW\)</span> since the asymptotic variance is</p>
 <p><span class="math display">\[
 \mathop{\mathrm{Var}} {\left\{  T^{-1/2} \int_{t=0}^{T} Y_t \, dt \right\}}
 \to
-2 \, \int_{0}^{\infty} C(r) \, dr = 2
+2 \, \int_{0}^{\infty} C(r) \, dr = 2/\lambda
 \]</span></p>
-<p>where <span class="math inline">\(C(r) = \mathop{\mathrm{E}}[Y_t Y_{t+r}] = \exp[-r]\)</span> is the autocorrelation function of the fast OU process, as explained <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">here</a>. The fact that the effective diffusion is (twice) the integrated autocorrelation of the fast process is an example of <a href="https://en.wikipedia.org/wiki/Green–Kubo_relations">Green-Kubo relations</a>.</p>
+<p>where <span class="math inline">\(C(r) = \mathop{\mathrm{E}}[Y_t Y_{t+r}] = \exp[-\lambda r]\)</span> is the autocorrelation function of the fast OU process, as explained <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">here</a>. The fact that the effective diffusion is (twice) the integrated autocorrelation of the fast process is an example of <a href="https://en.wikipedia.org/wiki/Green–Kubo_relations">Green-Kubo relations</a>.</p>
 </section>
 <section id="example-overdamped-langevin-dynamics" class="level3">
 <h3 class="anchored" data-anchor-id="example-overdamped-langevin-dynamics">Example: Overdamped Langevin Dynamics</h3>
@@ -417,7 +417,7 @@ dY^{\varepsilon} &amp;= -\varepsilon^{-1}\, Y^{\varepsilon} \, dt + \sqrt{2/\var
 \left\{
 \begin{align}
 dX^{\varepsilon} &amp;= \varepsilon^{-1/2} \, Y^{\varepsilon} \, dt\\
-dY^{\varepsilon} &amp;= -\varepsilon^{-1}\, [Y^{\varepsilon}+\varepsilon^{1/2}\nabla U(X^{\varepsilon})] \, dt + \sqrt{2/\varepsilon} \, dW^Y.
+dY^{\varepsilon} &amp;= - \varepsilon^{-1}\, [Y^{\varepsilon}+\varepsilon^{1/2}\nabla U(X^{\varepsilon})] \, dt + \sqrt{2 /\varepsilon} \, dW^Y.
 \end{align}
 \right.
 \]</span></p>
@@ -425,13 +425,13 @@ dY^{\varepsilon} &amp;= -\varepsilon^{-1}\, [Y^{\varepsilon}+\varepsilon^{1/2}\n
 <p><span class="math display">\[
 dY = -[Y^{\varepsilon}+\varepsilon^{1/2}\nabla U(x)] \, dt + \sqrt{2} \, dW^Y
 \]</span></p>
-<p>converges to a Gaussian distribution with mean <span class="math inline">\(-\nabla U(x)\)</span> and unit variance. The same arguments as the previous section immediately give that, starting from <span class="math inline">\(X^{\varepsilon}+0=x\)</span>, we have</p>
+<p>converges to a Gaussian distribution with mean <span class="math inline">\(-\nabla U(x)\)</span> and unit variance. The same arguments as the previous section immediately give that, starting from <span class="math inline">\(X^{\varepsilon}_0=x\)</span>, we have</p>
 <p><span class="math display">\[
 \varepsilon^{-1/2} \, \int_{0}^{\delta} Y^{\varepsilon} \, dt
 \; \to \;
 -\nabla U(x) \, \delta + \sqrt{2 \delta} \, \mathcal{N}(0,1).
 \]</span></p>
-<p>The <span class="math inline">\(\sqrt{2}\)</span> terms comes from the OU asymptotic variance. this shows that the slow process converges as <span class="math inline">\(\varepsilon\to 0\)</span> to the overdamped dynamics</p>
+<p>The <span class="math inline">\(\sqrt{2}\)</span> terms comes from the OU asymptotic variance. this shows that the slow process converges as <span class="math inline">\(\varepsilon\to 0\)</span> to the <a href="https://en.wikipedia.org/wiki/Brownian_dynamics">overdamped Langevin dynamics</a></p>
 <p><span class="math display">\[
 dX = -\nabla U(X) \; + \; \sqrt{2} \, dW.
 \]</span></p>
@@ -461,7 +461,7 @@ dX &amp;= \lambda^{-1} f'(X) f(X) \, dt + \sqrt{2/\lambda} \, f(X) \, dW\\
 </section>
 <section id="readings" class="level3">
 <h3 class="anchored" data-anchor-id="readings">Readings</h3>
-<p>The book <span class="citation" data-cites="pavliotis2008multiscale">(<a href="#ref-pavliotis2008multiscale" role="doc-biblioref">Pavliotis and Stuart 2008</a>)</span> is beautiful, and I quite like the section on multiscale expansion in <span class="citation" data-cites="weinan2011principles">(<a href="#ref-weinan2011principles" role="doc-biblioref">Weinan 2011</a>)</span>. For proving this type of results with the “martingale problem” approach, the lectures <span class="citation" data-cites="papanicolaou1977martingale">(<a href="#ref-papanicolaou1977martingale" role="doc-biblioref">Papanicolaou 1977</a>)</span> are nicely done.</p>
+<p>The book <span class="citation" data-cites="pavliotis2008multiscale">(<a href="#ref-pavliotis2008multiscale" role="doc-biblioref">Pavliotis and Stuart 2008</a>)</span> is beautiful, and I quite like the section on multiscale expansion in <span class="citation" data-cites="weinan2011principles">(<a href="#ref-weinan2011principles" role="doc-biblioref">Weinan 2011</a>)</span>. For proving this type of results with the “martingale problem” approach <span class="citation" data-cites="stroock1997multidimensional">(<a href="#ref-stroock1997multidimensional" role="doc-biblioref">Stroock and Varadhan 1997</a>)</span>, the lectures <span class="citation" data-cites="papanicolaou1977martingale">(<a href="#ref-papanicolaou1977martingale" role="doc-biblioref">Papanicolaou 1977</a>)</span> are nicely done.</p>
 
 
 
@@ -476,6 +476,9 @@ Papanicolaou, George. 1977. <span>“Martingale Approach to Some Limit Theorems.
 </div>
 <div id="ref-pavliotis2008multiscale" class="csl-entry" role="listitem">
 Pavliotis, Grigoris, and Andrew Stuart. 2008. <em>Multiscale Methods: Averaging and Homogenization</em>. Springer Science &amp; Business Media.
+</div>
+<div id="ref-stroock1997multidimensional" class="csl-entry" role="listitem">
+Stroock, Daniel W, and SR Srinivasa Varadhan. 1997. <em>Multidimensional Diffusion Processes</em>. Vol. 233. Springer Science &amp; Business Media.
 </div>
 <div id="ref-weinan2011principles" class="csl-entry" role="listitem">
 Weinan, E. 2011. <em>Principles of Multiscale Modeling</em>. Cambridge University Press.
