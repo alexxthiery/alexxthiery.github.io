@@ -402,7 +402,11 @@ dY^{\varepsilon} &amp;= -\lambda \varepsilon^{-1}\, Y^{\varepsilon} \, dt + \sqr
 \end{align}
 \right.
 \]</span></p>
-<p>where <span class="math inline">\(\lambda &gt; 0\)</span> is just a fixed time-scaling parameter. The fast OU process mixes on time scales of order <span class="math inline">\(\mathcal{O}(\varepsilon)\)</span> and has a standard Gaussian distribution as invariant distribution. Homogenization gives that in the regime <span class="math inline">\(\varepsilon\to 0\)</span>, the slow process can be approximated as <span class="math inline">\(dX = \sqrt{2/\lambda} \, dW\)</span> since the asymptotic variance is</p>
+<p>where <span class="math inline">\(\lambda &gt; 0\)</span> is just a fixed time-scaling parameter. The fast OU process mixes on time scales of order <span class="math inline">\(\mathcal{O}(\varepsilon)\)</span> and has a standard Gaussian distribution as invariant distribution. Homogenization gives that in the regime <span class="math inline">\(\varepsilon\to 0\)</span>, the slow process can be approximated as</p>
+<p><span id="eq-integ-OU"><span class="math display">\[
+dX = \sqrt{2/\lambda} \, dW
+\tag{8}\]</span></span></p>
+<p>since the asymptotic variance is</p>
 <p><span class="math display">\[
 \mathop{\mathrm{Var}} {\left\{  T^{-1/2} \int_{t=0}^{T} Y_t \, dt \right\}}
 \to
@@ -442,7 +446,11 @@ dX = -\nabla U(X) \; + \; \sqrt{2} \, dW.
 <p><span class="math display">\[
 dX^{\varepsilon} = \varepsilon^{-1/2} \, f(X^{\varepsilon}) \, Y^{\varepsilon} \, dt
 \]</span></p>
-<p>where <span class="math inline">\(dY^{\varepsilon} = -(\lambda/\varepsilon) Y^{\varepsilon} + \sqrt{2 \lambda / \varepsilon}\)</span> is a fast OU process mixing on scales of order <span class="math inline">\(\mathcal{O}(\varepsilon)\)</span> and with standard centred Gaussian invariant distribution <span class="math inline">\(\rho(dy)\)</span>. In order to obtain the effective dynamics of the slow process as <span class="math inline">\(\varepsilon\to 0\)</span>, since the generator of the fast-OU reads <span class="math inline">\(\mathcal{L}\varphi= \lambda [ -y\,\varphi_y + \varphi_{yy}]\)</span>, one can solve the Poisson equation <span class="math inline">\(\mathcal{L}\Psi(x,y) = f(x)y\)</span> to obtain that <span class="math inline">\(\Phi(x,y) = -f(x)y/\lambda\)</span>. One already knows that <span class="math inline">\(\mathop{\mathrm{Var}}[T^{-1}\int_{[0,T]} Y_t \, dt] = 2/\lambda\)</span>. The drift term is given by</p>
+<p>where <span class="math inline">\(dY^{\varepsilon} = -(\lambda/\varepsilon) Y^{\varepsilon} + \sqrt{2 \lambda / \varepsilon}\)</span> is a fast OU process mixing on scales of order <span class="math inline">\(\mathcal{O}(\varepsilon)\)</span> and with standard centred Gaussian invariant distribution <span class="math inline">\(\rho(dy)\)</span>.The discussion leading to <a href="#eq-integ-OU">Equation&nbsp;8</a> suggest that the term <span class="math inline">\(\varepsilon^{-1/2} \, Y^{\varepsilon} \, dt\)</span> can be heuristically be thought of as <span class="math inline">\((2/\lambda)^{1/2} \, dW\)</span>, which would imply that the effective dynamics for the slow-process is</p>
+<p><span class="math display">\[
+dX = \sqrt{2/\lambda} \, f(X) \, dW.
+\]</span></p>
+<p>We will see that this heuristic is <strong>wrong</strong>! In order to obtain the effective dynamics of the slow process as <span class="math inline">\(\varepsilon\to 0\)</span>, since the generator of the fast-OU reads <span class="math inline">\(\mathcal{L}\varphi= \lambda [ -y\,\varphi_y + \varphi_{yy}]\)</span>, one can solve the Poisson equation <span class="math inline">\(\mathcal{L}\Psi(x,y) = f(x)y\)</span> to obtain that <span class="math inline">\(\Phi(x,y) = -f(x)y/\lambda\)</span>. One already knows that <span class="math inline">\(\mathop{\mathrm{Var}}[T^{-1}\int_{[0,T]} Y_t \, dt] = 2/\lambda\)</span>. The drift term is given by</p>
 <p><span class="math display">\[
 \begin{align}
 I(x) &amp;= \int f(x) \partial_x \Phi(x,y) \, \rho(dy)\\
@@ -453,11 +461,11 @@ I(x) &amp;= \int f(x) \partial_x \Phi(x,y) \, \rho(dy)\\
 <p>Putting everything together gives that the effective slow dynamics reads</p>
 <p><span class="math display">\[
 \begin{align}
-dX &amp;= \lambda^{-1} f'(X) f(X) \, dt + \sqrt{2/\lambda} \, f(X) \, dW\\
-&amp;= \sqrt{2/\lambda} \, f(X) \circ dW
+dX &amp;=  \textcolor{blue}{ \lambda^{-1} f'(X) f(X) \, dt } + \sqrt{2/\lambda} \, f(X) \, dW\\
+&amp;= \sqrt{2/\lambda} \, f(X)  \textcolor{red}{\circ} dW
 \end{align}
 \]</span></p>
-<p>where <span class="math inline">\(\circ\)</span> denotes <a href="https://en.wikipedia.org/wiki/Stratonovich_integral">Stratonovich integration</a>.</p>
+<p>where <span class="math inline">\( \textcolor{red}{\circ}\)</span> denotes <a href="https://en.wikipedia.org/wiki/Stratonovich_integral">Stratonovich integration</a>.</p>
 </section>
 <section id="readings" class="level3">
 <h3 class="anchored" data-anchor-id="readings">Readings</h3>
