@@ -166,7 +166,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">19 11 2023</p>
+        <p class="date-modified">15 12 2023</p>
       </div>
     </div>
       
@@ -185,7 +185,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<p>Consider a linear-Gaussian state space model with <span class="math inline">\(\mathbb{R}^{D_x}\)</span>-valued dynamics <span class="math inline">\(X_{t+1} \sim F \, X_t + \mathcal{N}(0,Q)\)</span> and <span class="math inline">\(\mathbb{R}^{D_y}\)</span>-valued observations <span class="math inline">\(Y_t \sim H X_t + \mathcal{N}(0,R)\)</span>. Assuming a Gaussian initial distribution, the filtering distributions <span class="math inline">\(\mathop{\mathrm{P}}(X_t \in dx \, | Y_{1:t}) \equiv \mathcal{N}(\mu_{t|t}, P_{t|t})\)</span> are Gaussian and can be sequentially computed with the <a href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman Filter</a>. Given observations <span class="math inline">\(y_{1:T}\)</span> and <span class="math inline">\(1 \leq t \leq T\)</span>, the smoothing distributions <span class="math inline">\(\mathop{\mathrm{P}}(X_t \in dx \, | Y_{1:T}) \equiv \mathcal{N}(\mu_{t|T}, P_{t|T})\)</span> can computed by performing a “backward pass”. Since everything is linear and Gaussian, it is just an exercise in Linear Algebra &amp; Gaussian-conditioning, as described by the Rauch-Tung-Striebel <span class="citation" data-cites="rauch1965maximum">(<a href="#ref-rauch1965maximum" role="doc-biblioref">Rauch, Tung, and Striebel 1965</a>)</span> smoothing recursions. At time <span class="math inline">\(T\)</span>, the filtering and smoothing distributions are identical and the backward recursion reads</p>
+<p>Consider a linear-Gaussian state space model with <span class="math inline">\(\mathbb{R}^{D_x}\)</span>-valued dynamics <span class="math inline">\(X_{t+1} \sim F \, X_t + \mathcal{N}(0,Q)\)</span> and <span class="math inline">\(\mathbb{R}^{D_y}\)</span>-valued observations <span class="math inline">\(Y_t \sim H X_t + \mathcal{N}(0,R)\)</span>. Assuming a Gaussian initial distribution, the <strong>filtering distributions</strong> <span class="math inline">\(\mathop{\mathrm{P}}(X_t \in dx \, | Y_{1:t}) \equiv \mathcal{N}(\mu_{t|t}, P_{t|t})\)</span> are Gaussian and can be sequentially computed with the <a href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman Filter</a>. Similarly, the <strong>predictive distributions</strong> <span class="math inline">\(\mathop{\mathrm{P}}(X_{t+1} \in dx \, | Y_{1:t}) \equiv \mathcal{N}(\mu_{t+1|t}, P_{t+1|t})\)</span> are straightforward to obtain from the filtering distributions: <span class="math inline">\(\mu_{t+1|t} = F \, \mu_{t|t}\)</span> and <span class="math inline">\(P_{t+1|t} = F \, P_{t|t} \, F^\top + Q\)</span>. Given observations <span class="math inline">\(y_{1:T} \equiv (y_1, \ldots, y_T)\)</span> and <span class="math inline">\(1 \leq t \leq T\)</span>, the <strong>smoothing distributions</strong> <span class="math inline">\(\mathop{\mathrm{P}}(X_t \in dx \, | Y_{1:T}) \equiv \mathcal{N}(\mu_{t|T}, P_{t|T})\)</span> can computed by performing a “backward pass”. Since everything is linear and Gaussian, it is just an exercise in Linear Algebra &amp; Gaussian-conditioning, as described by the Rauch-Tung-Striebel <span class="citation" data-cites="rauch1965maximum">(<a href="#ref-rauch1965maximum" role="doc-biblioref">Rauch, Tung, and Striebel 1965</a>)</span> smoothing recursions. The backward recursion reads</p>
 <p><span id="eq-RTS"><span class="math display">\[
 \left\{
 \begin{aligned}
@@ -197,59 +197,79 @@ P_{t|t} + B_t  {\left(  P_{t+1|T} - P_{t+1|t}  \right)}  B^\top_{t}
 \end{aligned}
 \right.
 \tag{1}\]</span></span></p>
-<p>for predictive mean <span class="math inline">\(\mu_{t+1|t} = F \, \mu_{t|t}\)</span> and covariance <span class="math inline">\(P_{t+1|t} = F \, P_{t|t} \, F^\top + Q\)</span>. The <strong>smoothing gain matrix</strong> is given by</p>
-<p><span class="math display">\[
+<p>and allows one to compute the smoothing means and covariances matrices <span class="math inline">\((\mu_{t|T}, P_{t|T})\)</span> for <span class="math inline">\(1 \leq t \leq T\)</span> starting from the knowledge of <span class="math inline">\((\mu_{T|T}, P_{T|T})\)</span>. In <a href="#eq-RTS">Equation&nbsp;1</a>, the <strong>smoothing gain matrix</strong> <span class="math inline">\(B_t\)</span> is given by</p>
+<p><span id="eq-B-cond"><span class="math display">\[
 \begin{align}
 B_t &amp;=
 \mathop{\mathrm{Cov}}(X_t, X_{t+1} \, | y_{1:t}) \, \mathop{\mathrm{Var}}(X_{t+1} \, | y_{1:t})^{-1} \\
 &amp;=
 P_{t|t} F^\top \,  {\left( F \, P_{t|t} \, F^\top + Q \right)} ^{-1}.
 \end{align}
-\]</span></p>
-<p>Now, we would like to design an “ensemble” version of these updates so that it can be adapted to non-linear dynamics. For this purpose, consider <span class="math inline">\((X^f_t, X^p_{t+1})\)</span> with <span class="math inline">\(X^f_t \sim \mathcal{N}(\mu_{t|t}, P_{t|t})\)</span> and <span class="math inline">\(X^p_{t+1} = F \, X^f_t + \mathcal{N}(0,Q)\)</span>. In other words, the pair <span class="math inline">\((X^f_t, X^p_{t+1})\)</span> is obtained by assimilating all the observation <span class="math inline">\(y_{1:t}\)</span> with a standard Kalman filter; <span class="math inline">\(X^f_t\)</span> is distributed according to the filtering at time <span class="math inline">\(t\)</span> while <span class="math inline">\(X^p_{t+1}\)</span> is distributed to the predictive distribution given <span class="math inline">\(y_{1:t}\)</span>. The standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Conditional_distributions">gaussian conditional probabilities</a> give that</p>
-<p><span class="math display">\[
-X^f_t | (X^p_{t+1}=x_{t+1}) \; \sim \; \mu_{t|t} + B_T (x_{t+1} - \mu_{t+1|t}) + \mathcal{N}(0, P_{t|t} - B_t \, P_{t+1|t} \, B_t^\top),
-\]</span></p>
-<p>so that the smoothing gain matrix <span class="math inline">\(B_t\)</span> can be thought of as being obtained by <strong>regressing</strong> <span class="math inline">\(X^f_t\)</span> against <span class="math inline">\(X^p_{t+1}\)</span>, i.e.&nbsp;it is the matrix that minimizes the MSE</p>
-<p><span class="math display">\[
-\mathop{\mathrm{E}} {\left(  \left\| X^f_t - B (X^p_{t+1} - \mu_{t+1|t}) \right\|^2  \right)} .
-\]</span></p>
-<p>Now, assume that one can add a stochastic correction term <span class="math inline">\(\Delta_{t+1}\)</span> to <span class="math inline">\(X^p_{t+1}\)</span> by setting</p>
-<p><span class="math display">\[
-X^{s}_{t+1} = X^p_{t+1} + \Delta_{t+1}
-\]</span></p>
-<p>in such a manner that <span class="math inline">\(X^{s}_{t+1}\)</span> is distributed according to the <strong>smoothing distribution</strong>, i.e.&nbsp;<span class="math inline">\(X^{s}_{t+1} = \mathcal{N}(\mu_{t|T}, P_{t|T})\)</span>. Let us look at the distribution of the random variable <span class="math inline">\(X^{s}_{t}\)</span> defined as</p>
-<p><span id="eq-RTS-ensemble"><span class="math display">\[
-\begin{align}
-X^{s}_{t}
-&amp;= X^f_t + B_t \, (X^{s}_{t+1} - X^p_{t+1})\\
-&amp;= X^f_t + B_t \, \Delta_{t+1}.
-\end{align}
 \tag{2}\]</span></span></p>
-<p>The random variable <span class="math inline">\(X^{s}_{t}\)</span> is obtained by “pulling” the correction term <span class="math inline">\(\Delta_{t+1} = X^{s}_{t+1} - X^p_{t+1}\)</span> back to <span class="math inline">\(X^f_t\)</span> through the “regression” smoothing gain matrix <span class="math inline">\(B_t\)</span>. Writing</p>
+<p><a href="../../notes/Gaussian_Assimilation/gaussian_assimilation.html">The Ensemble Kalman Filter</a> (EnKF) is a non-linear equivalent of the Kalman filter, and the purpose of these notes is to derive the equivalent “ensemble version” of the backward recursion <a href="#eq-RTS">Equation&nbsp;1</a>. For this purpose, it is important to understand slightly better the role of the smoothing gain matrix <span class="math inline">\(B_t\)</span>. Consider the pair of random variable <span class="math inline">\((X^f_t, X^p_{t+1})\)</span> distributed according to the joint distribution between the filtering distribution at time <span class="math inline">\(t\)</span> and the predictive distribution at time <span class="math inline">\(t+1\)</span> in the sense that</p>
 <p><span class="math display">\[
-X^f_{t} = \mu_{t|t} + B_t \, (X^p_{t+1} - \mu_{t+1|t}) + \varepsilon_t
+(X^f_t, X^p_t) \; \underbrace{=}_{\text{(law)}}\; (X_t, X_{t+1} \, \mid \, y_{1:t}).
 \]</span></p>
-<p>where <span class="math inline">\(\varepsilon_t \sim \mathcal{N}(0, P_{t|t} - B_t \, P_{t+1|t} \, B_t^\top)\)</span> is independent from all other sources of randomness, one immediately obtains that <span class="math inline">\(X^{s}_{t}\)</span> is Gaussian with mean <span class="math inline">\(\mu_{t|t} + B_t \,  {\left( \mu_{t+1|T} - \mu_{t+1|t} \right)} \)</span> and variance <span class="math inline">\(P_{t|t} + B_t  {\left(  P_{t+1|T} - P_{t+1|t}  \right)}  B^\top_{t}\)</span>. Consequently, <a href="#eq-RTS">Equation&nbsp;1</a> shows that <span class="math inline">\(X^{s}_{t}\)</span> is actually distributed according to the smoothing distribution at time <span class="math inline">\(t\)</span>, as we hoped. In other words, <a href="#eq-RTS-ensemble">Equation&nbsp;2</a> describes a mechanism for back-propagating information and recursively construct the smoothing distributions during a backward pass. Furthermore, it is straightforward to adapt the methods to nonlinear scenarios. Run an <a href="../../notes/Gaussian_Assimilation/gaussian_assimilation.html">ensemble Kalman filter</a> (EnKF) with <span class="math inline">\(N\)</span> particles to obtain particle approximations of the filtering and predictive distributions,</p>
+<p>This means that <span class="math inline">\(X^f_t \sim \mathcal{N}(\mu_{t|t}, P_{t|t})\)</span> and <span class="math inline">\(X^p_{t+1} \sim \mathcal{N}(\mu_{t+1|t}, P_{t+1|t})\)</span> and <span class="math inline">\(X^p_t = F \, X^f_t + \mathcal{N}(0, Q)\)</span>. Furthermore, <a href="#eq-B-cond">Equation&nbsp;2</a> and the standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Conditional_distributions">gaussian conditional probabilities</a> formulas give that the conditional means and covariances are given by</p>
+<p><span id="eq-gauss-cond"><span class="math display">\[
+\left\{
+\begin{align}
+\textrm{Mean} {\left( X^f_t | (X^p_{t+1}=x_{t+1}) \right)}  
+\; &amp;= \;
+\mu_{t|t} + B_t (x_{t+1} - \mu_{t+1|t}) \\
+\textrm{Cov} {\left( X^f_t | (X^p_{t+1}=x_{t+1}) \right)}  
+\; &amp;= \;
+P_{t|t} - B_t \, P_{t+1|t} \, B_t^\top.
+\end{align}
+\right.
+\tag{3}\]</span></span></p>
+<p>The above expression for the conditional mean also shows that the matrix <span class="math inline">\(B_t\)</span> is a minimizer of the loss</p>
+<p><span class="math display">\[
+M \; \mapsto \;
+\mathop{\mathrm{E}} {\left(  \left\| (X^f_t - \mu_{t|t}) - B (X^p_{t+1} - \mu_{t+1|t}) \right\|^2  \right)}
+\]</span></p>
+<p>over all matrices <span class="math inline">\(M \in \mathbb{R}^{D_x, D_x}\)</span>. Heuristically, this shows that the smoothing gain matrix <span class="math inline">\(B_t\)</span> can easily be computed by <strong>regressing</strong> <span class="math inline">\(X^f_t\)</span> against <span class="math inline">\(X^p_{t+1}\)</span>. We can use this remark to build an ensemble version of the backward recursion <a href="#eq-RTS">Equation&nbsp;1</a>. Recall that when running a EnKF for filtering the observations <span class="math inline">\(y_{1:T}\)</span>, the final stage proceeds in two steps:</p>
+<ol type="1">
+<li>Obtain an ensemble of particles <span class="math inline">\(X^{i,p}_{T} = F \, X^{i,f}_{T-1} + \mathcal{N}(0,Q)\)</span> that approximate the predictive distribution <span class="math inline">\(\mathop{\mathrm{P}}(X_T | y_{1:T-1})\)</span>.<br>
+</li>
+<li><a href="../../notes/Gaussian_Assimilation/gaussian_assimilation.html">Assimilate</a> the last observation <span class="math inline">\(y_T\)</span> using the Kalman gain matrix <span class="math inline">\(K_T\)</span> and the correction <span class="math inline">\(\Delta_T^i = K_T \, (\tilde{y}_{i,\star} - H \, X^{i,p}_T)\)</span> by setting <span id="eq-pred-perturb"><span class="math display">\[
+X^{i,s}_T = X^{i,p}_T + \Delta_T^i.
+\tag{4}\]</span></span> The particles <span class="math inline">\(X^{i,s}_T\)</span> approximate the smoothing distribution <span class="math inline">\(\mathop{\mathrm{P}}(X_T | y_{1:T})\)</span>.</li>
+</ol>
+<p>Following our discussion of the smoothing gain matrix <span class="math inline">\(B_{t}\)</span> and <a href="#eq-pred-perturb">Equation&nbsp;4</a>, it seems sensible to set</p>
+<p><span id="eq-rec-ens"><span class="math display">\[
+\begin{align}
+X^{i,s}_{T-1}
+&amp;= X^{i,f}_{T-1} + B_{T-1} \, \Delta^i_T\\
+&amp;= X^{i,f}_{T-1} + B_{T-1} \, (X^{i,s}_{T} - X^{i,p}_{T})
+\end{align}
+\tag{5}\]</span></span></p>
+<p>and hope that the ensemble of updated particles <span class="math inline">\(X^{i,s}_{T-1}\)</span> approximate the smoothing distribution <span class="math inline">\(\mathop{\mathrm{P}}(X_{T-1} | y_{1:T})\)</span>. In words, the particle <span class="math inline">\(X^{i,s}_{T-1}\)</span> is obtained by “pulling” the correction term <span class="math inline">\(\Delta^i_{T} = X^{i,s}_{T} - X^{i,p}_{T}\)</span> back to <span class="math inline">\(X^{i,f}_{T-1}\)</span> through the “regression” smoothing gain matrix <span class="math inline">\(B_{T-1}\)</span>. To check that the particles <span class="math inline">\(X^{i,s}_{T-1}\)</span> indeed approximate the smoothing distribution <span class="math inline">\(\mathop{\mathrm{P}}(X_{T-1} \,|y_{1:T})\)</span>, it suffices to compute the mean/variance and verify that they are matching the one given by <a href="#eq-RTS">Equation&nbsp;1</a>. Recall that <a href="#eq-gauss-cond">Equation&nbsp;3</a> gives that the filtering/predictive distributions satisfy</p>
+<p><span class="math display">\[
+X^f_{T-1} = \mu_{T-1|T-1} + B_{T-1} \, (X^p_{T} - \mu_{T|T-1}) + \varepsilon_t
+\]</span></p>
+<p>where <span class="math inline">\(\varepsilon_t \sim \mathcal{N}(0, P_{T-1|T-1} - B_{T-1} \, P_{T|T-1} \, B_{T-1}^\top)\)</span> is independent from all other sources of randomness. Plugging this into <a href="#eq-rec-ens">Equation&nbsp;5</a> gives that</p>
+<p><span class="math display">\[
+X^{i,s}_{T-1}
+=
+\mu_{T-1|T-1} + B_{T-1} \, (X^{i,s}_{T} - \mu_{T|T-1}) + \varepsilon_t.
+\]</span></p>
+<p>Since the <span class="math inline">\(X^{i,s}_{T}\)</span> are distributed according to the smoothing distribution, i.e.&nbsp;<span class="math inline">\(X^{i,s}_{T} \sim \mathcal{N}(\mu_{T|T}, P_{T|T})\)</span>, this immediately shows that <span class="math inline">\(X^{i,s}_{T-1}\)</span> is Gaussian with</p>
 <p><span class="math display">\[
 \left\{
 \begin{align}
-\tfrac{1}{N} \sum_{i=1}^N \delta(x^{f}_{t,i})
-\; &amp;\approx \;
-\mathop{\mathrm{P}}(X_t \in dx \, | y_{1:t})\\
-\tfrac{1}{N} \sum_{i=1}^N \delta(x^{p}_{t,i})
-\; &amp;\approx \;
-\mathop{\mathrm{P}}(X_t \in dx \, | y_{1:t-1}).\\
+\textrm{Mean} &amp;= \mu_{T-1|T} = \mu_{T-1|T-1} + B_{T-1} \,  {\left( \mu_{T|T} - \mu_{T|T-1} \right)} \\
+\textrm{Covariance} &amp;= P_{T-1|T} = P_{T-1|T-1} + B_{T-1}  {\left(  P_{T|T} - P_{T|T-1}  \right)}  B^\top_{T-1},
 \end{align}
 \right.
 \]</span></p>
-<p>These particles can be used to approximate the “regression” smoothing gain matrices</p>
+<p>as it should. One can then iterate this construction to obtain particle approximations of the smoothing distributions <span class="math inline">\(\mathop{\mathrm{P}}(X_t | y_{1:T})\)</span> for <span class="math inline">\(1 \leq t \leq T\)</span> by running a backward pass and recursively setting</p>
+<p><span class="math display">\[
+X^{i,s}_t \; = \; X^{i,f}_t + B_t \,  {\left( X^{i,s}_{t+1} - X^{i,p}_{t+1} \right)} .
+\]</span></p>
+<p>The ensemble of particles <span class="math inline">\(X^{i,s}_t\)</span> approximates the smoothing distribution <span class="math inline">\(\mathop{\mathrm{P}}(X_t | y_{1:T})\)</span>. In a nonlinear setting, it suffices to approximate the smoothing gain matrices with</p>
 <p><span class="math display">\[
 \widehat{B}_t = \mathop{\mathrm{Cov}} {\left(  x^f_{t,i}, x^p_{t+1,i}  \right)}  \, \mathop{\mathrm{Var}} {\left(  x^p_{t+1,i}  \right)} ^{-1}.
-\]</span></p>
-<p>Finally, the smoothing distributions can be approximating during a backward pass by setting</p>
-<p><span class="math display">\[
-x^{s}_{t,i} \; = \; \widehat{B}_t  {\left(  x^{s}_{t+1,i} - x^{p}_{t+1,i}  \right)} .
 \]</span></p>
 <p>[Experiments: TODO]</p>
 
