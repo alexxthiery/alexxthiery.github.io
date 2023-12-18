@@ -186,7 +186,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#a-mixture-of-deterministic-transformations" id="toc-a-mixture-of-deterministic-transformations" class="nav-link active" data-scroll-target="#a-mixture-of-deterministic-transformations">A mixture of deterministic transformations?</a></li>
+  <li><a href="#same-but-without-involution" id="toc-same-but-without-involution" class="nav-link active" data-scroll-target="#same-but-without-involution">Same, but without involution</a></li>
+  <li><a href="#a-mixture-of-deterministic-transformations" id="toc-a-mixture-of-deterministic-transformations" class="nav-link" data-scroll-target="#a-mixture-of-deterministic-transformations">A mixture of deterministic transformations?</a></li>
   </ul>
 </nav>
     </div>
@@ -226,6 +227,20 @@ F(F(x)) = x
 \alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, |J_F(x)| \right\}}  \, \mathbf{1} {\left( F(y)=x \right)} .
 \]</span></p>
 <p>In other words, if applying <span class="math inline">\(F\)</span> to the proposal <span class="math inline">\(y=F(x)\)</span> does not lead back to <span class="math inline">\(x\)</span>, the proposal is rejected.</p>
+<section id="same-but-without-involution" class="level3">
+<h3 class="anchored" data-anchor-id="same-but-without-involution">Same, but without involution</h3>
+<p>Sometimes, the requirement for <span class="math inline">\(F\)</span> to be an involution is cumbersome. What if we just have a smooth bijection <span class="math inline">\(T: \mathbb{R}^d \to \mathbb{R}^d\)</span> and its inverse <span class="math inline">\(T^{-1}\)</span>? In that case, one can directly apply what has been described in the previous section: it suffices to add an index <span class="math inline">\(\varepsilon\in \{-1,1\}\)</span> and consider the involution <span class="math inline">\(F\)</span> on <span class="math inline">\(\mathcal{X}= \mathbb{R}^d \otimes \{-1,1\}\)</span> defined as</p>
+<p><span id="eq-extended"><span class="math display">\[
+F:
+\left\{
+\begin{align}
+(x,\varepsilon=+1) &amp;\mapsto (T(x), \varepsilon=-1)\\
+(x,\varepsilon=-1) &amp;\mapsto (T^{-1}(x), \varepsilon=+1)
+\end{align}
+\right.
+\tag{3}\]</span></span></p>
+<p>This allows one to define a Markov kernel that lets the distribution <span class="math inline">\(\overline{\pi}(x, \varepsilon) = \pi(dx)/2\)</span> invariant. If one wants, one can even get rid of the index <span class="math inline">\(\varepsilon\in \{-1,1\}\)</span>. Indeed, instead of considering the Markov kernel just described, one can consider the Markov kernel that first randomizes the index <span class="math inline">\(\varepsilon\)</span> and then applies the Markov kernel associated to <a href="#eq-extended">Equation&nbsp;3</a>. This has the same effect as choosing to apply with equal probability <span class="math inline">\(T(x)\)</span> pr <span class="math inline">\(T^{-1}(x)\)</span>, and this indeed still leaves <span class="math inline">\(\overline{\pi}\)</span> invariant. Indeed, there are quite a few situations when randomizing <span class="math inline">\(\varepsilon\)</span> is not a good idea since this can affect the mixing of the resulting Markov chain and there are indeed many papers exploiting this type of ideas.</p>
+</section>
 <section id="a-mixture-of-deterministic-transformations" class="level3">
 <h3 class="anchored" data-anchor-id="a-mixture-of-deterministic-transformations">A mixture of deterministic transformations?</h3>
 <p>A small riddle (whose answer I do not have), to conclude these notes. One can check that for any value of <span class="math inline">\(c \in \mathbb{R}\)</span>, the function <span class="math inline">\(F_{c}(x) = c + 1/(x-c)\)</span> is an involution of the real line. This means that for any target density <span class="math inline">\(\pi(x)\)</span> on the real line, one can build the associated Markov kernel <span class="math inline">\(M_c\)</span> defined as</p>
