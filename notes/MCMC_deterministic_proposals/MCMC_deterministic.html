@@ -182,7 +182,13 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#a-mixture-of-deterministic-transformations" id="toc-a-mixture-of-deterministic-transformations" class="nav-link active" data-scroll-target="#a-mixture-of-deterministic-transformations">A mixture of deterministic transformations?</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -220,7 +226,9 @@ F(F(x)) = x
 \alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, |J_F(x)| \right\}}  \, \mathbf{1} {\left( F(y)=x \right)} .
 \]</span></p>
 <p>In other words, if applying <span class="math inline">\(F\)</span> to the proposal <span class="math inline">\(y=F(x)\)</span> does not lead back to <span class="math inline">\(x\)</span>, the proposal is rejected.</p>
-<p>A small riddle (whose answer I do not have), to conclude these notes. One can check that the function <span class="math inline">\(F_{c}(x) = c + 1/(x-c)\)</span> is an involution of the real line. This means that for any target density <span class="math inline">\(\pi(x)\)</span> on the real line, one can build the associated Markov kernel <span class="math inline">\(M_c\)</span> defined as</p>
+<section id="a-mixture-of-deterministic-transformations" class="level3">
+<h3 class="anchored" data-anchor-id="a-mixture-of-deterministic-transformations">A mixture of deterministic transformations?</h3>
+<p>A small riddle (whose answer I do not have), to conclude these notes. One can check that for any value of <span class="math inline">\(c \in \mathbb{R}\)</span>, the function <span class="math inline">\(F_{c}(x) = c + 1/(x-c)\)</span> is an involution of the real line. This means that for any target density <span class="math inline">\(\pi(x)\)</span> on the real line, one can build the associated Markov kernel <span class="math inline">\(M_c\)</span> defined as</p>
 <p><span class="math display">\[
 M_c(x, dy) = \alpha_c(x) \, \delta_{F_c(x)}(dy) + (1-\alpha_c(x)) \, \delta_x(dy)
 \]</span></p>
@@ -244,6 +252,7 @@ M(x,dy) \; = \; \frac{1}{N} \sum_{i=1}^N M_{c_i}(x, dy).
 
 
 
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-green1995reversible" class="csl-entry" role="listitem">
