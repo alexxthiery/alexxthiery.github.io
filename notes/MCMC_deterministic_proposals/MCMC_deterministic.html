@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Alexandre Thiéry - Metropolis-Hastings ratio with deterministic proposals</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Metropolis-Hastings ratio with deterministic proposals">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/mcmc_deterministic.png">
+<meta property="og:site-name" content="Alexandre Thiéry">
+<meta property="og:image:height" content="800">
+<meta property="og:image:width" content="1200">
+<meta name="twitter:title" content="Alexandre Thiéry - Metropolis-Hastings ratio with deterministic proposals">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/mcmc_deterministic.png">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:image-height" content="800">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
+ <span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
+ <span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
+ <span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../posts/index_blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Metropolis-Hastings ratio with deterministic proposals</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">auxiliary-variable</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">18 12 2023</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">18 12 2023</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>Consider a probability density <span class="math inline">\(\pi(x)\)</span> on <span class="math inline">\(\mathbb{R}^d\)</span> and a (deterministic) function <span class="math inline">\(F: \mathbb{R}^d \to \mathbb{R}^d\)</span>. We assume further that <span class="math inline">\(F\)</span> is an <a href="https://en.wikipedia.org/wiki/Involution_(mathematics)">involution</a> in the sense that</p>
+<p><span class="math display">\[
+F(F(x)) = x
+\]</span></p>
+<p>for all <span class="math inline">\(x \in \mathbb{R}^d\)</span>. To keep simple since it is not really the point of this short note, suppose that <span class="math inline">\(\pi(x)&gt;0\)</span> everywhere and that <span class="math inline">\(F\)</span> is smooth. This type of transformations can be used to define Markov Chain Monte Carlo algorithms, eg. the standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> algorithm. In order to use this involution <span class="math inline">\(F\)</span> to design a MCMC scheme, one needs to answer the following basic question: suppose that <span class="math inline">\(X \sim \pi(dx)\)</span> and the proposal <span class="math inline">\(Y = F(X)\)</span> is constructed and accepted with probability <span class="math inline">\(\alpha(X)\)</span>, how should the acceptance probability function <span class="math inline">\(\alpha: \mathbb{R}^d \to [0,1]\)</span> be chosen so that the resulting random variable <span class="math inline">\(Z \; = \; Y \, B + (1-B) \, X\)</span> is also distributed according to <span class="math inline">\(\pi(dx)\)</span>? The Bernoulli random variable <span class="math inline">\(B\)</span> is such that <span class="math inline">\(\mathop{\mathrm{P}}(B=1|X=x)=\alpha(x)\)</span>. In other words, for any test function <span class="math inline">\(\varphi: \mathbb{R}^d \to \mathbb{R}\)</span>, we would like <span class="math inline">\(\mathop{\mathrm{E}}[\varphi(Z)] = \mathop{\mathrm{E}}[\varphi(X)]\)</span>, which means that</p>
+<p><span id="eq-necessary"><span class="math display">\[
+\int  {\left\{  \varphi(F(x)) \, \alpha(x) + \varphi(x) \, (1-\alpha(x))  \right\}}  \, \pi(dx) = \int \varphi(x) \, \pi(dx).
+\tag{1}\]</span></span></p>
+<p>A change of variable to transform <span class="math inline">\(\varphi(F(x)) \to \varphi(x)\)</span> and requiring that <a href="#eq-necessary">Equation&nbsp;1</a> holds for any test function <span class="math inline">\(\varphi\)</span> shows that this is equivalent to asking for the relation</p>
+<p><span class="math display">\[
+\alpha(x) \, \pi(x) \; = \; \alpha(y) \, \pi(y) \, |J_F(x)|
+\]</span></p>
+<p>to hold for any <span class="math inline">\(x \in \mathbb{R}^d\)</span> where <span class="math inline">\(y=F(x)\)</span> and <span class="math inline">\(J_F(x)\)</span> is the Jacobian of <span class="math inline">\(F\)</span> at <span class="math inline">\(x\)</span>. To make things slightly more symmetrical, since <span class="math inline">\(|J_F(y)| \times |J_F(x)| = 1\)</span> because of the involution property, this also reads</p>
+<p><span class="math display">\[
+\alpha(x) \, \frac{\pi(x) }{|J_F(x)|^{1/2}} \; = \;
+\alpha(y) \, \frac{\pi(y) }{|J_F(y)|^{1/2}}.
+\]</span></p>
+<p>At this point, an obvious solution for anybody who has looked at the correctness-proof of the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings algorithm</a> is to set</p>
+<p><span class="math display">\[
+\alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y) / |J_F(y)|^{1/2}}{\pi(x) / |J_F(x)|^{1/2}} \right\}} .
+\]</span></p>
+<p>Since <span class="math inline">\(|J_F(y)| \times |J_F(x)| = 1\)</span>, that is the same asking</p>
+<p><span id="eq-MH"><span class="math display">\[
+\alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, |J_F(x)| \right\}} .
+\tag{2}\]</span></span></p>
+<p>One could reach a similar conclusion by looking at the Radon-Nikodym ratio <span class="math inline">\([\pi(dx) \otimes q(x,dy)] / [\pi(dy) \otimes q(y,dx)]\)</span> where <span class="math inline">\(q(x,dy)\)</span> describes the deterministic transformation <span class="citation" data-cites="green1995reversible">(<a href="#ref-green1995reversible" role="doc-biblioref">Green 1995</a>)</span>, but I do not find this significantly simpler in this situation. Indeed, <a href="#eq-MH">Equation&nbsp;2</a> is often used in the simpler case when <span class="math inline">\(F\)</span> is volume preserving, i.e.&nbsp;<span class="math inline">\(|J_F(x)|=1\)</span>, as is the case for the <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a>. The discussion above was prompted by a student implementing a variant of this but with the wrong acceptance ratio <span class="math inline">\(\alpha(x) = \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, \frac{|J_F(x)|}{|J_F(y)|} \right\}} \)</span> and us taking quite a bit of time to find the bug… Note that there are situations when the function <span class="math inline">\(F\)</span> is not exactly an involution in the sense that sometimes <span class="math inline">\(F(F(x))=x\)</span>, but sometimes not. This can happen for example when implementing MCMC on a manifold <span class="math inline">\(\mathcal{M} \subset \mathbb{R}^d\)</span> and the function <span class="math inline">\(F\)</span> involves a “projection” on the manifold <span class="math inline">\(\mathcal{M}\)</span>, as for example described in the really interesting article <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span>. In that case, it suffices to add a “reversibility check”, i.e.&nbsp;make sure that when applying <span class="math inline">\(F\)</span> starting from <span class="math inline">\(y=F(x)\)</span>, one gets back to <span class="math inline">\(x\)</span>. The acceptance probability in that case should be amended and expressed as</p>
+<p><span class="math display">\[
+\alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, |J_F(x)| \right\}}  \, \mathbf{1} {\left( F(y)=x \right)} .
+\]</span></p>
+<p>In other words, if applying <span class="math inline">\(F\)</span> to the proposal <span class="math inline">\(y=F(x)\)</span> does not lead back to <span class="math inline">\(x\)</span>, the proposal is rejected.</p>
+<p>A small riddle (whose answer I do not have), to conclude these notes. One can check that the function <span class="math inline">\(F_{c}(x) = c + 1/(x-c)\)</span> is an involution of the real line. This means that for any target density <span class="math inline">\(\pi(x)\)</span> on the real line, one can build the associated Markov kernel <span class="math inline">\(M_c\)</span> defined as</p>
+<p><span class="math display">\[
+M_c(x, dy) = \alpha_c(x) \, \delta_{F_c(x)}(dy) + (1-\alpha_c(x)) \, \delta_x(dy)
+\]</span></p>
+<p>for acceptance probability described above, namely</p>
+<p><span class="math display">\[
+\alpha_c(x) = \min {\left\{ 1, \frac{\pi[F_c(x)]}{\pi(x)} |F'_c(x)| \right\}} .
+\]</span></p>
+<p>For <span class="math inline">\(N \geq 2\)</span>, choose a few values <span class="math inline">\(x_1, \ldots, c_N \in \mathbb{R}\)</span> and consider the mixture of Markov kernels</p>
+<p><span class="math display">\[
+M(x,dy) \; = \; \frac{1}{N} \sum_{i=1}^N M_{c_i}(x, dy).
+\]</span></p>
+<p>The Markov kernel <span class="math inline">\(M(x, dy)\)</span> lets the distribution <span class="math inline">\(\pi\)</span> invariant, but it is not clear at all (to me) under what conditions the associated MCMC algorithm does converge to <span class="math inline">\(\pi\)</span>. One can empirically check that if <span class="math inline">\(N\)</span> is very small, things can break down quite easily. On the other, for <span class="math inline">\(N\)</span> not too small, things can start to work.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./mcmc_deterministic.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+<p>For <span class="math inline">\(N=5\)</span> random values <span class="math inline">\(c_1, \ldots, c_5 \in \mathbb{R}\)</span>, the illustration aboves shows the empirical distribution of the associated Markov chain ran for <span class="math inline">\(T=10^6\)</span> iterations and targeting the standard Gaussian distribution <span class="math inline">\(\pi(dx) \equiv \mathcal{N}(0,1)\)</span>: the fit seems almost perfect and I would not be surprised if <span class="math inline">\(M(x,dy)\)</span> were ergodic with respect to <span class="math inline">\(\pi(dx)\)</span> although I cannot prove it.</p>
+
+
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-green1995reversible" class="csl-entry" role="listitem">
+Green, Peter J. 1995. <span>“Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination.”</span> <em>Biometrika</em> 82 (4). Oxford University Press: 711–32.
+</div>
+<div id="ref-zappa2018monte" class="csl-entry" role="listitem">
+Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte Carlo on Manifolds: Sampling Densities and Integrating Functions.”</span> <em>Communications on Pure and Applied Mathematics</em> 71 (12). Wiley Online Library: 2609–47.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
