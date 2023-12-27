@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -64,7 +64,8 @@ div.csl-indent {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
@@ -171,7 +172,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">18 12 2023</p>
+        <p class="date-modified">27 12 2023</p>
       </div>
     </div>
       
@@ -197,65 +198,66 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<p>Consider a probability density <span class="math inline">\(\pi(x)\)</span> on <span class="math inline">\(\mathbb{R}^d\)</span> and a (deterministic) function <span class="math inline">\(F: \mathbb{R}^d \to \mathbb{R}^d\)</span>. We assume further that <span class="math inline">\(F\)</span> is an <a href="https://en.wikipedia.org/wiki/Involution_(mathematics)">involution</a> in the sense that</p>
+<p>Consider a probability density <span class="math inline">\(\pi(x)\)</span> on <span class="math inline">\(\mathbb{R}^d\)</span> and a (deterministic) function <span class="math inline">\(F: \mathbb{R}^d \to \mathbb{R}^d\)</span>. Assume further that <span class="math inline">\(F\)</span> is an <a href="https://en.wikipedia.org/wiki/Involution_(mathematics)">involution</a> in the sense that</p>
 <p><span class="math display">\[
 F(F(x)) = x
 \]</span></p>
-<p>for all <span class="math inline">\(x \in \mathbb{R}^d\)</span>. To keep simple since it is not really the point of this short note, suppose that <span class="math inline">\(\pi(x)&gt;0\)</span> everywhere and that <span class="math inline">\(F\)</span> is smooth. This type of transformations can be used to define Markov Chain Monte Carlo algorithms, eg. the standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> algorithm. In order to use this involution <span class="math inline">\(F\)</span> to design a MCMC scheme, one needs to answer the following basic question: suppose that <span class="math inline">\(X \sim \pi(dx)\)</span> and the proposal <span class="math inline">\(Y = F(X)\)</span> is constructed and accepted with probability <span class="math inline">\(\alpha(X)\)</span>, how should the acceptance probability function <span class="math inline">\(\alpha: \mathbb{R}^d \to [0,1]\)</span> be chosen so that the resulting random variable <span class="math inline">\(Z \; = \; Y \, B + (1-B) \, X\)</span> is also distributed according to <span class="math inline">\(\pi(dx)\)</span>? The Bernoulli random variable <span class="math inline">\(B\)</span> is such that <span class="math inline">\(\mathop{\mathrm{P}}(B=1|X=x)=\alpha(x)\)</span>. In other words, for any test function <span class="math inline">\(\varphi: \mathbb{R}^d \to \mathbb{R}\)</span>, we would like <span class="math inline">\(\mathop{\mathrm{E}}[\varphi(Z)] = \mathop{\mathrm{E}}[\varphi(X)]\)</span>, which means that</p>
+<p>for all <span class="math inline">\(x \in \mathbb{R}^d\)</span>. To keep things simple since it is not really the point of this short note, suppose that <span class="math inline">\(\pi(x)&gt;0\)</span> everywhere and that <span class="math inline">\(F\)</span> is smooth. This type of transformations can be used to define Markov Chain Monte Carlo algorithms, eg. the standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> algorithm. To design a MCMC scheme with this involution <span class="math inline">\(F\)</span>, one needs to answer the following basic question: suppose that <span class="math inline">\(X \sim \pi(dx)\)</span> and the proposal <span class="math inline">\(Y = F(X)\)</span> is constructed and accepted with probability <span class="math inline">\(\alpha(X)\)</span>, how should the acceptance probability function <span class="math inline">\(\alpha: \mathbb{R}^d \to [0,1]\)</span> be chosen so that the resulting random variable <span class="math display">\[Z \; = \; Y \, B + (1-B) \, X\]</span> is also distributed according to <span class="math inline">\(\pi(dx)\)</span>? The Bernoulli random variable <span class="math inline">\(B\)</span> is such that <span class="math inline">\(\mathop{\mathrm{P}}(B=1|X=x)=\alpha(x)\)</span>. In other words, for any test function <span class="math inline">\(\varphi: \mathbb{R}^d \to \mathbb{R}\)</span>, we would like <span class="math inline">\(\mathop{\mathrm{E}}[\varphi(Z)] = \mathop{\mathrm{E}}[\varphi(X)]\)</span>, which means that</p>
 <p><span id="eq-necessary"><span class="math display">\[
 \int  {\left\{  \varphi(F(x)) \, \alpha(x) + \varphi(x) \, (1-\alpha(x))  \right\}}  \, \pi(dx) = \int \varphi(x) \, \pi(dx).
 \tag{1}\]</span></span></p>
-<p>A change of variable to transform <span class="math inline">\(\varphi(F(x)) \to \varphi(x)\)</span> and requiring that <a href="#eq-necessary">Equation&nbsp;1</a> holds for any test function <span class="math inline">\(\varphi\)</span> shows that this is equivalent to asking for the relation</p>
+<p>Requiring for <a href="#eq-necessary">Equation&nbsp;1</a> to hold for any test function <span class="math inline">\(\varphi\)</span> is easily seen to be equivalent to asking for the equation</p>
 <p><span class="math display">\[
 \alpha(x) \, \pi(x) \; = \; \alpha(y) \, \pi(y) \, |J_F(x)|
 \]</span></p>
-<p>to hold for any <span class="math inline">\(x \in \mathbb{R}^d\)</span> where <span class="math inline">\(y=F(x)\)</span> and <span class="math inline">\(J_F(x)\)</span> is the Jacobian of <span class="math inline">\(F\)</span> at <span class="math inline">\(x\)</span>. To make things slightly more symmetrical, since <span class="math inline">\(|J_F(y)| \times |J_F(x)| = 1\)</span> because of the involution property, this also reads</p>
+<p>to hold for any <span class="math inline">\(x \in \mathbb{R}^d\)</span> where <span class="math inline">\(y=F(x)\)</span> and <span class="math inline">\(J_F(x)\)</span> is the Jacobian of <span class="math inline">\(F\)</span> at <span class="math inline">\(x\)</span>. Since <span class="math inline">\(|J_F(y)| \times |J_F(x)| = 1\)</span> because the function <span class="math inline">\(F\)</span> is an involution, this also reads</p>
 <p><span class="math display">\[
 \alpha(x) \, \frac{\pi(x) }{|J_F(x)|^{1/2}} \; = \;
 \alpha(y) \, \frac{\pi(y) }{|J_F(y)|^{1/2}}.
 \]</span></p>
-<p>At this point, it becomes clear to anyone familiar with the the correctness-proof of the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings algorithm</a> that a possible solution is:</p>
+<p>At this point, it becomes clear to anyone familiar with the the correctness-proof of the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings algorithm</a> that a possible solution is</p>
 <p><span class="math display">\[
-\alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y) / |J_F(y)|^{1/2}}{\pi(x) / |J_F(x)|^{1/2}} \right\}} .
+\alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y) / |J_F(y)|^{1/2}}{\pi(x) / |J_F(x)|^{1/2}} \right\}}
 \]</span></p>
-<p>Since <span class="math inline">\(|J_F(y)| \times |J_F(x)| = 1\)</span>, that is the same asking</p>
+<p>although there are indeed many other possible solutions. Since <span class="math inline">\(|J_F(y)| \times |J_F(x)| = 1\)</span>, this also reads</p>
 <p><span id="eq-MH"><span class="math display">\[
 \alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, |J_F(x)| \right\}} .
 \tag{2}\]</span></span></p>
-<p>One could reach a similar conclusion by looking at the Radon-Nikodym ratio <span class="math inline">\([\pi(dx) \otimes q(x,dy)] / [\pi(dy) \otimes q(y,dx)]\)</span> where <span class="math inline">\(q(x,dy)\)</span> describes the deterministic transformation <span class="citation" data-cites="green1995reversible">(<a href="#ref-green1995reversible" role="doc-biblioref">Green 1995</a>)</span>, but I do not find this significantly simpler in this situation. See also <span class="citation" data-cites="andrieu2020general">(<a href="#ref-andrieu2020general" role="doc-biblioref">Andrieu, Lee, and Livingstone 2020</a>)</span> for more sophisticated and interesting generalizations. Indeed, <a href="#eq-MH">Equation&nbsp;2</a> is often used in the simpler case when <span class="math inline">\(F\)</span> is volume preserving, i.e.&nbsp;<span class="math inline">\(|J_F(x)|=1\)</span>, as is the case for the <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a>. The discussion above was prompted by a student implementing a variant of this but with the wrong acceptance ratio <span class="math inline">\(\alpha(x) = \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, \frac{|J_F(x)|}{|J_F(y)|} \right\}} \)</span> and us taking quite a bit of time to find the bug… Note that there are situations when the function <span class="math inline">\(F\)</span> is not exactly an involution in the sense that sometimes <span class="math inline">\(F(F(x))=x\)</span>, but sometimes not. This can happen for example when implementing MCMC on a manifold <span class="math inline">\(\mathcal{M} \subset \mathbb{R}^d\)</span> and the function <span class="math inline">\(F\)</span> involves a “projection” on the manifold <span class="math inline">\(\mathcal{M}\)</span>, as for example described in the really interesting article <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span>. In that case, it suffices to add a “reversibility check”, i.e.&nbsp;make sure that when applying <span class="math inline">\(F\)</span> starting from <span class="math inline">\(y=F(x)\)</span>, one gets back to <span class="math inline">\(x\)</span>. The acceptance probability in that case should be amended and expressed as</p>
+<p>One can reach a similar conclusion by looking at the Radon-Nikodym ratio <span class="math inline">\([\pi(dx) \otimes q(x,dy)] / [\pi(dy) \otimes q(y,dx)]\)</span> where <span class="math inline">\(q(x,dy)\)</span> is the markov kernel described the deterministic transformation <span class="citation" data-cites="green1995reversible">(<a href="#ref-green1995reversible" role="doc-biblioref">Green 1995</a>)</span>, but I do not find this approach significantly simpler. The very neat article <span class="citation" data-cites="andrieu2020general">(<a href="#ref-andrieu2020general" role="doc-biblioref">Andrieu, Lee, and Livingstone 2020</a>)</span> describes much more sophisticated and interesting generalizations. Indeed, <a href="#eq-MH">Equation&nbsp;2</a> is often used in the simpler case when <span class="math inline">\(F\)</span> is volume preserving, i.e.&nbsp;<span class="math inline">\(|J_F(x)|=1\)</span>, as is the case for the <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a>. The discussion above was prompted by a student implementing a variant of this but with the wrong acceptance ratio <span class="math inline">\(\alpha(x) = \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, \frac{|J_F(x)|}{|J_F(y)|} \right\}} \)</span> and us taking quite a bit of time to find the bug…</p>
+<p>Note that there are interesting and practical situations when the function <span class="math inline">\(F\)</span> satisfies the involution property <span class="math inline">\(F(F(x))=x\)</span> only when <span class="math inline">\(x\)</span> belongs to a subset of the state-space. For instance, this can happen when implementing MCMC on a manifold <span class="math inline">\(\mathcal{M} \subset \mathbb{R}^d\)</span> and the function <span class="math inline">\(F\)</span> involves a “projection” on the manifold <span class="math inline">\(\mathcal{M}\)</span>, as for example described in the really interesting article <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span>. In that case, it suffices to add a “reversibility check”, i.e.&nbsp;make sure that when applying <span class="math inline">\(F\)</span> to the proposal <span class="math inline">\(y=F(x)\)</span>, one goes back to <span class="math inline">\(x\)</span> in the sense that <span class="math inline">\(F(y)=x\)</span>. The acceptance probability in that case should be amended and expressed as</p>
 <p><span class="math display">\[
 \alpha(x) \; = \; \min {\left\{ 1, \frac{\pi(y)}{\pi(x)} \, |J_F(x)| \right\}}  \, \mathbf{1} {\left( F(y)=x \right)} .
 \]</span></p>
-<p>In other words, if applying <span class="math inline">\(F\)</span> to the proposal <span class="math inline">\(y=F(x)\)</span> does not lead back to <span class="math inline">\(x\)</span>, the proposal is rejected.</p>
+<p>In other words, if applying <span class="math inline">\(F\)</span> to the proposal <span class="math inline">\(y=F(x)\)</span> does not lead back to <span class="math inline">\(x\)</span>, the proposal is always rejected.</p>
 <section id="same-but-without-involution" class="level3">
 <h3 class="anchored" data-anchor-id="same-but-without-involution">Same, but without involution</h3>
-<p>Sometimes, the requirement for <span class="math inline">\(F\)</span> to be an involution is cumbersome. What if we consider a smooth bijection <span class="math inline">\(T: \mathbb{R}^d \to \mathbb{R}^d\)</span> and its inverse <span class="math inline">\(T^{-1}\)</span>? In that case, one can directly apply what has been described in the previous section: it suffices to add an index <span class="math inline">\(\varepsilon\in \{-1,1\}\)</span> and consider the involution <span class="math inline">\(F\)</span> on <span class="math inline">\(\mathcal{X}= \mathbb{R}^d \otimes \{-1,1\}\)</span> defined as</p>
+<p>in some situations, the requirement for <span class="math inline">\(F\)</span> to be an involution can seem cumbersome. What if we consider the more general situation of a smooth bijection <span class="math inline">\(T: \mathbb{R}^d \to \mathbb{R}^d\)</span> and its inverse <span class="math inline">\(T^{-1}\)</span>? In that case, one can directly apply what has been described in the previous section: it suffices to consider an extended state-space <span class="math inline">\((x,\varepsilon)\)</span> obtained by including an index <span class="math inline">\(\varepsilon\in \{-1,1\}\)</span> and the involution <span class="math inline">\(F\)</span> defined as</p>
 <p><span id="eq-extended"><span class="math display">\[
 F:
 \left\{
 \begin{align}
 (x,\varepsilon=+1) &amp;\mapsto (T(x), \varepsilon=-1)\\
-(x,\varepsilon=-1) &amp;\mapsto (T^{-1}(x), \varepsilon=+1)
+(x,\varepsilon=-1) &amp;\mapsto (T^{-1}(x), \varepsilon=+1).
 \end{align}
 \right.
 \tag{3}\]</span></span></p>
-<p>This allows one to define a Markov kernel that lets the distribution <span class="math inline">\(\overline{\pi}(x, \varepsilon) = \pi(dx)/2\)</span> invariant. Things can even start to get a bit more interesting if a deterministic flip <span class="math inline">\(\varepsilon\mapsto -\varepsilon\)</span> is applied after each application of the Markov kernel above describe: doing so avoids immediately coming back to <span class="math inline">\(x\)</span> in the event the move <span class="math inline">\((x,\varepsilon) \mapsto (T^{\varepsilon}(x), -\varepsilon)\)</span> is accepted. There are indeed quite a few papers exploiting this type of ideas.</p>
+<p>This allows one to define a Markov kernel that lets the distribution <span class="math inline">\(\overline{\pi}(x, \varepsilon) = \pi(dx)/2\)</span> invariant. Things can even start to get a bit more interesting if a deterministic “flip” <span class="math inline">\((x, \varepsilon) \mapsto (x, -\varepsilon)\)</span> is applied after each application of the Markov kernel above describe: doing so avoids immediately coming back to <span class="math inline">\(x\)</span> in the event the move <span class="math inline">\((x,\varepsilon) \mapsto (T^{\varepsilon}(x), -\varepsilon)\)</span> is accepted. There are indeed quite a few papers exploiting this type of ideas.</p>
 </section>
 <section id="a-mixture-of-deterministic-transformations" class="level3">
 <h3 class="anchored" data-anchor-id="a-mixture-of-deterministic-transformations">A mixture of deterministic transformations?</h3>
-<p>A small riddle (whose answer I do not have), to conclude these notes. One can check that for any value of <span class="math inline">\(c \in \mathbb{R}\)</span>, the function <span class="math inline">\(F_{c}(x) = c + 1/(x-c)\)</span> is an involution of the real line. This means that for any target density <span class="math inline">\(\pi(x)\)</span> on the real line, one can build the associated Markov kernel <span class="math inline">\(M_c\)</span> defined as</p>
+<p>To conclude these notes, here is a small riddle whose answer I do not have. One can check that for any <span class="math inline">\(c \in \mathbb{R}\)</span>, the function <span class="math inline">\(F_{c}(x) = c + 1/(x-c)\)</span> is an involution of the real line. This means that for any target density <span class="math inline">\(\pi(x)\)</span> on the real line, one can build the associated Markov kernel <span class="math inline">\(M_c\)</span> defined as</p>
 <p><span class="math display">\[
 M_c(x, dy) = \alpha_c(x) \, \delta_{F_c(x)}(dy) + (1-\alpha_c(x)) \, \delta_x(dy)
 \]</span></p>
-<p>for acceptance probability described above, namely</p>
+<p>for an acceptance probability <span class="math inline">\(\alpha_c(x)\)</span> described as above,</p>
 <p><span class="math display">\[
 \alpha_c(x) = \min {\left\{ 1, \frac{\pi[F_c(x)]}{\pi(x)} |F'_c(x)| \right\}} .
 \]</span></p>
-<p>For <span class="math inline">\(N \geq 2\)</span>, choose a few values <span class="math inline">\(x_1, \ldots, c_N \in \mathbb{R}\)</span> and consider the mixture of Markov kernels</p>
+<p>Finally, choose a <span class="math inline">\(N \geq 2\)</span> values <span class="math inline">\(c_1, \ldots, c_N \in \mathbb{R}\)</span> and consider the mixture of Markov kernels</p>
 <p><span class="math display">\[
 M(x,dy) \; = \; \frac{1}{N} \sum_{i=1}^N M_{c_i}(x, dy).
 \]</span></p>
-<p>The Markov kernel <span class="math inline">\(M(x, dy)\)</span> lets the distribution <span class="math inline">\(\pi\)</span> invariant, but it is not clear at all (to me) under what conditions the associated MCMC algorithm does converge to <span class="math inline">\(\pi\)</span>. One can empirically check that if <span class="math inline">\(N\)</span> is very small, things can break down quite easily. On the other, for <span class="math inline">\(N\)</span> not too small, things can start to work.</p>
+<p>The Markov kernel <span class="math inline">\(M(x, dy)\)</span> lets the distribution <span class="math inline">\(\pi\)</span> invariant since each Markov kernel <span class="math inline">\(M_{c_i}(x, dy)\)</span> does, but it is not clear at all (to me) under what conditions the associated MCMC algorithm does converge to <span class="math inline">\(\pi\)</span>. One can empirically check that if <span class="math inline">\(N\)</span> is very small, things can break down quite easily. On the other, for <span class="math inline">\(N\)</span> large, the mixuture of Markov kernels <span class="math inline">\(M(x,dy)\)</span> empirically seems to behave as if it were ergodic with respect to <span class="math inline">\(\pi\)</span>.</p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -263,7 +265,7 @@ M(x,dy) \; = \; \frac{1}{N} \sum_{i=1}^N M_{c_i}(x, dy).
 </figure>
 </div>
 </div>
-<p>For <span class="math inline">\(N=5\)</span> random values <span class="math inline">\(c_1, \ldots, c_5 \in \mathbb{R}\)</span>, the illustration aboves shows the empirical distribution of the associated Markov chain ran for <span class="math inline">\(T=10^6\)</span> iterations and targeting the standard Gaussian distribution <span class="math inline">\(\pi(dx) \equiv \mathcal{N}(0,1)\)</span>: the fit seems almost perfect and I would not be surprised if <span class="math inline">\(M(x,dy)\)</span> were ergodic with respect to <span class="math inline">\(\pi(dx)\)</span> although I cannot prove it.</p>
+<p>For <span class="math inline">\(N=5\)</span> values <span class="math inline">\(c_1, \ldots, c_5 \in \mathbb{R}\)</span> chosen at random, the illustration aboves shows the empirical distribution of the associated Markov chain ran for <span class="math inline">\(T=10^6\)</span> iterations and targeting the standard Gaussian distribution <span class="math inline">\(\pi(dx) \equiv \mathcal{N}(0,1)\)</span>: the fit seems almost perfect.</p>
 
 
 
