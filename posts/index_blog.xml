@@ -10,7 +10,7 @@
 <atom:link href="https://alexxthiery.github.io/posts/index_blog.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.433</generator>
-<lastBuildDate>Sun, 11 Jun 2023 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 11 Jun 2023 17:00:00 GMT</lastBuildDate>
 <item>
   <title>Reverse diffusions, Score &amp; Tweedie</title>
   <link>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</link>
@@ -92,7 +92,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
   <category>SDE</category>
   <category>Generative-Model</category>
   <guid>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</guid>
-  <pubDate>Sun, 11 Jun 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 11 Jun 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Hello World</title>
@@ -120,7 +120,7 @@ MacKay, David JC. 2003. <em>Information Theory, Inference and Learning Algorithm
 </div></section></div> ]]></description>
   <category>testing</category>
   <guid>https://alexxthiery.github.io/posts/hello_world/index.html</guid>
-  <pubDate>Mon, 05 Jun 2023 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 05 Jun 2023 17:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
