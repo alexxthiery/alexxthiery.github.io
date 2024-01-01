@@ -9,8 +9,8 @@
 <link>https://alexxthiery.github.io/notes/index_notes_as_list.html</link>
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
-<generator>quarto-1.3.353</generator>
-<lastBuildDate>Sun, 17 Dec 2023 16:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.433</generator>
+<lastBuildDate>Sun, 17 Dec 2023 17:00:00 GMT</lastBuildDate>
 <item>
   <title>Metropolis-Hastings ratio with deterministic proposals</title>
   <link>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</link>
@@ -19,28 +19,37 @@
 
 
 
-<p>Consider a probability density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5Ed"> and a (deterministic) function <img src="https://latex.codecogs.com/png.latex?F:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D%5Ed">. We assume further that <img src="https://latex.codecogs.com/png.latex?F"> is an <a href="https://en.wikipedia.org/wiki/Involution_(mathematics)">involution</a> in the sense that</p>
+<p>Consider a probability density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5Ed"> and a (deterministic) function <img src="https://latex.codecogs.com/png.latex?F:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D%5Ed">. Assume further that <img src="https://latex.codecogs.com/png.latex?F"> is an <a href="https://en.wikipedia.org/wiki/Involution_(mathematics)">involution</a> in the sense that</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AF(F(x))%20=%20x%0A"></p>
-<p>for all <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed">. To keep simple since it is not really the point of this short note, suppose that <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%3E0"> everywhere and that <img src="https://latex.codecogs.com/png.latex?F"> is smooth. This type of transformations can be used to define Markov Chain Monte Carlo algorithms, eg. the standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> algorithm. In order to use this involution <img src="https://latex.codecogs.com/png.latex?F"> to design a MCMC scheme, one needs to answer the following basic question: suppose that <img src="https://latex.codecogs.com/png.latex?X%20%5Csim%20%5Cpi(dx)"> and the proposal <img src="https://latex.codecogs.com/png.latex?Y%20=%20F(X)"> is constructed and accepted with probability <img src="https://latex.codecogs.com/png.latex?%5Calpha(X)">, how should the acceptance probability function <img src="https://latex.codecogs.com/png.latex?%5Calpha:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5B0,1%5D"> be chosen so that the resulting random variable <img src="https://latex.codecogs.com/png.latex?Z%20%5C;%20=%20%5C;%20Y%20%5C,%20B%20+%20(1-B)%20%5C,%20X"> is also distributed according to <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)">? The Bernoulli random variable <img src="https://latex.codecogs.com/png.latex?B"> is such that <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BP%7D%7D(B=1%7CX=x)=%5Calpha(x)">. In other words, for any test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D">, we would like <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BE%7D%7D%5B%5Cvarphi(Z)%5D%20=%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D%5B%5Cvarphi(X)%5D">, which means that</p>
+<p>for all <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed">. To keep things simple since it is not really the point of this short note, suppose that <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%3E0"> everywhere and that <img src="https://latex.codecogs.com/png.latex?F"> is smooth. This type of transformations can be used to define Markov Chain Monte Carlo algorithms, eg. the standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> algorithm. To design a MCMC scheme with this involution <img src="https://latex.codecogs.com/png.latex?F">, one needs to answer the following basic question: suppose that <img src="https://latex.codecogs.com/png.latex?X%20%5Csim%20%5Cpi(dx)"> and the proposal <img src="https://latex.codecogs.com/png.latex?Y%20=%20F(X)"> is constructed and accepted with probability <img src="https://latex.codecogs.com/png.latex?%5Calpha(X)">, how should the acceptance probability function <img src="https://latex.codecogs.com/png.latex?%5Calpha:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5B0,1%5D"> be chosen so that the resulting random variable <img src="https://latex.codecogs.com/png.latex?Z%20%5C;%20=%20%5C;%20Y%20%5C,%20B%20+%20(1-B)%20%5C,%20X"> is also distributed according to <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)">? The Bernoulli random variable <img src="https://latex.codecogs.com/png.latex?B"> is such that <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BP%7D%7D(B=1%7CX=x)=%5Calpha(x)">. In other words, for any test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D">, we would like <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BE%7D%7D%5B%5Cvarphi(Z)%5D%20=%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D%5B%5Cvarphi(X)%5D">, which means that</p>
 <p><span id="eq-necessary"><img src="https://latex.codecogs.com/png.latex?%0A%5Cint%20%20%7B%5Cleft%5C%7B%20%20%5Cvarphi(F(x))%20%5C,%20%5Calpha(x)%20+%20%5Cvarphi(x)%20%5C,%20(1-%5Calpha(x))%20%20%5Cright%5C%7D%7D%20%20%5C,%20%5Cpi(dx)%20=%20%5Cint%20%5Cvarphi(x)%20%5C,%20%5Cpi(dx).%0A%5Ctag%7B1%7D"></span></p>
-<p>A change of variable to transform <img src="https://latex.codecogs.com/png.latex?%5Cvarphi(F(x))%20%5Cto%20%5Cvarphi(x)"> and requiring that Equation&nbsp;1 holds for any test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi"> shows that this is equivalent to asking for the relation</p>
+<p>Requiring for Equation&nbsp;1 to hold for any test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi"> is easily seen to be equivalent to asking for the equation</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C,%20%5Cpi(x)%20%5C;%20=%20%5C;%20%5Calpha(y)%20%5C,%20%5Cpi(y)%20%5C,%20%7CJ_F(x)%7C%0A"></p>
-<p>to hold for any <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> where <img src="https://latex.codecogs.com/png.latex?y=F(x)"> and <img src="https://latex.codecogs.com/png.latex?J_F(x)"> is the Jacobian of <img src="https://latex.codecogs.com/png.latex?F"> at <img src="https://latex.codecogs.com/png.latex?x">. To make things slightly more symmetrical, since <img src="https://latex.codecogs.com/png.latex?%7CJ_F(y)%7C%20%5Ctimes%20%7CJ_F(x)%7C%20=%201"> because of the involution property, this also reads</p>
+<p>to hold for any <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> where <img src="https://latex.codecogs.com/png.latex?y=F(x)"> and <img src="https://latex.codecogs.com/png.latex?J_F(x)"> is the Jacobian of <img src="https://latex.codecogs.com/png.latex?F"> at <img src="https://latex.codecogs.com/png.latex?x">. Since <img src="https://latex.codecogs.com/png.latex?%7CJ_F(y)%7C%20%5Ctimes%20%7CJ_F(x)%7C%20=%201"> because the function <img src="https://latex.codecogs.com/png.latex?F"> is an involution, this also reads</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C,%20%5Cfrac%7B%5Cpi(x)%20%7D%7B%7CJ_F(x)%7C%5E%7B1/2%7D%7D%20%5C;%20=%20%5C;%0A%5Calpha(y)%20%5C,%20%5Cfrac%7B%5Cpi(y)%20%7D%7B%7CJ_F(y)%7C%5E%7B1/2%7D%7D.%0A"></p>
-<p>At this point, an obvious solution for anybody who has looked at the correctness-proof of the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings algorithm</a> is to set</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C;%20=%20%5C;%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%20/%20%7CJ_F(y)%7C%5E%7B1/2%7D%7D%7B%5Cpi(x)%20/%20%7CJ_F(x)%7C%5E%7B1/2%7D%7D%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>Since <img src="https://latex.codecogs.com/png.latex?%7CJ_F(y)%7C%20%5Ctimes%20%7CJ_F(x)%7C%20=%201">, that is the same asking</p>
+<p>At this point, it becomes clear to anyone familiar with the the correctness-proof of the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings algorithm</a> that a possible solution is</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C;%20=%20%5C;%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%20/%20%7CJ_F(y)%7C%5E%7B1/2%7D%7D%7B%5Cpi(x)%20/%20%7CJ_F(x)%7C%5E%7B1/2%7D%7D%20%5Cright%5C%7D%7D%0A"></p>
+<p>although there are indeed many other possible solutions. Since <img src="https://latex.codecogs.com/png.latex?%7CJ_F(y)%7C%20%5Ctimes%20%7CJ_F(x)%7C%20=%201">, this also reads</p>
 <p><span id="eq-MH"><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C;%20=%20%5C;%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%7D%7B%5Cpi(x)%7D%20%5C,%20%7CJ_F(x)%7C%20%5Cright%5C%7D%7D%20.%0A%5Ctag%7B2%7D"></span></p>
-<p>One could reach a similar conclusion by looking at the Radon-Nikodym ratio <img src="https://latex.codecogs.com/png.latex?%5B%5Cpi(dx)%20%5Cotimes%20q(x,dy)%5D%20/%20%5B%5Cpi(dy)%20%5Cotimes%20q(y,dx)%5D"> where <img src="https://latex.codecogs.com/png.latex?q(x,dy)"> describes the deterministic transformation <span class="citation" data-cites="green1995reversible">(Green 1995)</span>, but I do not find this significantly simpler in this situation. Indeed, Equation&nbsp;2 is often used in the simpler case when <img src="https://latex.codecogs.com/png.latex?F"> is volume preserving, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?%7CJ_F(x)%7C=1">, as is the case for the <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a>. The discussion above was prompted by a student implementing a variant of this but with the wrong acceptance ratio <img src="https://latex.codecogs.com/png.latex?%5Calpha(x)%20=%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%7D%7B%5Cpi(x)%7D%20%5C,%20%5Cfrac%7B%7CJ_F(x)%7C%7D%7B%7CJ_F(y)%7C%7D%20%5Cright%5C%7D%7D%20"> and us taking quite a bit of time to find the bug… Note that there are situations when the function <img src="https://latex.codecogs.com/png.latex?F"> is not exactly an involution in the sense that sometimes <img src="https://latex.codecogs.com/png.latex?F(F(x))=x">, but sometimes not. This can happen for example when implementing MCMC on a manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D%20%5Csubset%20%5Cmathbb%7BR%7D%5Ed"> and the function <img src="https://latex.codecogs.com/png.latex?F"> involves a “projection” on the manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">, as for example described in the really interesting article <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span>. In that case, it suffices to add a “reversibility check”, i.e.&nbsp;make sure that when applying <img src="https://latex.codecogs.com/png.latex?F"> starting from <img src="https://latex.codecogs.com/png.latex?y=F(x)">, one gets back to <img src="https://latex.codecogs.com/png.latex?x">. The acceptance probability in that case should be amended and expressed as</p>
+<p>One can reach a similar conclusion by looking at the Radon-Nikodym ratio <img src="https://latex.codecogs.com/png.latex?%5B%5Cpi(dx)%20%5Cotimes%20q(x,dy)%5D%20/%20%5B%5Cpi(dy)%20%5Cotimes%20q(y,dx)%5D"> where <img src="https://latex.codecogs.com/png.latex?q(x,dy)"> is the markov kernel described the deterministic transformation <span class="citation" data-cites="green1995reversible">(Green 1995)</span>, but I do not find this approach significantly simpler. The very neat article <span class="citation" data-cites="andrieu2020general">(Andrieu, Lee, and Livingstone 2020)</span> describes much more sophisticated and interesting generalizations. Indeed, Equation&nbsp;2 is often used in the simpler case when <img src="https://latex.codecogs.com/png.latex?F"> is volume preserving, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?%7CJ_F(x)%7C=1">, as is the case for the <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a>. The discussion above was prompted by a student implementing a variant of this but with the wrong acceptance ratio <img src="https://latex.codecogs.com/png.latex?%5Calpha(x)%20=%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%7D%7B%5Cpi(x)%7D%20%5C,%20%5Cfrac%7B%7CJ_F(x)%7C%7D%7B%7CJ_F(y)%7C%7D%20%5Cright%5C%7D%7D%20"> and us taking quite a bit of time to find the bug…</p>
+<p>Note that there are interesting and practical situations when the function <img src="https://latex.codecogs.com/png.latex?F"> satisfies the involution property <img src="https://latex.codecogs.com/png.latex?F(F(x))=x"> only when <img src="https://latex.codecogs.com/png.latex?x"> belongs to a subset of the state-space. For instance, this can happen when implementing MCMC on a manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D%20%5Csubset%20%5Cmathbb%7BR%7D%5Ed"> and the function <img src="https://latex.codecogs.com/png.latex?F"> involves a “projection” on the manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">, as for example described in the really interesting article <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span>. In that case, it suffices to add a “reversibility check”, i.e.&nbsp;make sure that when applying <img src="https://latex.codecogs.com/png.latex?F"> to the proposal <img src="https://latex.codecogs.com/png.latex?y=F(x)">, one goes back to <img src="https://latex.codecogs.com/png.latex?x"> in the sense that <img src="https://latex.codecogs.com/png.latex?F(y)=x">. The acceptance probability in that case should be amended and expressed as</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C;%20=%20%5C;%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%7D%7B%5Cpi(x)%7D%20%5C,%20%7CJ_F(x)%7C%20%5Cright%5C%7D%7D%20%20%5C,%20%5Cmathbf%7B1%7D%20%7B%5Cleft(%20F(y)=x%20%5Cright)%7D%20.%0A"></p>
-<p>In other words, if applying <img src="https://latex.codecogs.com/png.latex?F"> to the proposal <img src="https://latex.codecogs.com/png.latex?y=F(x)"> does not lead back to <img src="https://latex.codecogs.com/png.latex?x">, the proposal is rejected.</p>
-<p>A small riddle (whose answer I do not have), to conclude these notes. One can check that the function <img src="https://latex.codecogs.com/png.latex?F_%7Bc%7D(x)%20=%20c%20+%201/(x-c)"> is an involution of the real line. This means that for any target density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> on the real line, one can build the associated Markov kernel <img src="https://latex.codecogs.com/png.latex?M_c"> defined as</p>
+<p>In other words, if applying <img src="https://latex.codecogs.com/png.latex?F"> to the proposal <img src="https://latex.codecogs.com/png.latex?y=F(x)"> does not lead back to <img src="https://latex.codecogs.com/png.latex?x">, the proposal is always rejected.</p>
+<section id="same-but-without-involution" class="level3">
+<h3 class="anchored" data-anchor-id="same-but-without-involution">Same, but without involution</h3>
+<p>in some situations, the requirement for <img src="https://latex.codecogs.com/png.latex?F"> to be an involution can seem cumbersome. What if we consider the more general situation of a smooth bijection <img src="https://latex.codecogs.com/png.latex?T:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D%5Ed"> and its inverse <img src="https://latex.codecogs.com/png.latex?T%5E%7B-1%7D">? In that case, one can directly apply what has been described in the previous section: it suffices to consider an extended state-space <img src="https://latex.codecogs.com/png.latex?(x,%5Cvarepsilon)"> obtained by including an index <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cin%20%5C%7B-1,1%5C%7D"> and the involution <img src="https://latex.codecogs.com/png.latex?F"> defined as</p>
+<p><span id="eq-extended"><img src="https://latex.codecogs.com/png.latex?%0AF:%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0A(x,%5Cvarepsilon=+1)%20&amp;%5Cmapsto%20(T(x),%20%5Cvarepsilon=-1)%5C%5C%0A(x,%5Cvarepsilon=-1)%20&amp;%5Cmapsto%20(T%5E%7B-1%7D(x),%20%5Cvarepsilon=+1).%0A%5Cend%7Balign%7D%0A%5Cright.%0A%5Ctag%7B3%7D"></span></p>
+<p>This allows one to define a Markov kernel that lets the distribution <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(x,%20%5Cvarepsilon)%20=%20%5Cpi(dx)/2"> invariant. Things can even start to get a bit more interesting if a deterministic “flip” <img src="https://latex.codecogs.com/png.latex?(x,%20%5Cvarepsilon)%20%5Cmapsto%20(x,%20-%5Cvarepsilon)"> is applied after each application of the Markov kernel above describe: doing so avoids immediately coming back to <img src="https://latex.codecogs.com/png.latex?x"> in the event the move <img src="https://latex.codecogs.com/png.latex?(x,%5Cvarepsilon)%20%5Cmapsto%20(T%5E%7B%5Cvarepsilon%7D(x),%20-%5Cvarepsilon)"> is accepted. There are indeed quite a few papers exploiting this type of ideas.</p>
+</section>
+<section id="a-mixture-of-deterministic-transformations" class="level3">
+<h3 class="anchored" data-anchor-id="a-mixture-of-deterministic-transformations">A mixture of deterministic transformations?</h3>
+<p>To conclude these notes, here is a small riddle whose answer I do not have. One can check that for any <img src="https://latex.codecogs.com/png.latex?c%20%5Cin%20%5Cmathbb%7BR%7D">, the function <img src="https://latex.codecogs.com/png.latex?F_%7Bc%7D(x)%20=%20c%20+%201/(x-c)"> is an involution of the real line. This means that for any target density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> on the real line, one can build the associated Markov kernel <img src="https://latex.codecogs.com/png.latex?M_c"> defined as</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AM_c(x,%20dy)%20=%20%5Calpha_c(x)%20%5C,%20%5Cdelta_%7BF_c(x)%7D(dy)%20+%20(1-%5Calpha_c(x))%20%5C,%20%5Cdelta_x(dy)%0A"></p>
-<p>for acceptance probability described above, namely</p>
+<p>for an acceptance probability <img src="https://latex.codecogs.com/png.latex?%5Calpha_c(x)"> described as above,</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha_c(x)%20=%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi%5BF_c(x)%5D%7D%7B%5Cpi(x)%7D%20%7CF'_c(x)%7C%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>For <img src="https://latex.codecogs.com/png.latex?N%20%5Cgeq%202">, choose a few values <img src="https://latex.codecogs.com/png.latex?x_1,%20%5Cldots,%20c_N%20%5Cin%20%5Cmathbb%7BR%7D"> and consider the mixture of Markov kernels</p>
+<p>Finally, choose a <img src="https://latex.codecogs.com/png.latex?N%20%5Cgeq%202"> values <img src="https://latex.codecogs.com/png.latex?c_1,%20%5Cldots,%20c_N%20%5Cin%20%5Cmathbb%7BR%7D"> and consider the mixture of Markov kernels</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AM(x,dy)%20%5C;%20=%20%5C;%20%5Cfrac%7B1%7D%7BN%7D%20%5Csum_%7Bi=1%7D%5EN%20M_%7Bc_i%7D(x,%20dy).%0A"></p>
-<p>The Markov kernel <img src="https://latex.codecogs.com/png.latex?M(x,%20dy)"> lets the distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi"> invariant, but it is not clear at all (to me) under what conditions the associated MCMC algorithm does converge to <img src="https://latex.codecogs.com/png.latex?%5Cpi">. One can empirically check that if <img src="https://latex.codecogs.com/png.latex?N"> is very small, things can break down quite easily. On the other, for <img src="https://latex.codecogs.com/png.latex?N"> not too small, things can start to work.</p>
+<p>The Markov kernel <img src="https://latex.codecogs.com/png.latex?M(x,%20dy)"> lets the distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi"> invariant since each Markov kernel <img src="https://latex.codecogs.com/png.latex?M_%7Bc_i%7D(x,%20dy)"> does, but it is not clear at all (to me) under what conditions the associated MCMC algorithm does converge to <img src="https://latex.codecogs.com/png.latex?%5Cpi">. One can empirically check that if <img src="https://latex.codecogs.com/png.latex?N"> is very small, things can break down quite easily. On the other, for <img src="https://latex.codecogs.com/png.latex?N"> large, the mixuture of Markov kernels <img src="https://latex.codecogs.com/png.latex?M(x,dy)"> empirically seems to behave as if it were ergodic with respect to <img src="https://latex.codecogs.com/png.latex?%5Cpi">.</p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -48,12 +57,16 @@
 </figure>
 </div>
 </div>
-<p>For <img src="https://latex.codecogs.com/png.latex?N=5"> random values <img src="https://latex.codecogs.com/png.latex?c_1,%20%5Cldots,%20c_5%20%5Cin%20%5Cmathbb%7BR%7D">, the illustration aboves shows the empirical distribution of the associated Markov chain ran for <img src="https://latex.codecogs.com/png.latex?T=10%5E6"> iterations and targeting the standard Gaussian distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)%20%5Cequiv%20%5Cmathcal%7BN%7D(0,1)">: the fit seems almost perfect and I would not be surprised if <img src="https://latex.codecogs.com/png.latex?M(x,dy)"> were ergodic with respect to <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)"> although I cannot prove it.</p>
+<p>For <img src="https://latex.codecogs.com/png.latex?N=5"> values <img src="https://latex.codecogs.com/png.latex?c_1,%20%5Cldots,%20c_5%20%5Cin%20%5Cmathbb%7BR%7D"> chosen at random, the illustration aboves shows the empirical distribution of the associated Markov chain ran for <img src="https://latex.codecogs.com/png.latex?T=10%5E6"> iterations and targeting the standard Gaussian distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)%20%5Cequiv%20%5Cmathcal%7BN%7D(0,1)">: the fit seems almost perfect.</p>
 
 
 
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-andrieu2020general" class="csl-entry">
+Andrieu, Christophe, Anthony Lee, and Sam Livingstone. 2020. <span>“A General Perspective on the Metropolis-Hastings Kernel.”</span> <em>arXiv Preprint arXiv:2012.14881</em>.
+</div>
 <div id="ref-green1995reversible" class="csl-entry">
 Green, Peter J. 1995. <span>“Reversible Jump Markov Chain Monte Carlo Computation and Bayesian Model Determination.”</span> <em>Biometrika</em> 82 (4). Oxford University Press: 711–32.
 </div>
@@ -63,7 +76,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</guid>
-  <pubDate>Sun, 17 Dec 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 17 Dec 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Averaging and homogenization</title>
@@ -193,7 +206,7 @@ Weinan, E. 2011. <em>Principles of Multiscale Modeling</em>. Cambridge Universit
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</guid>
-  <pubDate>Mon, 27 Nov 2023 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 27 Nov 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Ensemble Kalman Smoother (EnKS)</title>
@@ -244,7 +257,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</guid>
-  <pubDate>Fri, 17 Nov 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 17 Nov 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Asymptotic variance &amp; Poisson Equation</title>
@@ -325,7 +338,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
  ]]></description>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</guid>
-  <pubDate>Fri, 10 Nov 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 10 Nov 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Gaussian Assimilation &amp; the EnKF</title>
@@ -399,7 +412,7 @@ Ollivier, Yann, Ludovic Arnold, Anne Auger, and Nikolaus Hansen. 2017. <span>“
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</guid>
-  <pubDate>Sun, 22 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 22 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Deriving Langevin MCMC</title>
@@ -446,7 +459,7 @@ Titsias, Michalis K, and Omiros Papaspiliopoulos. 2018. <span>“Auxiliary Gradi
 </div></section></div> ]]></description>
   <category>MCMC</category>
   <guid>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</guid>
-  <pubDate>Wed, 18 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Wed, 18 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Wasserstein Gradients &amp; Langevin Diffusions</title>
@@ -500,7 +513,7 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</guid>
-  <pubDate>Sun, 15 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 15 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sanov’s Theorem</title>
@@ -564,7 +577,7 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
  ]]></description>
   <category>LargeDeviation</category>
   <guid>https://alexxthiery.github.io/notes/sanov/sanov.html</guid>
-  <pubDate>Sun, 08 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 08 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Auxiliary variable trick</title>
@@ -640,7 +653,7 @@ Zhang, Yichuan, Zoubin Ghahramani, Amos J Storkey, and Charles Sutton. 2012. <sp
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/auxiliary_variable_trick/auxiliary_variable_trick.html</guid>
-  <pubDate>Mon, 02 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 02 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Shearer’s lemma</title>
@@ -679,7 +692,7 @@ Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</guid>
-  <pubDate>Sun, 01 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 01 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: References and Readings</title>
@@ -711,7 +724,7 @@ Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the
  ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</guid>
-  <pubDate>Fri, 29 Sep 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 29 Sep 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Shannon Source Coding Theorem</title>
@@ -804,7 +817,7 @@ Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.�
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</guid>
-  <pubDate>Mon, 25 Sep 2023 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 25 Sep 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: Fano’s inequality</title>
@@ -849,7 +862,7 @@ Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.�
  ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</guid>
-  <pubDate>Fri, 22 Sep 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 22 Sep 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: Entropy and Basic Definitions</title>
@@ -952,7 +965,7 @@ MacKay, David JC. 2003. <em>Information Theory, Inference and Learning Algorithm
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</guid>
-  <pubDate>Fri, 22 Sep 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 22 Sep 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>From Denoising Diffusion to ODEs</title>
@@ -1031,7 +1044,7 @@ Song, Yang, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Er
   <category>DDPM</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</guid>
-  <pubDate>Sat, 01 Jul 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sat, 01 Jul 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Denoising Diffusion Probabilistic Models (DDPM)</title>
@@ -1133,7 +1146,7 @@ $$ -->
   <category>DDPM</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/DDPM/DDPM.html</guid>
-  <pubDate>Sat, 01 Jul 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sat, 01 Jul 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Reverse diffusions, Score &amp; Tweedie</title>
@@ -1216,7 +1229,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
   <category>SDE</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</guid>
-  <pubDate>Sun, 11 Jun 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 11 Jun 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Notes</title>
@@ -1276,7 +1289,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
  ]]></description>
   <category>index</category>
   <guid>https://alexxthiery.github.io/notes/index_notes.html</guid>
-  <pubDate>Sat, 31 Dec 2022 16:00:00 GMT</pubDate>
+  <pubDate>Sat, 31 Dec 2022 17:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
