@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - State Space Models</title>
+<title>Alexandre Thiéry - State Space Models: References</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -62,15 +81,11 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - State Space Models">
-<meta property="og:description" content="">
-<meta property="og:image" content="https://alexxthiery.github.io/notes_DRAFT/SSM/ssm_dalle3_low.jpg">
+<meta property="og:title" content="Alexandre Thiéry - State Space Models: References">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - State Space Models">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://alexxthiery.github.io/notes_DRAFT/SSM/ssm_dalle3_low.jpg">
+<meta name="twitter:title" content="Alexandre Thiéry - State Space Models: References">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed">
@@ -132,13 +147,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#state-space-models" id="toc-state-space-models" class="nav-link active" data-scroll-target="#state-space-models">State Space Models:</a></li>
-  <li><a href="#filtering" id="toc-filtering" class="nav-link" data-scroll-target="#filtering">Filtering:</a></li>
-  <li><a href="#smoothing" id="toc-smoothing" class="nav-link" data-scroll-target="#smoothing">Smoothing:</a>
-  <ul class="collapse">
-  <li><a href="#forward-only-and-fixed-lag-approximation" id="toc-forward-only-and-fixed-lag-approximation" class="nav-link" data-scroll-target="#forward-only-and-fixed-lag-approximation">Forward only and Fixed-Lag approximation:</a></li>
-  <li><a href="#forward-filtering-backward-smoothing" id="toc-forward-filtering-backward-smoothing" class="nav-link" data-scroll-target="#forward-filtering-backward-smoothing">Forward-Filtering Backward Smoothing:</a></li>
-  </ul></li>
+  <li><a href="#books" id="toc-books" class="nav-link active" data-scroll-target="#books">Books:</a></li>
+  <li><a href="#web" id="toc-web" class="nav-link" data-scroll-target="#web">Web:</a></li>
+  <li><a href="#smoothing" id="toc-smoothing" class="nav-link" data-scroll-target="#smoothing">Smoothing:</a></li>
   </ul>
 </nav>
     </div>
@@ -147,7 +158,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">State Space Models</h1>
+<h1 class="title">State Space Models: References</h1>
   <div class="quarto-categories">
     <div class="quarto-category">timeSeries</div>
   </div>
@@ -177,84 +188,64 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 </header>
 
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./ssm_dalle3_low.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
-</figure>
-</div>
-</div>
-<section id="state-space-models" class="level2">
-<h2 class="anchored" data-anchor-id="state-space-models">State Space Models:</h2>
-<p>Consider a Markov chain <span class="math inline">\((X_t, Y_t)\)</span> with <span class="math inline">\(X_t \in \mathcal{X}\)</span> and <span class="math inline">\(Y_t \in \mathcal{Y}\)</span> with initial distribution <span class="math inline">\(p(X_0 \in dx_0) = \mu_0(x_0) \, dx_0\)</span> and described by the dynamics</p>
-<p><span id="eq-ssm"><span class="math display">\[
-\begin{align}
-\left\{
-\begin{aligned}
-x_{t+1} &amp;\sim f(x_{t+1} | x_t) \\
-y_{t+1} &amp;\sim g(y_{t+1} | x_{t+1})
-\end{aligned}
-\right.
-\end{align}
-\tag{1}\]</span></span></p>
-<p>for some transition and observation densities <span class="math inline">\(f(\cdot | \cdot)\)</span> and <span class="math inline">\(g(\cdot | \cdot)\)</span>. These functions could be time-dependent but we will assume not for lightening notations.</p>
+<section id="books" class="level2">
+<h2 class="anchored" data-anchor-id="books">Books:</h2>
+<ul>
+<li>Monte-Carlo methods for SSM:
+<ul>
+<li><span class="citation" data-cites="cappe2009inference">(<a href="#ref-cappe2009inference" role="doc-biblioref">Cappé, Moulines, and Rydén 2009</a>)</span></li>
+<li><span class="citation" data-cites="douc2014nonlinear">(<a href="#ref-douc2014nonlinear" role="doc-biblioref">Douc, Moulines, and Stoffer 2014</a>)</span></li>
+<li><span class="citation" data-cites="chopin2020introduction">(<a href="#ref-chopin2020introduction" role="doc-biblioref">Chopin, Papaspiliopoulos, et al. 2020</a>)</span><br>
+</li>
+<li><span class="citation" data-cites="sarkka2023bayesian">(<a href="#ref-sarkka2023bayesian" role="doc-biblioref">Särkkä and Svensson 2023</a>)</span></li>
+</ul></li>
+</ul>
 </section>
-<section id="filtering" class="level2">
-<h2 class="anchored" data-anchor-id="filtering">Filtering:</h2>
-<p>Consider an empirical approximation of the filtering distribution <span class="math inline">\(p(x_t | y_{0:t})\)</span> using <span class="math inline">\(N \geq 1\)</span> particles <span class="math inline">\((x^1_{t}, \ldots, x^N_{t})\)</span>,</p>
-<p><span class="math display">\[
-p(x_t | y_{0:t})
-\approx
-\sum_{i=1}^N w_{i,t} \, \delta_{x^i_{t}}(x_t).
-\]</span></p>
-<p>The filtering distribution at time <span class="math inline">\((t+1)\)</span> follows the recursion:</p>
-<p><span class="math display">\[
-p(x_{t+1} | y_{0:t+1}) \propto \int p(x_{t} | y_{0:t}) \, f(x_{t+1} | x_t) \, g(y_{t+1} | x_t) \, dx_t.
-\]</span></p>
-<p>This is the <span class="math inline">\(x_{t+1}\)</span>-marginal of the joint density proportional to <span class="math inline">\(p(x_{t} | y_{0:t}) \, f(x_{t+1} | x_t) \, g(y_{t+1} | x_t)\)</span>. One can approximate this joint density using importance sampling with a proposal <span class="math inline">\(p(x_{t} | y_{0:t}) \, q_t(x_{t+1} | x_t)\)</span>, where <span class="math inline">\(q_t(x_{t+1} | x_t)\)</span> is any reasonable Markov kernel. The choice of <span class="math inline">\(q_t(x_{t+1} | x_t) \equiv f(x_{t+1} | x_t)\)</span> leads to the bootstrap particle filter. Alternatively, <span class="math inline">\(q_t(x_{t+1} | x_t) = p(x_{t+1} | x_t, y_{t+1})\)</span> can yield better estimates, but is often hard to implement, though approximating it can be a viable strategy.</p>
-<p>Using these methods, the filtering distribution at time <span class="math inline">\((t+1)\)</span> can be approximated by a new set of particles <span class="math inline">\(\sum_{i=1}^N w_{i,t+1} \, \delta_{x^i_{t+1}}(x_{t+1})\)</span>, where <span class="math inline">\(x^{i}_{t+1} \sim q_t(x^{i}_{t+1} | x^{i}_{t})\)</span> and weights are calculated as:</p>
-<p><span class="math display">\[
-w^i_{t+1}  \propto \frac{f(x^{i}_{t+1} | x^{i}_{t}) \, g(y_{t+1} | x^i_{t+1})}{q_t(x^{i}_{t+1} | x^{i}_{t})}.
-\]</span></p>
+<section id="web" class="level2">
+<h2 class="anchored" data-anchor-id="web">Web:</h2>
+<ul>
+<li>Reference <a href="https://www.stats.ox.ac.uk/~doucet/smc_resources.html">webpage</a> maintained by <a href="https://www.stats.ox.ac.uk/~doucet/">Arnaud Doucet</a>.</li>
+<li>Reference <a href="https://people.bordeaux.inria.fr/pierre.delmoral/simulinks.html">webpage</a> maintained by <a href="https://people.bordeaux.inria.fr/pierre.delmoral/">Pierre Del Moral</a>.</li>
+</ul>
 </section>
 <section id="smoothing" class="level2">
 <h2 class="anchored" data-anchor-id="smoothing">Smoothing:</h2>
-<p>When estimating parameters in time-series models, it is often crucial to evaluate sums like</p>
-<p><span class="math display">\[
-\sum_{t=0}^{t-1} \mathop{\mathrm{E}}[ s_t(x_t, x_{t+1}) | y_{0:T}]
-\]</span></p>
-<p>where <span class="math inline">\(s_t(\cdot, \cdot)\)</span> is a specific function. For instance, in the Expectation-Maximization (EM) algorithm, we have <span class="math inline">\(s_t(x_t, x_{t+1}) = \log[ f(x_{t+1}|x_t) , g(y_{t+1}|x_{t+1})]\)</span>. Essentially, this means it is important to accurately approximate the <span class="math inline">\((x_t, x_{t+1})\)</span>-marginals of the smoothing distribution.</p>
-<section id="forward-only-and-fixed-lag-approximation" class="level3">
-<h3 class="anchored" data-anchor-id="forward-only-and-fixed-lag-approximation">Forward only and Fixed-Lag approximation:</h3>
-<p>A standard filtering approach on path-space, often referred to as the “poor man’s smoother”, can be used to approximate the full smoothing distribution. However, this method often leads to path degeneracy, especially for smoothing marginals at time <span class="math inline">\(t \ll T\)</span>, which are typically very poor. In cases where the State-Space Model (SSM) has a “forgetting property”, the fixed-lag approximation can be useful. This is expressed as:</p>
-<p><span class="math display">\[
-p(x_t | y_{0:T}) \; \approx \; p(x_t | y_{0:{t+L}}).
-\]</span></p>
-<p>Here, <span class="math inline">\(L\)</span> is the lag parameter, usually chosen to be quite small. To implement this fixed-lag approximation, one simply needs to run a filtering method and track the last <span class="math inline">\(L\)</span> ancestors; that it straightforward since the SSM in <a href="#eq-ssm">Equation&nbsp;1</a> can readily be extended to a SSM describing the dynamics of <span class="math inline">\((x_{t-L}, \ldots, x_{t-1}, x_t)\)</span>.</p>
-</section>
-<section id="forward-filtering-backward-smoothing" class="level3">
-<h3 class="anchored" data-anchor-id="forward-filtering-backward-smoothing">Forward-Filtering Backward Smoothing:</h3>
-<p>The smoothing distribution satisfy the following backward recursion</p>
-<p><span id="eq-kitagawa"><span class="math display">\[
-\begin{align}
-p(x_t| y_{0:T})
-&amp;=
-\int p(x_t, x_{t+1} | y_{0:T}) \, dx_{t+1}\\
-&amp;=
-\underbrace{p(x_t | y_{1:t})}_{\text{(filtering)}} \, \int \, \underbrace{p(x_{t+1} | y_{0:T})}_{\text{(smoothing)}} \, \frac{f(x_{t+1}|x_t)}{p(x_{t+1} | y_{1:t})} \, dx_{t+1}.
-\end{align}
-\tag{2}\]</span></span></p>
-<p>To exploit this backward recursion, one can first a standard filtering methods to obtain particle approximations of all the filtering distributions. It is then straightforward to discretize <a href="#eq-kitagawa">Equation&nbsp;2</a> to either:</p>
-<ol type="1">
-<li><p>generate a single trajectory from the smoothing distribution starting from the final time <span class="math inline">\(T\)</span>. Generating this <strong>single</strong> smoothing trajectory can be implementing in <span class="math inline">\(\mathcal{O}(N \, T)\)</span>.</p></li>
-<li><p>reweight the particle approximations of the filtering distributions to obtain particle approximation of the marginal smoothing distributions of <span class="math inline">\(x_t\)</span> or <span class="math inline">\((x_t, x_{t+1})\)</span>. This procedure can be implemented in <span class="math inline">\(\mathcal{O}(N^2 \, T)\)</span></p></li>
-</ol>
+<ul>
+<li>Fixed Lag Smoothing:
+<ul>
+<li><span class="citation" data-cites="kitagawa2001monte">(<a href="#ref-kitagawa2001monte" role="doc-biblioref">Kitagawa and Sato 2001</a>)</span>: proposes the fixed-lag smoothing approach</li>
+<li></li>
+</ul></li>
+<li>Forward Filtering-Backward Sampling:
+<ul>
+<li><span class="citation" data-cites="godsill2004monte">(<a href="#ref-godsill2004monte" role="doc-biblioref">Godsill, Doucet, and West 2004</a>)</span> generates a smoothing trajectory in <span class="math inline">\(\mathcal{O}(N \, T)\)</span></li>
+</ul></li>
+</ul>
+
 
 
 </section>
-</section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-cappe2009inference" class="csl-entry" role="listitem">
+Cappé, Olivier, Eric Moulines, and Tobias Rydén. 2009. <span>“Inference in Hidden Markov Models.”</span> In <em>Proceedings of EUSFLAT Conference</em>, 14–16.
+</div>
+<div id="ref-chopin2020introduction" class="csl-entry" role="listitem">
+Chopin, Nicolas, Omiros Papaspiliopoulos, et al. 2020. <em>An Introduction to Sequential Monte Carlo</em>. Vol. 4. Springer.
+</div>
+<div id="ref-douc2014nonlinear" class="csl-entry" role="listitem">
+Douc, Randal, Eric Moulines, and David Stoffer. 2014. <em>Nonlinear Time Series: Theory, Methods and Applications with r Examples</em>. CRC press.
+</div>
+<div id="ref-godsill2004monte" class="csl-entry" role="listitem">
+Godsill, Simon J, Arnaud Doucet, and Mike West. 2004. <span>“Monte Carlo Smoothing for Nonlinear Time Series.”</span> <em>Journal of the American Statistical Association</em> 99 (465). Taylor &amp; Francis: 156–68.
+</div>
+<div id="ref-kitagawa2001monte" class="csl-entry" role="listitem">
+Kitagawa, Genshiro, and Seisho Sato. 2001. <span>“Monte Carlo Smoothing and Self-Organising State-Space Model.”</span> In <em>Sequential Monte Carlo Methods in Practice</em>, 177–95. Springer.
+</div>
+<div id="ref-sarkka2023bayesian" class="csl-entry" role="listitem">
+Särkkä, Simo, and Lennart Svensson. 2023. <em>Bayesian Filtering and Smoothing</em>. Vol. 17. Cambridge university press.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
