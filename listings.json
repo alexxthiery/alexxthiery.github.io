@@ -1,5 +1,12 @@
 [
   {
+    "listing": "/posts/index_blog.html",
+    "items": [
+      "/posts/reverse_and_tweedie/reverse_and_tweedie.html",
+      "/posts/hello_world/index.html"
+    ]
+  },
+  {
     "listing": "/publications/index_pubs.html",
     "items": [
       "/publications/pub_list_theory/2023_ENKF-Aided.html",
@@ -46,13 +53,6 @@
       "/publications/pub_list_applications/2019_Glaucoma_management_in_the_era_of_artificial_intelligence.html",
       "/publications/pub_list_applications/2018_DRUNET_A_Dilated_Residual_U_Net_Deep_Learning_Network_to_Digitally_Stain_Optic_Nerve_Head_Tissues_in_Optical_Coherence_Tomography_Images.html",
       "/publications/pub_list_applications/2018_Probabilistic_forecasting_of_day_ahead_solar_irradiance_using_quantile_gradient_boosting.html"
-    ]
-  },
-  {
-    "listing": "/posts/index_blog.html",
-    "items": [
-      "/posts/reverse_and_tweedie/reverse_and_tweedie.html",
-      "/posts/hello_world/index.html"
     ]
   },
   {

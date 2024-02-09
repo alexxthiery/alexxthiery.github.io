@@ -9,8 +9,8 @@
 <link>https://alexxthiery.github.io/notes/index_notes_as_list.html</link>
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
-<generator>quarto-1.3.433</generator>
-<lastBuildDate>Sun, 17 Dec 2023 17:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.353</generator>
+<lastBuildDate>Sun, 17 Dec 2023 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Metropolis-Hastings ratio with deterministic proposals</title>
   <link>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</link>
@@ -76,7 +76,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</guid>
-  <pubDate>Sun, 17 Dec 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 17 Dec 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Averaging and homogenization</title>
@@ -206,7 +206,7 @@ Weinan, E. 2011. <em>Principles of Multiscale Modeling</em>. Cambridge Universit
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</guid>
-  <pubDate>Mon, 27 Nov 2023 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 27 Nov 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Ensemble Kalman Smoother (EnKS)</title>
@@ -257,7 +257,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</guid>
-  <pubDate>Fri, 17 Nov 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 17 Nov 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Asymptotic variance &amp; Poisson Equation</title>
@@ -338,7 +338,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
  ]]></description>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</guid>
-  <pubDate>Fri, 10 Nov 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 10 Nov 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Gaussian Assimilation &amp; the EnKF</title>
@@ -412,7 +412,7 @@ Ollivier, Yann, Ludovic Arnold, Anne Auger, and Nikolaus Hansen. 2017. <span>“
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</guid>
-  <pubDate>Sun, 22 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 22 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Deriving Langevin MCMC</title>
@@ -459,7 +459,7 @@ Titsias, Michalis K, and Omiros Papaspiliopoulos. 2018. <span>“Auxiliary Gradi
 </div></section></div> ]]></description>
   <category>MCMC</category>
   <guid>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</guid>
-  <pubDate>Wed, 18 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Wed, 18 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Wasserstein Gradients &amp; Langevin Diffusions</title>
@@ -513,7 +513,7 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</guid>
-  <pubDate>Sun, 15 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 15 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sanov’s Theorem</title>
@@ -577,7 +577,7 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
  ]]></description>
   <category>LargeDeviation</category>
   <guid>https://alexxthiery.github.io/notes/sanov/sanov.html</guid>
-  <pubDate>Sun, 08 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 08 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Auxiliary variable trick</title>
@@ -653,7 +653,7 @@ Zhang, Yichuan, Zoubin Ghahramani, Amos J Storkey, and Charles Sutton. 2012. <sp
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/auxiliary_variable_trick/auxiliary_variable_trick.html</guid>
-  <pubDate>Mon, 02 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 02 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Shearer’s lemma</title>
@@ -692,7 +692,7 @@ Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</guid>
-  <pubDate>Sun, 01 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 01 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: References and Readings</title>
@@ -724,7 +724,7 @@ Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the
  ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</guid>
-  <pubDate>Fri, 29 Sep 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 29 Sep 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Shannon Source Coding Theorem</title>
@@ -817,7 +817,7 @@ Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.�
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</guid>
-  <pubDate>Mon, 25 Sep 2023 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 25 Sep 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: Fano’s inequality</title>
@@ -862,7 +862,7 @@ Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.�
  ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</guid>
-  <pubDate>Fri, 22 Sep 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 22 Sep 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: Entropy and Basic Definitions</title>
@@ -965,7 +965,7 @@ MacKay, David JC. 2003. <em>Information Theory, Inference and Learning Algorithm
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</guid>
-  <pubDate>Fri, 22 Sep 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 22 Sep 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>From Denoising Diffusion to ODEs</title>
@@ -1044,7 +1044,7 @@ Song, Yang, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Er
   <category>DDPM</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</guid>
-  <pubDate>Sat, 01 Jul 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sat, 01 Jul 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Denoising Diffusion Probabilistic Models (DDPM)</title>
@@ -1146,7 +1146,7 @@ $$ -->
   <category>DDPM</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/DDPM/DDPM.html</guid>
-  <pubDate>Sat, 01 Jul 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sat, 01 Jul 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Reverse diffusions, Score &amp; Tweedie</title>
@@ -1229,7 +1229,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
   <category>SDE</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</guid>
-  <pubDate>Sun, 11 Jun 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 11 Jun 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Notes</title>
@@ -1289,7 +1289,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
  ]]></description>
   <category>index</category>
   <guid>https://alexxthiery.github.io/notes/index_notes.html</guid>
-  <pubDate>Sat, 31 Dec 2022 17:00:00 GMT</pubDate>
+  <pubDate>Sat, 31 Dec 2022 16:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
