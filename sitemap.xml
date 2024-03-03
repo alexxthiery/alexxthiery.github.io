@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://alexxthiery.github.io/notes_students/probability_basics/probability_basics.html</loc>
-    <lastmod>2024-02-13T14:04:15.236Z</lastmod>
+    <lastmod>2024-03-03T15:11:17.323Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</loc>
@@ -303,5 +303,9 @@
   <url>
     <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_koopman.html</loc>
     <lastmod>2024-02-13T14:04:38.914Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/MCMC_on_manifold/mcmc_manifold.html</loc>
+    <lastmod>2024-02-29T04:42:10.424Z</lastmod>
   </url>
 </urlset>
