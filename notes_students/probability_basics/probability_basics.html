@@ -252,7 +252,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <p><span class="math display">\[
 f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left\{ -\frac{(x - \mu)^2}{2\sigma^2}\right\}
 \]</span></p>
-<p>The constant <span class="math inline">\(1/\sqrt{2\pi\sigma^2}\)</span> is often written as <span class="math inline">\(1/\mathcal{Z}\)</span> where <span class="math inline">\(\mathcal{Z} = 2\pi\sigma^2\)</span> is referred to as the []“normalization factor”](https://en.wikipedia.org/wiki/Normalizing_constant). It ensures that the density <span class="math inline">\(f(x)\)</span> integrates to one.</p>
+<p>The constant <span class="math inline">\(1/\sqrt{2\pi\sigma^2}\)</span> is often written as <span class="math inline">\(1/\mathcal{Z}\)</span> where <span class="math inline">\(\mathcal{Z} = \sqrt{2\pi\sigma^2}\)</span> is referred to as the <a href="https://en.wikipedia.org/wiki/Normalizing_constant">“normalization factor”</a>. It ensures that the density <span class="math inline">\(f(x)\)</span> integrates to one.</p>
 </section>
 <section id="multivariate-case" class="level3">
 <h3 class="anchored" data-anchor-id="multivariate-case">Multivariate case:</h3>
@@ -260,7 +260,7 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left\{ -\frac{(x - \mu)^2}{2\sigma^2}\
 <p><span class="math display">\[
 f(\mathbf{x}) = \frac{1}{\sqrt{(2\pi)^n |\Sigma|}} \exp\left\{ -\frac{1}{2} \langle (\mathbf{x} - \boldsymbol{\mu}), \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})\rangle \right\}
 \]</span></p>
-<p>and <span class="math inline">\(|\Sigma|\)</span> is the <a href="https://en.wikipedia.org/wiki/Determinant">determinant</a> of the covariance matrix <span class="math inline">\(\Sigma\)</span>. Crucially, the <strong>inverse</strong> of the determinant is inside the dot product <span class="math inline">\(\langle (\mathbf{x} - \boldsymbol{\mu}), \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})\rangle\)</span>. In general, zero correlation between variables does not imply their independence. However, this principle has a notable exception in the case of multivariate Gaussian distributions. For a multivariate Gaussian distribution, if the covariance matrix is diagonal, indicating zero correlation between different components, this does imply their statistical independence.</p>
+<p>and <span class="math inline">\(|\Sigma|\)</span> is the <a href="https://en.wikipedia.org/wiki/Determinant">determinant</a> of the covariance matrix <span class="math inline">\(\Sigma\)</span>. Crucially, the <strong>inverse</strong> of the covariance matrix is inside the dot product <span class="math inline">\(\langle (\mathbf{x} - \boldsymbol{\mu}), \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})\rangle\)</span>. In general, zero correlation between variables does not imply their independence. However, this principle has a notable exception in the case of multivariate Gaussian distributions. For a multivariate Gaussian distribution, if the covariance matrix is diagonal, indicating zero correlation between different components, this does imply their statistical independence.</p>
 
 
 </section>
