@@ -58,6 +58,7 @@
   {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
+      "/notes/MCMC_on_manifold/mcmc_manifold.html",
       "/notes/MCMC_deterministic_proposals/MCMC_deterministic.html",
       "/notes/averaging_homogenization/averaging_homogenization.html",
       "/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html",

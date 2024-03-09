@@ -151,7 +151,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#random-walk-metropolis-hastings-rwm-on-manifolds" id="toc-random-walk-metropolis-hastings-rwm-on-manifolds" class="nav-link active" data-scroll-target="#random-walk-metropolis-hastings-rwm-on-manifolds">Random Walk Metropolis-Hastings (RWM) on manifolds</a></li>
+  <li><a href="#manifold-random-walk-metropolis-hastings" id="toc-manifold-random-walk-metropolis-hastings" class="nav-link active" data-scroll-target="#manifold-random-walk-metropolis-hastings">Manifold Random Walk Metropolis-Hastings</a></li>
   <li><a href="#projection-onto-the-manifold" id="toc-projection-onto-the-manifold" class="nav-link" data-scroll-target="#projection-onto-the-manifold">Projection onto the manifold</a></li>
   <li><a href="#hamiltonian-monte-carlo-hmc-on-manifolds" id="toc-hamiltonian-monte-carlo-hmc-on-manifolds" class="nav-link" data-scroll-target="#hamiltonian-monte-carlo-hmc-on-manifolds">Hamiltonian Monte Carlo (HMC) on manifolds</a></li>
   </ul>
@@ -203,10 +203,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <p><span class="math display">\[
 \mathcal{M}= \{ x \in \mathbb{R}^n \; \text{such that} \; C(x) = 0 \}.
 \]</span></p>
-<p>We would like to use MCMC to sample from a probability distribution defined on <span class="math inline">\(\mathcal{M}\)</span> with density <span class="math inline">\(\pi(x)\)</span> with respect to the uniform (Hausdorff) measure on <span class="math inline">\(\mathcal{M}\)</span>. It is relatively straightforward to adapt standard MCMC methods when dealing with simple manifolds such as the sphere or the torus since the geodesics and several other geometric quantities are analytically tractable. Maybe surprisingly, we will see that it is in fact relatively simple to design MCMC samplers on general implicitly defined manifold. The article <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span> explains these idea beautifully.</p>
-<section id="random-walk-metropolis-hastings-rwm-on-manifolds" class="level3">
-<h3 class="anchored" data-anchor-id="random-walk-metropolis-hastings-rwm-on-manifolds">Random Walk Metropolis-Hastings (RWM) on manifolds</h3>
-<p>Assume that <span class="math inline">\(x_n \in \mathcal{M}\)</span> is the current position of the MCMC chain. To generate a proposal <span class="math inline">\(y_n\)</span> that will eventually be accepted or rejected, one can proceed very similarly to the standard RWM algorithm with Gaussian perturbations with variance <span class="math inline">\(\sigma^2\)</span>. First, generate a vector <span class="math inline">\(v\)</span> from a centred Gaussian distribution with covariance <span class="math inline">\(\sigma^2 \, I\)</span> on the tangent space <span class="math inline">\(T_{x_n}\)</span> to <span class="math inline">\(\mathcal{M}\)</span> at <span class="math inline">\(x_n\)</span>. To do so, it suffices for example to generate a standard Gaussian vector <span class="math inline">\(z \sim \mathcal{N}(0, \sigma^2 I_n)\)</span> in <span class="math inline">\(\mathbb{R}^n\)</span> and orthogonal-project it onto <span class="math inline">\(T_{x_n}\)</span>. Indeed, one cannot simply define the proposal as <span class="math inline">\(x_n + v\)</span> since <span class="math inline">\(y\)</span> would not necessarily lie on <span class="math inline">\(\mathcal{M}\)</span>. Instead, one projects <span class="math inline">\(x_n + v\)</span> back to <span class="math inline">\(\mathcal{M}\)</span>. To do so, the proposal <span class="math inline">\(y_n\)</span> is obtained by seeking a vector <span class="math inline">\(w \in T_{x_n}^{\perp}\)</span> such that <span class="math inline">\(x_n + w + w \in \mathcal{M}\)</span>.</p>
+<p>We would like to use MCMC to sample from a probability distribution supported on <span class="math inline">\(\mathcal{M}\)</span> with density <span class="math inline">\(\pi(x)\)</span> with respect to the uniform <a href="https://en.wikipedia.org/wiki/Hausdorff_measure">Hausdorff measure</a> on <span class="math inline">\(\mathcal{M}\)</span>. It is relatively straightforward to adapt standard MCMC methods when dealing with simple manifolds such as a sphere or a torus since their geodesics and several other geometric quantities are analytically tractable. Maybe surprisingly, it is in fact relatively straightforward to design MCMC samplers on general implicitly defined manifold such as <span class="math inline">\(\mathcal{M}\)</span>. The article <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span> explains these ideas beautifully.</p>
+<section id="manifold-random-walk-metropolis-hastings" class="level3">
+<h3 class="anchored" data-anchor-id="manifold-random-walk-metropolis-hastings">Manifold Random Walk Metropolis-Hastings</h3>
+<p>Assume that <span class="math inline">\(x_n \in \mathcal{M}\)</span> is the current position of the MCMC chain. To generate a proposal <span class="math inline">\(y_n \in \mathcal{M}\)</span> that will eventually be accepted or rejected, one can proceed very similarly to the standard RWM algorithm with Gaussian perturbations with variance <span class="math inline">\(\sigma^2\)</span>. First, generate a vector <span class="math inline">\(v \in T_{x_n}\)</span> from a centred Gaussian distribution with covariance <span class="math inline">\(\sigma^2 \, I\)</span> on the tangent space <span class="math inline">\(T_{x_n}\)</span> to <span class="math inline">\(\mathcal{M}\)</span> at <span class="math inline">\(x_n\)</span>. To do so, it suffices for example to generate a standard Gaussian vector <span class="math inline">\(z \sim \mathcal{N}(0, \sigma^2 I_n)\)</span> in <span class="math inline">\(\mathbb{R}^n\)</span> and orthogonal-project it onto <span class="math inline">\(T_{x_n}\)</span>. Indeed, one cannot simply define the proposal as <span class="math inline">\(x_n + v\)</span> since it would not necessarily lie on <span class="math inline">\(\mathcal{M}\)</span>. Instead, one projects <span class="math inline">\(x_n + v\)</span> back to <span class="math inline">\(\mathcal{M}\)</span>. To do so, one needs to define the direction used for the projection and the manifold RWM algorithm uses <span class="math inline">\(T_{x_n}^\perp\)</span>, for reasons that will become clear later. In other words, the proposal <span class="math inline">\(y_n\)</span> is obtained by seeking a vector <span class="math inline">\(w \in T_{x_n}^{\perp}\)</span> such that <span class="math inline">\(x_n + v + w \in \mathcal{M}\)</span>.</p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -219,21 +219,20 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <p><span id="eq-projection"><span class="math display">\[
 C( \, x_n + v + J_{x_n}^\top \lambda) = 0 \in \mathbb{R}^d.
 \tag{1}\]</span></span></p>
-<p>Importantly, note that <a href="#eq-projection">Equation&nbsp;1</a> is a non-linear equation in <span class="math inline">\(\lambda\)</span> that can have no solution, one solution or many solutions. Before discussing in slightly more details the resolution of <a href="#eq-projection">Equation&nbsp;1</a>, asssume that one tries to solve it using a standard root-finding algorithm that takes <span class="math inline">\((x_n+v, J_{x_n})\)</span> as input: the algorithm will either converge to one of the possible solutions or fail. If the algorithm fails to converge, one can simply reject the proposal <span class="math inline">\(y_n\)</span> and set <span class="math inline">\(y_n = \text{(Failed)}\)</span> and keep the current position <span class="math inline">\(x_n\)</span>. If the algorithm converges, this defines a valid proposal <span class="math inline">\(y_n \in \mathcal{M}\)</span>. These two cases can be summarized as follows,</p>
+<p>Note that <a href="#eq-projection">Equation&nbsp;1</a> is a non-linear equation in <span class="math inline">\(\lambda\)</span> that can have no solution, one solution or many solutions – this can seem like a fundamental roadblock to the design of a valid MCMC algorithm, but we will see that it is not! Before discussing in slightly more details the resolution of <a href="#eq-projection">Equation&nbsp;1</a>, assume that a standard root-finding algorithm takes the pair <span class="math inline">\((x_n+v, J_{x_n})\)</span> as input and attempts to produces the projection <span class="math inline">\(y_n\)</span>,</p>
 <p><span class="math display">\[
-\begin{aligned}
-y_n
-= \text{Proj}(x_n + v, J_{x_n})
-=
-\left\{
-\begin{array}{ll}
-x_n + v + w &amp;\; \text{if the algorithm converges}\\
-\text{(Failed)} &amp;\; \text{otherwise.}
-\end{array}
-\right.
-\end{aligned}
+\text{Proj}: \quad (x_n+v, J_{x_n}) \; \underbrace{\mapsto}_{\text{root-finding}} \; y_n \in \mathcal{M}.
 \]</span></p>
-<p>In order to ensure reversibility, and it is one of the main novelty of the article <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span>, one needs to verify that the reverse proposal <span class="math inline">\(y_n \mapsto x_n\)</span> is possible. To do so, note that the only possibility for the reverse move <span class="math inline">\(y_n \to x_n\)</span> to happen is if <span class="math inline">\(x_n = \text{Proj}(y_n + v', J_{y_n})\)</span> where</p>
+<p>The algorithm will either converge to one of the possible solutions or fail. If the algorithm fails to converge, one can simply reject the proposal <span class="math inline">\(y_n\)</span> and set <span class="math inline">\(y_n = \text{(Failed)}\)</span> and set <span class="math inline">\(x_{n+1} = x_n\)</span>. If the algorithm converges, this defines a valid proposal <span class="math inline">\(y_n \in \mathcal{M}\)</span>. To ensure reversibility, and it is one of the main novelty of the article <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span>, one needs to verify that the reverse proposal <span class="math inline">\(y_n \mapsto x_n\)</span> is possible.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="reverse_mcmc.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Reversibility check <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span></figcaption>
+</figure>
+</div>
+</div>
+<p>To do so, note that the only possibility for the reverse move <span class="math inline">\(y_n \to x_n\)</span> to happen is if <span class="math inline">\(x_n = \text{Proj}(y_n + v', J_{y_n})\)</span> where</p>
 <p><span class="math display">\[
 x_n-y_n \;=\; \underbrace{v'}_{\in T_{y_n}}  \, + \, \underbrace{w'}_{\in T_{y_n}^{\perp}}.
 \]</span></p>
@@ -241,7 +240,7 @@ x_n-y_n \;=\; \underbrace{v'}_{\in T_{y_n}}  \, + \, \underbrace{w'}_{\in T_{y_n
 <p><span id="eq-reversibility"><span class="math display">\[
 x_n = \text{Proj}(y_n + v', J_{y_n}).
 \tag{2}\]</span></span></p>
-<p>This reversibility check is necessary as it is not guaranteed that the root-finding algorithm started from <span class="math inline">\(y_n + v'\)</span> will converge at all, or converge to <span class="math inline">\(x_n\)</span> in the case there are several solutions. If <a href="#eq-reversibility">Equation&nbsp;2</a> is not satisfied, the proposal <span class="math inline">\(y_n\)</span> is rejected and the chain stays at <span class="math inline">\(x_n\)</span>. On the other hand, if <a href="#eq-reversibility">Equation&nbsp;2</a> is satisfied, the proposal <span class="math inline">\(y_n\)</span> is accepted with the usual Metropolis-Hastings probability</p>
+<p>This reversibility check is necessary as it is not guaranteed that the root-finding algorithm started from <span class="math inline">\(y_n + v'\)</span> converges at all, or converges to <span class="math inline">\(x_n\)</span> in the case when there are several solutions. If <a href="#eq-reversibility">Equation&nbsp;2</a> is not satisfied, the proposal <span class="math inline">\(y_n\)</span> is rejected and one sets <span class="math inline">\(x_{n+1} = x_n\)</span>. On the other hand, if <a href="#eq-reversibility">Equation&nbsp;2</a> is satisfied, the proposal <span class="math inline">\(y_n\)</span> is accepted with the usual Metropolis-Hastings probability</p>
 <p><span class="math display">\[
 \min \left\{1, \frac{\pi(y_n) \, p(v'|x_n)}{\pi(x_n) \, p(v|x_n)} \right\}
 \]</span></p>
@@ -249,11 +248,11 @@ x_n = \text{Proj}(y_n + v', J_{y_n}).
 </section>
 <section id="projection-onto-the-manifold" class="level3">
 <h3 class="anchored" data-anchor-id="projection-onto-the-manifold">Projection onto the manifold</h3>
-<p>As described above, the main difficulty is to solve the non-linear equation <a href="#eq-projection">Equation&nbsp;1</a>, i.e.&nbsp;to find a vector <span class="math inline">\(\lambda \in \mathbb{R}^d\)</span> such that</p>
+<p>As described above, the main difficulty is to solve the non-linear equation <a href="#eq-projection">Equation&nbsp;1</a> describing the projection of the proposal <span class="math inline">\((x_n + v)\)</span> back to the manifold <span class="math inline">\(\mathcal{M}\)</span>. The projection is along the space spanned by the columns of <span class="math inline">\(J_{x_n}^\top \in \mathbb{R}^{n,d}\)</span>, i.e.&nbsp;find a vector <span class="math inline">\(\lambda \in \mathbb{R}^d\)</span> such that</p>
 <p><span class="math display">\[
 \Phi(\lambda) = C( \, x_n + v + J_{x_n}^\top \lambda) = 0 \in \mathbb{R}^d.
 \]</span></p>
-<p>One can use a standard Newton’s method to solve this equation started from <span class="math inline">\(\lambda_0=0\)</span>. If for notational compactness one sets <span class="math inline">\(q(\lambda) = x_n + v + J_{x_n}^T \, \lambda\)</span>, this boils down to iterating</p>
+<p>One can use a standard Newton’s method to solve this equation started from <span class="math inline">\(\lambda_0=0\)</span>. Setting for notational convenience <span class="math inline">\(q(\lambda) = x_n + v + J_{x_n}^T \, \lambda\)</span>, this boils down to iterating</p>
 <p><span class="math display">\[
 \lambda_{k+1} - \lambda_{k}
 =
@@ -265,11 +264,37 @@ x_n = \text{Proj}(y_n + v', J_{y_n}).
 =
 - G^{-1} \, \Phi(\lambda_k)
 \]</span></p>
-<p>with <strong>fixed</strong> positive definite matrix <span class="math inline">\(G = J_{x_n} \, J_{x_n}^\top\)</span> since one can then pre-compute a decomposition of <span class="math inline">\(G\)</span> and use it to solve the linear systems at each iterations. In some recent and related work <span class="citation" data-cites="au2020manifold">(<a href="#ref-au2020manifold" role="doc-biblioref">Au, Graham, and Thiery 2022</a>)</span>, we observed that the standard Newton method performed well in the settings we considered and there was most of the time no computational advantage to using a quasi-Newton method. In practice, the main difficulty is to compute the Jacobian matrix <span class="math inline">\(J_{x_n}\)</span> at e, although we expect this to be very problem-dependent. In practice, only a relatively small number of iterations are performed and the root-finding algorithm is stop as soon as <span class="math inline">\(\|\Phi(\lambda_k)\|\)</span> is below a certain threshold.</p>
+<p>with <strong>fixed</strong> positive definite matrix <span class="math inline">\(G = J_{x_n} \, J_{x_n}^\top\)</span> since one can then pre-compute a decomposition of <span class="math inline">\(G\)</span> and use it to solve the linear systems at each iterations. In some recent and related work <span class="citation" data-cites="au2020manifold">(<a href="#ref-au2020manifold" role="doc-biblioref">Au, Graham, and Thiery 2022</a>)</span>, we observed that the standard Newton method performed well in the settings we considered and there was most of the time no computational advantage to using a quasi-Newton method. In practice, the main computational bottleneck is to compute the Jacobian matrix <span class="math inline">\(J_{x_n}\)</span>, although it is problem-dependent and some structure can typically be exploited. In practice, only a relatively small number of iterations are performed and the root-finding algorithm is stopped as soon as <span class="math inline">\(\|\Phi(\lambda_k)\|\)</span> is below a certain threshold. If the stepsize is small, i.e.&nbsp;<span class="math inline">\(\|v\| \ll 1\)</span>, it is typically the case that the Newton’s method will converge to a solution in only a very small number of iterations – indeed, <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a> is quadratically convergent when close to a solution.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="RWM_double_torus.gif" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">30k RWM chains ran in parallel to explore a double torus.</figcaption>
+</figure>
+</div>
+</div>
+<p>In the figure above, I have implemented the RWM algorithm above described to sample from the uniform distribution supported on a double torus described by the constraint function <span class="math inline">\(C: \mathbb{R}^3 \to \mathbb{R}\)</span> given as</p>
+<p><span class="math display">\[
+C(x,y,z) = (x^2 \, (x^2 - 1) + y^2)^2+z^2-0.03.
+\]</span></p>
+<p>The figure shows <span class="math inline">\(30,000\)</span> chains ran in parallel, which is straightforward to implement in practice with JAX <span class="citation" data-cites="jax2018github">(<a href="#ref-jax2018github" role="doc-biblioref">Bradbury et al. 2018</a>)</span>. All the chains are initialized from the same position so that one can visualize the evolution of the density of particles.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="RWM_manifold_tuning.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Tuning of manifold-RWM</figcaption>
+</figure>
+</div>
+</div>
+<p>One can for example monitor the usual expected squared jump distance</p>
+<p><span class="math display">\[
+\textrm{(ESJD)} \equiv \mathbb{E}[\|X_{n+1} - X_n\|^2]
+\]</span></p>
+<p>and maximize it to tune the RWM step-size; it would probably make slightly more sense to monitor the squared geodesic distances instead the naive squared norm <span class="math inline">\(\|X_{n+1} - X_n\|^2\)</span>, but that’s way to much hassle and would probably make only a negligible difference. In the figure above, I have plotted the expected squared jump distance as a function of the acceptance rate for different step-sizes. It is interesting to see a pattern extremely similar to the one observed in the standard RWM algorithm <span class="citation" data-cites="roberts2001optimal">(<a href="#ref-roberts2001optimal" role="doc-biblioref">Roberts and Rosenthal 2001</a>)</span>: in this double torus example, the optimal acceptance rate is around <span class="math inline">\(25\%\)</span>. Note that since the target distribution is uniform, the rate of acceptance is only very slightly lower than the proportion of successful reversibility checks.</p>
 </section>
 <section id="hamiltonian-monte-carlo-hmc-on-manifolds" class="level3">
 <h3 class="anchored" data-anchor-id="hamiltonian-monte-carlo-hmc-on-manifolds">Hamiltonian Monte Carlo (HMC) on manifolds</h3>
-<p>While the Random Walk Metropolis-Hastings algorithm is interesting, exploiting gradient information is often necessary to design efficient MCMC samplers. Consider a single iteration of a standard Hamiltonian Monte Carlo (HMC) sampler targeting a density <span class="math inline">\(\pi(q)\)</span> on <span class="math inline">\(q \in \mathbb{R}^n\)</span>. The method proceeds by simulating from a dynamics that is reversible with respect to an extended target density <span class="math inline">\(\bar{\pi}(q,p)\)</span> on <span class="math inline">\(\mathbb{R}^n \otimes \mathbb{R}^n\)</span> defined as</p>
+<p>While the Random Walk Metropolis-Hastings algorithm is interesting, exploiting gradient information is often necessary to design efficient MCMC samplers. Consider a single iteration of a standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> sampler targeting a density <span class="math inline">\(\pi(q)\)</span> on <span class="math inline">\(q \in \mathbb{R}^n\)</span>. The method proceeds by simulating from a dynamics that is reversible with respect to an extended target density <span class="math inline">\(\bar{\pi}(q,p)\)</span> on <span class="math inline">\(\mathbb{R}^n \otimes \mathbb{R}^n\)</span> defined as</p>
 <p><span class="math display">\[
 \begin{aligned}
 \bar{\pi}(q,p)
@@ -287,7 +312,11 @@ p_{*} &amp;= p_{n+1/2} + \frac{\varepsilon}{2} \nabla \log \pi(q_{*}).
 \end{aligned}
 \right.
 \]</span></p>
-<p>and accepted with probability <span class="math inline">\(\min\left( 1, \bar{\pi}(q_*, p_*)/\bar{\pi}(q_n, p_n) \right)\)</span>. Indeed, in standard implementation, several leapfrog steps are performed instead of a single one. But one can also choose to perform a single leapfrog step as above and only do a partial refreshment of the momentum after each leapfrog step – this may be more efficient or easier to implement when running many HMC chains on a GPU. To modify the HMC algorithm to sample from a density <span class="math inline">\(\pi(q)\)</span> on a manifold <span class="math inline">\(\mathcal{M}\)</span>, one can proceed similarly to the RWM algorithm. The main difference is that additional projection steps need to be inserted in order to make sure that the momentum vectors remain in the right tangent spaces and the position vectors remain on the manifold <span class="math inline">\(\mathcal{M}\)</span>. Similar reversibility checks as in the RWM algorithm need to be performed to ensure that the overall algorithm is reversible with respect to the target distribution <span class="math inline">\(\pi(q)\)</span>. The resulting algorithm for generating a proposal <span class="math inline">\((q_n, p_n) \mapsto (q_*, p)*)\)</span> reads as follows:</p>
+<p>This proposal is accepted with probability <span class="math inline">\(\min\left( 1, \bar{\pi}(q_*, p_*)/\bar{\pi}(q_n, p_n) \right)\)</span>. Indeed, in standard implementation, several leapfrog steps are performed instead of a single one. One can also choose to perform a single leapfrog step as above and only do a partial refreshment of the momentum after each leapfrog step – this may be more efficient or easier to implement when running a large number of HMC chains in parallel on a GPU for example. To adapt the HMC algorithm to sample from a density <span class="math inline">\(\pi(q)\)</span> supported on a manifold <span class="math inline">\(\mathcal{M}\)</span>, one can proceed similarly to the RWM algorithm by interleaving additional projection steps. These projections are needed to ensure that the momentum vectors <span class="math inline">\(p_n\)</span> remain in the right tangent spaces and the position vectors <span class="math inline">\(q_n\)</span> remain on the manifold <span class="math inline">\(\mathcal{M}\)</span>,</p>
+<p><span class="math display">\[
+(q_n, p_n) \; \in \; \mathcal{M}\times T_{q_n}.
+\]</span></p>
+<p>As in the RWM algorithm, reversibility checks need to be performed to ensure that the overall algorithm is reversible with respect to the target distribution <span class="math inline">\(\overline{\pi}(q,p)\)</span>. The resulting algorithm for generating a proposal <span class="math inline">\((q_n, p_n) \mapsto (q_*, p_*)\)</span> reads as follows:</p>
 <p><span class="math display">\[
 \left\{
 \begin{aligned}
@@ -301,7 +330,7 @@ p_{*} &amp;=  \textcolor{red}{\text{orthogonal project $\widetilde{p}_{*}$ onto 
 \end{aligned}
 \right.
 \]</span></p>
-<p>If any of the projection operations fail, the proposal is rejected and the chain stays at <span class="math inline">\((q_n, p_n)\)</span>. If no failure occurs, a reversibility check is performed by running the algorithm backward starting from <span class="math inline">\((q_*, -p_*)\)</span>. If the reversibility check is successful, the proposal is accepted with the usual Metropolis-Hastings probability <span class="math inline">\(\min\left( 1, \bar{\pi}(q_*, p_*)/\bar{\pi}(q_n, p_n) \right)\)</span>. <strong>TODO:add a few references</strong></p>
+<p>If any of the projection operations fail, the proposal is rejected. If no failure occurs, a reversibility check is performed by running the algorithm backward starting from <span class="math inline">\((q_*, -p_*)\)</span>. If the reversibility check is successful, the proposal is accepted with the usual Metropolis-Hastings probability <span class="math inline">\(\min\left( 1, \bar{\pi}(q_*, p_*)/\bar{\pi}(q_n, p_n) \right)\)</span>. The article <span class="citation" data-cites="lelievre2019hybrid">(<a href="#ref-lelievre2019hybrid" role="doc-biblioref">Lelièvre, Rousset, and Stoltz 2019</a>)</span> provides a detailed description of several of these ideas along with detailed analysis and extensions.</p>
 
 
 
@@ -312,7 +341,16 @@ p_{*} &amp;=  \textcolor{red}{\text{orthogonal project $\widetilde{p}_{*}$ onto 
 Au, Khai Xiang, Matthew M Graham, and Alexandre H Thiery. 2022. <span>“Manifold Lifting: Scaling MCMC to the Vanishing Noise Regime.”</span> <em>Journal of the Royal Statistical Society: Series B</em>. <a href="https://arxiv.org/abs/2003.03950">https://arxiv.org/abs/2003.03950</a>.
 </div>
 <div id="ref-barth1995algorithms" class="csl-entry" role="listitem">
-Barth, Eric, Krzysztof Kuczera, Benedict Leimkuhler, and Robert D Skeel. 1995. <span>“Algorithms for Constrained Molecular Dynamics.”</span> <em>Journal of Computational Chemistry</em> 16 (10). Wiley Online Library: 1192–1209.
+Barth, Eric, Krzysztof Kuczera, Benedict Leimkuhler, and Robert D Skeel. 1995. <span>“Algorithms for Constrained Molecular Dynamics.”</span> <em>Journal of Computational Chemistry</em> 16 (10). Wiley Online Library: 1192–1209. <a href="https://doi.org/10.1002/jcc.540161003">https://doi.org/10.1002/jcc.540161003</a>.
+</div>
+<div id="ref-jax2018github" class="csl-entry" role="listitem">
+Bradbury, James, Roy Frostig, Peter Hawkins, Matthew James Johnson, Chris Leary, Dougal Maclaurin, George Necula, et al. 2018. <span>“<span>JAX</span>: Composable Transformations of <span>P</span>ython+<span>N</span>um<span>P</span>y Programs.”</span> <a href="http://github.com/google/jax">http://github.com/google/jax</a>.
+</div>
+<div id="ref-lelievre2019hybrid" class="csl-entry" role="listitem">
+Lelièvre, Tony, Mathias Rousset, and Gabriel Stoltz. 2019. <span>“Hybrid Monte Carlo Methods for Sampling Probability Measures on Submanifolds.”</span> <em>Numerische Mathematik</em> 143 (2). Springer: 379–421. <a href="https://arxiv.org/abs/1807.02356">https://arxiv.org/abs/1807.02356</a>.
+</div>
+<div id="ref-roberts2001optimal" class="csl-entry" role="listitem">
+Roberts, Gareth O, and Jeffrey S Rosenthal. 2001. <span>“Optimal Scaling for Various Metropolis-Hastings Algorithms.”</span> <em>Statistical Science</em> 16 (4). Institute of Mathematical Statistics: 351–67. <a href="https://doi.org/10.1214/ss/1015346320">https://doi.org/10.1214/ss/1015346320</a>.
 </div>
 <div id="ref-zappa2018monte" class="csl-entry" role="listitem">
 Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte Carlo on Manifolds: Sampling Densities and Integrating Functions.”</span> <em>Communications on Pure and Applied Mathematics</em> 71 (12). Wiley Online Library: 2609–47. <a href="https://arxiv.org/abs/1702.08446">https://arxiv.org/abs/1702.08446</a>.

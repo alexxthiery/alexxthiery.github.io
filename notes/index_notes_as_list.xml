@@ -10,7 +10,130 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Sun, 17 Dec 2023 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 08 Mar 2024 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>MCMC on manifolds</title>
+  <link>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+<p>Consider a smooth manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D%5Csubset%20%5Cmathbb%7BR%7D%5En"> of dimension <img src="https://latex.codecogs.com/png.latex?d_%7B%5Cmathcal%7BM%7D%7D%20=%20(n-d)"> defined as the zero set of a well-behaved “constraint” function <img src="https://latex.codecogs.com/png.latex?C:%20%5Cmathbb%7BR%7D%5En%20%5Cto%20%5Cmathbb%7BR%7D%5Ed">,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BM%7D=%20%5C%7B%20x%20%5Cin%20%5Cmathbb%7BR%7D%5En%20%5C;%20%5Ctext%7Bsuch%20that%7D%20%5C;%20C(x)%20=%200%20%5C%7D.%0A"></p>
+<p>We would like to use MCMC to sample from a probability distribution supported on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> with density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> with respect to the uniform <a href="https://en.wikipedia.org/wiki/Hausdorff_measure">Hausdorff measure</a> on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. It is relatively straightforward to adapt standard MCMC methods when dealing with simple manifolds such as a sphere or a torus since their geodesics and several other geometric quantities are analytically tractable. Maybe surprisingly, it is in fact relatively straightforward to design MCMC samplers on general implicitly defined manifold such as <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. The article <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span> explains these ideas beautifully.</p>
+<section id="manifold-random-walk-metropolis-hastings" class="level3">
+<h3 class="anchored" data-anchor-id="manifold-random-walk-metropolis-hastings">Manifold Random Walk Metropolis-Hastings</h3>
+<p>Assume that <img src="https://latex.codecogs.com/png.latex?x_n%20%5Cin%20%5Cmathcal%7BM%7D"> is the current position of the MCMC chain. To generate a proposal <img src="https://latex.codecogs.com/png.latex?y_n%20%5Cin%20%5Cmathcal%7BM%7D"> that will eventually be accepted or rejected, one can proceed very similarly to the standard RWM algorithm with Gaussian perturbations with variance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2">. First, generate a vector <img src="https://latex.codecogs.com/png.latex?v%20%5Cin%20T_%7Bx_n%7D"> from a centred Gaussian distribution with covariance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2%20%5C,%20I"> on the tangent space <img src="https://latex.codecogs.com/png.latex?T_%7Bx_n%7D"> to <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> at <img src="https://latex.codecogs.com/png.latex?x_n">. To do so, it suffices for example to generate a standard Gaussian vector <img src="https://latex.codecogs.com/png.latex?z%20%5Csim%20%5Cmathcal%7BN%7D(0,%20%5Csigma%5E2%20I_n)"> in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5En"> and orthogonal-project it onto <img src="https://latex.codecogs.com/png.latex?T_%7Bx_n%7D">. Indeed, one cannot simply define the proposal as <img src="https://latex.codecogs.com/png.latex?x_n%20+%20v"> since it would not necessarily lie on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. Instead, one projects <img src="https://latex.codecogs.com/png.latex?x_n%20+%20v"> back to <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. To do so, one needs to define the direction used for the projection and the manifold RWM algorithm uses <img src="https://latex.codecogs.com/png.latex?T_%7Bx_n%7D%5E%5Cperp">, for reasons that will become clear later. In other words, the proposal <img src="https://latex.codecogs.com/png.latex?y_n"> is obtained by seeking a vector <img src="https://latex.codecogs.com/png.latex?w%20%5Cin%20T_%7Bx_n%7D%5E%7B%5Cperp%7D"> such that <img src="https://latex.codecogs.com/png.latex?x_n%20+%20v%20+%20w%20%5Cin%20%5Cmathcal%7BM%7D">.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/projection_onto_M.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Projection onto <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> from <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span></figcaption>
+</figure>
+</div>
+</div>
+<p>If one calls <img src="https://latex.codecogs.com/png.latex?J_%7Bx_n%7D"> the Jacobian matrix of <img src="https://latex.codecogs.com/png.latex?C"> at <img src="https://latex.codecogs.com/png.latex?x_n">, i.e.&nbsp;the matrix whose <strong>rows</strong> are the gradients of the components of <img src="https://latex.codecogs.com/png.latex?C">, this projection operation boils down to finding a vector <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> such that</p>
+<p><span id="eq-projection"><img src="https://latex.codecogs.com/png.latex?%0AC(%20%5C,%20x_n%20+%20v%20+%20J_%7Bx_n%7D%5E%5Ctop%20%5Clambda)%20=%200%20%5Cin%20%5Cmathbb%7BR%7D%5Ed.%0A%5Ctag%7B1%7D"></span></p>
+<p>Note that Equation&nbsp;1 is a non-linear equation in <img src="https://latex.codecogs.com/png.latex?%5Clambda"> that can have no solution, one solution or many solutions – this can seem like a fundamental roadblock to the design of a valid MCMC algorithm, but we will see that it is not! Before discussing in slightly more details the resolution of Equation&nbsp;1, assume that a standard root-finding algorithm takes the pair <img src="https://latex.codecogs.com/png.latex?(x_n+v,%20J_%7Bx_n%7D)"> as input and attempts to produces the projection <img src="https://latex.codecogs.com/png.latex?y_n">,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctext%7BProj%7D:%20%5Cquad%20(x_n+v,%20J_%7Bx_n%7D)%20%5C;%20%5Cunderbrace%7B%5Cmapsto%7D_%7B%5Ctext%7Broot-finding%7D%7D%20%5C;%20y_n%20%5Cin%20%5Cmathcal%7BM%7D.%0A"></p>
+<p>The algorithm will either converge to one of the possible solutions or fail. If the algorithm fails to converge, one can simply reject the proposal <img src="https://latex.codecogs.com/png.latex?y_n"> and set <img src="https://latex.codecogs.com/png.latex?y_n%20=%20%5Ctext%7B(Failed)%7D"> and set <img src="https://latex.codecogs.com/png.latex?x_%7Bn+1%7D%20=%20x_n">. If the algorithm converges, this defines a valid proposal <img src="https://latex.codecogs.com/png.latex?y_n%20%5Cin%20%5Cmathcal%7BM%7D">. To ensure reversibility, and it is one of the main novelty of the article <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span>, one needs to verify that the reverse proposal <img src="https://latex.codecogs.com/png.latex?y_n%20%5Cmapsto%20x_n"> is possible.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/reverse_mcmc.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Reversibility check <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span></figcaption>
+</figure>
+</div>
+</div>
+<p>To do so, note that the only possibility for the reverse move <img src="https://latex.codecogs.com/png.latex?y_n%20%5Cto%20x_n"> to happen is if <img src="https://latex.codecogs.com/png.latex?x_n%20=%20%5Ctext%7BProj%7D(y_n%20+%20v',%20J_%7By_n%7D)"> where</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ax_n-y_n%20%5C;=%5C;%20%5Cunderbrace%7Bv'%7D_%7B%5Cin%20T_%7By_n%7D%7D%20%20%5C,%20+%20%5C,%20%5Cunderbrace%7Bw'%7D_%7B%5Cin%20T_%7By_n%7D%5E%7B%5Cperp%7D%7D.%0A"></p>
+<p>The uniqueness follows from the decomposition <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5En%20%5Cequiv%20T_%7By_n%7D%20%5Cotimes%20T_%7By_n%7D%5E%7B%5Cperp%7D">. The reverse move is consequently possible if and only if the following <strong>reversibility check</strong> condition is satisfied,</p>
+<p><span id="eq-reversibility"><img src="https://latex.codecogs.com/png.latex?%0Ax_n%20=%20%5Ctext%7BProj%7D(y_n%20+%20v',%20J_%7By_n%7D).%0A%5Ctag%7B2%7D"></span></p>
+<p>This reversibility check is necessary as it is not guaranteed that the root-finding algorithm started from <img src="https://latex.codecogs.com/png.latex?y_n%20+%20v'"> converges at all, or converges to <img src="https://latex.codecogs.com/png.latex?x_n"> in the case when there are several solutions. If Equation&nbsp;2 is not satisfied, the proposal <img src="https://latex.codecogs.com/png.latex?y_n"> is rejected and one sets <img src="https://latex.codecogs.com/png.latex?x_%7Bn+1%7D%20=%20x_n">. On the other hand, if Equation&nbsp;2 is satisfied, the proposal <img src="https://latex.codecogs.com/png.latex?y_n"> is accepted with the usual Metropolis-Hastings probability</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmin%20%5Cleft%5C%7B1,%20%5Cfrac%7B%5Cpi(y_n)%20%5C,%20p(v'%7Cx_n)%7D%7B%5Cpi(x_n)%20%5C,%20p(v%7Cx_n)%7D%20%5Cright%5C%7D%0A"></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?p(v%7Cx)%20=%20Z%5E%7B-1%7D%20%5C,%20%5Cexp(-%5C%7Cv%5C%7C%5E2%20/%202%20%5Csigma%5E2)"> denotes the Gaussian density on the tangent space <img src="https://latex.codecogs.com/png.latex?T_%7Bx_n%7D"> The above description defines a valid MCMC algorithm on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> that is reversible with respect to the target distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)">.</p>
+</section>
+<section id="projection-onto-the-manifold" class="level3">
+<h3 class="anchored" data-anchor-id="projection-onto-the-manifold">Projection onto the manifold</h3>
+<p>As described above, the main difficulty is to solve the non-linear equation Equation&nbsp;1 describing the projection of the proposal <img src="https://latex.codecogs.com/png.latex?(x_n%20+%20v)"> back to the manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. The projection is along the space spanned by the columns of <img src="https://latex.codecogs.com/png.latex?J_%7Bx_n%7D%5E%5Ctop%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bn,d%7D">, i.e.&nbsp;find a vector <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> such that</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5CPhi(%5Clambda)%20=%20C(%20%5C,%20x_n%20+%20v%20+%20J_%7Bx_n%7D%5E%5Ctop%20%5Clambda)%20=%200%20%5Cin%20%5Cmathbb%7BR%7D%5Ed.%0A"></p>
+<p>One can use a standard Newton’s method to solve this equation started from <img src="https://latex.codecogs.com/png.latex?%5Clambda_0=0">. Setting for notational convenience <img src="https://latex.codecogs.com/png.latex?q(%5Clambda)%20=%20x_n%20+%20v%20+%20J_%7Bx_n%7D%5ET%20%5C,%20%5Clambda">, this boils down to iterating</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clambda_%7Bk+1%7D%20-%20%5Clambda_%7Bk%7D%0A=%0A-%20%5Cleft(%20J_%7Bq(%5Clambda_k)%7D%20%5C,%20J_%7Bx_n%7D%5E%5Ctop%20%5Cright)%5E%7B-1%7D%20%5C,%20%5CPhi(%5Clambda_k).%0A"></p>
+<p>As described in <span class="citation" data-cites="barth1995algorithms">(Barth et al. 1995)</span>, it can sometimes be computationally advantageous to use a quasi-Newton method and use instead</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clambda_%7Bk+1%7D%20-%20%5Clambda_%7Bk%7D%0A=%0A-%20G%5E%7B-1%7D%20%5C,%20%5CPhi(%5Clambda_k)%0A"></p>
+<p>with <strong>fixed</strong> positive definite matrix <img src="https://latex.codecogs.com/png.latex?G%20=%20J_%7Bx_n%7D%20%5C,%20J_%7Bx_n%7D%5E%5Ctop"> since one can then pre-compute a decomposition of <img src="https://latex.codecogs.com/png.latex?G"> and use it to solve the linear systems at each iterations. In some recent and related work <span class="citation" data-cites="au2020manifold">(Au, Graham, and Thiery 2022)</span>, we observed that the standard Newton method performed well in the settings we considered and there was most of the time no computational advantage to using a quasi-Newton method. In practice, the main computational bottleneck is to compute the Jacobian matrix <img src="https://latex.codecogs.com/png.latex?J_%7Bx_n%7D">, although it is problem-dependent and some structure can typically be exploited. In practice, only a relatively small number of iterations are performed and the root-finding algorithm is stopped as soon as <img src="https://latex.codecogs.com/png.latex?%5C%7C%5CPhi(%5Clambda_k)%5C%7C"> is below a certain threshold. If the stepsize is small, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?%5C%7Cv%5C%7C%20%5Cll%201">, it is typically the case that the Newton’s method will converge to a solution in only a very small number of iterations – indeed, <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a> is quadratically convergent when close to a solution.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/RWM_double_torus.gif" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">30k RWM chains ran in parallel to explore a double torus.</figcaption>
+</figure>
+</div>
+</div>
+<p>In the figure above, I have implemented the RWM algorithm above described to sample from the uniform distribution supported on a double torus described by the constraint function <img src="https://latex.codecogs.com/png.latex?C:%20%5Cmathbb%7BR%7D%5E3%20%5Cto%20%5Cmathbb%7BR%7D"> given as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AC(x,y,z)%20=%20(x%5E2%20%5C,%20(x%5E2%20-%201)%20+%20y%5E2)%5E2+z%5E2-0.03.%0A"></p>
+<p>The figure shows <img src="https://latex.codecogs.com/png.latex?30,000"> chains ran in parallel, which is straightforward to implement in practice with JAX <span class="citation" data-cites="jax2018github">(Bradbury et al. 2018)</span>. All the chains are initialized from the same position so that one can visualize the evolution of the density of particles.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/RWM_manifold_tuning.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Tuning of manifold-RWM</figcaption>
+</figure>
+</div>
+</div>
+<p>One can for example monitor the usual expected squared jump distance</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextrm%7B(ESJD)%7D%20%5Cequiv%20%5Cmathbb%7BE%7D%5B%5C%7CX_%7Bn+1%7D%20-%20X_n%5C%7C%5E2%5D%0A"></p>
+<p>and maximize it to tune the RWM step-size; it would probably make slightly more sense to monitor the squared geodesic distances instead the naive squared norm <img src="https://latex.codecogs.com/png.latex?%5C%7CX_%7Bn+1%7D%20-%20X_n%5C%7C%5E2">, but that’s way to much hassle and would probably make only a negligible difference. In the figure above, I have plotted the expected squared jump distance as a function of the acceptance rate for different step-sizes. It is interesting to see a pattern extremely similar to the one observed in the standard RWM algorithm <span class="citation" data-cites="roberts2001optimal">(Roberts and Rosenthal 2001)</span>: in this double torus example, the optimal acceptance rate is around <img src="https://latex.codecogs.com/png.latex?25%5C%25">. Note that since the target distribution is uniform, the rate of acceptance is only very slightly lower than the proportion of successful reversibility checks.</p>
+</section>
+<section id="hamiltonian-monte-carlo-hmc-on-manifolds" class="level3">
+<h3 class="anchored" data-anchor-id="hamiltonian-monte-carlo-hmc-on-manifolds">Hamiltonian Monte Carlo (HMC) on manifolds</h3>
+<p>While the Random Walk Metropolis-Hastings algorithm is interesting, exploiting gradient information is often necessary to design efficient MCMC samplers. Consider a single iteration of a standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> sampler targeting a density <img src="https://latex.codecogs.com/png.latex?%5Cpi(q)"> on <img src="https://latex.codecogs.com/png.latex?q%20%5Cin%20%5Cmathbb%7BR%7D%5En">. The method proceeds by simulating from a dynamics that is reversible with respect to an extended target density <img src="https://latex.codecogs.com/png.latex?%5Cbar%7B%5Cpi%7D(q,p)"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5En%20%5Cotimes%20%5Cmathbb%7BR%7D%5En"> defined as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Cbar%7B%5Cpi%7D(q,p)%0A&amp;%5Cpropto%20%5Cpi(q)%20%5C,%20%5Cexp%20%5Cleft%5C%7B%20-%5Cfrac%7B1%7D%7B2m%7D%20%5C%7Cp%5C%7C%5E2%20%5Cright%5C%7D%5C%5C%0A&amp;=%20%5Cexp%5Cleft%5C%7B%20%5Clog%20%5Cpi(q)%20-%20K(p)%20%5Cright%5C%7D%0A%5Cend%7Baligned%7D%0A"></p>
+<p>for a user-defined mass parameter <img src="https://latex.codecogs.com/png.latex?m%20%3E%200">. In general, the mass parameter is a positive definite <strong>matrix</strong> but generalizing this to manifolds is slightly less useful in practice. For a time-discretization step <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%3E%200"> and a current position <img src="https://latex.codecogs.com/png.latex?(q_n,p_n)">, the method proceeds by generating a proposal <img src="https://latex.codecogs.com/png.latex?(q_%7B*%7D,p_%7B*%7D)"> defined as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0Ap_%7Bn+1/2%7D%20&amp;=%20p_n%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_n)%5C%5C%0Aq_%7B*%7D%20&amp;=%20q_n%20+%20%5Cvarepsilon%5C,%20m%5E%7B-1%7D%20%5C,%20p_%7Bn+1/2%7D%5C%5C%0Ap_%7B*%7D%20&amp;=%20p_%7Bn+1/2%7D%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_%7B*%7D).%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
+<p>This proposal is accepted with probability <img src="https://latex.codecogs.com/png.latex?%5Cmin%5Cleft(%201,%20%5Cbar%7B%5Cpi%7D(q_*,%20p_*)/%5Cbar%7B%5Cpi%7D(q_n,%20p_n)%20%5Cright)">. Indeed, in standard implementation, several leapfrog steps are performed instead of a single one. One can also choose to perform a single leapfrog step as above and only do a partial refreshment of the momentum after each leapfrog step – this may be more efficient or easier to implement when running a large number of HMC chains in parallel on a GPU for example. To adapt the HMC algorithm to sample from a density <img src="https://latex.codecogs.com/png.latex?%5Cpi(q)"> supported on a manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">, one can proceed similarly to the RWM algorithm by interleaving additional projection steps. These projections are needed to ensure that the momentum vectors <img src="https://latex.codecogs.com/png.latex?p_n"> remain in the right tangent spaces and the position vectors <img src="https://latex.codecogs.com/png.latex?q_n"> remain on the manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A(q_n,%20p_n)%20%5C;%20%5Cin%20%5C;%20%5Cmathcal%7BM%7D%5Ctimes%20T_%7Bq_n%7D.%0A"></p>
+<p>As in the RWM algorithm, reversibility checks need to be performed to ensure that the overall algorithm is reversible with respect to the target distribution <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(q,p)">. The resulting algorithm for generating a proposal <img src="https://latex.codecogs.com/png.latex?(q_n,%20p_n)%20%5Cmapsto%20(q_*,%20p_*)"> reads as follows:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0A%5Cwidetilde%7Bp%7D_%7Bn+1/2%7D%20&amp;=%20p_n%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_n)%5C%5C%0Ap_%7Bn+1/2%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$%5Cwidetilde%7Bp%7D_%7Bn+1/2%7D$%20onto%20$T_%7Bq_n%7D$%7D%7D%20%5C%5C%0A%5Cwidetilde%7Bq%7D_%7B*%7D%20&amp;=%20q_n%20+%20%5Cvarepsilon%5C,%20m%5E%7B-1%7D%20%5C,%20p_%7Bn+1/2%7D%5C%5C%0Aq_%7B*%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7BProj$(%5Cwidetilde%7Bq%7D_%7B*%7D,%20J_%7Bq_n%7D)$%7D%7D%5C%5C%0A%5Coverline%7Bp%7D_%7Bn+1/2%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$(q_%7B*%7D-q_n)%20%5C,%20m%20/%20%5Cvarepsilon$%20onto%20$T_%7Bq_%7B*%7D%7D$%7D%7D%20%5C%5C%0A%5Cwidetilde%7Bp%7D_%7B*%7D%20&amp;=%20%5Coverline%7Bp%7D_%7Bn+1/2%7D%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_%7B*%7D)%5C%5C%0Ap_%7B*%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$%5Cwidetilde%7Bp%7D_%7B*%7D$%20onto%20$T_%7Bq_%7B*%7D%7D$%7D%7D.%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
+<p>If any of the projection operations fail, the proposal is rejected. If no failure occurs, a reversibility check is performed by running the algorithm backward starting from <img src="https://latex.codecogs.com/png.latex?(q_*,%20-p_*)">. If the reversibility check is successful, the proposal is accepted with the usual Metropolis-Hastings probability <img src="https://latex.codecogs.com/png.latex?%5Cmin%5Cleft(%201,%20%5Cbar%7B%5Cpi%7D(q_*,%20p_*)/%5Cbar%7B%5Cpi%7D(q_n,%20p_n)%20%5Cright)">. The article <span class="citation" data-cites="lelievre2019hybrid">(Lelièvre, Rousset, and Stoltz 2019)</span> provides a detailed description of several of these ideas along with detailed analysis and extensions.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-au2020manifold" class="csl-entry">
+Au, Khai Xiang, Matthew M Graham, and Alexandre H Thiery. 2022. <span>“Manifold Lifting: Scaling MCMC to the Vanishing Noise Regime.”</span> <em>Journal of the Royal Statistical Society: Series B</em>. <a href="https://arxiv.org/abs/2003.03950">https://arxiv.org/abs/2003.03950</a>.
+</div>
+<div id="ref-barth1995algorithms" class="csl-entry">
+Barth, Eric, Krzysztof Kuczera, Benedict Leimkuhler, and Robert D Skeel. 1995. <span>“Algorithms for Constrained Molecular Dynamics.”</span> <em>Journal of Computational Chemistry</em> 16 (10). Wiley Online Library: 1192–1209. <a href="https://doi.org/10.1002/jcc.540161003">https://doi.org/10.1002/jcc.540161003</a>.
+</div>
+<div id="ref-jax2018github" class="csl-entry">
+Bradbury, James, Roy Frostig, Peter Hawkins, Matthew James Johnson, Chris Leary, Dougal Maclaurin, George Necula, et al. 2018. <span>“<span>JAX</span>: Composable Transformations of <span>P</span>ython+<span>N</span>um<span>P</span>y Programs.”</span> <a href="http://github.com/google/jax">http://github.com/google/jax</a>.
+</div>
+<div id="ref-lelievre2019hybrid" class="csl-entry">
+Lelièvre, Tony, Mathias Rousset, and Gabriel Stoltz. 2019. <span>“Hybrid Monte Carlo Methods for Sampling Probability Measures on Submanifolds.”</span> <em>Numerische Mathematik</em> 143 (2). Springer: 379–421. <a href="https://arxiv.org/abs/1807.02356">https://arxiv.org/abs/1807.02356</a>.
+</div>
+<div id="ref-roberts2001optimal" class="csl-entry">
+Roberts, Gareth O, and Jeffrey S Rosenthal. 2001. <span>“Optimal Scaling for Various Metropolis-Hastings Algorithms.”</span> <em>Statistical Science</em> 16 (4). Institute of Mathematical Statistics: 351–67. <a href="https://doi.org/10.1214/ss/1015346320">https://doi.org/10.1214/ss/1015346320</a>.
+</div>
+<div id="ref-zappa2018monte" class="csl-entry">
+Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte Carlo on Manifolds: Sampling Densities and Integrating Functions.”</span> <em>Communications on Pure and Applied Mathematics</em> 71 (12). Wiley Online Library: 2609–47. <a href="https://arxiv.org/abs/1702.08446">https://arxiv.org/abs/1702.08446</a>.
+</div>
+</div></section></div> ]]></description>
+  <category>MCMC</category>
+  <category>manifold</category>
+  <guid>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</guid>
+  <pubDate>Fri, 08 Mar 2024 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Metropolis-Hastings ratio with deterministic proposals</title>
   <link>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</link>
@@ -1271,6 +1394,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
 <li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation &amp; the EnKF</a></li>
 <li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html">Ensemble Kalman Smoothers</a></li>
 <li><a href="../notes/MCMC_deterministic_proposals/MCMC_deterministic.html">MCMC with deterministic proposals</a></li>
+<li><a href="../notes/MCMC_on_manifold/mcmc_manifold.html">Random Walk Metropolis on Manifolds</a></li>
 </ul>
 </section>
 <section id="probability-misc" class="level3">
