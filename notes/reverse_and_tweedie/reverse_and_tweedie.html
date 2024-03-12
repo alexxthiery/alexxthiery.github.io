@@ -168,7 +168,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">12 06 2023</p>
+        <p class="date-modified">12 03 2024</p>
       </div>
     </div>
       
@@ -236,27 +236,33 @@ d\overleftarrow{X}_t = -\mu(\overleftarrow{X}_t) \, dt \; + {\color{red} \sigma^
 </div>
 </div>
 <p>The previous section shows that a quantity often referred to as the “score” in machine learning (ML) literature, i.e.&nbsp;<span class="math inline">\(\mathcal{S}_t(x) \equiv \nabla_x \log p_t(x)\)</span>, naturally arises when a diffusion process runs backward in time. Interestingly, it is worth noting that since the beginning of times statisticians have been using the term <a href="https://en.wikipedia.org/wiki/Score_(statistics)">“score”</a> to refer to the other derivative, i.e.&nbsp;the derivative with respect to a model’s parameter, which is a completely different object!</p>
-<p>Consider a Brownian diffusion process <span class="math inline">\(dX = \sigma \, dW\)</span> initiated from a distribution <span class="math inline">\(\mu(dx) = p_0(dx)\)</span>. If this process is ran forward for a duration <span class="math inline">\(\delta&gt;0\)</span>, we have:</p>
+<p>Consider a Brownian diffusion process <span class="math inline">\(dX = \sigma \, dW\)</span> initiated from a distribution <span class="math inline">\(p_0(dx)\)</span>. If this process is ran forward for a duration <span class="math inline">\(\delta&gt;0\)</span>, we have:</p>
 <p><span class="math display">\[X_{\delta} = X_0 + \mathcal{N}(0, \sigma^2 \, \delta)\]</span></p>
-<p>where <span class="math inline">\(X_0 \sim \mu(dx)\)</span>. Now, focusing on a specific sample <span class="math inline">\(y = X_{\delta}\)</span>, the backward dynamics <span class="math inline">\(d\overleftarrow{X} = \sigma^2 \, \nabla \log p_t(\overleftarrow{X}) , dt + \sigma \, dB\)</span> suggests that for sufficiently small <span class="math inline">\(\delta\)</span>, the following approximation holds:</p>
+<p>where <span class="math inline">\(X_0 \sim p_0(dx)\)</span>. Now, focusing on a specific sample <span class="math inline">\(y = X_{\delta}\)</span>, the backward dynamics <span class="math inline">\(d\overleftarrow{X} = \sigma^2 \, \nabla \log p_t(\overleftarrow{X}) \, dt + \sigma \, dB\)</span> suggests that for sufficiently small <span class="math inline">\(\delta\)</span>, the following approximation holds:</p>
 <p><span id="eq-rev-tweedie"><span class="math display">\[
 \mathbb{E}[X_0 \, | X_{\delta} = y] \; { \color{\red} \approx} \; y + \nabla \log p_{\delta}(y) \, \sigma^2 \delta.
 \tag{3}\]</span></span></p>
-<p>Maybe surprisingly, in the case of Brownian dynamics (no drift), this relationship holds exactly, even for arbitrarily large time increments <span class="math inline">\(\delta&gt;0\)</span>. This observation attributed in <span class="citation" data-cites="efron2011tweedie">(<a href="#ref-efron2011tweedie" role="doc-biblioref">Efron 2011</a>)</span> to <a href="https://en.wikipedia.org/wiki/Maurice_Tweedie">Maurice Tweedie (1919–1996)</a> has a straightforward proof. Specifically, if <span class="math inline">\(X \sim \mu(dx)\)</span>, then <span class="math inline">\(Y = X + \mathcal{N}(0, \Gamma^2)\)</span> has a density given by:</p>
+<p>Maybe surprisingly, in the case of Brownian dynamics (no drift), this relationship holds exactly, even for arbitrarily large time increments <span class="math inline">\(\delta&gt;0\)</span>. This observation attributed in <span class="citation" data-cites="efron2011tweedie">(<a href="#ref-efron2011tweedie" role="doc-biblioref">Efron 2011</a>)</span> to <a href="https://en.wikipedia.org/wiki/Maurice_Tweedie">Maurice Tweedie (1919–1996)</a> has a straightforward proof. Specifically, if <span class="math inline">\(X \sim p_0(dx)\)</span>, then <span class="math inline">\(Y = X + \mathcal{N}(0, \Gamma^2)\)</span> has a density given by:</p>
 <p><span class="math display">\[
-p_Y(dy) = \int \mu(x) \, \rho_{\Gamma}(y-x) \, dx
+p_Y(dy) = \int p_0(x) \, \rho_{\Gamma}(y-x) \, dx
 \]</span></p>
 <p>where <span class="math inline">\(\rho_{\Gamma}(z) \propto \exp[-z^2/(2 \Gamma^2)]\)</span> is a centred Gaussian with variance <span class="math inline">\(\Gamma^2\)</span>. It follows that</p>
 <p><span class="math display">\[
-\frac{ \mathbb{E}[X \, | Y = y]-y}{\Gamma^2} = \frac{ \int \left( \frac {x-y }{\Gamma^2} \right)\, \mu(x) \, \rho_{\Gamma}(y-x) \, dx }{\int \mu(x) \, \rho_{\Gamma}(y-x) \, dx}
+\frac{ \mathbb{E}[X \, | Y = y]-y}{\Gamma^2}
 =
-\nabla_y \log \left\{ \int \mu(x) \, \rho_{\Gamma}(y-x) \, dx \right\}
+\frac{ \int \left( \frac {x-y }{\Gamma^2} \right)\, p_0(x) \, \rho_{\Gamma}(y-x) \, dx }{\int p_0(x) \, \rho_{\Gamma}(y-x) \, dx}.
 \]</span></p>
-<p>since <span class="math inline">\(\nabla_y \rho_{\Gamma}(y-x) = (x-y)/\Gamma^2\)</span>. This leads to Tweedie’s formula:</p>
+<p>Since <span class="math inline">\(\nabla_y \log \rho_{\Gamma}(y-x) = (x-y)/\Gamma^2\)</span>, this also read:</p>
+<p><span class="math display">\[
+\frac{ \mathbb{E}[X \, | Y = y]-y}{\Gamma^2}
+=
+\nabla_y \log \left\{ \int p_0(x) \, \rho_{\Gamma}(y-x) \, dx \right\}
+\]</span></p>
+<p>This leads to Tweedie’s formula:</p>
 <p><span class="math display">\[
 \mathbb{E}[X \, | Y = y] \; {\color{red} =} \; y + \Gamma^2 \, \nabla \log p_Y(y),
 \]</span></p>
-<p>which is exactly the same as <a href="#eq-rev-tweedie">Equation&nbsp;3</a> but with an equality sign: no approximation needed! Interestingly, this is what Machine-Learners often refer to as “denoising score matching” <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref">Vincent 2011</a>)</span>: if we have access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, where <span class="math inline">\(X_i \sim \mu(dx)\)</span> and <span class="math inline">\(Y_i = X_i + \mathcal{N}(0, \Gamma^2)\)</span>, and fit a regression model <span class="math inline">\(F_{\theta}\)</span> by minimizing the mean-squared error <span class="math inline">\(\theta \mapsto \mathbb{E} \|X - F_{\theta}(Y)\|^2\)</span>, then Tweedie formula shows that in the limit of infinite samples and with sufficient flexibility in the regression model <span class="math inline">\(F_{\theta_\star}(y) = y + \Gamma^2 \nabla \log p_Y(y)\)</span>. This allows one to estimate <span class="math inline">\(\nabla \log p_Y\)</span> from data, which is often a good approximation of <span class="math inline">\(\nabla \log \mu\)</span> if the variance <span class="math inline">\(\Gamma^2\)</span> of the added noise is not too large. Indeed, things can go bad if <span class="math inline">\(\Gamma^2\)</span> is very small and the number of training data is not large, no free lunch!</p>
+<p>which is exactly the same as <a href="#eq-rev-tweedie">Equation&nbsp;3</a> but with an equality sign: no approximation needed! Interestingly, this is what Machine-Learners often refer to as “denoising score matching” <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref">Vincent 2011</a>)</span>: if we have access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, where <span class="math inline">\(X_i \sim p_0(dx)\)</span> and <span class="math inline">\(Y_i = X_i + \mathcal{N}(0, \Gamma^2)\)</span>, and fit a regression model <span class="math inline">\(F_{\theta}\)</span> by minimizing the mean-squared error <span class="math inline">\(\theta \mapsto \mathbb{E} \|X - F_{\theta}(Y)\|^2\)</span>, then Tweedie formula shows that in the limit of infinite samples and with sufficient flexibility in the regression model <span class="math inline">\(F_{\theta_\star}(y) = y + \Gamma^2 \nabla \log p_Y(y)\)</span>. This allows one to estimate <span class="math inline">\(\nabla \log p_Y\)</span> from data, which is often a good approximation of <span class="math inline">\(\nabla \log p_0\)</span> if the variance <span class="math inline">\(\Gamma^2\)</span> of the added noise is not too large. Indeed, things can go bad if <span class="math inline">\(\Gamma^2 \ll 1\)</span> and the number of training data is not large enough, no free lunch!</p>
 
 
 
