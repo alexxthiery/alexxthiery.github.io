@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2024-02-13T14:04:15.745Z</lastmod>
+    <lastmod>2024-05-05T08:18:49.734Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/posts/hello_world/index.html</loc>
@@ -210,7 +210,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/index.html</loc>
-    <lastmod>2024-04-30T02:42:13.447Z</lastmod>
+    <lastmod>2024-05-14T02:18:06.860Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
@@ -218,7 +218,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2024-03-16T03:32:15.718Z</lastmod>
+    <lastmod>2024-05-05T08:19:25.239Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/sanov/sanov.html</loc>
@@ -274,7 +274,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
-    <lastmod>2024-02-13T14:04:36.540Z</lastmod>
+    <lastmod>2024-05-05T08:20:06.981Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</loc>
@@ -315,5 +315,25 @@
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_DAIS.html</loc>
     <lastmod>2024-04-30T02:41:42.350Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_controlled.html</loc>
+    <lastmod>2024-05-14T02:14:07.477Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/jobs/2024_control/2024_controlled.html</loc>
+    <lastmod>2024-05-14T02:16:25.014Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_control/2024_controlled.html</loc>
+    <lastmod>2024-05-14T02:16:24.303Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/jobs/2024_control/2024_diffusion.html</loc>
+    <lastmod>2024-05-14T02:16:48.533Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/jobs/2024_diffusion/2024_diffusion.html</loc>
+    <lastmod>2024-05-14T02:18:06.117Z</lastmod>
   </url>
 </urlset>
