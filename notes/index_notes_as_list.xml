@@ -10,9 +10,62 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.353</generator>
-<lastBuildDate>Fri, 08 Mar 2024 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 13 May 2024 16:00:00 GMT</lastBuildDate>
 <item>
-  <title>MCMC on manifolds</title>
+  <title>Joe Doob &amp; Change of measures on path-space</title>
+  <link>https://alexxthiery.github.io/notes/doob_transforms/doob.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/doob_transforms/joseph_doob.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
+<figcaption class="figure-caption">Joseph Doob (1910 – 2004)</figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a continuous time Markov process <img src="https://latex.codecogs.com/png.latex?X_t"> on <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D"> on a state space <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D">. This defines a probability <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D"> on the set of <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D">-valued paths. Now, it is often the case that one has to consider a perturbed probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> defined as</p>
+<p><span id="eq-change-pb"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%5Cmathbb%7BQ%7D%7D%7Bd%5Cmathbb%7BP%7D%7D(x_%7B%5B0,T%5D%7D)%20=%20%5Cfrac%7BG(x_T)%7D%7B%5Cmathcal%7BZ%7D%7D%0A%5Ctag%7B1%7D"></span></p>
+<p>for a normalization constant <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BZ%7D=%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D%5BG(x_T)%5D"> and some positive function <img src="https://latex.codecogs.com/png.latex?G:%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D_%7B%3E0%7D">. For example, if one were to collect a noisy observation <img src="https://latex.codecogs.com/png.latex?y_T%20%5Csim%20%5Cmathcal%7BF%7D(X_T)%20+%20%5Ctextrm%7B(noise)%7D"> at time <img src="https://latex.codecogs.com/png.latex?T">, the distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> defined through Equation&nbsp;1 with the choice <img src="https://latex.codecogs.com/png.latex?G(x)%20=%20%5Cmathop%7B%5Cmathrm%7BP%7D%7D(y_T%20%5Cmid%20X_T=x)"> describes the dynamics of the Markov process <img src="https://latex.codecogs.com/png.latex?X_t"> conditioned on the observation <img src="https://latex.codecogs.com/png.latex?y_T">. How can one describe the dynamics of this conditioned process?</p>
+<p>For convenience, let us use the notation <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BE%7D%7D_x%5B%5Cldots%5D%20%5Cequiv%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D%5B%5Cldots%20%5Cmid%20x_t=x%5D">. For a test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi:%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D"> and a time increment <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20%3E%200">, we have</p>
+<p><span id="eq-def"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign*%7D%0A%5Cmathop%7B%5Cmathrm%7BE%7D%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20Y_T%5D%20&amp;=%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20G(x_T)%20%5D%20%5C,%20/%20%5C,%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D_%7Bx_t%7D%5BG(x_T)%5D%5C%5C%0A&amp;=%20%5Cfrac%7B%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20h(t+%5Cdelta,%20x_%7Bt+%5Cdelta%7D)%5D%20%7D%7Bh(t,%20x)%7D.%0A%5Cend%7Balign*%7D%0A%5Ctag%7B2%7D"></span></p>
+<p>We have introduced the important function <img src="https://latex.codecogs.com/png.latex?h:%5B0,T%5D%20%5Ctimes%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D"> defined as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ah(t,%20x)%20%5C;%20=%20%5C;%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D%20%7B%5Cleft%5B%20%20G(x_T)%20%5Cmid%20x_t%20=%20x%20%5Cright%5D%7D%20%20%5C;%20=%20%5C;%20%5Cmathbb%7BP%7D(Y_T%20%5Cmid%20x_t%20=%20x).%0A"></p>
+<p>One can readily check that the function <img src="https://latex.codecogs.com/png.latex?h"> satisfies the Kolmogorov equation</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%20h%20=%200%0A"></p>
+<p>with boundary condition <img src="https://latex.codecogs.com/png.latex?h(T,x)%20=%20G(x)">. Furthermore, the definition of the infinitesimal generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> of the Markov process <img src="https://latex.codecogs.com/png.latex?X_t"> gives that</p>
+<p><span id="eq-kolmogorov"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7BE%7D%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20h(t+%5Cdelta,%20x_%7Bt+%5Cdelta%7D)%20%5D%0A%5C;%20%5Capprox%20%5C;%0A%5Cvarphi(x_t)%20h(t,%20x_t)%20+%20%5Cdelta%20%5C,%20(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%5Bh%20%5C,%20%5Cvarphi%5D%20%5C,%20(t,%20x_t)%0A%5Ctag%7B3%7D"></span></p>
+<p>with an error of size <img src="https://latex.codecogs.com/png.latex?o(%5Cdelta)">. The infinitesimal generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D"> of the conditioned process is defined as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi(t,%20x_t)%20=%20%5Clim_%7B%5Cdelta%20%5Cto%200%5E+%7D%20%5C;%20%5Cfrac%7B%5Cmathop%7B%5Cmathrm%7BE%7D%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20Y_T%5D%20-%20%5Cvarphi(x_t)%7D%7B%5Cdelta%7D.%0A"></p>
+<p>Plugging Equation&nbsp;3 within Equation&nbsp;2 directly gives that</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi%5C;%20=%20%5C;%20%5Cmathcal%7BL%7D%5Cvarphi+%20%5Cfrac%7B%5Cmathcal%7BL%7D%5B%5Cvarphi%5C,%20h%5D%7D%7Bh%7D%20+%20%5Cvarphi%5Cfrac%7B%5Cpartial_t%20h%7D%7Bh%7D%0A"></p>
+<p>which is a description of the dynamics of the conditioned process. In fact, one could have done more or less the same computation with a more general change of measure: consider the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> described as</p>
+<p><span id="eq-change-gen"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Cfrac%7Bd%5Cmathbb%7BQ%7D%7D%7Bd%5Cmathbb%7BP%7D%7D(x_%7B%5B0,T%5D%7D)%20=%20%5Cfrac%7B1%7D%7B%5Cmathcal%7BZ%7D%7D%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7B0%7D%5ET%20f(s,%20X_s)%20%5C,%20ds%20%5Cright%5C%7D%7D%20%20%5C,%20G(x_T)%7D%0A%5Ctag%7B4%7D"></span></p>
+<p>for some function <img src="https://latex.codecogs.com/png.latex?f:%5B0,T%5D%20%5Ctimes%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D">. One can define the function <img src="https://latex.codecogs.com/png.latex?h"> similarly as</p>
+<p><span id="eq-h-gen"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%20h(t,%20x_t)%20%5C;%20=%20%5C;%20%5Cmathop%7B%5Cmathrm%7BE%7D%7D%20%7B%5Cleft%5B%20%20%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7Bt%7D%5ET%20f(X_s)%20%5C,%20ds%20%5Cright%5C%7D%7D%20%20%5C,%20G(x_T)%20%5Cmid%20x_t%20%5Cright%5D%7D%20%7D.%0A%5Ctag%7B5%7D"></span></p>
+<p>This function satisfies the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac formula</a> <img src="https://latex.codecogs.com/png.latex?(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%20h%20=%200"> and one obtains entirely similarly that the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> describes a Markov process with infinitesimal generator</p>
+<p><span id="eq-doob-transforms"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi%5C;%20=%20%5C;%20%5Cmathcal%7BL%7D%5Cvarphi+%20%5Cfrac%7B%5Cmathcal%7BL%7D%5Bh%20%5C,%20%5Cvarphi%5D%7D%7Bh%7D%20+%20%20%7B%5Cleft(%20%20%5Cfrac%7B%5Cpartial_t%20h%7D%20%7Bh%7D%20+%20f%20%5Cright)%7D%20%20%5C,%20%5Cvarphi.%7D%0A%5Ctag%7B6%7D"></span></p>
+<p>To see how this works, consider the case of a diffusion process</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AdX%20=%20b(X)%20%5C,%20dt%20+%20%5Csigma%20%5C,%20dt%0A"></p>
+<p>with generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5Cvarphi(x)%20=%20b(x)%20%5Cnabla%20%5Cvarphi+%20%5Ctfrac12%20%5C,%20%5Csigma%20%5Csigma%5E%5Ctop%20:%20%5Cnabla%5E2%20%5Cvarphi(x)">. Algebra applied to Equation&nbsp;5 then shows that</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%5Cstar%20%5Cvarphi%5C;%20=%20%5C;%20%5Cmathcal%7BL%7D%5Cvarphi+%20%5Cunderbrace%7B%5Cfrac%7B%5Cvarphi%5C,%20(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%5Bh%5D%7D%7Bh%7D%7D_%7B=0%7D%0A+%20%5Csigma%20%5C,%20%5Csigma%5E%5Ctop%20%5C,%20(%5Cnabla%20%5Clog%20h)%20%5C,%20%5Cnabla%20%5Cvarphi%0A"></p>
+<p>where the function <img src="https://latex.codecogs.com/png.latex?h"> is described in Equation&nbsp;5. Since <img src="https://latex.codecogs.com/png.latex?(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%20h%20=%200">, this reveals that the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> describes in fact a new diffusion process <img src="https://latex.codecogs.com/png.latex?X%5E%5Cstar"> with an additional drift <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7B%5Csigma%20%5C,%20%5Csigma%5E%5Ctop%20%5C,%20%5Cnabla%20%5Clog%20h(t,%20x)%7D">:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AdX%20=%20b(X)%20%5C,%20dt%20+%20%20%5Ctextcolor%7Bblue%7D%7B%5Csigma%20%5C,%20%5Csigma%5E%5Ctop%20%5C,%20%5Cnabla%20%5Clog%20h(t,%20X)%20%5C,%20dt%7D%20+%20%5Csigma%20%5C,%20dt%0A"></p>
+<p>Unfortunately, apart from a few straightforward cases such as a Brownian motion or an Ornstein-Uhlenbeck process, the function <img src="https://latex.codecogs.com/png.latex?h"> is generally intractable. However, there are indeed several numerical methods available to approximate it effectively.</p>
+
+
+
+ ]]></description>
+  <category>SDE</category>
+  <category>markov</category>
+  <guid>https://alexxthiery.github.io/notes/doob_transforms/doob.html</guid>
+  <pubDate>Mon, 13 May 2024 16:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>RWM &amp; HMC on manifolds</title>
   <link>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</link>
   <description><![CDATA[ 
 
@@ -103,7 +156,16 @@
 <p><img src="https://latex.codecogs.com/png.latex?%0A(q_n,%20p_n)%20%5C;%20%5Cin%20%5C;%20%5Cmathcal%7BM%7D%5Ctimes%20T_%7Bq_n%7D.%0A"></p>
 <p>As in the RWM algorithm, reversibility checks need to be performed to ensure that the overall algorithm is reversible with respect to the target distribution <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(q,p)">. The resulting algorithm for generating a proposal <img src="https://latex.codecogs.com/png.latex?(q_n,%20p_n)%20%5Cmapsto%20(q_*,%20p_*)"> reads as follows:</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0A%5Cwidetilde%7Bp%7D_%7Bn+1/2%7D%20&amp;=%20p_n%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_n)%5C%5C%0Ap_%7Bn+1/2%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$%5Cwidetilde%7Bp%7D_%7Bn+1/2%7D$%20onto%20$T_%7Bq_n%7D$%7D%7D%20%5C%5C%0A%5Cwidetilde%7Bq%7D_%7B*%7D%20&amp;=%20q_n%20+%20%5Cvarepsilon%5C,%20m%5E%7B-1%7D%20%5C,%20p_%7Bn+1/2%7D%5C%5C%0Aq_%7B*%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7BProj$(%5Cwidetilde%7Bq%7D_%7B*%7D,%20J_%7Bq_n%7D)$%7D%7D%5C%5C%0A%5Coverline%7Bp%7D_%7Bn+1/2%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$(q_%7B*%7D-q_n)%20%5C,%20m%20/%20%5Cvarepsilon$%20onto%20$T_%7Bq_%7B*%7D%7D$%7D%7D%20%5C%5C%0A%5Cwidetilde%7Bp%7D_%7B*%7D%20&amp;=%20%5Coverline%7Bp%7D_%7Bn+1/2%7D%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_%7B*%7D)%5C%5C%0Ap_%7B*%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$%5Cwidetilde%7Bp%7D_%7B*%7D$%20onto%20$T_%7Bq_%7B*%7D%7D$%7D%7D.%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
-<p>If any of the projection operations fail, the proposal is rejected. If no failure occurs, a reversibility check is performed by running the algorithm backward starting from <img src="https://latex.codecogs.com/png.latex?(q_*,%20-p_*)">. If the reversibility check is successful, the proposal is accepted with the usual Metropolis-Hastings probability <img src="https://latex.codecogs.com/png.latex?%5Cmin%5Cleft(%201,%20%5Cbar%7B%5Cpi%7D(q_*,%20p_*)/%5Cbar%7B%5Cpi%7D(q_n,%20p_n)%20%5Cright)">. The article <span class="citation" data-cites="lelievre2019hybrid">(Lelièvre, Rousset, and Stoltz 2019)</span> provides a detailed description of several of these ideas along with detailed analysis and extensions.</p>
+<p>If any of the projection operations fail, the proposal is rejected. If no failure occurs, a reversibility check is performed by running the algorithm backward starting from <img src="https://latex.codecogs.com/png.latex?(q_*,%20-p_*)">. If the reversibility check is successful, the proposal is accepted with the usual Metropolis-Hastings probability <img src="https://latex.codecogs.com/png.latex?%5Cmin%5Cleft(%201,%20%5Cbar%7B%5Cpi%7D(q_*,%20p_*)/%5Cbar%7B%5Cpi%7D(q_n,%20p_n)%20%5Cright)">.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/HMC_double_torus_compressed.gif" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">5k HMC chains ran in parallel: the momentum is not refreshed</figcaption>
+</figure>
+</div>
+</div>
+<p>The article <span class="citation" data-cites="lelievre2019hybrid">(Lelièvre, Rousset, and Stoltz 2019)</span> provides a detailed description of several of these ideas along with detailed analysis and extensions.</p>
 
 
 
@@ -671,7 +733,7 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
 <p><span id="eq-boltz"><img src="https://latex.codecogs.com/png.latex?%0Ap_%7B%5Cbeta_%5Cmu%7D(a_k)%20=%20%5Cfrac%7B%20p_k%20%5C,%20e%5E%7B-%5Cbeta_%7B%5Cmu%7D%20%5C,%20a_k%7D%20%7D%7BZ(%5Cbeta_%7B%5Cmu%7D)%7D.%0A%5Ctag%7B3%7D"></span></p>
 <p>The parameter <img src="https://latex.codecogs.com/png.latex?%5Cbeta_%7B%5Cmu%7D%20%5Cin%20%5Cmathbb%7BR%7D"> is chosen so that the constraint Equation&nbsp;2 be satisfied and the minus sign is to follow the “physics” convention. Note in passing that, in fact, the joint function <img src="https://latex.codecogs.com/png.latex?(%5Cwidehat%7Bp%7D,p)%20%5Cmapsto%20%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(%5Cwidehat%7Bp%7D,%20p)"> is convex! As usual, if one defines the log-partition function as <img src="https://latex.codecogs.com/png.latex?%5CPhi(%5Cbeta)%20=%20-%5Clog%20Z(%5Cbeta)">, with</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AZ(%5Cbeta)%20%5C;%20=%20%5C;%20%5Csum_%7Bk=1%7D%5EK%20%5C,%20p_k%20%5C,%20e%5E%7B-%5Cbeta%20%5C,%20a_k%7D,%0A"></p>
-<p>one obtains that the constraint is equivalent to requiring <img src="https://latex.codecogs.com/png.latex?%5Cmu%20=%20%5Cfrac%7Bd%7D%7Bd%20%5Cbeta%7D%20%5CPhi(%5Cbeta)%20%5Cmid_%7B%5Cbeta%20=%20%5Cbeta_%5Cmu%7D">. Furthermore, since <img src="https://latex.codecogs.com/png.latex?%5CPhi"> is smooth and strictly concave, so is the function <img src="https://latex.codecogs.com/png.latex?%5Cbeta%20%5Cmapsto%20%5Cleft%3C%20%5Cmu,%20%5Cbeta%20%5Cright%3E%20-%20%5CPhi(%5Cbeta)">, so that the condition <img src="https://latex.codecogs.com/png.latex?%5Cmu%20=%20%5Cfrac%7Bd%7D%7Bd%20%5Cbeta%7D%20%5CPhi(%5Cbeta)%20%5Cmid_%7B%5Cbeta%20=%20%5Cbeta_%5Cmu%7D"> is equivalent to setting</p>
+<p>one obtains that the constraint is equivalent to requiring <img src="https://latex.codecogs.com/png.latex?%5Cmu%20=%20%5Cfrac%7Bd%7D%7Bd%20%5Cbeta%7D%20%5CPhi(%5Cbeta)%20%5Cmid_%7B%5Cbeta%20=%20%5Cbeta_%5Cmu%7D">. Furthermore, since <img src="https://latex.codecogs.com/png.latex?%5CPhi"> is smooth and strictly concave, the function <img src="https://latex.codecogs.com/png.latex?%5Cbeta%20%5Cmapsto%20%5Cleft%3C%20%5Cmu,%20%5Cbeta%20%5Cright%3E%20-%20%5CPhi(%5Cbeta)"> is convex and the condition <img src="https://latex.codecogs.com/png.latex?%5Cmu%20=%20%5Cfrac%7Bd%7D%7Bd%20%5Cbeta%7D%20%5CPhi(%5Cbeta)%20%5Cmid_%7B%5Cbeta%20=%20%5Cbeta_%5Cmu%7D"> is equivalent to setting</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbeta_%7B%5Cmu%7D%20%5C;%20=%20%5C;%20%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cbeta%20%5Cin%20%5Cmathbb%7BR%7D%7D%20%5C;%20%5Cleft%3C%20%5Cmu,%20%5Cbeta%20%5Cright%3E%20-%20%5CPhi(%5Cbeta).%0A"></p>
 <p>Naturally, one can now also estimate the probability of the event <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BP%7D%7D%5B(X_1%20+%20%5Cldots%20+%20X_N)/N%20%5Capprox%20%5Calpha%5D"> happening since one now knows that it is equivalent (on a log scale) to <img src="https://latex.codecogs.com/png.latex?%5Cexp%5B-N%20%5C,%20%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p_%7B%5Cbeta_%5Cmu%7D,%20p)%5D">. Algebra gives</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p_%7B%5Cbeta_%5Cmu%7D,%20p)%0A&amp;=%20%5CPhi(%5Cbeta_%5Cmu)%20-%20%5Cleft%3C%20%5Cmu,%20%5Cbeta_%5Cmu%20%5Cright%3E%5C%5C%0A&amp;=%20%5Cmax_%7B%5Cbeta%20%5Cin%20%5Cmathbb%7BR%7D%7D%20%5C;%20%5CPhi(%5Cbeta)%20-%20%5Cleft%3C%20%5Cmu,%20%5Cbeta%20%5Cright%3E.%0A%5Cend%7Balign%7D%0A"></p>
@@ -1407,6 +1469,7 @@ Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoisin
 <li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
 <li><a href="../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson Equation &amp; Asymptotic Variance</a></li>
 <li><a href="../notes/averaging_homogenization/averaging_homogenization.html">Averaging and Homogenization</a></li>
+<li><a href="../notes/doob_transforms/doob.html">Joe Doob &amp; Change of measures on path space</a></li>
 </ul>
 
 
