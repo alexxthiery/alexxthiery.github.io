@@ -160,7 +160,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#general-diffusions" id="toc-general-diffusions" class="nav-link active" data-scroll-target="#general-diffusions">General diffusions</a></li>
+  <li><a href="#brownian-bridge" id="toc-brownian-bridge" class="nav-link" data-scroll-target="#brownian-bridge">Brownian bridge</a></li>
+  <li><a href="#positive-brownian-motion" id="toc-positive-brownian-motion" class="nav-link" data-scroll-target="#positive-brownian-motion">Positive Brownian motion</a></li>
+  <li><a href="#brownian-motion-staying-in-a-domain" id="toc-brownian-motion-staying-in-a-domain" class="nav-link" data-scroll-target="#brownian-motion-staying-in-a-domain">Brownian motion staying in a domain</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -222,22 +231,92 @@ h(t, x) \; = \; \mathop{\mathrm{E}} {\left[  G(x_T) \mid x_t = x \right]}  \; = 
 <p><span id="eq-doob-transforms"><span class="math display">\[
 \textcolor{green}{\mathcal{L}^{\star} \varphi\; = \; \mathcal{L}\varphi+ \frac{\mathcal{L}[h \, \varphi]}{h} +  {\left(  \frac{\partial_t h} {h} + f \right)}  \, \varphi.}
 \tag{6}\]</span></span></p>
-<p>To see how this works, consider the case of a diffusion process</p>
+<p>To see how this works, let us see a few examples:</p>
+<section id="general-diffusions" class="level3">
+<h3 class="anchored" data-anchor-id="general-diffusions">General diffusions</h3>
+<p>Consider a diffusion process</p>
 <p><span class="math display">\[
-dX = b(X) \, dt + \sigma \, dt
+dX = b(X) \, dt + \sigma(X) \, dt
 \]</span></p>
-<p>with generator <span class="math inline">\(\mathcal{L}\varphi(x) = b(x) \nabla \varphi+ \tfrac12 \, \sigma \sigma^\top : \nabla^2 \varphi(x)\)</span>. Algebra applied to <a href="#eq-h-gen">Equation&nbsp;5</a> then shows that</p>
+<p>with generator <span class="math inline">\(\mathcal{L}\varphi= b \nabla \varphi+ \tfrac12 \, \sigma \sigma^\top : \nabla^2 \varphi\)</span>. Algebra applied to <a href="#eq-h-gen">Equation&nbsp;5</a> then shows that</p>
 <p><span class="math display">\[
 \mathcal{L}^\star \varphi\; = \; \mathcal{L}\varphi+ \underbrace{\frac{\varphi\, (\partial_t + \mathcal{L}+ f)[h]}{h}}_{=0}
 + \sigma \, \sigma^\top \, (\nabla \log h) \, \nabla \varphi
 \]</span></p>
-<p>where the function <span class="math inline">\(h\)</span> is described in <a href="#eq-h-gen">Equation&nbsp;5</a>. Since <span class="math inline">\((\partial_t + \mathcal{L}+ f) h = 0\)</span>, this reveals that the probability distribution <span class="math inline">\(\mathbb{Q}\)</span> describes in fact a new diffusion process <span class="math inline">\(X^\star\)</span> with an additional drift <span class="math inline">\( \textcolor{blue}{\sigma \, \sigma^\top \, \nabla \log h(t, x)}\)</span>:</p>
-<p><span class="math display">\[
-dX = b(X) \, dt +  \textcolor{blue}{\sigma \, \sigma^\top \, \nabla \log h(t, X) \, dt} + \sigma \, dt
-\]</span></p>
+<p>where the function <span class="math inline">\(h\)</span> is described in <a href="#eq-h-gen">Equation&nbsp;5</a>. Since <span class="math inline">\((\partial_t + \mathcal{L}+ f) h = 0\)</span>, this reveals that the probability distribution <span class="math inline">\(\mathbb{Q}\)</span> describes in fact a new diffusion process <span class="math inline">\(X^\star\)</span> with an additional drift <span class="math inline">\( \textcolor{blue}{\sigma(X) \, \sigma^\top(X) \, \nabla \log h(t, x)}\)</span>:</p>
+<p><span id="eq-diffusion-doob"><span class="math display">\[
+dX = b(X) \, dt +  \textcolor{blue}{\sigma(X) \, \sigma^\top(X) \, \nabla \log h(t, X) \, dt} + \sigma(X) \, dt
+\tag{7}\]</span></span></p>
 <p>Unfortunately, apart from a few straightforward cases such as a Brownian motion or an Ornstein-Uhlenbeck process, the function <span class="math inline">\(h\)</span> is generally intractable. However, there are indeed several numerical methods available to approximate it effectively.</p>
+</section>
+<section id="brownian-bridge" class="level3">
+<h3 class="anchored" data-anchor-id="brownian-bridge">Brownian bridge</h3>
+<p>What about a Brownian motion in <span class="math inline">\(\mathbb{R}^D\)</span> conditioned to hit <span class="math inline">\(x_\star\)</span> at time <span class="math inline">\(t=T\)</span>, i.e.&nbsp;a <a href="https://en.wikipedia.org/wiki/Brownian_bridge">Brownian bridge</a>? In that case, the function <span class="math inline">\(h\)</span> is given by</p>
+<p><span class="math display">\[
+h(t,x) = \mathop{\mathrm{P}}(B_T = x_\star \mid B_t = x)
+=
+\exp {\left\{ -\frac{\|x-x_\star\|^2}{2 \, (T-t)} \right\}}  / \mathcal{Z}_{T-t}
+\]</span></p>
+<p>for some irrelevant normalization constant <span class="math inline">\(\mathcal{Z}_{T-t}\)</span> that only depends on <span class="math inline">\(T-t\)</span>. Plugging this into <a href="#eq-diffusion-doob">Equation&nbsp;7</a> gives that the conditioned Brownian <span class="math inline">\(X^{\star}\)</span> motion has dynamics</p>
+<p><span class="math display">\[
+dX^\star \;=\;  \textcolor{blue}{- \frac{X^\star - x_\star}{T-t} \, dt} + dB.
+\]</span></p>
+<p>The additional drift term <span class="math inline">\(-(X^\star - x_\star)/(T-t)\)</span> is intuitive: it points in the direction of <span class="math inline">\(x^\star\)</span> and gets increasingly large as <span class="math inline">\(t \to T\)</span>.</p>
+</section>
+<section id="positive-brownian-motion" class="level3">
+<h3 class="anchored" data-anchor-id="positive-brownian-motion">Positive Brownian motion</h3>
+<p>What about a scalar Brownian conditioned to stay positive at all times? Let us consider <span class="math inline">\(T\)</span> and conditioned first on the event that the Brownian motion stays positive within <span class="math inline">\([0,T]\)</span> and later consider the limit <span class="math inline">\(T \to \infty\)</span>. The function <span class="math inline">\(h\)</span> reads</p>
+<p><span class="math display">\[
+h(t,x) = \mathop{\mathrm{P}} {\left( \text{$B_t$ stays $&gt;0$ on $[t,T]$} \mid B_t=x \right)} .
+\]</span></p>
+<p>This can easily be calculated with the <a href="https://en.wikipedia.org/wiki/Reflection_principle_(Wiener_process)">reflection principle</a>. It equals</p>
+<p><span class="math display">\[
+h(t,x) = 1 - 2 \, \mathop{\mathrm{P}}(B_T &lt; 0 \mid B_T = x)
+=
+\mathop{\mathrm{P}}(\sqrt{T-t} \, \| \xi \| &lt; x)
+\]</span></p>
+<p>for a standard Gaussian <span class="math inline">\(\xi \sim \mathcal{N}(0,1)\)</span>. Plugging this into <a href="#eq-diffusion-doob">Equation&nbsp;7</a> gives that the additional drift term is</p>
+<p><span class="math display">\[
+\nabla \log h(t,x) = \frac{\exp {\left( -x^2 / (2 \, (T-t)) \right)} }{x} \quad \to \quad \frac{1}{x}
+\]</span></p>
+<p>as <span class="math inline">\(T \to \infty\)</span>. This shows that a Brownian motion conditioned to stay positive at all times has a upward drift of size <span class="math inline">\(1/x\)</span>,</p>
+<p><span class="math display">\[
+dX^\star \;=\; \frac{1}{X^{\star}} + dB.
+\]</span></p>
+<p>Incidentally, it is the dynamics of a <a href="https://en.wikipedia.org/wiki/Bessel_process">Bessel process</a> of dimension <span class="math inline">\(d=3\)</span>, i.e., the law of the modulus of a three-dimensional Brownian motion.</p>
+</section>
+<section id="brownian-motion-staying-in-a-domain" class="level3">
+<h3 class="anchored" data-anchor-id="brownian-motion-staying-in-a-domain">Brownian motion staying in a domain</h3>
+<p>What about a Brownian motion conditioned to stay within a domain <span class="math inline">\(\mathcal{D}\)</span> forever? As before, consider an time horizon <span class="math inline">\(T\)</span> and define the function <span class="math inline">\(h\)</span> as</p>
+<p><span class="math display">\[
+h(t,x) = \mathop{\mathrm{P}} {\left( \text{$B_t$ stays in $\mathcal{D}$ on $[t,T]$} \mid B_t=x \right)} .
+\]</span></p>
+<p>One can see that the function <span class="math inline">\(h\)</span> satisfies the PDE</p>
+<p><span class="math display">\[
+(\partial_t + \Delta) h = 0
+\]</span></p>
+<p>and equals zero on the boundary <span class="math inline">\(\partial \mathcal{D}\)</span> of the domain. Furthermore <span class="math inline">\(h(t,x) \to 1\)</span> as <span class="math inline">\(t \to T\)</span> for all <span class="math inline">\(x \in \mathcal{D}\)</span>. Consider the eigenfunctions <span class="math inline">\(\psi_k\)</span> of the negative Laplacian <span class="math inline">\(-\Delta\)</span> with Dirichlet boundary conditions on <span class="math inline">\(\partial \mathcal{D}\)</span>. Recall that <span class="math inline">\(-\Delta\)</span> is a positive operator with a discrete spectrum <span class="math inline">\(\lambda_1 \leq \lambda_2 \leq \ldots\)</span> of non-negative eigenvalues. The eigenfunction corresponding to the smallest eigenvalue <span class="math inline">\(\lambda_1\)</span> is the principal eigenfunction <span class="math inline">\(\psi_1\)</span> and it is standard that it is a positive function within the domain <span class="math inline">\(\mathcal{D}\)</span>, as a “slight” generalization of the <a href="https://en.wikipedia.org/wiki/Perron–Frobenius_theorem">Perron-Frobenius</a> in linear algebra shows it. Expanding <span class="math inline">\(h\)</span> in the basis of eigenfunctions <span class="math inline">\(\psi_k\)</span> gives that</p>
+<p><span class="math display">\[
+h(t,x) = \underbrace{c_1 \, e^{-\lambda_1 \, (T-t)} \, \psi_1(x)}_{\textrm{dominant contribution}} + \sum_{k \geq 2} c_k \, e^{-\lambda_k \, (T-t)} \, \psi_k(x).
+\]</span></p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./eigenfunctions.jpg" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">Eigenfunctions of the Laplacian</figcaption>
+</figure>
+</div>
+</div>
+<p>Since we are interested in the regime <span class="math inline">\(T \to \infty\)</span>, it holds that</p>
+<p><span class="math display">\[ \nabla_x \log h(t,x) \; \to \; \nabla \log \psi_1(x).\]</span></p>
+<p>This shows that the conditioned Brownian motion has a drift term expressed in terms of the principal eigenfunction <span class="math inline">\(\psi_1\)</span> of the Laplacian:</p>
+<p><span class="math display">\[
+dX^\star \;=\;  \textcolor{blue}{ \nabla \log \psi_1(X^\star) \, dt} + dB.
+\]</span></p>
+<p>For example, if <span class="math inline">\(\mathcal{D}\equiv [0,L]\)</span> for a 1D Brownian motion, the principal eigenfunction is <span class="math inline">\(\psi_1(x) = \sin(\pi \, x /L)\)</span>. This shows that there is a upward drift of size <span class="math inline">\(\sim 1/x\)</span> near <span class="math inline">\(x \approx 0\)</span> and a downward drift of size <span class="math inline">\(\sim 1/(L-x)\)</span> near <span class="math inline">\(x \approx L\)</span>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
