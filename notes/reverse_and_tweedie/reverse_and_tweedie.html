@@ -168,7 +168,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">12 03 2024</p>
+        <p class="date-modified">23 05 2024</p>
       </div>
     </div>
       
@@ -220,10 +220,18 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 \exp\left\{ -\frac{\left( x - [x_{t+\delta} - \mu(x_{t+\delta}) \delta
 + {\color{red} \sigma^2 \, \nabla \log p_t(x_{t+\delta}) \, \delta} ] \right)^2}{2 \sigma^2 \, \delta} \right\}.\]</span></p>
 <p>For <span class="math inline">\(\delta \ll 1\)</span>, this is transition of the reverse diffusion</p>
+<p><span id="eq-rev-diffusion"><span class="math display">\[
+d\overleftarrow{X}_t =  \textcolor{red}{-}\mu(\overleftarrow{X}_t) \, dt \; + {\color{red} \sigma^2 \, \nabla \log p_{T-t}(\overleftarrow{X}_t) \, dt} \; + \; \sigma \, dB.
+\tag{3}\]</span></span></p>
+<p>The notation <span class="math inline">\(B\)</span> is used to emphasize that this Brownian motion is distinct from the one used in the forward diffusion. The additional drift term, denoted as <span class="math inline">\({\color{red} \sigma^2 \, \nabla \log p_t(\overleftarrow{X})}\)</span>, is intuitive: it pushes the reverse diffusion toward regions where the forward diffusion spent a significant amount of time, i.e., where <span class="math inline">\(p_t(dx)\)</span> is large. Note the minus sign in front of the original drift term <span class="math inline">\(\mu(X) \, dt\)</span> It interesting to note that if <span class="math inline">\(X\)</span> is a <a href="https://en.wikipedia.org/wiki/Langevin_equation">Langevin diffusion</a> reversible with respect to a probability density <span class="math inline">\(\pi(x)\)</span>,</p>
 <p><span class="math display">\[
-d\overleftarrow{X}_t = -\mu(\overleftarrow{X}_t) \, dt \; + {\color{red} \sigma^2 \, \nabla \log p_{T-t}(\overleftarrow{X}_t) \, dt} \; + \; \sigma \, dB.
+dX = \tfrac{\sigma^2}{2} \nabla \log \pi(X) \, dt + \sigma \, dB,
 \]</span></p>
-<p>The notation <span class="math inline">\(B\)</span> is used to emphasize that this Brownian motion is distinct from the one used in the forward diffusion. The additional drift term, denoted as <span class="math inline">\({\color{red} \sigma^2 \, \nabla \log p_t(\overleftarrow{X})}\)</span>, is intuitive: it pushes the reverse diffusion toward regions where the forward diffusion spent a significant amount of time, i.e., where <span class="math inline">\(p_t(dx)\)</span> is large. The popular “denoising diffusion models” <span class="citation" data-cites="ho2020denoising">(<a href="#ref-ho2020denoising" role="doc-biblioref">Ho, Jain, and Abbeel 2020</a>)</span> can be seen as discretizations of this backward process, employing various techniques to estimate the additional drift term from data.</p>
+<p>then the reverse diffusion diffusion <a href="#eq-rev-diffusion">Equation&nbsp;3</a> reads simply as</p>
+<p><span class="math display">\[
+d\overleftarrow{X}_t =  \tfrac{\sigma^2}{2} \nabla \log \pi(\overleftarrow{X}_t) \, dt \; + {\color{red} \sigma^2 \, \nabla \log [p_{T-t} / \pi](\overleftarrow{X}_t) \, dt} \; + \; \sigma \, dB.
+\]</span></p>
+<p>Note that there is no minus sign in front of the original drift term. This highlight that, when at stationarity, the reverse diffusion indeed follows the same dynamics as the forward diffusion. The popular “denoising diffusion models” <span class="citation" data-cites="ho2020denoising">(<a href="#ref-ho2020denoising" role="doc-biblioref">Ho, Jain, and Abbeel 2020</a>)</span> can be seen as discretizations of the backward process <a href="#eq-rev-diffusion">Equation&nbsp;3</a>, employing various techniques to estimate the additional drift term from data.</p>
 </section>
 <section id="denoising-score-matching-tweedie-formula" class="level2">
 <h2 class="anchored" data-anchor-id="denoising-score-matching-tweedie-formula">Denoising Score Matching &amp; Tweedie formula</h2>
@@ -241,7 +249,7 @@ d\overleftarrow{X}_t = -\mu(\overleftarrow{X}_t) \, dt \; + {\color{red} \sigma^
 <p>where <span class="math inline">\(X_0 \sim p_0(dx)\)</span>. Now, focusing on a specific sample <span class="math inline">\(y = X_{\delta}\)</span>, the backward dynamics <span class="math inline">\(d\overleftarrow{X} = \sigma^2 \, \nabla \log p_t(\overleftarrow{X}) \, dt + \sigma \, dB\)</span> suggests that for sufficiently small <span class="math inline">\(\delta\)</span>, the following approximation holds:</p>
 <p><span id="eq-rev-tweedie"><span class="math display">\[
 \mathbb{E}[X_0 \, | X_{\delta} = y] \; { \color{\red} \approx} \; y + \nabla \log p_{\delta}(y) \, \sigma^2 \delta.
-\tag{3}\]</span></span></p>
+\tag{4}\]</span></span></p>
 <p>Maybe surprisingly, in the case of Brownian dynamics (no drift), this relationship holds exactly, even for arbitrarily large time increments <span class="math inline">\(\delta&gt;0\)</span>. This observation attributed in <span class="citation" data-cites="efron2011tweedie">(<a href="#ref-efron2011tweedie" role="doc-biblioref">Efron 2011</a>)</span> to <a href="https://en.wikipedia.org/wiki/Maurice_Tweedie">Maurice Tweedie (1919–1996)</a> has a straightforward proof. Specifically, if <span class="math inline">\(X \sim p_0(dx)\)</span>, then <span class="math inline">\(Y = X + \mathcal{N}(0, \Gamma^2)\)</span> has a density given by:</p>
 <p><span class="math display">\[
 p_Y(dy) = \int p_0(x) \, \rho_{\Gamma}(y-x) \, dx
@@ -262,7 +270,7 @@ p_Y(dy) = \int p_0(x) \, \rho_{\Gamma}(y-x) \, dx
 <p><span class="math display">\[
 \mathbb{E}[X \, | Y = y] \; {\color{red} =} \; y + \Gamma^2 \, \nabla \log p_Y(y),
 \]</span></p>
-<p>which is exactly the same as <a href="#eq-rev-tweedie">Equation&nbsp;3</a> but with an equality sign: no approximation needed! Interestingly, this is what Machine-Learners often refer to as “denoising score matching” <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref">Vincent 2011</a>)</span>: if we have access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, where <span class="math inline">\(X_i \sim p_0(dx)\)</span> and <span class="math inline">\(Y_i = X_i + \mathcal{N}(0, \Gamma^2)\)</span>, and fit a regression model <span class="math inline">\(F_{\theta}\)</span> by minimizing the mean-squared error <span class="math inline">\(\theta \mapsto \mathbb{E} \|X - F_{\theta}(Y)\|^2\)</span>, then Tweedie formula shows that in the limit of infinite samples and with sufficient flexibility in the regression model <span class="math inline">\(F_{\theta_\star}(y) = y + \Gamma^2 \nabla \log p_Y(y)\)</span>. This allows one to estimate <span class="math inline">\(\nabla \log p_Y\)</span> from data, which is often a good approximation of <span class="math inline">\(\nabla \log p_0\)</span> if the variance <span class="math inline">\(\Gamma^2\)</span> of the added noise is not too large. Indeed, things can go bad if <span class="math inline">\(\Gamma^2 \ll 1\)</span> and the number of training data is not large enough, no free lunch!</p>
+<p>which is exactly the same as <a href="#eq-rev-tweedie">Equation&nbsp;4</a> but with an equality sign: no approximation needed! Interestingly, this is what Machine-Learners often refer to as “denoising score matching” <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref">Vincent 2011</a>)</span>: if we have access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, where <span class="math inline">\(X_i \sim p_0(dx)\)</span> and <span class="math inline">\(Y_i = X_i + \mathcal{N}(0, \Gamma^2)\)</span>, and fit a regression model <span class="math inline">\(F_{\theta}\)</span> by minimizing the mean-squared error <span class="math inline">\(\theta \mapsto \mathbb{E} \|X - F_{\theta}(Y)\|^2\)</span>, then Tweedie formula shows that in the limit of infinite samples and with sufficient flexibility in the regression model <span class="math inline">\(F_{\theta_\star}(y) = y + \Gamma^2 \nabla \log p_Y(y)\)</span>. This allows one to estimate <span class="math inline">\(\nabla \log p_Y\)</span> from data, which is often a good approximation of <span class="math inline">\(\nabla \log p_0\)</span> if the variance <span class="math inline">\(\Gamma^2\)</span> of the added noise is not too large. Indeed, things can go bad if <span class="math inline">\(\Gamma^2 \ll 1\)</span> and the number of training data is not large enough, no free lunch!</p>
 
 
 
