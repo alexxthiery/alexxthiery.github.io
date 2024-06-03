@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Notes</title>
+<title>Alexandre Thiéry - Girsanov and Importance Sampling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,18 +23,18 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,15 +58,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Notes">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Girsanov and Importance Sampling">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/girsanov/girsanov_portrait.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Notes">
+<meta name="twitter:title" content="Alexandre Thiéry - Girsanov and Importance Sampling">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/girsanov/girsanov_portrait.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -76,7 +80,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -86,29 +90,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html" rel="" target="">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -123,9 +127,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
+      <h1 class="title">Girsanov and Importance Sampling</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">markov</div>
               </div>
                   </div>
   </div>
@@ -137,10 +142,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">03 06 2024</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">03 06 2024</p>
+      </div>
+    </div>
       
     </div>
     
@@ -153,10 +164,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theory" id="toc-information-theory" class="nav-link" data-scroll-target="#information-theory">Information Theory</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
+  <li><a href="#importance-sampling-on-path-space" id="toc-importance-sampling-on-path-space" class="nav-link active" data-scroll-target="#importance-sampling-on-path-space">Importance Sampling on path-space</a></li>
   </ul>
 </nav>
     </div>
@@ -166,52 +174,66 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">categories</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-</ul>
-</section>
-<section id="information-theory" class="level3">
-<h3 class="anchored" data-anchor-id="information-theory">Information Theory</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-</ul>
-</section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
-<ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation &amp; the EnKF</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html">Ensemble Kalman Smoothers</a></li>
-<li><a href="../notes/MCMC_deterministic_proposals/MCMC_deterministic.html">MCMC with deterministic proposals</a></li>
-<li><a href="../notes/MCMC_on_manifold/mcmc_manifold.html">RWM &amp; HMC on Manifolds</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-<li><a href="../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson Equation &amp; Asymptotic Variance</a></li>
-<li><a href="../notes/averaging_homogenization/averaging_homogenization.html">Averaging and Homogenization</a></li>
-<li><a href="../notes/doob_transforms/doob.html">Joe Doob &amp; Change of measures on path space</a></li>
-<li><a href="../notes/girsanov/girsanov.html">Girsanov and importance sampling</a></li>
-</ul>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./girsanov_portrait.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
+<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Igor_Girsanov">Igor Girsanov</a> (1934 – 1967)</figcaption>
+</figure>
+</div>
+</div>
+<p>Let <span class="math inline">\(q_{\mu,\Gamma}(dx)\)</span> be the Gaussian distribution with mean <span class="math inline">\(\mu \in \mathbb{R}^D\)</span> and covariances <span class="math inline">\(\Gamma \in \mathbb{R}^{D \times D}\)</span>, as well as <span class="math inline">\(u \in \mathbb{R}^d\)</span>. Consider the distribution <span class="math inline">\(q_{\mu + \Gamma^{1/2} \, u, \Gamma}\)</span>, i.e.&nbsp;the same Gaussian distribution but shifted by an amount <span class="math inline">\(\Gamma^{1/2}u\)</span>. One line of algebra shows that the Radon-Nikodym derivative of <span class="math inline">\(q_{\mu + \Gamma^{1/2}u, \, \Gamma}\)</span> with respect to <span class="math inline">\(q_{\mu, \Gamma}\)</span> is given by</p>
+<p><span class="math display">\[
+\frac{d \, q_{\mu + \Gamma^{1/2}u, \, \Gamma}}{d \, q_{\mu, \Gamma}}(x) \; = \;
+\exp {\left( \left&lt;  \Gamma^{-1/2}(x-\mu), u \right&gt; - \frac{1}{2} \| u\|^2  \right)} .
+\]</span></p>
+<p>We will see that, not very surprisingly, a similar change-of-probability result holds in continuous time. On the time interval <span class="math inline">\([0,T]\)</span>, let <span class="math inline">\(W_t\)</span> be a standard Brownian motion in <span class="math inline">\(\mathbb{R}^D\)</span> and <span class="math inline">\(X_t\)</span> be the solution to the SDE</p>
+<p><span id="eq-sde-original"><span class="math display">\[
+dX_t \; = \; b(X_t) \, dt + \sigma(X_t) \, dW_t
+\tag{1}\]</span></span></p>
+<p>for some drift <span class="math inline">\(b: \mathbb{R}^D \to \mathbb{R}^D\)</span> and diffusion <span class="math inline">\(\sigma: \mathbb{R}^D \to \mathbb{R}^{D \times D}\)</span> and initial distribution <span class="math inline">\(\mu_0(dx_0)\)</span>. This SDE defines a probability measure <span class="math inline">\(\mathbb{P}\)</span> on the path-space <span class="math inline">\(C([0,T]; \mathbb{R}^D)\)</span>, the space of continuous functions from <span class="math inline">\([0,T]\)</span> to <span class="math inline">\(\mathbb{R}^D\)</span>. Consider a perturbation drift function <span class="math inline">\(u: \mathbb{R}^D \to \mathbb{R}^D\)</span> and associated perturbed SDE given by</p>
+<p><span id="eq-sde-perturbed"><span class="math display">\[
+dX_t^u \; = \; b(X_t^u) \, dt + \sigma(X_t^u) \,  {\left(  dW_t +  \textcolor{blue}{u(X_t^u) \, dt}  \right)} .
+\tag{2}\]</span></span></p>
+<p>This perturbed SDE, started from the same initial distribution <span class="math inline">\(\mu_0(dx_0)\)</span>, defines a probability measure <span class="math inline">\(\mathbb{P}^u\)</span> on the path-space <span class="math inline">\(C([0,T]; \mathbb{R}^D)\)</span> and it is often useful to understand the Radon-Nikodym derivative of <span class="math inline">\(\mathbb{P}^u\)</span> with respect to <span class="math inline">\(\mathbb{P}\)</span>. I have never really liked the way this is <a href="https://en.wikipedia.org/wiki/Girsanov_theorem">usually</a> derived, and also never really remember the result. It takes only a few lines of algebra to re-derive these results, at least informally. For this purpose, consider a simpler <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler discretization</a> of the SDE with time-discretization <span class="math inline">\(\delta = T/N\)</span> for <span class="math inline">\(N \gg 1\)</span>. Consider a discretized paths <span class="math inline">\((x_0, x_{\delta}, \ldots, x_{T})\)</span> of <a href="#eq-sde-original">Equation&nbsp;1</a> obtained by iterating the update</p>
+<p><span class="math display">\[
+x_{t_{k+1}} \; = \; x_{t_k} + b(x_{t_k})\,\delta + \sigma(x_{t_k}) \, (\Delta W_{t_k})
+\]</span></p>
+<p>with <span class="math inline">\(t_k = k\delta\)</span> and <span class="math inline">\(\Delta W_{t_k} = W_{t_{k+1}} - W_{t_k}\)</span>. The probability of observing such a path reads <span class="math display">\[
+\frac{1}{\mathcal{Z}} \, \mu_0(x_0) \, \exp {\left\{ -\frac{1}{2 \delta} \sum_{k=0}^{N-1}
+\|x_{t_{k+1}} - [x_{t_k} + b(x_{t_k})\,\delta]\|^2_{\Gamma^{-1}(x_{t_k}) } \right\}}
+\]</span></p>
+<p>with <span class="math inline">\(\Gamma(x) \equiv \sigma(x) \sigma^\top(x)\)</span> the volatility matrix and an irrelevant multiplicative constant <span class="math inline">\(\mathcal{Z}\)</span>. One obtains a similar expression for a discretized path of the perturbed SDE <a href="#eq-sde-perturbed">Equation&nbsp;2</a> and the ratio of these two quantities equals</p>
+<p><span class="math display">\[
+\frac{d \widetilde{\mathbb{P}}^{u}}{d \widetilde{\mathbb{P}}}(x) = \exp {\left\{ \sum_{k=0}^{N-1} -\frac 12 \|u(x_{t_k})\|^2 \, \delta +
+\left&lt; x_{t_{k+1}}-x_{t_k}-b(x_{t_k})\delta, \sigma(x_{t_k}) \, u(x_{t_k}) \right&gt;_{\Gamma^{-1}(x_{t_k})}  \right\}} .
+\]</span></p>
+<p>where the tilde notation denotes the discretized version of the measures. Under <span class="math inline">\(\widetilde{\mathbb{P}}\)</span> and as <span class="math inline">\(N \to \infty\)</span>, for a path <span class="math inline">\(dX_t \; = \; b(X_t) \, dt + \sigma(X_t) \, dW_t\)</span>, we have</p>
+<p><span class="math display">\[
+\frac{d \widetilde{\mathbb{P}}^{u}}{d \widetilde{\mathbb{P}}}(x) \to \exp {\left\{
+-\frac 12 \, \int_0^T \|u(X_t)\|^2 \, dt + \int_{0}^T u^\top(X_t) \, dW_t
+\right\}} .
+\]</span></p>
+<p>Similarly, under <span class="math inline">\(\widetilde{\mathbb{P}}^u\)</span> and as <span class="math inline">\(N \to \infty\)</span>, for a path <span class="math inline">\(dX^{u}_t \; = \; b(X^u_t) \, dt + \sigma(X^u_t) \,  {\left(  dW_t + u(X_t) \right)} \)</span>, we have</p>
+<p><span class="math display">\[
+\frac{d \widetilde{\mathbb{P}}}{d \widetilde{\mathbb{P}}^u}(x) \to \exp {\left\{
+-\frac 12 \, \int_0^T \|u(X_t)\|^2 \, dt - \int_{0}^T u^\top(X_t) \, dW_t
+\right\}} .
+\]</span></p>
+<p>These results remain identical for time-dependent drift and volatility functions, as is clear from this non-rigorous argument. As described below, these change of variables formulae are often useful when performing importance sampling on path-space.</p>
+<section id="importance-sampling-on-path-space" class="level3">
+<h3 class="anchored" data-anchor-id="importance-sampling-on-path-space">Importance Sampling on path-space</h3>
+<p>Consider a functional <span class="math inline">\(\Phi: C([0,T]; \mathbb{R}^D) \to \mathbb{R}\)</span> on path-space; a typical example is</p>
+<p><span class="math display">\[
+\Phi(x) = \exp {\left\{ \int_0^T f(X_t) \, dt \, + \, g(X_T) \right\}} .
+\]</span></p>
+<p>Suppose that we would like to evaluate the expectation of <span class="math inline">\(\Phi\)</span> under the measure <span class="math inline">\(\mathbb{P}\)</span>. Naive Monte-Carlo (MC) would require sampling <span class="math inline">\(M\)</span> trajectories from <a href="#eq-sde-original">Equation&nbsp;1</a> and computing the average of <span class="math inline">\(\Phi\)</span> on these trajectories. To reduce the variance of this naive MC estimator, one can also use importance sampling by sampling <span class="math inline">\(M\)</span> trajectories <span class="math inline">\(x^{1,u}, \ldots, x^{M,u}\)</span> from the measure <span class="math inline">\(\mathbb{P}^u\)</span> and compute the average</p>
+<p><span class="math display">\[
+\frac{1}{M} \, \sum_{i=1}^M \Phi(x^{i,u}) \, \exp {\left\{
+-\frac 12 \, \int_0^T \|u(x^{i,u}_t)\|^2 \, dt - \int_{0}^T u^\top(x^{i,u}_t) \, dW_t
+\right\}} .
+\]</span></p>
+<p>Choose the optimal “control” function <span class="math inline">\(u\)</span> that minimizes the variance of the estimator is not entirely straightforward, although this <a href="../doob_transforms/">previous note</a> already gives the answer. More on this in another note.</p>
 
 
 </section>
