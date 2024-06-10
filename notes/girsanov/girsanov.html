@@ -149,7 +149,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">03 06 2024</p>
+        <p class="date-modified">08 06 2024</p>
       </div>
     </div>
       
@@ -182,10 +182,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </figure>
 </div>
 </div>
-<p>Let <span class="math inline">\(q_{\mu,\Gamma}(dx)\)</span> be the Gaussian distribution with mean <span class="math inline">\(\mu \in \mathbb{R}^D\)</span> and covariances <span class="math inline">\(\Gamma \in \mathbb{R}^{D \times D}\)</span>, as well as <span class="math inline">\(u \in \mathbb{R}^d\)</span>. Consider the distribution <span class="math inline">\(q_{\mu + \Gamma^{1/2} \, u, \Gamma}\)</span>, i.e.&nbsp;the same Gaussian distribution but shifted by an amount <span class="math inline">\(\Gamma^{1/2}u\)</span>. One line of algebra shows that the Radon-Nikodym derivative of <span class="math inline">\(q_{\mu + \Gamma^{1/2}u, \, \Gamma}\)</span> with respect to <span class="math inline">\(q_{\mu, \Gamma}\)</span> is given by</p>
+<p>Let <span class="math inline">\(q_{\mu,\Gamma}(dx)\)</span> be the Gaussian distribution with mean <span class="math inline">\(\mu \in \mathbb{R}^D\)</span> and covariances <span class="math inline">\(\Gamma \in \mathbb{R}^{D \times D}\)</span>. For a direction <span class="math inline">\(u \in \mathbb{R}^D\)</span>, consider the distribution <span class="math inline">\(q_{\mu + \Gamma^{1/2} \, u, \Gamma}\)</span>, i.e.&nbsp;the same Gaussian distribution but shifted by an amount <span class="math inline">\(\Gamma^{1/2} \, u\)</span>. Algebra directly gives that</p>
 <p><span class="math display">\[
 \frac{d \, q_{\mu + \Gamma^{1/2}u, \, \Gamma}}{d \, q_{\mu, \Gamma}}(x) \; = \;
-\exp {\left( \left&lt;  \Gamma^{-1/2}(x-\mu), u \right&gt; - \frac{1}{2} \| u\|^2  \right)} .
+\exp {\left\{ \left&lt;  \Gamma^{-1/2}(x-\mu), u \right&gt; - \frac{1}{2} \| u\|^2  \right\}} .
 \]</span></p>
 <p>We will see that, not very surprisingly, a similar change-of-probability result holds in continuous time. On the time interval <span class="math inline">\([0,T]\)</span>, let <span class="math inline">\(W_t\)</span> be a standard Brownian motion in <span class="math inline">\(\mathbb{R}^D\)</span> and <span class="math inline">\(X_t\)</span> be the solution to the SDE</p>
 <p><span id="eq-sde-original"><span class="math display">\[
@@ -193,7 +193,7 @@ dX_t \; = \; b(X_t) \, dt + \sigma(X_t) \, dW_t
 \tag{1}\]</span></span></p>
 <p>for some drift <span class="math inline">\(b: \mathbb{R}^D \to \mathbb{R}^D\)</span> and diffusion <span class="math inline">\(\sigma: \mathbb{R}^D \to \mathbb{R}^{D \times D}\)</span> and initial distribution <span class="math inline">\(\mu_0(dx_0)\)</span>. This SDE defines a probability measure <span class="math inline">\(\mathbb{P}\)</span> on the path-space <span class="math inline">\(C([0,T]; \mathbb{R}^D)\)</span>, the space of continuous functions from <span class="math inline">\([0,T]\)</span> to <span class="math inline">\(\mathbb{R}^D\)</span>. Consider a perturbation drift function <span class="math inline">\(u: \mathbb{R}^D \to \mathbb{R}^D\)</span> and associated perturbed SDE given by</p>
 <p><span id="eq-sde-perturbed"><span class="math display">\[
-dX_t^u \; = \; b(X_t^u) \, dt + \sigma(X_t^u) \,  {\left(  dW_t +  \textcolor{blue}{u(X_t^u) \, dt}  \right)} .
+dX_t^u \; = \; b(X_t^u) \, dt + \sigma(X_t^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(X_t^u) \, dt}  \right\}} .
 \tag{2}\]</span></span></p>
 <p>This perturbed SDE, started from the same initial distribution <span class="math inline">\(\mu_0(dx_0)\)</span>, defines a probability measure <span class="math inline">\(\mathbb{P}^u\)</span> on the path-space <span class="math inline">\(C([0,T]; \mathbb{R}^D)\)</span> and it is often useful to understand the Radon-Nikodym derivative of <span class="math inline">\(\mathbb{P}^u\)</span> with respect to <span class="math inline">\(\mathbb{P}\)</span>. I have never really liked the way this is <a href="https://en.wikipedia.org/wiki/Girsanov_theorem">usually</a> derived, and also never really remember the result. It takes only a few lines of algebra to re-derive these results, at least informally. For this purpose, consider a simpler <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler discretization</a> of the SDE with time-discretization <span class="math inline">\(\delta = T/N\)</span> for <span class="math inline">\(N \gg 1\)</span>. Consider a discretized paths <span class="math inline">\((x_0, x_{\delta}, \ldots, x_{T})\)</span> of <a href="#eq-sde-original">Equation&nbsp;1</a> obtained by iterating the update</p>
 <p><span class="math display">\[
@@ -205,10 +205,10 @@ x_{t_{k+1}} \; = \; x_{t_k} + b(x_{t_k})\,\delta + \sigma(x_{t_k}) \, (\Delta W_
 \]</span></p>
 <p>with <span class="math inline">\(\Gamma(x) \equiv \sigma(x) \sigma^\top(x)\)</span> the volatility matrix and an irrelevant multiplicative constant <span class="math inline">\(\mathcal{Z}\)</span>. One obtains a similar expression for a discretized path of the perturbed SDE <a href="#eq-sde-perturbed">Equation&nbsp;2</a> and the ratio of these two quantities equals</p>
 <p><span class="math display">\[
-\frac{d \widetilde{\mathbb{P}}^{u}}{d \widetilde{\mathbb{P}}}(x) = \exp {\left\{ \sum_{k=0}^{N-1} -\frac 12 \|u(x_{t_k})\|^2 \, \delta +
+\frac{d \widetilde{\mathbb{P}}^{u}}{d \widetilde{\mathbb{P}}}(x) = \exp {\left\{ \sum_{k=0}^{N-1} -\frac{\delta}{2} \|u(x_{t_k})\|^2  +
 \left&lt; x_{t_{k+1}}-x_{t_k}-b(x_{t_k})\delta, \sigma(x_{t_k}) \, u(x_{t_k}) \right&gt;_{\Gamma^{-1}(x_{t_k})}  \right\}} .
 \]</span></p>
-<p>where the tilde notation denotes the discretized version of the measures. Under <span class="math inline">\(\widetilde{\mathbb{P}}\)</span> and as <span class="math inline">\(N \to \infty\)</span>, for a path <span class="math inline">\(dX_t \; = \; b(X_t) \, dt + \sigma(X_t) \, dW_t\)</span>, we have</p>
+<p>where the tilde notation denotes the discretized version of the measures. Since <span class="math inline">\(x_{t_{k+1}}-x_{t_k}-b(x_{t_k})\delta = \sigma(x_{t_k}) \, \Delta W_{t_k}\)</span>, under <span class="math inline">\(\widetilde{\mathbb{P}}\)</span> and as <span class="math inline">\(N \to \infty\)</span>, for a path <span class="math inline">\(dX_t \; = \; b(X_t) \, dt + \sigma(X_t) \, dW_t\)</span>, we have</p>
 <p><span class="math display">\[
 \frac{d \widetilde{\mathbb{P}}^{u}}{d \widetilde{\mathbb{P}}}(x) \to \exp {\left\{
 -\frac 12 \, \int_0^T \|u(X_t)\|^2 \, dt + \int_{0}^T u^\top(X_t) \, dW_t
@@ -220,7 +220,7 @@ x_{t_{k+1}} \; = \; x_{t_k} + b(x_{t_k})\,\delta + \sigma(x_{t_k}) \, (\Delta W_
 -\frac 12 \, \int_0^T \|u(X_t)\|^2 \, dt - \int_{0}^T u^\top(X_t) \, dW_t
 \right\}} .
 \]</span></p>
-<p>These results remain identical for time-dependent drift and volatility functions, as is clear from this non-rigorous argument. As described below, these change of variables formulae are often useful when performing importance sampling on path-space.</p>
+<p>These results remain identical for time-dependent drift and volatility functions, as is clear from this non-rigorous argument. As described below, these change of variables formulae are often useful when performing importance sampling on path-space. As a sanity check, one can see that in the case of a scalar Brownian motion <span class="math inline">\(dX = \sigma \, dW\)</span> and drifted version of it <span class="math inline">\(dX^u = \sigma \, dW + u \, dt\)</span>, we indeed have that <span class="math inline">\(d\mathbb{P}^u/d\mathbb{P}(x)\)</span> has unit expectation under <span class="math inline">\(\mathbb{P}\)</span> since it is equivalent to the fact <span class="math inline">\(\mathop{\mathrm{E}}[\exp(\sigma \, \xi)] = \exp(\sigma^2/2)\)</span> for a standard Gaussian random variable <span class="math inline">\(\xi\)</span>.</p>
 <section id="importance-sampling-on-path-space" class="level3">
 <h3 class="anchored" data-anchor-id="importance-sampling-on-path-space">Importance Sampling on path-space</h3>
 <p>Consider a functional <span class="math inline">\(\Phi: C([0,T]; \mathbb{R}^D) \to \mathbb{R}\)</span> on path-space; a typical example is</p>
@@ -229,11 +229,15 @@ x_{t_{k+1}} \; = \; x_{t_k} + b(x_{t_k})\,\delta + \sigma(x_{t_k}) \, (\Delta W_
 \]</span></p>
 <p>Suppose that we would like to evaluate the expectation of <span class="math inline">\(\Phi\)</span> under the measure <span class="math inline">\(\mathbb{P}\)</span>. Naive Monte-Carlo (MC) would require sampling <span class="math inline">\(M\)</span> trajectories from <a href="#eq-sde-original">Equation&nbsp;1</a> and computing the average of <span class="math inline">\(\Phi\)</span> on these trajectories. To reduce the variance of this naive MC estimator, one can also use importance sampling by sampling <span class="math inline">\(M\)</span> trajectories <span class="math inline">\(x^{1,u}, \ldots, x^{M,u}\)</span> from the measure <span class="math inline">\(\mathbb{P}^u\)</span> and compute the average</p>
 <p><span class="math display">\[
-\frac{1}{M} \, \sum_{i=1}^M \Phi(x^{i,u}) \, \exp {\left\{
+\frac{1}{M} \, \sum_{i=1}^M \Phi(x^{i,u}) \, W(x^{i,u})
+\]</span></p>
+<p>with weights given by the Radon-Nikodym derivative</p>
+<p><span class="math display">\[
+W(x^{i,u}) \; = \; \exp {\left\{
 -\frac 12 \, \int_0^T \|u(x^{i,u}_t)\|^2 \, dt - \int_{0}^T u^\top(x^{i,u}_t) \, dW_t
 \right\}} .
 \]</span></p>
-<p>Choose the optimal “control” function <span class="math inline">\(u\)</span> that minimizes the variance of the estimator is not entirely straightforward, although this <a href="../doob_transforms/">previous note</a> already gives the answer. More on this in another note.</p>
+<p>Choosing the optimal “control” function <span class="math inline">\(u\)</span> that minimizes the variance of the estimator is not entirely straightforward, although this <a href="../../notes/doob_transforms/doob.html">previous note</a> already gives the answer. More on this in another note.</p>
 
 
 </section>
