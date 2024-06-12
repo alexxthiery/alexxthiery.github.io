@@ -230,7 +230,7 @@ x_{t_{k+1}}-x_{t_k}-b(x_{t_k})\delta = \sigma(x_{t_k}) \, \Delta W_{t_k},
 \frac{d \mathbb{P}^{u}}{d \mathbb{P}}(x) = \exp {\left\{
 -\frac 12 \, \int_0^T \|u(x_t)\|^2 \, dt + \int_{0}^T u^\top(x_t) \, \frac{dx_t - b(x_t) dt}{\sigma(x_t)} \right\}} ,
 \]</span></p>
-<p>From this expression, it is slightly easier to see the relationship between <span class="math inline">\(d\mathbb{P}^u/d\mathbb{P}(x)\)</span> and <span class="math inline">\(d\mathbb{P}/d\mathbb{P}^u(x)\)</span>. As described below, these change of variables formulae are often useful when performing importance sampling on path-space. As a sanity check, one can see that in the case of a scalar Brownian motion <span class="math inline">\(dX = \sigma \, dW\)</span> and drifted version of it <span class="math inline">\(dX^u = \sigma \, dW + u \, dt\)</span>, we indeed have that <span class="math inline">\(d\mathbb{P}^u/d\mathbb{P}(x)\)</span> has unit expectation under <span class="math inline">\(\mathbb{P}\)</span> since it is equivalent to the fact <span class="math inline">\(\mathop{\mathrm{E}}[\exp(\sigma \, \xi)] = \exp(\sigma^2/2)\)</span> for a standard Gaussian random variable <span class="math inline">\(\xi\)</span>.</p>
+<p>From this expression, it is slightly easier to see the relationship between <span class="math inline">\(d\mathbb{P}^u/d\mathbb{P}(x)\)</span> and <span class="math inline">\(d\mathbb{P}/d\mathbb{P}^u(x)\)</span>. As described below, these change of variables formulae are often useful when performing importance sampling on path-space. As a sanity check, one can see that in the case of a scalar Brownian motion <span class="math inline">\(dX = \sigma \, dW\)</span> and drifted version of it <span class="math inline">\(dX^u = \sigma \, dW + u \, dt\)</span>, we indeed have that <span class="math inline">\(d\mathbb{P}^u/d\mathbb{P}(x)\)</span> has unit expectation under <span class="math inline">\(\mathbb{P}\)</span> since it is equivalent to the fact <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}[\exp(\sigma \, \xi)] = \exp(\sigma^2/2)\)</span> for a standard Gaussian random variable <span class="math inline">\(\xi\)</span>.</p>
 <section id="importance-sampling-on-path-space" class="level3">
 <h3 class="anchored" data-anchor-id="importance-sampling-on-path-space">Importance Sampling on path-space</h3>
 <p>Consider a functional <span class="math inline">\(\Phi: C([0,T]; \mathbb{R}^D) \to \mathbb{R}\)</span> on path-space; a typical example is</p>
@@ -247,7 +247,7 @@ W(x^{i,u}) \; = \; \exp {\left\{
 -\frac 12 \, \int_0^T \|u(x^{i,u}_t)\|^2 \, dt - \int_{0}^T u^\top(x^{i,u}_t) \, dW_t
 \right\}} .
 \]</span></p>
-<p>Choosing the optimal “control” function <span class="math inline">\(u\)</span> that minimizes the variance of the estimator is not entirely straightforward, although this <a href="../../notes/doob_transforms/doob.html">previous note</a> already gives the answer. More on this in another note.</p>
+<p>Choosing the optimal “control” function <span class="math inline">\(u\)</span> that minimizes the variance of the estimator is not entirely straightforward, although this <a href="../../notes/doob_transforms/doob.html">previous note</a> already gives the answer. More on this in <a href="../../notes/HJB/HJB.html">another note</a>.</p>
 
 
 </section>

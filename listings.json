@@ -59,6 +59,7 @@
   {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
+      "/notes/HJB/HJB.html",
       "/notes/girsanov/girsanov.html",
       "/notes/doob_transforms/doob.html",
       "/notes/MCMC_on_manifold/mcmc_manifold.html",

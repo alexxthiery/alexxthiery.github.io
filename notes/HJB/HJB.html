@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Sanov’s Theorem</title>
+<title>Alexandre Thiéry - Doob, Girsanov and Bellman</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -62,18 +62,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Sanov’s Theorem">
+<meta property="og:title" content="Alexandre Thiéry - Doob, Girsanov and Bellman">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://alexxthiery.github.io/notes/sanov/boltzman.png">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/HJB/bellman.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta property="og:image:height" content="1200">
-<meta property="og:image:width" content="1800">
-<meta name="twitter:title" content="Alexandre Thiéry - Sanov’s Theorem">
+<meta name="twitter:title" content="Alexandre Thiéry - Doob, Girsanov and Bellman">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://alexxthiery.github.io/notes/sanov/boltzman.png">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/HJB/bellman.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:image-height" content="1200">
-<meta name="twitter:image-width" content="1800">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -131,9 +127,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Sanov’s Theorem</h1>
+      <h1 class="title">Doob, Girsanov and Bellman</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">LargeDeviation</div>
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">markov</div>
               </div>
                   </div>
   </div>
@@ -145,14 +142,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">09 10 2023</p>
+        <p class="date">11 06 2024</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">09 10 2023</p>
+        <p class="date-modified">11 06 2024</p>
       </div>
     </div>
       
@@ -163,15 +160,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#sanovs-theorem" id="toc-sanovs-theorem" class="nav-link active" data-scroll-target="#sanovs-theorem">Sanov’s Theorem</a></li>
-  <li><a href="#rare-events-happen-in-the-least-unlikely-manner" id="toc-rare-events-happen-in-the-least-unlikely-manner" class="nav-link" data-scroll-target="#rare-events-happen-in-the-least-unlikely-manner">Rare events happen in the least unlikely manner</a></li>
-  <li><a href="#example-averaging-uniforms" id="toc-example-averaging-uniforms" class="nav-link" data-scroll-target="#example-averaging-uniforms">Example: averaging uniforms…</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -179,87 +168,126 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<section id="sanovs-theorem" class="level3">
-<h3 class="anchored" data-anchor-id="sanovs-theorem">Sanov’s Theorem</h3>
-<p>Consider a random variable <span class="math inline">\(X\)</span> on the finite alphabet <span class="math inline">\(\{a_1, \ldots, a_K\}\)</span> with <span class="math inline">\(\mathop{\mathrm{\mathbb{P}}}(X=a_k) = p_k\)</span>. For <span class="math inline">\(N \gg 1\)</span>, consider a sequence <span class="math inline">\((x_1, \ldots, x_N)\)</span> obtained by sampling <span class="math inline">\(N\)</span> times independently from <span class="math inline">\(X\)</span> and set</p>
-<p><span class="math display">\[
-\widehat{p}_k = \frac{1}{N} \, \sum_{i=1}^N \, \mathbf{1} {\left( x_i = a_k \right)}
-\]</span></p>
-<p>the proportion of <span class="math inline">\(a_k\)</span> within this sequence. In other words, the empirical distribution obtained from the samples <span class="math inline">\((x_1, \ldots, x_N)\)</span> reads</p>
-<p><span class="math display">\[
-\widehat{p} = \sum_{k=1}^K \, \widehat{p}_k \, \delta_{a_k}.
-\]</span></p>
-<p>Indeed, the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">LLN</a> indicates that <span class="math inline">\(\widehat{p}_k \to p_k\)</span> as <span class="math inline">\(N \to \infty\)</span>, and it is important to estimate the probability that <span class="math inline">\(\widehat{p}_k\)</span> significantly deviates from <span class="math inline">\(p_k\)</span>. To this end, note that for another probability vector <span class="math inline">\(q=(q_1, \ldots, q_K)\)</span> the probability that</p>
-<p><span class="math display">\[
-(\widehat{p}_1, \ldots, \widehat{p}_K) \; = \; (q_1, \ldots, q_K)
-\]</span></p>
-<p>is straightforward to compute and reads</p>
-<p><span class="math display">\[
-\mathop{\mathrm{\mathbb{P}}}(\widehat{p} = q) \; = \; \binom{N}{N q_1, \ldots, N q_K} \, p_1^{N q_1} \ldots p_R^{N q_K}.
-\]</span></p>
-<p><a href="https://en.wikipedia.org/wiki/Stirling%27s_approximation">Stirling’s approximation</a> <span class="math inline">\(m! \asymp m \, \ln(m)\)</span> then gives that</p>
-<p><span class="math display">\[
-\mathop{\mathrm{\mathbb{P}}}(\widehat{p} = q) \; \asymp \;
-\exp {\left( -N \cdot \mathop{\mathrm{D_{\text{KL}}}}(q,p) \right)}
-\]</span></p>
-<p>where <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(q,p) = \sum_{k=1}^K q_k \, \log[q_k / p_k]\)</span> is the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback–Leibler divergence</a> of <span class="math inline">\(q\)</span> from <span class="math inline">\(p\)</span>. In other words, as soon as <span class="math inline">\(q \neq p\)</span>, the probability of observing <span class="math inline">\(\widehat{p} \approx q\)</span> falls exponentially quickly to zero. With the language of <a href="https://en.wikipedia.org/wiki/Large_deviations_theory">Large Deviations</a>, one can make this statement slightly more precise, rigorous and general, but it is essentially the content of <a href="https://en.wikipedia.org/wiki/Sanov%27s_theorem">Sanov’s Theorem</a>.</p>
-</section>
-<section id="rare-events-happen-in-the-least-unlikely-manner" class="level3">
-<h3 class="anchored" data-anchor-id="rare-events-happen-in-the-least-unlikely-manner">Rare events happen in the least unlikely manner</h3>
-<p>Given a list of mutually exclusive events <span class="math inline">\(E_1, \ldots, E_R\)</span> and the knowledge that at least one of these events has taken place, the probability that the event <span class="math inline">\(E_k\)</span> was the one that happened is <span class="math inline">\(\mathop{\mathrm{\mathbb{P}}}(E_k) / [\mathop{\mathrm{\mathbb{P}}}(E_1) + \ldots + \mathop{\mathrm{\mathbb{P}}}(E_R)]\)</span>. The implication is that if all the events are rare, that is <span class="math inline">\(p_k \approx e^{-N \, I_k} \ll 1\)</span>, and it is known that one event has indeed occurred, there is a high probability that the event with the smallest <span class="math inline">\(I_k\)</span> value was the one that happened: the rare event took place in the least unlikely manner.</p>
-<p>Consider an iid sequence <span class="math inline">\((X_1, \ldots, X_N)\)</span> of <span class="math inline">\(N \gg 1\)</span> discrete real-valued random variables with <span class="math inline">\(\mathop{\mathrm{\mathbb{P}}}(X = a_k) = p_k\)</span> and mean <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}(X) \in \mathbb{R}\)</span>. Suppose one observes the rare event</p>
-<p><span id="eq-rare"><span class="math display">\[
-\frac{1}{N} \sum_{i=1}^N x_i  \geq \mu
-\tag{1}\]</span></span></p>
-<p>for some level <span class="math inline">\(\mu\)</span> significantly above <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}(X)\)</span>. Naturally, the least unlikely way for this to happen is if <span class="math inline">\((x_1 + \ldots + x_N) / N \, \approx \, \mu\)</span>. Furthermore, one may be interested in the empirical distribution <span class="math inline">\(\widehat{p}\)</span> associated to the sequence <span class="math inline">\((x_1, \ldots, x_N)\)</span> when the rare event <a href="#eq-rare">Equation&nbsp;1</a> does happen. The least unlikely empirical distribution is the one that minimizes <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> under the constraint that</p>
-<p><span id="eq-contraint"><span class="math display">\[
-\sum_{i=1}^K a_k \, \widehat{p}_k = \mu.
-\tag{2}\]</span></span></p>
-<p>The function <span class="math inline">\(\widehat{p} \mapsto \mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> is convex and the introduction of Lagrange multipliers shows that the solution to this constraint minimization problem is given by the Boltzmann distribution <span class="math inline">\(p_{\beta_\mu}\)</span> defined as</p>
-<p><span id="eq-boltz"><span class="math display">\[
-p_{\beta_\mu}(a_k) = \frac{ p_k \, e^{-\beta_{\mu} \, a_k} }{Z(\beta_{\mu})}.
-\tag{3}\]</span></span></p>
-<p>The parameter <span class="math inline">\(\beta_{\mu} \in \mathbb{R}\)</span> is chosen so that the constraint <a href="#eq-contraint">Equation&nbsp;2</a> be satisfied and the minus sign is to follow the “physics” convention. Note in passing that, in fact, the joint function <span class="math inline">\((\widehat{p},p) \mapsto \mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> is convex! As usual, if one defines the log-partition function as <span class="math inline">\(\Phi(\beta) = -\log Z(\beta)\)</span>, with</p>
-<p><span class="math display">\[
-Z(\beta) \; = \; \sum_{k=1}^K \, p_k \, e^{-\beta \, a_k},
-\]</span></p>
-<p>one obtains that the constraint is equivalent to requiring <span class="math inline">\(\mu = \frac{d}{d \beta} \Phi(\beta) \mid_{\beta = \beta_\mu}\)</span>. Furthermore, since <span class="math inline">\(\Phi\)</span> is smooth and strictly concave, the function <span class="math inline">\(\beta \mapsto \left&lt; \mu, \beta \right&gt; - \Phi(\beta)\)</span> is convex and the condition <span class="math inline">\(\mu = \frac{d}{d \beta} \Phi(\beta) \mid_{\beta = \beta_\mu}\)</span> is equivalent to setting</p>
-<p><span class="math display">\[
-\beta_{\mu} \; = \; \mathop{\mathrm{argmin}}_{\beta \in \mathbb{R}} \; \left&lt; \mu, \beta \right&gt; - \Phi(\beta).
-\]</span></p>
-<p>Naturally, one can now also estimate the probability of the event <span class="math inline">\(\mathop{\mathrm{\mathbb{P}}}[(X_1 + \ldots + X_N)/N \approx \alpha]\)</span> happening since one now knows that it is equivalent (on a log scale) to <span class="math inline">\(\exp[-N \, \mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p)]\)</span>. Algebra gives</p>
-<p><span class="math display">\[
-\begin{align}
-\mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p)
-&amp;= \Phi(\beta_\mu) - \left&lt; \mu, \beta_\mu \right&gt;\\
-&amp;= \max_{\beta \in \mathbb{R}} \; \Phi(\beta) - \left&lt; \mu, \beta \right&gt;.
-\end{align}
-\]</span></p>
-<p>As a sanity check, note that since <span class="math inline">\(\Phi(0)=0\)</span>, we have that <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p) \geq 0\)</span>, as required. The statement that</p>
-<p><span class="math display">\[
-\frac{1}{N} \, \log \mathop{\mathrm{\mathbb{P}}} {\left\{ \frac{X_1 + \ldots + X_N}{N} \; \approx \; \mu \right\}}  \; = \; - I(\mu)
-\]</span></p>
-<p>with a (Large Deviation) rate function given by</p>
-<p><span class="math display">\[
-I(\mu) \; = \; \max_{\beta \in \mathbb{R}} \; \Phi(\beta) - \left&lt; \mu, \beta \right&gt;
-\]</span></p>
-<p>is more or less the content of <a href="https://en.wikipedia.org/wiki/Cramér%27s_theorem_(large_deviations)">Cramer’s Theorem</a>. The rate function <span class="math inline">\(I(\mu)\)</span> and the function <span class="math inline">\(\log Z( \textcolor{red}{-}\beta)\)</span> are related by a <a href="https://en.wikipedia.org/wiki/Legendre_transformation">Legendre transform</a>.</p>
-</section>
-<section id="example-averaging-uniforms" class="level3">
-<h3 class="anchored" data-anchor-id="example-averaging-uniforms">Example: averaging uniforms…</h3>
-<p>Now, to illustrate the above discussion, consider <span class="math inline">\(N=10\)</span> iid uniform random variables on the interval <span class="math inline">\([0,1]\)</span>. It is straightforward to simulate these <span class="math inline">\(N=10\)</span> uniforms conditioned on the event that their mean exceeds the level <span class="math inline">\(\mu = 0.7\)</span>, which is a relatively rare event. When this is done repetitively and the empirical distribution is plotted, the resulting distribution is as follows:</p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./boltzman.png" class="img-fluid figure-img" style="width:95.0%"></p>
-<figcaption class="figure-caption">Mean of <span class="math inline">\(10\)</span> uniforms conditioned on being larger than <span class="math inline">\(\mu = 0.7\)</span></figcaption>
+<p><img src="./bellman.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
+<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Richard_E._Bellman">Richard Bellman</a> (1920 – 1984)</figcaption>
 </figure>
 </div>
 </div>
-<p>Indeed, the distribution in blue is (very close to) the Boltzmann distribution with density <span class="math inline">\(\mathcal{D}_{\beta}(x) = e^{-\beta \, x} / Z(\beta)\)</span> with <span class="math inline">\(\beta \in \mathbb{R}\)</span> chosen so that <span class="math inline">\(\int_{0}^{1} x \, \mathcal{D}_{\beta}(dx) = \mu\)</span>.</p>
+<p>Consider a diffusion in <span class="math inline">\(\mathbb{R}^D\)</span> with deterministic starting position <span class="math inline">\(x_0 \in \mathbb{R}^D\)</span> and dynamics</p>
+<p><span class="math display">\[
+dX_t = b(X_t)dt + \sigma(X_t) \, dW_t
+\]</span></p>
+<p>for a drift and volatility functions <span class="math inline">\(b: \mathbb{R}^D \to \mathbb{R}^D\)</span> and <span class="math inline">\(\sigma: \mathbb{R}^D \to \mathbb{R}^{D \times D}\)</span>. On the time interval <span class="math inline">\([0,T]\)</span>, this defines a probability <span class="math inline">\(\mathbb{P}\)</span> on the path-space <span class="math inline">\(C([0,T];\mathbb{R}^D)\)</span>. For two functions <span class="math inline">\(f: [0,T] \times \mathbb{R}^D \to \mathbb{R}\)</span> and <span class="math inline">\(g: \mathbb{R}^D \to \mathbb{R}\)</span>, consider the probability distribution <span class="math inline">\(\mathbb{Q}\)</span> defined as</p>
+<p><span class="math display">\[
+\frac{d \mathbb{Q}}{d \mathbb{P}} = \frac{1}{\mathcal{Z}} \exp  {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}}
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal{Z}\)</span> denotes the normalizing constant <span id="eq-normalizing-constant"><span class="math display">\[
+\mathcal{Z}\; = \; \mathop{\mathrm{\mathbb{E}}} {\left[  \exp  {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}}   \right]} .
+\tag{1}\]</span></span></p>
+<p>The distribution <span class="math inline">\(\mathbb{Q}\)</span> places more probability mass on trajectories such that <span class="math inline">\(\int_0^T f(X_s) \, ds + g(X_T)\)</span> is large. As described in these notes on <a href="../../notes/doob_transforms/doob.html">Doob h-transforms</a>, the tilted probability distribution <span class="math inline">\(\mathbb{Q}\)</span> can be described by a diffusion process <span class="math inline">\(X^\star\)</span> with dynamics</p>
+<p><span class="math display">\[
+dX^\star = b(X^\star)dt + \sigma(X^\star) \,  {\left\{  dW_t +  \textcolor{blue}{u^\star(t, X^\star)} \, dt  \right\}} .
+\]</span></p>
+<p>The control function <span class="math inline">\( \textcolor{blue}{u^\star: [0,T] \times \mathbb{R}^D \to \mathbb{R}^D}\)</span> is of the gradient form</p>
+<p><span id="eq-u-star"><span class="math display">\[
+\textcolor{blue}{u^\star(t, x)} \; = \; \sigma^\top(x) \, \nabla \log[  \textcolor{green}{h(t,x)} ]
+\tag{2}\]</span></span></p>
+<p>and the function <span class="math inline">\( \textcolor{green}{h(t,x)}\)</span> is described by the conditional expectation,</p>
+<p><span class="math display">\[
+\textcolor{green}{h(t,x) = \mathbb{E} {\left[  \exp  {\left\{  \int_t^T f(X_s) \, ds + g(X_T)  \right\}}   \mid X_t = x  \right]} }.
+\]</span></p>
+<p>The expression <span class="math inline">\( \textcolor{blue}{u^\star(t, x)} \; = \; \sigma^\top(x) \, \nabla \log[  \textcolor{green}{h(t,x)} ]\)</span> is quite intuitive; in order to describe the tilted measure <span class="math inline">\(\mathbb{Q}\)</span> that places more probability mass on trajectories such that <span class="math inline">\(\int_0^T f(X_s) \, ds + g(X_T)\)</span> is large, the optimal control <span class="math inline">\(u^\star(t,x)\)</span> should be in the direction of states such that the “cost-to-go” quantity <span class="math inline">\(\int_t^T f(X_s) \, ds + g(X_T)\)</span> is large.</p>
+<p>To obtain a variational description of the optimal control function <span class="math inline">\( \textcolor{blue}{u^\star}\)</span>, it suffices to express it as the solution of an optimization problem. It turns out that KL-divergences between diffusion processes are the right tool for this: we will write <span class="math inline">\(\mathbb{Q}\)</span> as the minimizer of <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(\mathbb{P}^u \| \mathbb{Q})\)</span> for a class of tractable probability distributions <span class="math inline">\(\mathbb{P}^u\)</span> described by controlled diffusions. As described in these notes on the <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a>, for any control function <span class="math inline">\(u(t,x)\)</span>, the controlled diffusion <span class="math inline">\(X^u\)</span> with dynamics</p>
+<p><span class="math display">\[
+dX^u = b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^u)} \, dt  \right\}}
+\]</span></p>
+<p>and started at <span class="math inline">\(x_0\)</span> induces a probability distribution <span class="math inline">\(\mathbb{P}^u\)</span> on path-space given by</p>
+<p><span id="eq-girsanov"><span class="math display">\[
+\frac{d\mathbb{P}}{d\mathbb{P}^u}(x)
+\; = \;
+\exp {\left\{ -\frac 12 \int_{0}^{T} \|u(s,X^u_S)\|^2 \, ds - \int_{0}^{T} u(s,X^u_s)^\top \, dW_s \right\}} .
+\tag{3}\]</span></span></p>
+<p>This allows one to write down explicitly the expression for the negative KL divergence</p>
+<p><span class="math display">\[
+-\mathop{\mathrm{D_{\text{KL}}}}(\mathbb{P}^u \| \mathbb{Q}) =
+\mathbb{E}_u {\left[   \log {\left\{ \frac{d\mathbb{Q}}{d\mathbb{P}^u}(X^u) \right\}}  \right]}
+\]</span></p>
+<p>between <span class="math inline">\(\mathbb{P}^u\)</span> and the tilted distribution <span class="math inline">\(\mathbb{Q}\)</span>. The notation <span class="math inline">\(\mathbb{E}_u\)</span> denotes the expectation with respect to the controlled diffusion <span class="math inline">\(X^u\)</span>. The negative KL is, up to a constant, the usual Evidence Lower Bound (ELBO) used in variational inference. Since the quantity <span class="math inline">\(\log {\left\{ \frac{d\mathbb{Q}}{d\mathbb{P}^u}(X^u) \right\}} \)</span> can be expressed as</p>
+<p><span class="math display">\[
+\log {\left\{ \frac{d\mathbb{P}}{d\mathbb{P}^u}(X^u) \right\}}  - \log(\mathcal{Z})
++ \int_0^T f(X^u_s) \, ds + g(X^u_T)
+\]</span></p>
+<p>it follows from <a href="#eq-girsanov">Equation&nbsp;3</a> that <span class="math inline">\(-\mathop{\mathrm{D_{\text{KL}}}}(\mathbb{P}^u \| \mathbb{Q})\)</span> equals</p>
+<p><span class="math display">\[
+-\log(\mathcal{Z}) +
+\mathop{\mathrm{\mathbb{E}}} {\left[  \int_{0}^{T}  {\left\{  -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \right\}}  \, ds + g(X^u_T) \right]} .
+\]</span></p>
+<p>Since the KL divergence is positive and the optimal control <span class="math inline">\(u^\star\)</span> in <a href="#eq-u-star">Equation&nbsp;2</a> drives the KL divergence to zero, we have that</p>
+<p><span class="math display">\[
+\max_u \; \text{ELBO}(u) = \log \mathcal{Z}
+\]</span></p>
+<p>where the minimization is over all (reasonably well-behaved) control functions <span class="math inline">\(u: [0,T] \times \mathbb{R}^D \to \mathbb{R}^D\)</span> and</p>
+<p><span class="math display">\[
+\text{ELBO}(u) \; = \; \mathop{\mathrm{\mathbb{E}}} {\left[  \int_{0}^{T}  {\left\{  -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \right\}}  \, ds + g(X^u_T) \right]} .
+\]</span></p>
+<p>For maximizing the ELBO, the control needs to drive the trajectories to regions where <span class="math inline">\(\int_{0}^{T} f(X^u_s) \, ds + g(X^u_T)\)</span> is large while at the same time keep the control effort <span class="math inline">\(\int_{0}^{T} \|u(s,X^u_s)\|^2 \, ds\)</span> small. The optimal control <span class="math inline">\(u^\star\)</span> is given by <a href="#eq-u-star">Equation&nbsp;2</a> and <a href="#eq-normalizing-constant">Equation&nbsp;1</a> gives that</p>
+<p><span class="math display">\[
+\begin{align}
+\log \mathcal{Z}
+&amp;= \log \mathop{\mathrm{\mathbb{E}}} {\left[  \exp  {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}}   \right]} \\
+&amp;= \log[  \textcolor{green}{ h(0,x_0) } ].
+\end{align}
+\]</span></p>
+<p>Since there was nothing really special about the starting point <span class="math inline">\(x_0\)</span> and the time horizon <span class="math inline">\(T&gt;0\)</span>, the above derivation gives the solution to the following stochastic optimal control problem. It is written as a maximization problem although a large part of the control and physics literature writes it as an equivalent minimization problem. Consider the cost-to-go function (a.k.a. value function) defined as</p>
+<p><span class="math display">\[
+V(t,x) = \sup_u \; \mathop{\mathrm{\mathbb{E}}} {\left[  \int_{t}^{T}  {\left\{  -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \right\}}  \, ds + g(X^u_T) \mid X_t = x \right]} .
+\]</span></p>
+<p>We have that</p>
+<p><span class="math display">\[
+\begin{align}
+V(t,x)
+&amp;= \log \mathbb{E} {\left[  \exp  {\left\{  \int_t^T f(X_s) \, ds + g(X_T)  \right\}}  \mid X_t = x \right]} \\
+&amp;= \log[  \textcolor{green}{h(t, x)} ].
+\end{align}
+\]</span></p>
+<p>This shows that optimal control <span class="math inline">\(u^\star\)</span> can also be expressed as</p>
+<p><span id="eq-u-star-V"><span class="math display">\[
+u^\star(t,x) = \sigma^\top(x) \nabla \log[  \textcolor{green}{ h(t,x) }]
+= \sigma^\top(x) \, \nabla V(t,x) .
+\tag{4}\]</span></span></p>
+<p>The expression <span class="math inline">\(\sigma^\top(x) \, \nabla V(t,x)\)</span> is intuitive: since we are trying to maximize the cost-to-go function, the optimal control should be in the direction of the gradient of the cost-to-go function.</p>
+<p>Finally, let us mention that one can easily derive the <a href="https://en.wikipedia.org/wiki/Hamilton–Jacobi–Bellman_equation">Hamilton-Jacobi-Bellman</a> equation for the cost-to-go function <span class="math inline">\(V(t,x)\)</span>. We have</p>
+<p><span class="math display">\[
+V(t,x) = \sup_u \; \mathop{\mathrm{\mathbb{E}}} {\left[  \int_{t}^T C_s \, ds + g(X^u_T) \right]}
+\]</span></p>
+<p>with <span class="math inline">\(C_s = -\tfrac12 \|u(s,X^u_s)\|^2 + f(X^u_s)\)</span>. For <span class="math inline">\(\delta \ll 1\)</span>, we have</p>
+<p><span class="math display">\[
+\begin{align}
+V(t,x)
+&amp;\; = \;
+\sup_u \;  {\left\{  C_t \, \delta + \mathop{\mathrm{\mathbb{E}}} {\left[  V(t+\delta, X^u_{t+\delta}) \mid X^u_t=x \right]}   \right\}}  + o(\delta)\\
+&amp;\; = \;
+V(t,x) + \delta \, \sup_{u(t,x)} \;  {\left\{  C_t + (\partial_t + \mathcal{L}+ \sigma(x) \, u(t,x) \, \nabla) \, V(t,x) \right\}}  + o(\delta)
+\end{align}
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal{L}= b \nabla + \sigma \sigma^\top : \nabla^2\)</span> is the generator of the uncontrolled diffusion. Since <span class="math inline">\(C_t = -\tfrac12 \|u(t,x)\|^2 + f(x)\)</span> is a simple quadratic function, the supremum over the control <span class="math inline">\(u(t,x)\)</span> can be computed in closed form,</p>
+<p><span class="math display">\[
+\begin{align}
+u^\star(t,x)
+&amp;= \mathop{\mathrm{argmax}}_{z \in \mathbb{R}^D} \; -\tfrac12 \|z\|^2 + \left&lt; z, \sigma^\top(x) \nabla V(t,x)  \right&gt;\\
+&amp;= \sigma^\top(x) \, \nabla V(t,x),
+\end{align}
+\]</span></p>
+<p>as we already knew from <a href="#eq-u-star-V">Equation&nbsp;4</a>. This implies that the cost-to-go function <span class="math inline">\(V(t,x)\)</span> satisfies the HJB equation</p>
+<p><span id="eq-hjb"><span class="math display">\[
+{\left( \partial_t + \mathcal{L} \right)} V + \frac12 \| \sigma^\top \nabla V \|^2 + f = 0
+\tag{5}\]</span></span></p>
+<p>with terminal condition <span class="math inline">\(V(T,x) = g(x)\)</span>. Another route to derive <a href="#eq-hjb">Equation&nbsp;5</a> is to simply use the fact that <span class="math inline">\(V(t,x) = \log h(t,x)\)</span>; since the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac</a> gives that the function <span class="math inline">\(h(t,x)\)</span> satisfies <span class="math inline">\((\partial_t + \mathcal{L}+ f) h = 0\)</span>, the conclusion follows from a few lines of algebra by starting writing <span class="math inline">\(\partial_t V = -h^{-1} \, \partial_t h = h^{-1}(\mathcal{L}+ f)[h]\)</span>, expanding <span class="math inline">\(\mathcal{L}h\)</span> and expressing everything back in terms of <span class="math inline">\(V\)</span>. The term <span class="math inline">\(\|\sigma^\top \nabla V\|^2\)</span> naturally arises when expressing the diffusion term <span class="math inline">\(\sigma \sigma^\top : \nabla^2 h\)</span> in terms of the second derivative of <span class="math inline">\(V\)</span>.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

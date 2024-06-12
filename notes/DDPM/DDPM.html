@@ -192,7 +192,7 @@ dX = - \frac12 X \, dt + dW.
 \right.
 \]</span></p>
 <p>for isotropic Gaussian noise term <span class="math inline">\(\mathbf{n}\sim \pi_{\mathrm{ref}} = \mathcal{N}(0,I)\)</span>. The forward transition from <span class="math inline">\(x\)</span> to <span class="math inline">\(y\)</span> in “<span class="math inline">\(s\)</span>” amount of time reads <span id="eq-OU-forward"><span class="math display">\[
-\mathop{\mathrm{P}}(X_{t+s} \in dy \, | \, X_t = x )
+\mathop{\mathrm{\mathbb{P}}}(X_{t+s} \in dy \, | \, X_t = x )
 \; \propto \;
 \exp {\left\{ -\frac{(y - \alpha_s \, x)^2}{2 \, \sigma^2_s} \right\}}  \, dy.
 \tag{2}\]</span></span></p>
@@ -224,7 +224,7 @@ d\overleftarrow{X}_t = {\color{red} + }\frac12 \overleftarrow{X}_t \, dt
 \tag{4}\]</span></span></p>
 <p>where <span class="math inline">\(\widehat{x}_0(x,t)\)</span> is a “denoising” estimate of the initial position <span class="math inline">\(x_0\)</span> given a noisy estimate <span class="math inline">\(X_t=x\)</span> at time <span class="math inline">\(t\)</span>, i.e.</p>
 <p><span class="math display">\[
-\widehat{x}_0(x,t) \; = \; \mathop{\mathrm{E}}[X_0  \; \mid \; X_t = x].
+\widehat{x}_0(x,t) \; = \; \mathop{\mathrm{\mathbb{E}}}[X_0  \; \mid \; X_t = x].
 \]</span></p>
 <p>Note that this derivation fundamentally relies on the tractability of the transition density of the OU process, although any other linear Gaussian diffusion could have been used. For simplifying notation, I will often write <span class="math inline">\(\widehat{x}_0(x_t, t)\)</span> as <span class="math inline">\(\widehat{x}_0(x_t)\)</span> when it is clear that <span class="math inline">\(x_t\)</span> is a sample obtained at time <span class="math inline">\(0 \leq t \leq T\)</span>. <a href="#eq-score-denoising">Equation&nbsp;4</a> means that to estimate the score, one only needs to train a denoising function</p>
 <p><span class="math display">\[
@@ -238,7 +238,7 @@ X_t = \alpha_t X_0 + \sigma_t \, \mathbf{n}
 \]</span></p>
 <p>with <span class="math inline">\(\mathbf{n}\sim \mathcal{N}(0,I)\)</span> and minimize the Mean Squared Error (MSE) loss, i.e.</p>
 <p><span class="math display">\[
-\mathop{\mathrm{E}}\|X_0 - \widehat{x}_0(t, X_t)\|^2,
+\mathop{\mathrm{\mathbb{E}}}\|X_0 - \widehat{x}_0(t, X_t)\|^2,
 \]</span></p>
 <p>with stochastic gradient descent or any other stochastic optimization procedure. The score is then defined as</p>
 <p><span class="math display">\[
@@ -250,27 +250,31 @@ X_t = \alpha_t X_0 + \sigma_t \, \mathbf{n}
 <h3 class="anchored" data-anchor-id="denoiser-practical-parametrization-and-training">Denoiser: practical parametrization and training</h3>
 <p>In practice, it may not be efficient, or stable, to try to directly parametrize the denoiser <span class="math inline">\(\widehat{x}_0(\cdots)\)</span> with a neural network and simply minimize the loss</p>
 <p><span id="eq-loss-naive"><span class="math display">\[
-\mathop{\mathrm{E}}\|X_0 - \widehat{x}_0(t, X_t)\|^2.
+\mathop{\mathrm{\mathbb{E}}}\|X_0 - \widehat{x}_0(t, X_t)\|^2.
 \tag{5}\]</span></span></p>
-<p>For example, for <span class="math inline">\(t \approx 0\)</span>, we have that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t \approx X_0\)</span> so that it is very easy to reconstruct <span class="math inline">\(X_0\)</span> from <span class="math inline">\(X_t\)</span>. On the contrary, for large <span class="math inline">\(t\)</span>, there is almost no information contained within <span class="math inline">\(X_t\)</span> to reconstruct <span class="math inline">\(X_0\)</span> so that <span class="math inline">\(\mathop{\mathrm{E}}[X_0 \mid X_t=x] \approx \mathop{\mathrm{E}}[X_0]\)</span>. This means that the typical value of the naive loss <a href="#eq-loss-naive">Equation&nbsp;5</a> depends widely on <span class="math inline">\(t\)</span>, which makes it difficult to optimize: with this parametrization, since large values of the loss will be typically concentrated to large values of <span class="math inline">\(t\)</span>, the denoiser will not be accurate for <span class="math inline">\(t \approx 0\)</span>, leading to sub-optimal results. Since <span class="math inline">\(X_t = \alpha_t \, X_0 + \sigma_t \, \mathbf{n}\)</span>, one can defined the Signal-to-Noise-Ratio as</p>
+<p>For example, for <span class="math inline">\(t \approx 0\)</span>, we have that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t \approx X_0\)</span> so that it is very easy to reconstruct <span class="math inline">\(X_0\)</span> from <span class="math inline">\(X_t\)</span>. On the contrary, for large <span class="math inline">\(t\)</span>, there is almost no information contained within <span class="math inline">\(X_t\)</span> to reconstruct <span class="math inline">\(X_0\)</span> so that <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}[X_0 \mid X_t=x] \approx \mathop{\mathrm{\mathbb{E}}}[X_0]\)</span>. This means that the typical value of the naive loss <a href="#eq-loss-naive">Equation&nbsp;5</a> depends widely on <span class="math inline">\(t\)</span>, which makes it difficult to optimize: with this parametrization, since large values of the loss will be typically concentrated to large values of <span class="math inline">\(t\)</span>, the denoiser will not be accurate for <span class="math inline">\(t \approx 0\)</span>, leading to sub-optimal results. Since <span class="math inline">\(X_t = \alpha_t \, X_0 + \sigma_t \, \mathbf{n}\)</span>, one can defined the Signal-to-Noise-Ratio as</p>
 <p><span class="math display">\[\mathrm{SNR}(t) = \frac{\alpha_t}{\sigma_t}\]</span></p>
 <p>and, in order to normalize by the reconstruction difficulty, it makes more sense to train a denoiser by minimizing the loss:</p>
 <p><span class="math display">\[
-\mathop{\mathrm{E}} {\left[  \mathrm{SNR}^2(t) \times \|X_0 - \widehat{x}_0(t, X_t)\|^2  \right]} .
+\mathop{\mathrm{\mathbb{E}}} {\left[  \mathrm{SNR}^2(t) \times \|X_0 - \widehat{x}_0(t, X_t)\|^2  \right]} .
 \]</span></p>
 <p>It turns out that it is entirely equivalent to minimizing the loss</p>
 <p><span class="math display">\[
-\mathop{\mathrm{E}} {\left[  \| \mathbf{n}- \widehat{\mathbf{n}}(t, X_t)\|^2  \right]} .
+\mathop{\mathrm{\mathbb{E}}} {\left[  \| \mathbf{n}- \widehat{\mathbf{n}}(t, X_t)\|^2  \right]} .
 \]</span></p>
 <p>where <span class="math inline">\(X_t = \alpha_t \, X_0 + \sigma_t \, \mathbf{n}\)</span> while the denoiser <span class="math inline">\(\widehat{x}_0(\ldots)\)</span> and noise estimator <span class="math inline">\(\widehat{\mathbf{n}}(\ldots)\)</span> are parametrized so that</p>
 <p><span class="math display">\[
 X_t = \alpha_t \, \widehat{x}_0(t, X_t) + \sigma_t \, \widehat{\mathbf{n}}(t,X_t).
 \]</span></p>
 <p>That is one of the reasons why most of the papers on DDPM are parametrizing the denoiser <span class="math inline">\(\widehat{x}_0(\ldots)\)</span> by building instead a “noise estimator” <span class="math inline">\(\widehat{\mathbf{n}}(\ldots)\)</span> with a neural network and setting</p>
-<p><span class="math display">\[
+<p><span id="eq-noise-param"><span class="math display">\[
 \widehat{x}_0(t,X_t) = \frac{X_t - \sigma_t \, \widehat{\mathbf{n}}(t,X_T)}{\alpha_t}.
+\tag{6}\]</span></span></p>
+<p>Since <span class="math inline">\(\alpha_t \to 1\)</span> and <span class="math inline">\(\sigma_t \to 0\)</span> for <span class="math inline">\(t \to 0\)</span>, this also implicitly ensures that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t\)</span> for <span class="math inline">\(t \to 0\)</span>, as required. With the parametrization <a href="#eq-noise-param">Equation&nbsp;6</a>, the score is given by</p>
+<p><span class="math display">\[
+\mathcal{S}(t,x) \, = \, -\frac{\widehat{\mathbf{n}}(t,x)}{\sigma_t},
 \]</span></p>
-<p>Since <span class="math inline">\(\alpha_t \to 1\)</span> and <span class="math inline">\(\sigma_t \to 0\)</span> for <span class="math inline">\(t \to 0\)</span>, this also implicitly ensures that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t\)</span> for <span class="math inline">\(t \to 0\)</span>, as required.</p>
+<p>which can <strong>still</strong> lead to instability issues for small times <span class="math inline">\(t \to 0\)</span>, although to a lesser extent. It is unlikely that there is an easy way to avoid these issues since, as soon as the data distribution is supported on a (neighbourhood of) lower dimensional manifold, the actual score function indeed does become very large for <span class="math inline">\(t \to 0^+\)</span> since a strong “drift” is required to bring the diffusion back to the manifold.</p>
 </section>
 <section id="the-denoising-diffusion" class="level3">
 <h3 class="anchored" data-anchor-id="the-denoising-diffusion">The “denoising” diffusion</h3>
@@ -281,7 +285,7 @@ d\overleftarrow{X}_s =
 {\left(  \overleftarrow{X}_s - \frac{\widehat{x}_0(\overleftarrow{X}_s)}{\cosh((T-s)/2)}  \right)}
 \; + \;
 dB
-\tag{6}\]</span></span></p>
+\tag{7}\]</span></span></p>
 <p>This dynamics is intuitive: as <span class="math inline">\(s \to T\)</span> we have <span class="math inline">\(\cosh((T-s)/2) \to 1\)</span> and <span class="math inline">\(\varepsilon^2 \equiv \tanh((T-s)/2) \sim (T-s)/2 \to 0\)</span> so that the dynamics is similar to</p>
 <p><span class="math display">\[
 d\overleftarrow{X}_s =
@@ -289,7 +293,7 @@ d\overleftarrow{X}_s =
 {\left(  \overleftarrow{X}_s - \widehat{x}_0 \right)}  + dB.
 \]</span></p>
 <p>That is an Ornstein-Uhlenbeck process that converges quickly, i.e.&nbsp;on time-scale of order <span class="math inline">\(\mathcal{O}(\varepsilon^2)\)</span>, towards a Gaussian distribution centred at <span class="math inline">\(\widehat{x}_0\)</span> and with variance <span class="math inline">\(\varepsilon^2\)</span>.</p>
-<p>To discretize the reverse dynamics <a href="#eq-reverse-diff">Equation&nbsp;6</a> on a small interval <span class="math inline">\([\overline{s}, \overline{s}+\delta]\)</span>, one can for example consider the slightly simplified (linear) dynamics</p>
+<p>To discretize the reverse dynamics <a href="#eq-reverse-diff">Equation&nbsp;7</a> on a small interval <span class="math inline">\([\overline{s}, \overline{s}+\delta]\)</span>, one can for example consider the slightly simplified (linear) dynamics</p>
 <p><span class="math display">\[
 d\overleftarrow{X}_s =
 -\frac12 \, \frac{1}{\tanh((T-s)/2)} \,
@@ -299,7 +303,7 @@ d\overleftarrow{X}_s =
 <p><span class="math display">\[
 \left\{
 \begin{aligned}
-\mathop{\mathrm{E}}[ \overleftarrow{X}_{\overline{s} + \delta} ]
+\mathop{\mathrm{\mathbb{E}}}[ \overleftarrow{X}_{\overline{s} + \delta} ]
 \quad &amp;= \quad \mu + \lambda \, (\overleftarrow{x}_{\overline{s}} - \mu)\\
 \mathop{\mathrm{Var}}[ \overleftarrow{X}_{\overline{s} + \delta} ]
 \quad &amp;= \quad
