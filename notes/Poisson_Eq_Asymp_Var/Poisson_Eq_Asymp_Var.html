@@ -187,7 +187,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <p><span id="eq-martingale"><span class="math display">\[
 \varphi(X_t) = \varphi(X_0) + \int_{s=0}^t \mathcal{L}\varphi(X_s) \, ds + \textrm{($M_t \equiv$ martingale)}.
 \tag{1}\]</span></span></p>
-<p>Now, assume further that <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\varphi(X)] = 0\)</span> and that a Central Limit Theorem holds,</p>
+<p>Now, assume further that <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}_{\pi}[\varphi(X)] = 0\)</span> and that a Central Limit Theorem holds,</p>
 <p><span id="eq-CLT"><span class="math display">\[
 \frac{1}{\sqrt{T}} \int_{s=0}^T \varphi(X_s) \, ds \; \to \; \mathcal{N}(0, \sigma^2).
 \tag{2}\]</span></span></p>
@@ -197,11 +197,11 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <p>One can directly try to compute the second moment of <a href="#eq-CLT">Equation&nbsp;2</a> and obtain that</p>
 <p><span class="math display">\[
 \sigma^2 \; = \; \lim_{T \to \infty} \;
-\frac{1}{T} \, \iint_{0 \leq s,t \leq T} \mathop{\mathrm{E}}[\varphi(X_s) \varphi(X_t)] \, ds \, dt
+\frac{1}{T} \, \iint_{0 \leq s,t \leq T} \mathop{\mathrm{\mathbb{E}}}[\varphi(X_s) \varphi(X_t)] \, ds \, dt
 \]</span></p>
-<p>Since <span class="math inline">\(\mathop{\mathrm{E}}[\varphi(X_s) \varphi(X_t)]\)</span> falls quickly to zero as <span class="math inline">\(|s-t| \to 0\)</span> and defining the auto-covariance at lag <span class="math inline">\(r &gt; 0\)</span> as</p>
+<p>Since <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}[\varphi(X_s) \varphi(X_t)]\)</span> falls quickly to zero as <span class="math inline">\(|s-t| \to 0\)</span> and defining the auto-covariance at lag <span class="math inline">\(r &gt; 0\)</span> as</p>
 <p><span class="math display">\[
-C(r) = \mathop{\mathrm{E}}[\varphi(X_t) \varphi(X_{t+r})],
+C(r) = \mathop{\mathrm{\mathbb{E}}}[\varphi(X_t) \varphi(X_{t+r})],
 \]</span></p>
 <p>one obtains that an expression of the asymptotic as the integrated autocovariance function,</p>
 <p><span id="eq-autocov"><span class="math display">\[
@@ -229,9 +229,9 @@ C(r) = \mathop{\mathrm{E}}[\varphi(X_t) \varphi(X_{t+r})],
 \; = \;
 \frac{M_T}{\sqrt{T}} +  {\left\{  \frac{\Phi(X_T) - \Phi(X_0)}{\sqrt{T}}  \right\}}
 \]</span></p>
-<p>where <span class="math inline">\(M_T\)</span> is the martingale and <span class="math inline">\([\Phi(X_T) - \Phi(X_0)]/\sqrt{T}\)</span> typically vanishes as <span class="math inline">\(T \to \infty\)</span> and can be neglected. For computing the asymptotic variance, it suffices to estimate <span class="math inline">\(\mathop{\mathrm{E}}(M_T^2)\)</span>. And using the martingale property, it equals <span class="math inline">\(\int_{s=0}^T \mathop{\mathrm{E}}(dM_t)^2\)</span>. Also, since <span class="math inline">\(M_t = \varphi(X_t) - \varphi(X_0) - \int_{s=0}^t \mathcal{L}\varphi(X_s) \, ds\)</span>, algebra gives that</p>
+<p>where <span class="math inline">\(M_T\)</span> is the martingale and <span class="math inline">\([\Phi(X_T) - \Phi(X_0)]/\sqrt{T}\)</span> typically vanishes as <span class="math inline">\(T \to \infty\)</span> and can be neglected. For computing the asymptotic variance, it suffices to estimate <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}(M_T^2)\)</span>. And using the martingale property, it equals <span class="math inline">\(\int_{s=0}^T \mathop{\mathrm{\mathbb{E}}}(dM_t)^2\)</span>. Also, since <span class="math inline">\(M_t = \varphi(X_t) - \varphi(X_0) - \int_{s=0}^t \mathcal{L}\varphi(X_s) \, ds\)</span>, algebra gives that</p>
 <p><span class="math display">\[
-\frac{1}{\varepsilon} \, \mathop{\mathrm{E}} {\left[  (M_{t+\varepsilon} - M_t)^2  \right]}  \approx 2 \mathop{\mathrm{E}} {\left[  (\Gamma \Phi)(X_t)  \right]}
+\frac{1}{\varepsilon} \, \mathop{\mathrm{\mathbb{E}}} {\left[  (M_{t+\varepsilon} - M_t)^2  \right]}  \approx 2 \mathop{\mathrm{\mathbb{E}}} {\left[  (\Gamma \Phi)(X_t)  \right]}
 \]</span></p>
 <p>where the so-called <strong>carré du champ</strong> <span class="math inline">\((\Gamma \Phi)\)</span> is defined as</p>
 <p><span class="math display">\[
@@ -266,20 +266,20 @@ C(r) = \mathop{\mathrm{E}}[\varphi(X_t) \varphi(X_{t+r})],
 <p><span class="math display">\[
 \mathcal{L}^{-1} \; = \; -\int_{t=0}^{\infty} e^{t \, \mathcal{L}} \, dt.
 \]</span></p>
-<p>That is just another way of writing that the solution <span class="math inline">\(\Phi\)</span> to the Poisson equation <span class="math inline">\(\mathcal{L}\Phi = \varphi\)</span>, with the <strong>centering condition</strong> <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\Phi(X)]=0\)</span> for picking one solution out of the many possible solutions to the Poisson equation differing from each other by an additive constant, can be expressed as</p>
+<p>That is just another way of writing that the solution <span class="math inline">\(\Phi\)</span> to the Poisson equation <span class="math inline">\(\mathcal{L}\Phi = \varphi\)</span>, with the <strong>centering condition</strong> <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}_{\pi}[\Phi(X)]=0\)</span> for picking one solution out of the many possible solutions to the Poisson equation differing from each other by an additive constant, can be expressed as</p>
 <p><span id="eq-expansion"><span class="math display">\[
-\Phi(x) \, = \, -\int_{t=0}^{\infty} \mathop{\mathrm{E}}[\varphi(X_t)|X_0=x] \, dt.
+\Phi(x) \, = \, -\int_{t=0}^{\infty} \mathop{\mathrm{\mathbb{E}}}[\varphi(X_t)|X_0=x] \, dt.
 \tag{6}\]</span></span></p>
 <p><a href="#eq-expansion">Equation&nbsp;6</a> is easily proved with <a href="#eq-martingale">Equation&nbsp;1</a> by writing</p>
 <p><span class="math display">\[
 \Phi(x)-\Phi(X_T) = -\int_{t=0}^\infty \varphi(X_t) \, dt + \textrm{(martingale)}
 \]</span></p>
-<p>and by taking expectation from both sides and noticing that <span class="math inline">\(\mathop{\mathrm{E}}[\Phi(X_T)] \to 0\)</span> thanks to the assumed centering condition <span class="math inline">\(\mathop{\mathrm{E}}_{\pi}[\Phi(X)]=0\)</span>. Note that this remarks allows to give another derivation of <a href="#eq-asymp-var-poisson">Equation&nbsp;5</a> starting from the integrated autocovariance formulation <a href="#eq-autocov">Equation&nbsp;3</a>. Indeed, note that</p>
+<p>and by taking expectation from both sides and noticing that <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}[\Phi(X_T)] \to 0\)</span> thanks to the assumed centering condition <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}_{\pi}[\Phi(X)]=0\)</span>. Note that this remarks allows to give another derivation of <a href="#eq-asymp-var-poisson">Equation&nbsp;5</a> starting from the integrated autocovariance formulation <a href="#eq-autocov">Equation&nbsp;3</a>. Indeed, note that</p>
 <p><span class="math display">\[
 \begin{align}
 \sigma^2 &amp;= 2 \, \int_{r=0}^{\infty} C(r) \, dr\\
 &amp;=
-2 \, \int_{x \in \mathbb{R}^D} \varphi(x)  {\left\{  \int_{r=0}^{\infty}  \mathop{\mathrm{E}}[\varphi(X_t) | X_0=x] \, dr  \right\}}  \, \pi(dx)\\
+2 \, \int_{x \in \mathbb{R}^D} \varphi(x)  {\left\{  \int_{r=0}^{\infty}  \mathop{\mathrm{\mathbb{E}}}[\varphi(X_t) | X_0=x] \, dr  \right\}}  \, \pi(dx)\\
 &amp;=
 -2 \, \int_{x \in \mathbb{R}^D} \varphi(x) \Phi(x) \, \pi(dx)
 =
