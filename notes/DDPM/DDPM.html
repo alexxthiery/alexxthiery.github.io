@@ -144,6 +144,12 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">15 06 2024</p>
+      </div>
+    </div>
       
     </div>
     
@@ -160,7 +166,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <li><a href="#ornsteinuhlenbeck-noising-process" id="toc-ornsteinuhlenbeck-noising-process" class="nav-link" data-scroll-target="#ornsteinuhlenbeck-noising-process">Ornstein–Uhlenbeck Noising process</a></li>
   <li><a href="#the-reverse-diffusion" id="toc-the-reverse-diffusion" class="nav-link" data-scroll-target="#the-reverse-diffusion">The reverse diffusion</a></li>
   <li><a href="#denoising-to-estimating-the-score" id="toc-denoising-to-estimating-the-score" class="nav-link" data-scroll-target="#denoising-to-estimating-the-score">Denoising to estimating the score</a></li>
-  <li><a href="#denoiser-practical-parametrization-and-training" id="toc-denoiser-practical-parametrization-and-training" class="nav-link" data-scroll-target="#denoiser-practical-parametrization-and-training">Denoiser: practical parametrization and training</a></li>
+  <li><a href="#denoiser-practical-parametrization" id="toc-denoiser-practical-parametrization" class="nav-link" data-scroll-target="#denoiser-practical-parametrization">Denoiser: practical parametrization</a></li>
   <li><a href="#the-denoising-diffusion" id="toc-the-denoising-diffusion" class="nav-link" data-scroll-target="#the-denoising-diffusion">The “denoising” diffusion</a></li>
   </ul>
 </nav>
@@ -177,26 +183,20 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </section>
 <section id="ornsteinuhlenbeck-noising-process" class="level3">
 <h3 class="anchored" data-anchor-id="ornsteinuhlenbeck-noising-process">Ornstein–Uhlenbeck Noising process</h3>
-<p>DDPMs work as follows. Consider a diffusion process <span class="math inline">\(\{ X_t \}_{t=0}^T\)</span> that starts from the data distribution <span class="math inline">\(p_0(dx) \equiv \pi_{\mathrm{data}}(dx)\)</span> at time <span class="math inline">\(t=0\)</span>. The notation <span class="math inline">\(p_t(dx)\)</span> refers to the marginal distribution of the diffusion at time <span class="math inline">\(0 \leq t \leq T\)</span>. Assume furthermore that at time <span class="math inline">\(t=T\)</span>, the marginal distribution is (very close to) a reference distribution <span class="math inline">\(p_T(dx) = \pi_{\mathrm{ref}}(dx)\)</span> that is straightforward to sample from. Typically, <span class="math inline">\(\pi_{\mathrm{ref}}(dx)\)</span> is an isotropic Gaussian distribution. This diffusion process is often called the <em>noising</em> process since it transform the data distribution into a reference measure that can be thought of as “pure noise”. It is often chosen as an <a href="https://en.wikipedia.org/wiki/Ornstein–Uhlenbeck_process">Ornstein–Uhlenbeck</a> (OU) diffusion,</p>
+<p>Denoising Diffusion Probabilistic Models (DDPMs) work as follows. Consider a diffusion process <span class="math inline">\(\{ X_t \}_{t=0}^T\)</span> that starts from the data distribution <span class="math inline">\(p_0(dx) \equiv \pi_{\mathrm{data}}(dx)\)</span> at time <span class="math inline">\(t=0\)</span>. The notation <span class="math inline">\(p_t(dx)\)</span> refers to the marginal distribution of the diffusion at time <span class="math inline">\(0 \leq t \leq T\)</span>. Assume furthermore that at time <span class="math inline">\(t=T\)</span>, the marginal distribution is (very close to) a reference distribution <span class="math inline">\(p_T(dx) = \pi_{\mathrm{ref}}(dx)\)</span> that is straightforward to sample from. Typically, <span class="math inline">\(\pi_{\mathrm{ref}}(dx)\)</span> is an isotropic Gaussian distribution. This diffusion process is often called the <em>noising</em> process since it transform the data distribution into a reference measure that can be thought of as “pure noise”. It is often chosen as an <a href="https://en.wikipedia.org/wiki/Ornstein–Uhlenbeck_process">Ornstein–Uhlenbeck</a> (OU) diffusion,</p>
 <p><span id="eq-OU"><span class="math display">\[
 dX = - \frac12 X \, dt + dW.
 \tag{1}\]</span></span></p>
 <p>This diffusion is reversible with respect to, and quickly converges to, the reference distribution <span class="math inline">\(\pi_{\mathrm{ref}} = \mathcal{N}(0, I)\)</span> and has the good taste of having simple transition densities: the law of <span class="math inline">\(X_{t+s}\)</span> given that <span class="math inline">\(X_t = x_t\)</span> is the same as <span class="math inline">\(e^{-s/2} x_t + \sqrt{1-e^{-s}} \, \mathbf{n}\)</span>, which we write as</p>
 <p><span class="math display">\[
-\alpha_s x + \sigma_s \, \mathbf{n}\qquad \text{with} \qquad
-\left\{
-\begin{aligned}
-\alpha_s &amp;= \sqrt{1-\sigma_s^2}\\
-\sigma^2_s &amp;= 1-e^{-s}
-\end{aligned}
-\right.
+\alpha_s \, x + \sigma_s \, \mathbf{n}
 \]</span></p>
-<p>for isotropic Gaussian noise term <span class="math inline">\(\mathbf{n}\sim \pi_{\mathrm{ref}} = \mathcal{N}(0,I)\)</span>. The forward transition from <span class="math inline">\(x\)</span> to <span class="math inline">\(y\)</span> in “<span class="math inline">\(s\)</span>” amount of time reads <span id="eq-OU-forward"><span class="math display">\[
+<p>with <span class="math inline">\(\alpha_s^2 + \sigma_s^2 = 1\)</span> and <span class="math inline">\(\alpha_s = e^{-s/2}\)</span> and <span class="math inline">\(\mathbf{n}\sim \pi_{\mathrm{ref}} = \mathcal{N}(0,I)\)</span>. The forward probability transitions are tractable and given by <span id="eq-OU-forward"><span class="math display">\[
 \mathop{\mathrm{\mathbb{P}}}(X_{t+s} \in dy \, | \, X_t = x )
 \; \propto \;
 \exp {\left\{ -\frac{(y - \alpha_s \, x)^2}{2 \, \sigma^2_s} \right\}}  \, dy.
 \tag{2}\]</span></span></p>
-<p>This also means that one can directly generate samples from <span class="math inline">\(p_t(dx)\)</span> by first choosing a data samples <span class="math inline">\(x_i\)</span> from the data distribution <span class="math inline">\(p_{\mathrm{data}} \equiv p_0\)</span> and blend it with noise by setting <span class="math inline">\(x_i^{(t)} = \alpha_t \, x_i + \sigma_t \, \mathbf{n}\)</span>.</p>
+<p>This also means that one can directly generate samples from <span class="math inline">\(p_t(dx)\)</span> by first choosing a data samples <span class="math inline">\(x_i\)</span> from the data distribution <span class="math inline">\(p_{\mathrm{data}} \equiv p_0\)</span> and blend it with noise by setting <span class="math inline">\(x_i^{(t)} = \alpha_t \, x_i + \sigma_t \, \mathbf{n}\)</span>. In other words, one does not need to simulate the diffusion to generate samples from the data distribution, i.e.&nbsp;the method is “simulation free”.</p>
 </section>
 <section id="the-reverse-diffusion" class="level3">
 <h3 class="anchored" data-anchor-id="the-reverse-diffusion">The reverse diffusion</h3>
@@ -208,71 +208,86 @@ d\overleftarrow{X}_t = {\color{red} + }\frac12 \overleftarrow{X}_t \, dt
 \; {\color{red} + \nabla \log p_{T-t}(\overleftarrow{X}_t) \, dt} \;
 + dB
 \tag{3}\]</span></span></p>
-<p>where <span class="math inline">\(B\)</span> is another Wiener process. I have used the notation <span class="math inline">\(B\)</span> to emphasize that there is no link between this Wiener process and the one used to simulate the forward process. Note that if the initial data distribution <span class="math inline">\(p_0 \equiv \pi_{\mathrm{data}}\)</span> were equal to the reference measure <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>, i.e.&nbsp;<span class="math inline">\(p_0 = p_T = \pi_{\mathrm{ref}}\)</span> then it is easy to see that the reverse diffusion would have exactly teh same dynamics as the forward diffusion. In order to simulate the reverse diffusion, one needs to be able to estimate the new term <span class="math inline">\({\color{red}\nabla \log p_{T-t}(x)}\)</span> called the <em>score</em>. If one can estimate the score, it is straightforward to simulate the reverse process <span class="math inline">\(\overleftarrow{X}_t\)</span> all the way to <span class="math inline">\(t=T\)</span> and obtain samples from the data distribution.</p>
+<p>where <span class="math inline">\(B\)</span> is another Wiener process. I have used the notation <span class="math inline">\(B\)</span> to emphasize that there is no link between this Wiener process and the one used to simulate the forward process. Note that if the initial data distribution <span class="math inline">\(p_0 \equiv \pi_{\mathrm{data}}\)</span> were equal to the reference measure <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>, i.e.&nbsp;<span class="math inline">\(p_0 = p_T = \pi_{\mathrm{ref}}\)</span> then it is easy to see that the reverse diffusion would have exactly teh same dynamics as the forward diffusion. In order to simulate the reverse diffusion, one needs to be able to estimate the new term <span class="math inline">\({\color{red}\nabla \log p_{T-t}(x)}\)</span> called the <em>score</em>. If one can estimate the score, it is straightforward to simulate the reverse process <span class="math inline">\(\overleftarrow{X}_t\)</span> and obtain samples from the data distribution. Estimating the score is the crux of the game.</p>
 </section>
 <section id="denoising-to-estimating-the-score" class="level3">
 <h3 class="anchored" data-anchor-id="denoising-to-estimating-the-score">Denoising to estimating the score</h3>
 <p>In practice, the score is unknown and one has to build an approximation of it</p>
-<p><span class="math display">\[\mathcal{S}(t,x) \; \approx \; \nabla_x \log p_t(x).\]</span></p>
-<p>The approximate score <span class="math inline">\(\mathcal{S}(t,x)\)</span> is often parametrized by a neural network. Since</p>
+<p><span class="math display">\[\mathcal{S}^\theta(t,x) \; \approx \; \nabla_x \log p_t(x).\]</span></p>
+<p>The approximate score <span class="math inline">\(\mathcal{S}^\theta(t,x)\)</span> is often parametrized by a neural network with parameters <span class="math inline">\(\theta \in \Theta\)</span>. Since</p>
 <p><span class="math display">\[
 \log p_t(x) \; = \; \log \int \; p(X_t=x \mid X_0 = x_0)\; \pi_{\mathrm{data}}(d x_0)
 \]</span></p>
-<p>and <span class="math inline">\(p(X_t=x \mid X_0 = x_0)\)</span> is given in <a href="#eq-OU-forward">Equation&nbsp;2</a>, we have that</p>
+<p>and <span class="math inline">\(p(X_t=x \mid X_0 = x_0)\)</span> is given in <a href="#eq-OU-forward">Equation&nbsp;2</a>, algebra gives that</p>
 <p><span id="eq-score-denoising"><span class="math display">\[
-\nabla_x \log p_t(x) \; = \; -\frac{x - \alpha_t \, \widehat{x}_0(x,t)}{\sigma_t^2}
+\nabla_x \log p_t(x) \; = \; -\frac{x - \alpha_t \,  \textcolor{green}{\widehat{x}_0(x,t)}}{\sigma_t^2}
 \tag{4}\]</span></span></p>
 <p>where <span class="math inline">\(\widehat{x}_0(x,t)\)</span> is a “denoising” estimate of the initial position <span class="math inline">\(x_0\)</span> given a noisy estimate <span class="math inline">\(X_t=x\)</span> at time <span class="math inline">\(t\)</span>, i.e.</p>
 <p><span class="math display">\[
-\widehat{x}_0(x,t) \; = \; \mathop{\mathrm{\mathbb{E}}}[X_0  \; \mid \; X_t = x].
+\textcolor{green}{ \widehat{x}_0(x_t,t) \; = \; \mathop{\mathrm{\mathbb{E}}}[X_0  \; \mid \; X_t = x_t] }.
 \]</span></p>
-<p>Note that this derivation fundamentally relies on the tractability of the transition density of the OU process, although any other linear Gaussian diffusion could have been used. For simplifying notation, I will often write <span class="math inline">\(\widehat{x}_0(x_t, t)\)</span> as <span class="math inline">\(\widehat{x}_0(x_t)\)</span> when it is clear that <span class="math inline">\(x_t\)</span> is a sample obtained at time <span class="math inline">\(0 \leq t \leq T\)</span>. <a href="#eq-score-denoising">Equation&nbsp;4</a> means that to estimate the score, one only needs to train a denoising function</p>
+<p>Note that this derivation fundamentally relies on the tractability of the transition density of the OU process, although any other linear Gaussian diffusion could have been used. For simplifying notation, I will often write <span class="math inline">\(\widehat{x}_0(x_t, t)\)</span> as <span class="math inline">\(\widehat{x}_0(x_t)\)</span> when it is clear that <span class="math inline">\(x_t\)</span> is a sample obtained at time <span class="math inline">\(0 \leq t \leq T\)</span>. <a href="#eq-score-denoising">Equation&nbsp;4</a> means that to estimate the score, one only needs to train a denoising function <span class="math inline">\(\widehat{x}^{\theta}_0: [0,T] \times \mathbb{R}^d \to \mathbb{R}^d\)</span> that approximate the true conditional expectation,</p>
 <p><span class="math display">\[
-\widehat{x}_0(\cdots): [0,T] \times \mathbb{R}^d \to \mathbb{R}^d.
+\widehat{x}^{\theta}_0(t,x_t)
+\; \approx \;
+\widehat{x}_0(t,x_t) = \mathop{\mathrm{\mathbb{E}}}[X_0 \mid X_t=x_t].
 \]</span></p>
-<p>It is a simple regression problem: take a bunch of pairs <span class="math inline">\((X_0, X_t)\)</span> that can be generated as</p>
+<p>It is a standard regression problem: take a bunch of pairs <span class="math inline">\((X_0, X_t)\)</span> that can be generated as</p>
 <p><span class="math display">\[
 X_0 \sim \pi_{\mathrm{data}}
 \qquad \textrm{and} \qquad
 X_t = \alpha_t X_0 + \sigma_t \, \mathbf{n}
 \]</span></p>
-<p>with <span class="math inline">\(\mathbf{n}\sim \mathcal{N}(0,I)\)</span> and minimize the Mean Squared Error (MSE) loss, i.e.</p>
+<p>and minimize the Mean Squared Error (MSE) loss, i.e.</p>
 <p><span class="math display">\[
-\mathop{\mathrm{\mathbb{E}}}\|X_0 - \widehat{x}_0(t, X_t)\|^2,
+\theta \mapsto \mathop{\mathrm{\mathbb{E}}}\|X_0 - \widehat{x}^{\theta}_0(t, X_t)\|^2.
 \]</span></p>
-<p>with stochastic gradient descent or any other stochastic optimization procedure. The score is then defined as</p>
+<p>This can be implemented with a stochastic gradient descent method or any other stochastic optimization procedure. Indeed, this implicitly relies on the standard fact that the expectation of a squared integrable random variable <span class="math inline">\(Z\)</span> is the minimizer of the function <span class="math inline">\(\gamma \mapsto \mathop{\mathrm{\mathbb{E}}}[(Z-\gamma)^2]\)</span>. The score is then defined as</p>
 <p><span class="math display">\[
-\mathcal{S}(t,x) \; = \; -\frac{x - \alpha_t \, \widehat{x}_0(t,x)}{\sigma^2_t}.
+\mathcal{S}^{\theta}(t,x) \; = \; -\frac{x - \alpha_t \, \widehat{x}^{\theta}_0(t,x)}{\sigma^2_t}.
 \]</span></p>
-<p>One of the important take-away is that a <strong>denoiser</strong>. i.e.&nbsp;a function that estimates the conditional expectation of <span class="math inline">\(X_0\)</span> given <span class="math inline">\(X_t=x\)</span>, can be upgraded to a <strong>sampler</strong>!</p>
+<p>One of the important take-away is that a <strong>denoiser</strong>, i.e.&nbsp;a function that estimates the conditional expectation of <span class="math inline">\(X_0\)</span> given <span class="math inline">\(X_t=x\)</span>, can be upgraded to a <strong>sampler</strong>! Furthermore, for a given estimate <span class="math inline">\(\mathcal{S}(t,x_t)\)</span> of the score function, one can easily obtain bounds on the quality of the resulting approximation of the data distribution. For example, if <span class="math inline">\(q^{\mathcal{S}}\)</span> denotes the probability distribution on path-space induced by the reverse diffusion with approximate score <span class="math inline">\(\mathcal{S}\)</span> while <span class="math inline">\(p\)</span> denotes the “true” reverse diffusion, the chain rule for the KL divergence gives</p>
+<p><span class="math display">\[
+\mathop{\mathrm{D_{\text{KL}}}}(\pi_{\mathrm{data}}, q^{\mathcal{S}}_0) = \mathop{\mathrm{D_{\text{KL}}}}(p_0, q^{\mathcal{S}}_0)
+\leq \mathop{\mathrm{D_{\text{KL}}}}(p, q^{\mathcal{S}}).
+\]</span></p>
+<p>Furthermore, as described in <a href="../../notes/girsanov/girsanov.html">these notes</a>, Girsanov’s theorem gives that</p>
+<p><span class="math display">\[
+\mathop{\mathrm{D_{\text{KL}}}}(p, q^{\mathcal{S}}) = \frac12 \, \mathop{\mathrm{\mathbb{E}}} {\left\{ \int_{0}^T \|\mathcal{S}(t,X_t) - \nabla_x \log p_t(X_t) \|^2 \, dt \right\}} .
+\]</span></p>
+<p>If there were a time-dependent volatility <span class="math inline">\(\gamma_t\)</span> in the dynamics, i.e.&nbsp;<span class="math inline">\(dX = \mu(X) \, dt + \gamma_t \, dW\)</span> instead of the one in <a href="#eq-OU">Equation&nbsp;1</a>, the expression would remain essentially the same, with the only difference that the error term <span class="math inline">\(\|\mathcal{S}(t,X_t) - \nabla_x \log p_t(X_t) \|^2\)</span> would be scaled by a factor <span class="math inline">\(\gamma^2_t\)</span>. Indeed, this means that when the approximation of the score is perfect, i.e.&nbsp;<span class="math inline">\(\mathcal{S}(t,x_t) = \nabla_x \log p_t(x_t)\)</span>, the data distribution is perfectly recovered, as expected. When expressed in terms of the denoiser <span class="math inline">\(\widehat{x}\)</span>, the upper-bound on <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(\pi_{\mathrm{data}}, q^{\mathcal{S}}_0)\)</span> reads</p>
+<p><span class="math display">\[
+\frac12 \, \mathop{\mathrm{\mathbb{E}}} {\left\{ \int_{0}^T  {\left( \frac{\alpha_t}{\sigma_t^2} \right)} ^2 \, \|\widehat{x}^{\theta}_0(t,X_t) - \mathop{\mathrm{\mathbb{E}}}[X_0 \mid X_t] \|^2 \, dt \right\}} .
+\]</span></p>
+<p>Since <span class="math inline">\((\alpha_t / \sigma_t) \to \infty\)</span> as <span class="math inline">\(t \to 0\)</span>, this shows that it is probably a good idea to approximate denoiser <span class="math inline">\(\widehat{x}_0(t,x_t)\)</span> much better for small times <span class="math inline">\(t \to 0\)</span> than for large times <span class="math inline">\(t \to T\)</span>.</p>
 </section>
-<section id="denoiser-practical-parametrization-and-training" class="level3">
-<h3 class="anchored" data-anchor-id="denoiser-practical-parametrization-and-training">Denoiser: practical parametrization and training</h3>
-<p>In practice, it may not be efficient, or stable, to try to directly parametrize the denoiser <span class="math inline">\(\widehat{x}_0(\cdots)\)</span> with a neural network and simply minimize the loss</p>
+<section id="denoiser-practical-parametrization" class="level3">
+<h3 class="anchored" data-anchor-id="denoiser-practical-parametrization">Denoiser: practical parametrization</h3>
+<p>In practice, it may not be efficient, or stable, to try to directly parametrize the denoiser <span class="math inline">\(\widehat{x}^\theta_0(t, x_t)\)</span> with a neural network and simply minimize the loss</p>
 <p><span id="eq-loss-naive"><span class="math display">\[
-\mathop{\mathrm{\mathbb{E}}}\|X_0 - \widehat{x}_0(t, X_t)\|^2.
+\mathop{\mathrm{\mathbb{E}}}\|X_0 - \widehat{x}^{\theta}_0(t, X_t)\|^2.
 \tag{5}\]</span></span></p>
-<p>For example, for <span class="math inline">\(t \approx 0\)</span>, we have that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t \approx X_0\)</span> so that it is very easy to reconstruct <span class="math inline">\(X_0\)</span> from <span class="math inline">\(X_t\)</span>. On the contrary, for large <span class="math inline">\(t\)</span>, there is almost no information contained within <span class="math inline">\(X_t\)</span> to reconstruct <span class="math inline">\(X_0\)</span> so that <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}[X_0 \mid X_t=x] \approx \mathop{\mathrm{\mathbb{E}}}[X_0]\)</span>. This means that the typical value of the naive loss <a href="#eq-loss-naive">Equation&nbsp;5</a> depends widely on <span class="math inline">\(t\)</span>, which makes it difficult to optimize: with this parametrization, since large values of the loss will be typically concentrated to large values of <span class="math inline">\(t\)</span>, the denoiser will not be accurate for <span class="math inline">\(t \approx 0\)</span>, leading to sub-optimal results. Since <span class="math inline">\(X_t = \alpha_t \, X_0 + \sigma_t \, \mathbf{n}\)</span>, one can defined the Signal-to-Noise-Ratio as</p>
-<p><span class="math display">\[\mathrm{SNR}(t) = \frac{\alpha_t}{\sigma_t}\]</span></p>
-<p>and, in order to normalize by the reconstruction difficulty, it makes more sense to train a denoiser by minimizing the loss:</p>
+<p>For example, for <span class="math inline">\(t \approx 0\)</span>, we have that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t \approx X_0\)</span> so that it is very easy to reconstruct <span class="math inline">\(X_0\)</span> from <span class="math inline">\(X_t\)</span>. On the contrary, for large <span class="math inline">\(t\)</span>, there is almost no information contained within <span class="math inline">\(X_t\)</span> to reconstruct <span class="math inline">\(X_0\)</span>. This means that the typical value of the naive loss <a href="#eq-loss-naive">Equation&nbsp;5</a> depends widely on <span class="math inline">\(t\)</span>, which makes it difficult to optimize: with this parametrization, since large values of the loss will be typically concentrated to large values of <span class="math inline">\(t\)</span>, the denoiser will not be accurate for <span class="math inline">\(t \approx 0\)</span>, which is exactly the opposite than what is required, as discussed at the end of the previous section. Since <span class="math inline">\(x_t = \alpha_t \, x_0 + \sigma_t \, \mathbf{n}\)</span>, one can defined the Signal-to-Noise-Ratio as</p>
+<p><span class="math display">\[\mathrm{SNR}(t) = \frac{\alpha_t}{\sigma_t}.\]</span></p>
+<p>In order to normalize by the reconstruction difficulty, it makes more sense to train a denoiser by minimizing the loss:</p>
 <p><span class="math display">\[
-\mathop{\mathrm{\mathbb{E}}} {\left[  \mathrm{SNR}^2(t) \times \|X_0 - \widehat{x}_0(t, X_t)\|^2  \right]} .
+\mathop{\mathrm{\mathbb{E}}} {\left[  \mathrm{SNR}^2(t) \times \|X_0 - \widehat{x}^{\theta}_0(t, X_t)\|^2  \right]} .
 \]</span></p>
 <p>It turns out that it is entirely equivalent to minimizing the loss</p>
 <p><span class="math display">\[
-\mathop{\mathrm{\mathbb{E}}} {\left[  \| \mathbf{n}- \widehat{\mathbf{n}}(t, X_t)\|^2  \right]} .
+\mathop{\mathrm{\mathbb{E}}} {\left[  \| \mathbf{n}- \widehat{\mathbf{n}}^{\theta}(t, X_t)\|^2  \right]} .
 \]</span></p>
-<p>where <span class="math inline">\(X_t = \alpha_t \, X_0 + \sigma_t \, \mathbf{n}\)</span> while the denoiser <span class="math inline">\(\widehat{x}_0(\ldots)\)</span> and noise estimator <span class="math inline">\(\widehat{\mathbf{n}}(\ldots)\)</span> are parametrized so that</p>
+<p>where <span class="math inline">\(x_t = \alpha_t \, x_0 + \sigma_t \, \mathbf{n}\)</span> while the denoiser <span class="math inline">\(\widehat{x}^{\theta}_0\)</span> and noise estimator <span class="math inline">\(\widehat{\mathbf{n}}^{\theta}\)</span> are parametrized so that</p>
 <p><span class="math display">\[
-X_t = \alpha_t \, \widehat{x}_0(t, X_t) + \sigma_t \, \widehat{\mathbf{n}}(t,X_t).
+x_t = \alpha_t \, \widehat{x}^{\theta}_0(t, x_t) + \sigma_t \, \widehat{\mathbf{n}}^{\theta}(t,x_t).
 \]</span></p>
-<p>That is one of the reasons why most of the papers on DDPM are parametrizing the denoiser <span class="math inline">\(\widehat{x}_0(\ldots)\)</span> by building instead a “noise estimator” <span class="math inline">\(\widehat{\mathbf{n}}(\ldots)\)</span> with a neural network and setting</p>
+<p>That is one of the reasons why most of the papers on DDPM are parametrizing the denoiser <span class="math inline">\(\widehat{x}_0\)</span> by building instead a “noise estimator” <span class="math inline">\(\widehat{\mathbf{n}}^{\theta}\)</span> with a neural network and setting</p>
 <p><span id="eq-noise-param"><span class="math display">\[
-\widehat{x}_0(t,X_t) = \frac{X_t - \sigma_t \, \widehat{\mathbf{n}}(t,X_T)}{\alpha_t}.
+\widehat{x}^{\theta}_0(t,x_t) = \frac{x_t - \sigma_t \, \widehat{\mathbf{n}}^{\theta}(t,x_T)}{\alpha_t}.
 \tag{6}\]</span></span></p>
-<p>Since <span class="math inline">\(\alpha_t \to 1\)</span> and <span class="math inline">\(\sigma_t \to 0\)</span> for <span class="math inline">\(t \to 0\)</span>, this also implicitly ensures that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t\)</span> for <span class="math inline">\(t \to 0\)</span>, as required. With the parametrization <a href="#eq-noise-param">Equation&nbsp;6</a>, the score is given by</p>
+<p>Since <span class="math inline">\(\alpha_t \to 1\)</span> and <span class="math inline">\(\sigma_t \to 0\)</span> for <span class="math inline">\(t \to 0\)</span>, this also implicitly ensures that <span class="math inline">\(\widehat{x}_0(t,x_t) \approx x_t\)</span> for <span class="math inline">\(t \to 0\)</span>, as required. With the parametrization <a href="#eq-noise-param">Equation&nbsp;6</a>, the score is given by</p>
 <p><span class="math display">\[
-\mathcal{S}(t,x) \, = \, -\frac{\widehat{\mathbf{n}}(t,x)}{\sigma_t},
+\mathcal{S}^{\theta}(t,x_t) \, = \, -\frac{\widehat{\mathbf{n}}^{\theta}(t,x_t)}{\sigma_t},
 \]</span></p>
 <p>which can <strong>still</strong> lead to instability issues for small times <span class="math inline">\(t \to 0\)</span>, although to a lesser extent. It is unlikely that there is an easy way to avoid these issues since, as soon as the data distribution is supported on a (neighbourhood of) lower dimensional manifold, the actual score function indeed does become very large for <span class="math inline">\(t \to 0^+\)</span> since a strong “drift” is required to bring the diffusion back to the manifold.</p>
 </section>
