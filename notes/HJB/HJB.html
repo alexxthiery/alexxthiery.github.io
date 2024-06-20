@@ -199,7 +199,7 @@ dX^\star = b(X^\star)dt + \sigma(X^\star) \,  {\left\{  dW_t +  \textcolor{blue}
 <p><span class="math display">\[
 \textcolor{green}{h(t,x) = \mathbb{E} {\left[  \exp  {\left\{  \int_t^T f(X_s) \, ds + g(X_T)  \right\}}   \mid X_t = x  \right]} }.
 \]</span></p>
-<p>The expression <span class="math inline">\( \textcolor{blue}{u^\star(t, x)} \; = \; \sigma^\top(x) \, \nabla \log[  \textcolor{green}{h(t,x)} ]\)</span> is quite intuitive; in order to describe the tilted measure <span class="math inline">\(\mathbb{Q}\)</span> that places more probability mass on trajectories such that <span class="math inline">\(\int_0^T f(X_s) \, ds + g(X_T)\)</span> is large, the optimal control <span class="math inline">\(u^\star(t,x)\)</span> should be in the direction of states such that the “cost-to-go” quantity <span class="math inline">\(\int_t^T f(X_s) \, ds + g(X_T)\)</span> is large.</p>
+<p>The expression <span class="math inline">\( \textcolor{blue}{u^\star(t, x)} \; = \; \sigma^\top(x) \, \nabla \log[  \textcolor{green}{h(t,x)} ]\)</span> is quite intuitive; in order to describe the tilted measure <span class="math inline">\(\mathbb{Q}\)</span> that places more probability mass on trajectories such that <span class="math inline">\(\int_0^T f(X_s) \, ds + g(X_T)\)</span> is large, the optimal control <span class="math inline">\(u^\star(t,x)\)</span> should be in the direction of states such that the “reward-to-go” quantity <span class="math inline">\(\int_t^T f(X_s) \, ds + g(X_T)\)</span> is large.</p>
 <p>To obtain a variational description of the optimal control function <span class="math inline">\( \textcolor{blue}{u^\star}\)</span>, it suffices to express it as the solution of an optimization problem. It turns out that KL-divergences between diffusion processes are the right tool for this: we will write <span class="math inline">\(\mathbb{Q}\)</span> as the minimizer of <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(\mathbb{P}^u \| \mathbb{Q})\)</span> for a class of tractable probability distributions <span class="math inline">\(\mathbb{P}^u\)</span> described by controlled diffusions. As described in these notes on the <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a>, for any control function <span class="math inline">\(u(t,x)\)</span>, the controlled diffusion <span class="math inline">\(X^u\)</span> with dynamics</p>
 <p><span class="math display">\[
 dX^u = b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^u)} \, dt  \right\}}
@@ -241,7 +241,7 @@ dX^u = b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^u)} 
 &amp;= \log[  \textcolor{green}{ h(0,x_0) } ].
 \end{align}
 \]</span></p>
-<p>Since there was nothing really special about the starting point <span class="math inline">\(x_0\)</span> and the time horizon <span class="math inline">\(T&gt;0\)</span>, the above derivation gives the solution to the following stochastic optimal control problem. It is written as a maximization problem although a large part of the control and physics literature writes it as an equivalent minimization problem. Consider the cost-to-go function (a.k.a. value function) defined as</p>
+<p>Since there was nothing really special about the starting point <span class="math inline">\(x_0\)</span> and the time horizon <span class="math inline">\(T&gt;0\)</span>, the above derivation gives the solution to the following stochastic optimal control problem. It is written as a maximization problem although a large part of the control and physics literature writes it as an equivalent minimization problem. Consider the reward-to-go function (a.k.a. value function) defined as</p>
 <p><span class="math display">\[
 V(t,x) = \sup_u \; \mathop{\mathrm{\mathbb{E}}} {\left[  \int_{t}^{T}  {\left\{  -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \right\}}  \, ds + g(X^u_T) \mid X_t = x \right]} .
 \]</span></p>
@@ -258,8 +258,8 @@ V(t,x)
 u^\star(t,x) = \sigma^\top(x) \nabla \log[  \textcolor{green}{ h(t,x) }]
 = \sigma^\top(x) \, \nabla V(t,x) .
 \tag{4}\]</span></span></p>
-<p>The expression <span class="math inline">\(\sigma^\top(x) \, \nabla V(t,x)\)</span> is intuitive: since we are trying to maximize the cost-to-go function, the optimal control should be in the direction of the gradient of the cost-to-go function.</p>
-<p>Finally, let us mention that one can easily derive the <a href="https://en.wikipedia.org/wiki/Hamilton–Jacobi–Bellman_equation">Hamilton-Jacobi-Bellman</a> equation for the cost-to-go function <span class="math inline">\(V(t,x)\)</span>. We have</p>
+<p>The expression <span class="math inline">\(\sigma^\top(x) \, \nabla V(t,x)\)</span> is intuitive: since we are trying to maximize the reward-to-go function, the optimal control should be in the direction of the gradient of the reward-to-go function.</p>
+<p>Finally, let us mention that one can easily derive the <a href="https://en.wikipedia.org/wiki/Hamilton–Jacobi–Bellman_equation">Hamilton-Jacobi-Bellman</a> equation for the reward-to-go function <span class="math inline">\(V(t,x)\)</span>. We have</p>
 <p><span class="math display">\[
 V(t,x) = \sup_u \; \mathop{\mathrm{\mathbb{E}}} {\left[  \int_{t}^T C_s \, ds + g(X^u_T) \right]}
 \]</span></p>
@@ -281,7 +281,7 @@ u^\star(t,x)
 &amp;= \sigma^\top(x) \, \nabla V(t,x),
 \end{align}
 \]</span></p>
-<p>as we already knew from <a href="#eq-u-star-V">Equation&nbsp;4</a>. This implies that the cost-to-go function <span class="math inline">\(V(t,x)\)</span> satisfies the HJB equation</p>
+<p>as we already knew from <a href="#eq-u-star-V">Equation&nbsp;4</a>. This implies that the reward-to-go function <span class="math inline">\(V(t,x)\)</span> satisfies the HJB equation</p>
 <p><span id="eq-hjb"><span class="math display">\[
 {\left( \partial_t + \mathcal{L} \right)} V + \frac12 \| \sigma^\top \nabla V \|^2 + f = 0
 \tag{5}\]</span></span></p>
