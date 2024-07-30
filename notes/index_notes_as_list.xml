@@ -10,7 +10,31 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.3.433</generator>
-<lastBuildDate>Mon, 10 Jun 2024 17:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 29 Jul 2024 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>VIASM mini-course on diffusions and flows</title>
+  <link>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/VIASM_2024/viasm_2024.jpg" class="img-fluid figure-img" style="width:95.0%"></p>
+</figure>
+</div>
+</div>
+<p>The slides for this short course on diffusion models (denoising diffusions, probability flows) and other flow methods (stochastic interpolants, flow-matching) are available <a href="https://alexxthiery.github.io/viasm_2024/">here</a>. There are a few animations, so loading the slides may be slow…</p>
+
+
+
+ ]]></description>
+  <category>diffusion</category>
+  <guid>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</guid>
+  <pubDate>Mon, 29 Jul 2024 17:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Doob, Girsanov and Bellman</title>
   <link>https://alexxthiery.github.io/notes/HJB/HJB.html</link>
@@ -871,30 +895,6 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</guid>
-  <pubDate>Sun, 15 Oct 2023 17:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>VIASM mini-course on diffusions and flows</title>
-  <link>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/VIASM_2024/viasm_2024.jpg" class="img-fluid figure-img" style="width:95.0%"></p>
-</figure>
-</div>
-</div>
-<p>The slides for this short course on diffusion models (denoising diffusions, probability flows) and other flow methods (stochastic interpolants, flow-matching) are available <a href="https://alexxthiery.github.io/viasm_2024/">here</a>. There are a few animations, so loading the slides may be slow…</p>
-
-
-
- ]]></description>
-  <category>diffusion</category>
-  <guid>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</guid>
   <pubDate>Sun, 15 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
