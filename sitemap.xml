@@ -246,7 +246,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2024-06-15T10:43:16.521Z</lastmod>
+    <lastmod>2024-07-30T14:14:18.333Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
@@ -290,7 +290,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2024-06-15T10:43:21.176Z</lastmod>
+    <lastmod>2024-07-30T14:15:19.355Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
@@ -310,11 +310,11 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/teaching.html</loc>
-    <lastmod>2024-06-15T10:43:22.937Z</lastmod>
+    <lastmod>2024-07-30T14:13:55.759Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSA4212/assignments.html</loc>
-    <lastmod>2024-06-15T10:43:23.388Z</lastmod>
+    <lastmod>2024-07-30T14:13:56.393Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/people/index_people.html</loc>
@@ -331,5 +331,9 @@
   <url>
     <loc>https://alexxthiery.github.io/jobs/2024_diffusion/2024_diffusion.html</loc>
     <lastmod>2024-06-15T10:43:24.691Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</loc>
+    <lastmod>2024-07-30T14:14:03.551Z</lastmod>
   </url>
 </urlset>
