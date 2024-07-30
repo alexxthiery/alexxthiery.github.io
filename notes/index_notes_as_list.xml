@@ -9,8 +9,8 @@
 <link>https://alexxthiery.github.io/notes/index_notes_as_list.html</link>
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
-<generator>quarto-1.3.353</generator>
-<lastBuildDate>Mon, 10 Jun 2024 16:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.433</generator>
+<lastBuildDate>Mon, 10 Jun 2024 17:00:00 GMT</lastBuildDate>
 <item>
   <title>Doob, Girsanov and Bellman</title>
   <link>https://alexxthiery.github.io/notes/HJB/HJB.html</link>
@@ -38,7 +38,7 @@
 <p><span id="eq-u-star"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bblue%7D%7Bu%5E%5Cstar(t,%20x)%7D%20%5C;%20=%20%5C;%20%5Csigma%5E%5Ctop(x)%20%5C,%20%5Cnabla%20%5Clog%5B%20%20%5Ctextcolor%7Bgreen%7D%7Bh(t,x)%7D%20%5D%0A%5Ctag%7B2%7D"></span></p>
 <p>and the function <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bgreen%7D%7Bh(t,x)%7D"> is described by the conditional expectation,</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7Bh(t,x)%20=%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20%5Cexp%20%20%7B%5Cleft%5C%7B%20%20%5Cint_t%5ET%20f(X_s)%20%5C,%20ds%20+%20g(X_T)%20%20%5Cright%5C%7D%7D%20%20%20%5Cmid%20X_t%20=%20x%20%20%5Cright%5D%7D%20%7D.%0A"></p>
-<p>The expression <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7Bu%5E%5Cstar(t,%20x)%7D%20%5C;%20=%20%5C;%20%5Csigma%5E%5Ctop(x)%20%5C,%20%5Cnabla%20%5Clog%5B%20%20%5Ctextcolor%7Bgreen%7D%7Bh(t,x)%7D%20%5D"> is quite intuitive; in order to describe the tilted measure <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> that places more probability mass on trajectories such that <img src="https://latex.codecogs.com/png.latex?%5Cint_0%5ET%20f(X_s)%20%5C,%20ds%20+%20g(X_T)"> is large, the optimal control <img src="https://latex.codecogs.com/png.latex?u%5E%5Cstar(t,x)"> should be in the direction of states such that the “cost-to-go” quantity <img src="https://latex.codecogs.com/png.latex?%5Cint_t%5ET%20f(X_s)%20%5C,%20ds%20+%20g(X_T)"> is large.</p>
+<p>The expression <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7Bu%5E%5Cstar(t,%20x)%7D%20%5C;%20=%20%5C;%20%5Csigma%5E%5Ctop(x)%20%5C,%20%5Cnabla%20%5Clog%5B%20%20%5Ctextcolor%7Bgreen%7D%7Bh(t,x)%7D%20%5D"> is quite intuitive; in order to describe the tilted measure <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> that places more probability mass on trajectories such that <img src="https://latex.codecogs.com/png.latex?%5Cint_0%5ET%20f(X_s)%20%5C,%20ds%20+%20g(X_T)"> is large, the optimal control <img src="https://latex.codecogs.com/png.latex?u%5E%5Cstar(t,x)"> should be in the direction of states such that the “reward-to-go” quantity <img src="https://latex.codecogs.com/png.latex?%5Cint_t%5ET%20f(X_s)%20%5C,%20ds%20+%20g(X_T)"> is large.</p>
 <p>To obtain a variational description of the optimal control function <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7Bu%5E%5Cstar%7D">, it suffices to express it as the solution of an optimization problem. It turns out that KL-divergences between diffusion processes are the right tool for this: we will write <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> as the minimizer of <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(%5Cmathbb%7BP%7D%5Eu%20%5C%7C%20%5Cmathbb%7BQ%7D)"> for a class of tractable probability distributions <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5Eu"> described by controlled diffusions. As described in these notes on the <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a>, for any control function <img src="https://latex.codecogs.com/png.latex?u(t,x)">, the controlled diffusion <img src="https://latex.codecogs.com/png.latex?X%5Eu"> with dynamics</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AdX%5Eu%20=%20b(X%5Eu)dt%20+%20%5Csigma(X%5Eu)%20%5C,%20%20%7B%5Cleft%5C%7B%20%20dW_t%20+%20%20%5Ctextcolor%7Bblue%7D%7Bu(t,%20X%5Eu)%7D%20%5C,%20dt%20%20%5Cright%5C%7D%7D%0A"></p>
 <p>and started at <img src="https://latex.codecogs.com/png.latex?x_0"> induces a probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5Eu"> on path-space given by</p>
@@ -55,22 +55,22 @@
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctext%7BELBO%7D(u)%20%5C;%20=%20%5C;%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5B%20%20%5Cint_%7B0%7D%5E%7BT%7D%20%20%7B%5Cleft%5C%7B%20%20-%5Ctfrac%2012%20%5C%7Cu(s,X%5Eu_s)%5C%7C%5E2%20+%20f(X%5Eu_s)%20%20%5Cright%5C%7D%7D%20%20%5C,%20ds%20+%20g(X%5Eu_T)%20%5Cright%5D%7D%20.%0A"></p>
 <p>For maximizing the ELBO, the control needs to drive the trajectories to regions where <img src="https://latex.codecogs.com/png.latex?%5Cint_%7B0%7D%5E%7BT%7D%20f(X%5Eu_s)%20%5C,%20ds%20+%20g(X%5Eu_T)"> is large while at the same time keep the control effort <img src="https://latex.codecogs.com/png.latex?%5Cint_%7B0%7D%5E%7BT%7D%20%5C%7Cu(s,X%5Eu_s)%5C%7C%5E2%20%5C,%20ds"> small. The optimal control <img src="https://latex.codecogs.com/png.latex?u%5E%5Cstar"> is given by Equation&nbsp;2 and Equation&nbsp;1 gives that</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Clog%20%5Cmathcal%7BZ%7D%0A&amp;=%20%5Clog%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5B%20%20%5Cexp%20%20%7B%5Cleft%5C%7B%20%20%5Cint_0%5ET%20f(X_s)%20%5C,%20ds%20+%20g(X_T)%20%20%5Cright%5C%7D%7D%20%20%20%5Cright%5D%7D%20%5C%5C%0A&amp;=%20%5Clog%5B%20%20%5Ctextcolor%7Bgreen%7D%7B%20h(0,x_0)%20%7D%20%5D.%0A%5Cend%7Balign%7D%0A"></p>
-<p>Since there was nothing really special about the starting point <img src="https://latex.codecogs.com/png.latex?x_0"> and the time horizon <img src="https://latex.codecogs.com/png.latex?T%3E0">, the above derivation gives the solution to the following stochastic optimal control problem. It is written as a maximization problem although a large part of the control and physics literature writes it as an equivalent minimization problem. Consider the cost-to-go function (a.k.a. value function) defined as</p>
+<p>Since there was nothing really special about the starting point <img src="https://latex.codecogs.com/png.latex?x_0"> and the time horizon <img src="https://latex.codecogs.com/png.latex?T%3E0">, the above derivation gives the solution to the following stochastic optimal control problem. It is written as a maximization problem although a large part of the control and physics literature writes it as an equivalent minimization problem. Consider the reward-to-go function (a.k.a. value function) defined as</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AV(t,x)%20=%20%5Csup_u%20%5C;%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5B%20%20%5Cint_%7Bt%7D%5E%7BT%7D%20%20%7B%5Cleft%5C%7B%20%20-%5Ctfrac%2012%20%5C%7Cu(s,X%5Eu_s)%5C%7C%5E2%20+%20f(X%5Eu_s)%20%20%5Cright%5C%7D%7D%20%20%5C,%20ds%20+%20g(X%5Eu_T)%20%5Cmid%20X_t%20=%20x%20%5Cright%5D%7D%20.%0A"></p>
 <p>We have that</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AV(t,x)%0A&amp;=%20%5Clog%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20%5Cexp%20%20%7B%5Cleft%5C%7B%20%20%5Cint_t%5ET%20f(X_s)%20%5C,%20ds%20+%20g(X_T)%20%20%5Cright%5C%7D%7D%20%20%5Cmid%20X_t%20=%20x%20%5Cright%5D%7D%20%5C%5C%0A&amp;=%20%5Clog%5B%20%20%5Ctextcolor%7Bgreen%7D%7Bh(t,%20x)%7D%20%5D.%0A%5Cend%7Balign%7D%0A"></p>
 <p>This shows that optimal control <img src="https://latex.codecogs.com/png.latex?u%5E%5Cstar"> can also be expressed as</p>
 <p><span id="eq-u-star-V"><img src="https://latex.codecogs.com/png.latex?%0Au%5E%5Cstar(t,x)%20=%20%5Csigma%5E%5Ctop(x)%20%5Cnabla%20%5Clog%5B%20%20%5Ctextcolor%7Bgreen%7D%7B%20h(t,x)%20%7D%5D%0A=%20%5Csigma%5E%5Ctop(x)%20%5C,%20%5Cnabla%20V(t,x)%20.%0A%5Ctag%7B4%7D"></span></p>
-<p>The expression <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E%5Ctop(x)%20%5C,%20%5Cnabla%20V(t,x)"> is intuitive: since we are trying to maximize the cost-to-go function, the optimal control should be in the direction of the gradient of the cost-to-go function.</p>
-<p>Finally, let us mention that one can easily derive the <a href="https://en.wikipedia.org/wiki/Hamilton–Jacobi–Bellman_equation">Hamilton-Jacobi-Bellman</a> equation for the cost-to-go function <img src="https://latex.codecogs.com/png.latex?V(t,x)">. We have</p>
+<p>The expression <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E%5Ctop(x)%20%5C,%20%5Cnabla%20V(t,x)"> is intuitive: since we are trying to maximize the reward-to-go function, the optimal control should be in the direction of the gradient of the reward-to-go function.</p>
+<p>Finally, let us mention that one can easily derive the <a href="https://en.wikipedia.org/wiki/Hamilton–Jacobi–Bellman_equation">Hamilton-Jacobi-Bellman</a> equation for the reward-to-go function <img src="https://latex.codecogs.com/png.latex?V(t,x)">. We have</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AV(t,x)%20=%20%5Csup_u%20%5C;%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5B%20%20%5Cint_%7Bt%7D%5ET%20C_s%20%5C,%20ds%20+%20g(X%5Eu_T)%20%5Cright%5D%7D%0A"></p>
 <p>with <img src="https://latex.codecogs.com/png.latex?C_s%20=%20-%5Ctfrac12%20%5C%7Cu(s,X%5Eu_s)%5C%7C%5E2%20+%20f(X%5Eu_s)">. For <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20%5Cll%201">, we have</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AV(t,x)%0A&amp;%5C;%20=%20%5C;%0A%5Csup_u%20%5C;%20%20%7B%5Cleft%5C%7B%20%20C_t%20%5C,%20%5Cdelta%20+%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5B%20%20V(t+%5Cdelta,%20X%5Eu_%7Bt+%5Cdelta%7D)%20%5Cmid%20X%5Eu_t=x%20%5Cright%5D%7D%20%20%20%5Cright%5C%7D%7D%20%20+%20o(%5Cdelta)%5C%5C%0A&amp;%5C;%20=%20%5C;%0AV(t,x)%20+%20%5Cdelta%20%5C,%20%5Csup_%7Bu(t,x)%7D%20%5C;%20%20%7B%5Cleft%5C%7B%20%20C_t%20+%20(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20%5Csigma(x)%20%5C,%20u(t,x)%20%5C,%20%5Cnabla)%20%5C,%20V(t,x)%20%5Cright%5C%7D%7D%20%20+%20o(%5Cdelta)%0A%5Cend%7Balign%7D%0A"></p>
 <p>where <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D=%20b%20%5Cnabla%20+%20%5Csigma%20%5Csigma%5E%5Ctop%20:%20%5Cnabla%5E2"> is the generator of the uncontrolled diffusion. Since <img src="https://latex.codecogs.com/png.latex?C_t%20=%20-%5Ctfrac12%20%5C%7Cu(t,x)%5C%7C%5E2%20+%20f(x)"> is a simple quadratic function, the supremum over the control <img src="https://latex.codecogs.com/png.latex?u(t,x)"> can be computed in closed form,</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0Au%5E%5Cstar(t,x)%0A&amp;=%20%5Cmathop%7B%5Cmathrm%7Bargmax%7D%7D_%7Bz%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5C;%20-%5Ctfrac12%20%5C%7Cz%5C%7C%5E2%20+%20%5Cleft%3C%20z,%20%5Csigma%5E%5Ctop(x)%20%5Cnabla%20V(t,x)%20%20%5Cright%3E%5C%5C%0A&amp;=%20%5Csigma%5E%5Ctop(x)%20%5C,%20%5Cnabla%20V(t,x),%0A%5Cend%7Balign%7D%0A"></p>
-<p>as we already knew from Equation&nbsp;4. This implies that the cost-to-go function <img src="https://latex.codecogs.com/png.latex?V(t,x)"> satisfies the HJB equation</p>
+<p>as we already knew from Equation&nbsp;4. This implies that the reward-to-go function <img src="https://latex.codecogs.com/png.latex?V(t,x)"> satisfies the HJB equation</p>
 <p><span id="eq-hjb"><img src="https://latex.codecogs.com/png.latex?%0A%7B%5Cleft(%20%5Cpartial_t%20+%20%5Cmathcal%7BL%7D%20%5Cright)%7D%20V%20+%20%5Cfrac12%20%5C%7C%20%5Csigma%5E%5Ctop%20%5Cnabla%20V%20%5C%7C%5E2%20+%20f%20=%200%0A%5Ctag%7B5%7D"></span></p>
-<p>with terminal condition <img src="https://latex.codecogs.com/png.latex?V(T,x)%20=%20g(x)">. Another route to derive Equation&nbsp;5 is to simply use the fact that <img src="https://latex.codecogs.com/png.latex?V(t,x)%20=%20%5Clog%20h(t,x)">; since the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac</a> gives that the function <img src="https://latex.codecogs.com/png.latex?h(t,x)"> satisfies <img src="https://latex.codecogs.com/png.latex?(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%20h%20=%200">, the conclusion follows from a few lines of algebra by starting writing <img src="https://latex.codecogs.com/png.latex?%5Cpartial_t%20V%20=%20h%5E%7B-1%7D%20%5C,%20%5Cpartial_t%20h%20=%20-h%5E%7B-1%7D(%5Cmathcal%7BL%7D+%20f)%5Bh%5D">, expanding <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7Dh"> and expressing everything back in terms of <img src="https://latex.codecogs.com/png.latex?V">. The term <img src="https://latex.codecogs.com/png.latex?%5C%7C%5Csigma%5E%5Ctop%20%5Cnabla%20V%5C%7C%5E2"> naturally arises when expressing the diffusion term <img src="https://latex.codecogs.com/png.latex?%5Csigma%20%5Csigma%5E%5Ctop%20:%20%5Cnabla%5E2%20h"> in terms of the second derivative of <img src="https://latex.codecogs.com/png.latex?V">; this is the idea of the standard <a href="https://en.wikipedia.org/wiki/Cole–Hopf_transformation">Cole-Hopf transformation</a>.</p>
+<p>with terminal condition <img src="https://latex.codecogs.com/png.latex?V(T,x)%20=%20g(x)">. Another route to derive Equation&nbsp;5 is to simply use the fact that <img src="https://latex.codecogs.com/png.latex?V(t,x)%20=%20%5Clog%20h(t,x)">; since the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac</a> gives that the function <img src="https://latex.codecogs.com/png.latex?h(t,x)"> satisfies <img src="https://latex.codecogs.com/png.latex?(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%20h%20=%200">, the conclusion follows from a few lines of algebra by starting writing <img src="https://latex.codecogs.com/png.latex?%5Cpartial_t%20V%20=%20h%5E%7B-1%7D%20%5C,%20%5Cpartial_t%20h%20=%20-h%5E%7B-1%7D(%5Cmathcal%7BL%7D+%20f)%5Bh%5D">, expanding <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7Dh"> and expressing everything back in terms of <img src="https://latex.codecogs.com/png.latex?V">. The term <img src="https://latex.codecogs.com/png.latex?%5C%7C%5Csigma%5E%5Ctop%20%5Cnabla%20V%5C%7C%5E2"> naturally arises when expressing the diffusion term <img src="https://latex.codecogs.com/png.latex?%5Csigma%20%5Csigma%5E%5Ctop%20:%20%5Cnabla%5E2%20h"> as a function of the second derivative of <img src="https://latex.codecogs.com/png.latex?V">; it is the idea of the standard <a href="https://en.wikipedia.org/wiki/Cole–Hopf_transformation">Cole-Hopf transformation</a>.</p>
 
 
 
@@ -78,7 +78,7 @@
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/HJB/HJB.html</guid>
-  <pubDate>Mon, 10 Jun 2024 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 10 Jun 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Girsanov and Importance Sampling</title>
@@ -134,7 +134,7 @@
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/girsanov/girsanov.html</guid>
-  <pubDate>Sun, 02 Jun 2024 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 02 Jun 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Joe Doob &amp; Change of measures on path-space</title>
@@ -235,7 +235,7 @@
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/doob_transforms/doob.html</guid>
-  <pubDate>Mon, 13 May 2024 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 13 May 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RWM &amp; HMC on manifolds</title>
@@ -367,7 +367,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
   <category>MCMC</category>
   <category>manifold</category>
   <guid>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</guid>
-  <pubDate>Fri, 08 Mar 2024 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 08 Mar 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Metropolis-Hastings ratio with deterministic proposals</title>
@@ -434,7 +434,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</guid>
-  <pubDate>Sun, 17 Dec 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 17 Dec 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Averaging and homogenization</title>
@@ -564,7 +564,7 @@ Weinan, E. 2011. <em>Principles of Multiscale Modeling</em>. Cambridge Universit
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</guid>
-  <pubDate>Mon, 27 Nov 2023 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 27 Nov 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Ensemble Kalman Smoother (EnKS)</title>
@@ -615,7 +615,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</guid>
-  <pubDate>Fri, 17 Nov 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 17 Nov 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Asymptotic variance &amp; Poisson Equation</title>
@@ -696,7 +696,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
  ]]></description>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</guid>
-  <pubDate>Fri, 10 Nov 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 10 Nov 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Gaussian Assimilation &amp; the EnKF</title>
@@ -770,7 +770,7 @@ Ollivier, Yann, Ludovic Arnold, Anne Auger, and Nikolaus Hansen. 2017. <span>“
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</guid>
-  <pubDate>Sun, 22 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 22 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Deriving Langevin MCMC</title>
@@ -817,7 +817,7 @@ Titsias, Michalis K, and Omiros Papaspiliopoulos. 2018. <span>“Auxiliary Gradi
 </div></section></div> ]]></description>
   <category>MCMC</category>
   <guid>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</guid>
-  <pubDate>Wed, 18 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Wed, 18 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Wasserstein Gradients &amp; Langevin Diffusions</title>
@@ -871,7 +871,31 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</guid>
-  <pubDate>Sun, 15 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 15 Oct 2023 17:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>VIASM mini-course on diffusions and flows</title>
+  <link>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/VIASM_2024/viasm_2024.jpg" class="img-fluid figure-img" style="width:95.0%"></p>
+</figure>
+</div>
+</div>
+<p>The slides for this short course on diffusion models (denoising diffusions, probability flows) and other flow methods (stochastic interpolants, flow-matching) are available <a href="https://alexxthiery.github.io/viasm_2024/">here</a>. There are a few animations, so loading the slides may be slow…</p>
+
+
+
+ ]]></description>
+  <category>diffusion</category>
+  <guid>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</guid>
+  <pubDate>Sun, 15 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sanov’s Theorem</title>
@@ -935,7 +959,7 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
  ]]></description>
   <category>LargeDeviation</category>
   <guid>https://alexxthiery.github.io/notes/sanov/sanov.html</guid>
-  <pubDate>Sun, 08 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 08 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Auxiliary variable trick</title>
@@ -1011,7 +1035,7 @@ Zhang, Yichuan, Zoubin Ghahramani, Amos J Storkey, and Charles Sutton. 2012. <sp
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/auxiliary_variable_trick/auxiliary_variable_trick.html</guid>
-  <pubDate>Mon, 02 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 02 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Shearer’s lemma</title>
@@ -1050,7 +1074,7 @@ Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</guid>
-  <pubDate>Sun, 01 Oct 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 01 Oct 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: References and Readings</title>
@@ -1082,7 +1106,7 @@ Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the
  ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</guid>
-  <pubDate>Fri, 29 Sep 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 29 Sep 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Shannon Source Coding Theorem</title>
@@ -1175,7 +1199,7 @@ Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.�
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</guid>
-  <pubDate>Mon, 25 Sep 2023 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 25 Sep 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: Fano’s inequality</title>
@@ -1220,7 +1244,7 @@ Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.�
  ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</guid>
-  <pubDate>Fri, 22 Sep 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 22 Sep 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: Entropy and Basic Definitions</title>
@@ -1323,7 +1347,7 @@ MacKay, David JC. 2003. <em>Information Theory, Inference and Learning Algorithm
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</guid>
-  <pubDate>Fri, 22 Sep 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 22 Sep 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>From Denoising Diffusion to ODEs</title>
@@ -1402,111 +1426,7 @@ Song, Yang, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Er
   <category>DDPM</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</guid>
-  <pubDate>Sat, 01 Jul 2023 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Denoising Diffusion Probabilistic Models (DDPM)</title>
-  <link>https://alexxthiery.github.io/notes/DDPM/DDPM.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<section id="setting-goals" class="level3">
-<h3 class="anchored" data-anchor-id="setting-goals">Setting &amp; Goals</h3>
-<p>Consider <img src="https://latex.codecogs.com/png.latex?N"> samples <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D%5Cequiv%20%5C%7Bx_i%5C%7D_%7Bi=1%7D%5EN"> in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED"> from an unknown data distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D(dx)">. We would like to build an mechanism that can generate other samples from this data distribution. Implicitly, this means that we will be fitting a statistical model to this finite set of samples and have an algorithmic procedure to generate samples from the fitted probabilistic model. This type of models that directly define a stochastic procedure that generates data are called <em>implicit probabilistic models</em> in the ML literature.</p>
-</section>
-<section id="ornsteinuhlenbeck-noising-process" class="level3">
-<h3 class="anchored" data-anchor-id="ornsteinuhlenbeck-noising-process">Ornstein–Uhlenbeck Noising process</h3>
-<p>Denoising Diffusion Probabilistic Models (DDPMs) work as follows. Consider a diffusion process <img src="https://latex.codecogs.com/png.latex?%5C%7B%20X_t%20%5C%7D_%7Bt=0%7D%5ET"> that starts from the data distribution <img src="https://latex.codecogs.com/png.latex?p_0(dx)%20%5Cequiv%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D(dx)"> at time <img src="https://latex.codecogs.com/png.latex?t=0">. The notation <img src="https://latex.codecogs.com/png.latex?p_t(dx)"> refers to the marginal distribution of the diffusion at time <img src="https://latex.codecogs.com/png.latex?0%20%5Cleq%20t%20%5Cleq%20T">. Assume furthermore that at time <img src="https://latex.codecogs.com/png.latex?t=T">, the marginal distribution is (very close to) a reference distribution <img src="https://latex.codecogs.com/png.latex?p_T(dx)%20=%20%5Cpi_%7B%5Cmathrm%7Bref%7D%7D(dx)"> that is straightforward to sample from. Typically, <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bref%7D%7D(dx)"> is an isotropic Gaussian distribution. This diffusion process is often called the <em>noising</em> process since it transform the data distribution into a reference measure that can be thought of as “pure noise”. It is often chosen as an <a href="https://en.wikipedia.org/wiki/Ornstein–Uhlenbeck_process">Ornstein–Uhlenbeck</a> (OU) diffusion,</p>
-<p><span id="eq-OU"><img src="https://latex.codecogs.com/png.latex?%0AdX%20=%20-%20%5Cfrac12%20X%20%5C,%20dt%20+%20dW.%0A%5Ctag%7B1%7D"></span></p>
-<p>This diffusion is reversible with respect to, and quickly converges to, the reference distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bref%7D%7D%20=%20%5Cmathcal%7BN%7D(0,%20I)"> and has the good taste of having simple transition densities: the law of <img src="https://latex.codecogs.com/png.latex?X_%7Bt+s%7D"> given that <img src="https://latex.codecogs.com/png.latex?X_t%20=%20x_t"> is the same as <img src="https://latex.codecogs.com/png.latex?e%5E%7B-s/2%7D%20x_t%20+%20%5Csqrt%7B1-e%5E%7B-s%7D%7D%20%5C,%20%5Cmathbf%7Bn%7D">, which we write as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha_s%20%5C,%20x%20+%20%5Csigma_s%20%5C,%20%5Cmathbf%7Bn%7D%0A"></p>
-<p>with <img src="https://latex.codecogs.com/png.latex?%5Calpha_s%5E2%20+%20%5Csigma_s%5E2%20=%201"> and <img src="https://latex.codecogs.com/png.latex?%5Calpha_s%20=%20e%5E%7B-s/2%7D"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bn%7D%5Csim%20%5Cpi_%7B%5Cmathrm%7Bref%7D%7D%20=%20%5Cmathcal%7BN%7D(0,I)">. The forward probability transitions are tractable and given by <span id="eq-OU-forward"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BP%7D%7D%7D(X_%7Bt+s%7D%20%5Cin%20dy%20%5C,%20%7C%20%5C,%20X_t%20=%20x%20)%0A%5C;%20%5Cpropto%20%5C;%0A%5Cexp%20%7B%5Cleft%5C%7B%20-%5Cfrac%7B(y%20-%20%5Calpha_s%20%5C,%20x)%5E2%7D%7B2%20%5C,%20%5Csigma%5E2_s%7D%20%5Cright%5C%7D%7D%20%20%5C,%20dy.%0A%5Ctag%7B2%7D"></span></p>
-<p>This also means that one can directly generate samples from <img src="https://latex.codecogs.com/png.latex?p_t(dx)"> by first choosing a data samples <img src="https://latex.codecogs.com/png.latex?x_i"> from the data distribution <img src="https://latex.codecogs.com/png.latex?p_%7B%5Cmathrm%7Bdata%7D%7D%20%5Cequiv%20p_0"> and blend it with noise by setting <img src="https://latex.codecogs.com/png.latex?x_i%5E%7B(t)%7D%20=%20%5Calpha_t%20%5C,%20x_i%20+%20%5Csigma_t%20%5C,%20%5Cmathbf%7Bn%7D">. In other words, one does not need to simulate the diffusion to generate samples from the data distribution, i.e.&nbsp;the method is “simulation free”.</p>
-</section>
-<section id="the-reverse-diffusion" class="level3">
-<h3 class="anchored" data-anchor-id="the-reverse-diffusion">The reverse diffusion</h3>
-<p>In order to generate samples from the data distribution, the DDPM strategy consists in sampling from the Gaussian reference measure <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bref%7D%7D"> at time <img src="https://latex.codecogs.com/png.latex?t=T"> and simulate the OU process backward in time. In other words, one would like to simulate from the <em>reverse process</em> <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_t"> defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_s%20=%20X_%7BT-s%7D."></p>
-<p>In other words, the reverse process is distributed as <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_0%20%5Csim%20%5Cpi_%7B%5Cmathrm%7Bref%7D%7D"> at time <img src="https://latex.codecogs.com/png.latex?t=0"> and, crucially, we have that <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_T%20%5Csim%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D">. Furthermore, and as explained in this <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">note</a>, the reverse diffusion follows the dynamics</p>
-<p><span id="eq-OU-rev"><img src="https://latex.codecogs.com/png.latex?%0Ad%5Coverleftarrow%7BX%7D_t%20=%20%7B%5Ccolor%7Bred%7D%20+%20%7D%5Cfrac12%20%5Coverleftarrow%7BX%7D_t%20%5C,%20dt%0A%5C;%20%7B%5Ccolor%7Bred%7D%20+%20%5Cnabla%20%5Clog%20p_%7BT-t%7D(%5Coverleftarrow%7BX%7D_t)%20%5C,%20dt%7D%20%5C;%0A+%20dB%0A%5Ctag%7B3%7D"></span></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?B"> is another Wiener process. I have used the notation <img src="https://latex.codecogs.com/png.latex?B"> to emphasize that there is no link between this Wiener process and the one used to simulate the forward process. Note that if the initial data distribution <img src="https://latex.codecogs.com/png.latex?p_0%20%5Cequiv%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D"> were equal to the reference measure <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bref%7D%7D">, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?p_0%20=%20p_T%20=%20%5Cpi_%7B%5Cmathrm%7Bref%7D%7D"> then it is easy to see that the reverse diffusion would have exactly teh same dynamics as the forward diffusion. In order to simulate the reverse diffusion, one needs to be able to estimate the new term <img src="https://latex.codecogs.com/png.latex?%7B%5Ccolor%7Bred%7D%5Cnabla%20%5Clog%20p_%7BT-t%7D(x)%7D"> called the <em>score</em>. If one can estimate the score, it is straightforward to simulate the reverse process <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_t"> and obtain samples from the data distribution. Estimating the score is the crux of the game.</p>
-</section>
-<section id="denoising-to-estimating-the-score" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-to-estimating-the-score">Denoising to estimating the score</h3>
-<p>In practice, the score is unknown and one has to build an approximation of it</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BS%7D%5E%5Ctheta(t,x)%20%5C;%20%5Capprox%20%5C;%20%5Cnabla_x%20%5Clog%20p_t(x)."></p>
-<p>The approximate score <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BS%7D%5E%5Ctheta(t,x)"> is often parametrized by a neural network with parameters <img src="https://latex.codecogs.com/png.latex?%5Ctheta%20%5Cin%20%5CTheta">. Since</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clog%20p_t(x)%20%5C;%20=%20%5C;%20%5Clog%20%5Cint%20%5C;%20p(X_t=x%20%5Cmid%20X_0%20=%20x_0)%5C;%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D(d%20x_0)%0A"></p>
-<p>and <img src="https://latex.codecogs.com/png.latex?p(X_t=x%20%5Cmid%20X_0%20=%20x_0)"> is given in Equation&nbsp;2, algebra gives that</p>
-<p><span id="eq-score-denoising"><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla_x%20%5Clog%20p_t(x)%20%5C;%20=%20%5C;%20-%5Cfrac%7Bx%20-%20%5Calpha_t%20%5C,%20%20%5Ctextcolor%7Bgreen%7D%7B%5Cwidehat%7Bx%7D_0(x,t)%7D%7D%7B%5Csigma_t%5E2%7D%0A%5Ctag%7B4%7D"></span></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0(x,t)"> is a “denoising” estimate of the initial position <img src="https://latex.codecogs.com/png.latex?x_0"> given a noisy estimate <img src="https://latex.codecogs.com/png.latex?X_t=x"> at time <img src="https://latex.codecogs.com/png.latex?t">, i.e.</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%20%5Cwidehat%7Bx%7D_0(x_t,t)%20%5C;%20=%20%5C;%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%5BX_0%20%20%5C;%20%5Cmid%20%5C;%20X_t%20=%20x_t%5D%20%7D.%0A"></p>
-<p>Note that this derivation fundamentally relies on the tractability of the transition density of the OU process, although any other linear Gaussian diffusion could have been used. For simplifying notation, I will often write <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0(x_t,%20t)"> as <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0(x_t)"> when it is clear that <img src="https://latex.codecogs.com/png.latex?x_t"> is a sample obtained at time <img src="https://latex.codecogs.com/png.latex?0%20%5Cleq%20t%20%5Cleq%20T">. Equation&nbsp;4 means that to estimate the score, one only needs to train a denoising function <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0:%20%5B0,T%5D%20%5Ctimes%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D%5Ed"> that approximate the true conditional expectation,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0(t,x_t)%0A%5C;%20%5Capprox%20%5C;%0A%5Cwidehat%7Bx%7D_0(t,x_t)%20=%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%5BX_0%20%5Cmid%20X_t=x_t%5D.%0A"></p>
-<p>It is a standard regression problem: take a bunch of pairs <img src="https://latex.codecogs.com/png.latex?(X_0,%20X_t)"> that can be generated as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AX_0%20%5Csim%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D%0A%5Cqquad%20%5Ctextrm%7Band%7D%20%5Cqquad%0AX_t%20=%20%5Calpha_t%20X_0%20+%20%5Csigma_t%20%5C,%20%5Cmathbf%7Bn%7D%0A"></p>
-<p>and minimize the Mean Squared Error (MSE) loss, i.e.</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctheta%20%5Cmapsto%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%5C%7CX_0%20-%20%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0(t,%20X_t)%5C%7C%5E2.%0A"></p>
-<p>This can be implemented with a stochastic gradient descent method or any other stochastic optimization procedure. Indeed, this implicitly relies on the standard fact that the expectation of a squared integrable random variable <img src="https://latex.codecogs.com/png.latex?Z"> is the minimizer of the function <img src="https://latex.codecogs.com/png.latex?%5Cgamma%20%5Cmapsto%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%5B(Z-%5Cgamma)%5E2%5D">. The score is then defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BS%7D%5E%7B%5Ctheta%7D(t,x)%20%5C;%20=%20%5C;%20-%5Cfrac%7Bx%20-%20%5Calpha_t%20%5C,%20%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0(t,x)%7D%7B%5Csigma%5E2_t%7D.%0A"></p>
-<p>One of the important take-away is that a <strong>denoiser</strong>, i.e.&nbsp;a function that estimates the conditional expectation of <img src="https://latex.codecogs.com/png.latex?X_0"> given <img src="https://latex.codecogs.com/png.latex?X_t=x">, can be upgraded to a <strong>sampler</strong>! Furthermore, for a given estimate <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BS%7D(t,x_t)"> of the score function, one can easily obtain bounds on the quality of the resulting approximation of the data distribution. For example, if <img src="https://latex.codecogs.com/png.latex?q%5E%7B%5Cmathcal%7BS%7D%7D"> denotes the probability distribution on path-space induced by the reverse diffusion with approximate score <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BS%7D"> while <img src="https://latex.codecogs.com/png.latex?p"> denotes the “true” reverse diffusion, the chain rule for the KL divergence gives</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D,%20q%5E%7B%5Cmathcal%7BS%7D%7D_0)%20=%20%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p_0,%20q%5E%7B%5Cmathcal%7BS%7D%7D_0)%0A%5Cleq%20%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p,%20q%5E%7B%5Cmathcal%7BS%7D%7D).%0A"></p>
-<p>Furthermore, as described in <a href="../../notes/girsanov/girsanov.html">these notes</a>, Girsanov’s theorem gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(p,%20q%5E%7B%5Cmathcal%7BS%7D%7D)%20=%20%5Cfrac12%20%5C,%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5C%7B%20%5Cint_%7B0%7D%5ET%20%5C%7C%5Cmathcal%7BS%7D(t,X_t)%20-%20%5Cnabla_x%20%5Clog%20p_t(X_t)%20%5C%7C%5E2%20%5C,%20dt%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>If there were a time-dependent volatility <img src="https://latex.codecogs.com/png.latex?%5Cgamma_t"> in the dynamics, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?dX%20=%20%5Cmu(X)%20%5C,%20dt%20+%20%5Cgamma_t%20%5C,%20dW"> instead of the one in Equation&nbsp;1, the expression would remain essentially the same, with the only difference that the error term <img src="https://latex.codecogs.com/png.latex?%5C%7C%5Cmathcal%7BS%7D(t,X_t)%20-%20%5Cnabla_x%20%5Clog%20p_t(X_t)%20%5C%7C%5E2"> would be scaled by a factor <img src="https://latex.codecogs.com/png.latex?%5Cgamma%5E2_t">. Indeed, this means that when the approximation of the score is perfect, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BS%7D(t,x_t)%20=%20%5Cnabla_x%20%5Clog%20p_t(x_t)">, the data distribution is perfectly recovered, as expected. When expressed in terms of the denoiser <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D">, the upper-bound on <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BD_%7B%5Ctext%7BKL%7D%7D%7D%7D(%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D,%20q%5E%7B%5Cmathcal%7BS%7D%7D_0)"> reads</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac12%20%5C,%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5C%7B%20%5Cint_%7B0%7D%5ET%20%20%7B%5Cleft(%20%5Cfrac%7B%5Calpha_t%7D%7B%5Csigma_t%5E2%7D%20%5Cright)%7D%20%5E2%20%5C,%20%5C%7C%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0(t,X_t)%20-%20%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%5BX_0%20%5Cmid%20X_t%5D%20%5C%7C%5E2%20%5C,%20dt%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>Since <img src="https://latex.codecogs.com/png.latex?(%5Calpha_t%20/%20%5Csigma_t)%20%5Cto%20%5Cinfty"> as <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%200">, this shows that it is probably a good idea to approximate denoiser <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0(t,x_t)"> much better for small times <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%200"> than for large times <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%20T">.</p>
-</section>
-<section id="denoiser-practical-parametrization" class="level3">
-<h3 class="anchored" data-anchor-id="denoiser-practical-parametrization">Denoiser: practical parametrization</h3>
-<p>In practice, it may not be efficient, or stable, to try to directly parametrize the denoiser <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D%5E%5Ctheta_0(t,%20x_t)"> with a neural network and simply minimize the loss</p>
-<p><span id="eq-loss-naive"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%5C%7CX_0%20-%20%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0(t,%20X_t)%5C%7C%5E2.%0A%5Ctag%7B5%7D"></span></p>
-<p>For example, for <img src="https://latex.codecogs.com/png.latex?t%20%5Capprox%200">, we have that <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0(t,X_t)%20%5Capprox%20X_t%20%5Capprox%20X_0"> so that it is very easy to reconstruct <img src="https://latex.codecogs.com/png.latex?X_0"> from <img src="https://latex.codecogs.com/png.latex?X_t">. On the contrary, for large <img src="https://latex.codecogs.com/png.latex?t">, there is almost no information contained within <img src="https://latex.codecogs.com/png.latex?X_t"> to reconstruct <img src="https://latex.codecogs.com/png.latex?X_0">. This means that the typical value of the naive loss Equation&nbsp;5 depends widely on <img src="https://latex.codecogs.com/png.latex?t">, which makes it difficult to optimize: with this parametrization, since large values of the loss will be typically concentrated to large values of <img src="https://latex.codecogs.com/png.latex?t">, the denoiser will not be accurate for <img src="https://latex.codecogs.com/png.latex?t%20%5Capprox%200">, which is exactly the opposite than what is required, as discussed at the end of the previous section. Since <img src="https://latex.codecogs.com/png.latex?x_t%20=%20%5Calpha_t%20%5C,%20x_0%20+%20%5Csigma_t%20%5C,%20%5Cmathbf%7Bn%7D">, one can defined the Signal-to-Noise-Ratio as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Cmathrm%7BSNR%7D(t)%20=%20%5Cfrac%7B%5Calpha_t%7D%7B%5Csigma_t%7D."></p>
-<p>In order to normalize by the reconstruction difficulty, it makes more sense to train a denoiser by minimizing the loss:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5B%20%20%5Cmathrm%7BSNR%7D%5E2(t)%20%5Ctimes%20%5C%7CX_0%20-%20%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0(t,%20X_t)%5C%7C%5E2%20%20%5Cright%5D%7D%20.%0A"></p>
-<p>It turns out that it is entirely equivalent to minimizing the loss</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%20%7B%5Cleft%5B%20%20%5C%7C%20%5Cmathbf%7Bn%7D-%20%5Cwidehat%7B%5Cmathbf%7Bn%7D%7D%5E%7B%5Ctheta%7D(t,%20X_t)%5C%7C%5E2%20%20%5Cright%5D%7D%20.%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?x_t%20=%20%5Calpha_t%20%5C,%20x_0%20+%20%5Csigma_t%20%5C,%20%5Cmathbf%7Bn%7D"> while the denoiser <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0"> and noise estimator <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cmathbf%7Bn%7D%7D%5E%7B%5Ctheta%7D"> are parametrized so that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ax_t%20=%20%5Calpha_t%20%5C,%20%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0(t,%20x_t)%20+%20%5Csigma_t%20%5C,%20%5Cwidehat%7B%5Cmathbf%7Bn%7D%7D%5E%7B%5Ctheta%7D(t,x_t).%0A"></p>
-<p>That is one of the reasons why most of the papers on DDPM are parametrizing the denoiser <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0"> by building instead a “noise estimator” <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cmathbf%7Bn%7D%7D%5E%7B%5Ctheta%7D"> with a neural network and setting</p>
-<p><span id="eq-noise-param"><img src="https://latex.codecogs.com/png.latex?%0A%5Cwidehat%7Bx%7D%5E%7B%5Ctheta%7D_0(t,x_t)%20=%20%5Cfrac%7Bx_t%20-%20%5Csigma_t%20%5C,%20%5Cwidehat%7B%5Cmathbf%7Bn%7D%7D%5E%7B%5Ctheta%7D(t,x_T)%7D%7B%5Calpha_t%7D.%0A%5Ctag%7B6%7D"></span></p>
-<p>Since <img src="https://latex.codecogs.com/png.latex?%5Calpha_t%20%5Cto%201"> and <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%20%5Cto%200"> for <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%200">, this also implicitly ensures that <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0(t,x_t)%20%5Capprox%20x_t"> for <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%200">, as required. With the parametrization Equation&nbsp;6, the score is given by</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BS%7D%5E%7B%5Ctheta%7D(t,x_t)%20%5C,%20=%20%5C,%20-%5Cfrac%7B%5Cwidehat%7B%5Cmathbf%7Bn%7D%7D%5E%7B%5Ctheta%7D(t,x_t)%7D%7B%5Csigma_t%7D,%0A"></p>
-<p>which can <strong>still</strong> lead to instability issues for small times <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%200">, although to a lesser extent. It is unlikely that there is an easy way to avoid these issues since, as soon as the data distribution is supported on a (neighbourhood of) lower dimensional manifold, the actual score function indeed does become very large for <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%200%5E+"> since a strong “drift” is required to bring the diffusion back to the manifold.</p>
-</section>
-<section id="the-denoising-diffusion" class="level3">
-<h3 class="anchored" data-anchor-id="the-denoising-diffusion">The “denoising” diffusion</h3>
-<p>Once the denoiser <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0(%5Cldots)"> trained, the reverse diffusion defined <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_s%20=%20X_%7BT-s%7D"> has to be simulated. Plugging Equation&nbsp;4 back in the expression of the dynamics of the reverse diffusion shows that</p>
-<p><span id="eq-reverse-diff"><img src="https://latex.codecogs.com/png.latex?%0Ad%5Coverleftarrow%7BX%7D_s%20=%0A-%5Cfrac12%20%5C,%20%5Cfrac%7B1%7D%7B%5Ctanh((T-s)/2)%7D%20%5C,%0A%7B%5Cleft(%20%20%5Coverleftarrow%7BX%7D_s%20-%20%5Cfrac%7B%5Cwidehat%7Bx%7D_0(%5Coverleftarrow%7BX%7D_s)%7D%7B%5Ccosh((T-s)/2)%7D%20%20%5Cright)%7D%0A%5C;%20+%20%5C;%0AdB%0A%5Ctag%7B7%7D"></span></p>
-<p>This dynamics is intuitive: as <img src="https://latex.codecogs.com/png.latex?s%20%5Cto%20T"> we have <img src="https://latex.codecogs.com/png.latex?%5Ccosh((T-s)/2)%20%5Cto%201"> and <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E2%20%5Cequiv%20%5Ctanh((T-s)/2)%20%5Csim%20(T-s)/2%20%5Cto%200"> so that the dynamics is similar to</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ad%5Coverleftarrow%7BX%7D_s%20=%0A-%5Cfrac12%20%5C,%20%5Cfrac%7B1%7D%7B%5Cvarepsilon%5E2%7D%20%5C,%0A%7B%5Cleft(%20%20%5Coverleftarrow%7BX%7D_s%20-%20%5Cwidehat%7Bx%7D_0%20%5Cright)%7D%20%20+%20dB.%0A"></p>
-<p>That is an Ornstein-Uhlenbeck process that converges quickly, i.e.&nbsp;on time-scale of order <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BO%7D(%5Cvarepsilon%5E2)">, towards a Gaussian distribution centred at <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7Bx%7D_0"> and with variance <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E2">.</p>
-<p>To discretize the reverse dynamics Equation&nbsp;7 on a small interval <img src="https://latex.codecogs.com/png.latex?%5B%5Coverline%7Bs%7D,%20%5Coverline%7Bs%7D+%5Cdelta%5D">, one can for example consider the slightly simplified (linear) dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ad%5Coverleftarrow%7BX%7D_s%20=%0A-%5Cfrac12%20%5C,%20%5Cfrac%7B1%7D%7B%5Ctanh((T-s)/2)%7D%20%5C,%0A%7B%5Cleft(%20%20%5Coverleftarrow%7BX%7D_s%20-%20%5Cmu%20%5Cright)%7D%20%20+%20dB.%0A"></p>
-<p>Here, <img src="https://latex.codecogs.com/png.latex?%5Cmu%20=%20%5Cwidehat%7Bx%7D_0(%5Coverleftarrow%7BX%7D_%7B%5Coverline%7Bs%7D%7D)%20/%20%5Ccosh((T-%5Coverline%7Bs%7D)/2)"> with <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_%7B%5Coverline%7Bs%7D%7D%20=%20%5Coverleftarrow%7Bx%7D_%7B%5Coverline%7Bs%7D%7D">. Algebra gives that, conditioned upon <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_%7B%5Coverline%7Bs%7D%7D%20=%20%5Coverleftarrow%7Bx%7D_%7B%5Coverline%7Bs%7D%7D">, we have</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0A%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BE%7D%7D%7D%5B%20%5Coverleftarrow%7BX%7D_%7B%5Coverline%7Bs%7D%20+%20%5Cdelta%7D%20%5D%0A%5Cquad%20&amp;=%20%5Cquad%20%5Cmu%20+%20%5Clambda%20%5C,%20(%5Coverleftarrow%7Bx%7D_%7B%5Coverline%7Bs%7D%7D%20-%20%5Cmu)%5C%5C%0A%5Cmathop%7B%5Cmathrm%7BVar%7D%7D%5B%20%5Coverleftarrow%7BX%7D_%7B%5Coverline%7Bs%7D%20+%20%5Cdelta%7D%20%5D%0A%5Cquad%20&amp;=%20%5Cquad%0A%5Ctanh%20%7B%5Cleft(%20%5Cfrac%7BT-%5Coverline%7Bs%7D-%5Cdelta%7D%7B2%7D%20%5Cright)%7D%20%20%5C,%20(1-%5Clambda%5E2)%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
-<p>where the coefficient <img src="https://latex.codecogs.com/png.latex?0%3C%5Clambda%3C1"> is given by</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clambda%20=%20%5Cfrac%7B%5Csinh(T-%5Coverline%7Bs%7D-%5Cdelta)%7D%7B%5Csinh(T-%5Coverline%7Bs%7D)%7D.%0A"></p>
-<p>This discretization is more stable and efficient than a naive Euler-Maruyama approach since the drift term can get large as <img src="https://latex.codecogs.com/png.latex?s%20%5Cto%20T">. WIth the above discretization, one can easily simulate the reverse diffusion on <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D"> and generate approximate samples from <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D">.</p>
-<p>In the animation below, the method described in these notes was used. This very small example trains in less than a minute on an old laptop without a GPU. The noise estimator was parametrized with an MLP with <img src="https://latex.codecogs.com/png.latex?%5Cmathrm%7Belu%7D(%5Cldots)"> non-linearity and two hidden-layers with size <img src="https://latex.codecogs.com/png.latex?H=128">. It was very useful to add a few Fourier features as input of the network, I could not make this work properly without.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="sine_reverse.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="sine_reverse.mp4">Video</a></video></p>
-</figure>
-</div>
-<p>The literature on DDPM is <a href="https://github.com/heejkoo/Awesome-Diffusion-Models">enormous and still growing</a>!</p>
-
-
-</section>
-
- ]]></description>
-  <category>DDPM</category>
-  <category>score</category>
-  <guid>https://alexxthiery.github.io/notes/DDPM/DDPM.html</guid>
-  <pubDate>Sat, 01 Jul 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sat, 01 Jul 2023 17:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
