@@ -63,10 +63,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Alexandre Thiéry - Probability Basics">
-<meta property="og:description" content="">
 <meta property="og:site-name" content="Alexandre Thiéry">
 <meta name="twitter:title" content="Alexandre Thiéry - Probability Basics">
-<meta name="twitter:description" content="">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
 </head>
@@ -146,7 +144,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">23 01 2024</p>
+        <p class="date-modified">13 08 2025</p>
       </div>
     </div>
       
@@ -161,13 +159,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#mean-expectation" id="toc-mean-expectation" class="nav-link active" data-scroll-target="#mean-expectation">Mean / Expectation</a></li>
-  <li><a href="#standard-deviation-variances-and-covariances" id="toc-standard-deviation-variances-and-covariances" class="nav-link" data-scroll-target="#standard-deviation-variances-and-covariances">Standard Deviation, Variances and Covariances</a></li>
-  <li><a href="#random-vectors-mean-vector-and-covariance-matrix" id="toc-random-vectors-mean-vector-and-covariance-matrix" class="nav-link" data-scroll-target="#random-vectors-mean-vector-and-covariance-matrix">Random Vectors: Mean Vector and Covariance Matrix</a></li>
+  <li><a href="#table-of-contents" id="toc-table-of-contents" class="nav-link active" data-scroll-target="#table-of-contents">Table of Contents</a>
+  <ul class="collapse">
+  <li><a href="#mean-and-expectation" id="toc-mean-and-expectation" class="nav-link" data-scroll-target="#mean-and-expectation">Mean and Expectation</a></li>
+  <li><a href="#standard-deviation-and-variances-and-covariances" id="toc-standard-deviation-and-variances-and-covariances" class="nav-link" data-scroll-target="#standard-deviation-and-variances-and-covariances">Standard Deviation and Variances and Covariances</a></li>
+  <li><a href="#random-vectors" id="toc-random-vectors" class="nav-link" data-scroll-target="#random-vectors">Random Vectors</a></li>
   <li><a href="#gaussian-distributions" id="toc-gaussian-distributions" class="nav-link" data-scroll-target="#gaussian-distributions">Gaussian distributions</a>
   <ul class="collapse">
   <li><a href="#univariate-case" id="toc-univariate-case" class="nav-link" data-scroll-target="#univariate-case">Univariate case:</a></li>
   <li><a href="#multivariate-case" id="toc-multivariate-case" class="nav-link" data-scroll-target="#multivariate-case">Multivariate case:</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -178,8 +179,17 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<section id="mean-expectation" class="level2">
-<h2 class="anchored" data-anchor-id="mean-expectation">Mean / Expectation</h2>
+<section id="table-of-contents" class="level1">
+<h1>Table of Contents</h1>
+<ol type="1">
+<li><a href="#mean-and-expectation">Mean and Expectation</a></li>
+<li><a href="#standard-deviation-and-variances-and-covariances">Standard Deviation, Variances and Covariances</a></li>
+<li><a href="#random-vectors">Random Vectors</a></li>
+<li><a href="#gaussian-distributions">Gaussian distributions</a></li>
+</ol>
+<hr>
+<section id="mean-and-expectation" class="level2">
+<h2 class="anchored" data-anchor-id="mean-and-expectation">Mean and Expectation</h2>
 <p>The <a href="https://en.wikipedia.org/wiki/Expected_value">mean or expectation</a> of a random variable <span class="math inline">\(X\)</span> is denoted as <span class="math inline">\(\mathbb{E}[X]\)</span>l. For a discrete random variable,</p>
 <p><span class="math display">\[
 \mathbb{E}[X] = \sum_{x} x \cdot \mathbb{P}(X = x)
@@ -203,8 +213,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 \]</span></p>
 <p>as soon as all these quantities exists. This holds even if the two random variables are <strong>not</strong> independent.</p>
 </section>
-<section id="standard-deviation-variances-and-covariances" class="level2">
-<h2 class="anchored" data-anchor-id="standard-deviation-variances-and-covariances">Standard Deviation, Variances and Covariances</h2>
+<section id="standard-deviation-and-variances-and-covariances" class="level2">
+<h2 class="anchored" data-anchor-id="standard-deviation-and-variances-and-covariances">Standard Deviation and Variances and Covariances</h2>
 <p>The <a href="https://en.wikipedia.org/wiki/Variance">variance</a> of a random variable <span class="math inline">\(X\)</span>, denoted as <span class="math inline">\(\text{Var}(X)\)</span>, measures the spread of its values. It is defined as</p>
 <p><span class="math display">\[
 \begin{align}
@@ -233,8 +243,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 \text{Var}\left\{ \frac{X_1 + \ldots + X_N}{N} \right\} \; = \; \frac{\text{Var}(X)}{N}.
 \]</span></p>
 </section>
-<section id="random-vectors-mean-vector-and-covariance-matrix" class="level2">
-<h2 class="anchored" data-anchor-id="random-vectors-mean-vector-and-covariance-matrix">Random Vectors: Mean Vector and Covariance Matrix</h2>
+<section id="random-vectors" class="level2">
+<h2 class="anchored" data-anchor-id="random-vectors">Random Vectors</h2>
 <p>A <a href="https://en.wikipedia.org/wiki/Multivariate_random_variable">random vector</a> is a vector of random variables. For a random vector <span class="math inline">\(\mathbf{X}\)</span> in <span class="math inline">\(\mathbb{R}^d\)</span>, the mean of <span class="math inline">\(\mu = \mathbf{X} \ in \mathbb{R}^d\)</span> is a vector in <span class="math inline">\(\mathbb{R}^d\)</span>, each component of which is the mean of one of its <span class="math inline">\(d\)</span> components. The <a href="https://en.wikipedia.org/wiki/Covariance_matrix">covariance matrix</a>, <span class="math inline">\(\Sigma \in \mathbb{R}^{d,d}\)</span>, of <span class="math inline">\(\mathbf{X}\)</span> is a <span class="math inline">\(d \times d\)</span> matrix defined by</p>
 <p><span class="math display">\[
 \Sigma_{ij} = \text{Cov}(X_i, X_j)
@@ -260,9 +270,10 @@ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left\{ -\frac{(x - \mu)^2}{2\sigma^2}\
 <p><span class="math display">\[
 f(\mathbf{x}) = \frac{1}{\sqrt{(2\pi)^n |\Sigma|}} \exp\left\{ -\frac{1}{2} \langle (\mathbf{x} - \boldsymbol{\mu}), \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})\rangle \right\}
 \]</span></p>
-<p>and <span class="math inline">\(|\Sigma|\)</span> is the <a href="https://en.wikipedia.org/wiki/Determinant">determinant</a> of the covariance matrix <span class="math inline">\(\Sigma\)</span>. Crucially, the <strong>inverse</strong> of the covariance matrix is inside the dot product <span class="math inline">\(\langle (\mathbf{x} - \boldsymbol{\mu}), \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})\rangle\)</span>. In general, zero correlation between variables does not imply their independence. However, this principle has a notable exception in the case of multivariate Gaussian distributions. For a multivariate Gaussian distribution, if the covariance matrix is diagonal, indicating zero correlation between different components, this does imply their statistical independence.</p>
+<p>and <span class="math inline">\(|\Sigma|\)</span> is the <a href="https://en.wikipedia.org/wiki/Determinant">determinant</a> of the covariance matrix <span class="math inline">\(\Sigma\)</span>. Crucially, the <strong>inverse</strong> of the covariance matrix is inside the dot product <span class="math inline">\(\langle (\mathbf{x} - \boldsymbol{\mu}), \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})\rangle\)</span>. In general, zero correlation between variables does not imply their independence. However, this principle has a notable exception in the case of Gaussian distributions. If two vectors <span class="math inline">\(X,Y\)</span> are such that <span class="math inline">\((X,Y)\)</span> is a Gaussian vector, then zero correlation implies independence. Note that, it is still possible that <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are both Gaussian vectors with zero correlation and yet are not independent; this may happen with the joint vector <span class="math inline">\((X,Y)\)</span> is not Gaussian (although both <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are).</p>
 
 
+</section>
 </section>
 </section>
 
