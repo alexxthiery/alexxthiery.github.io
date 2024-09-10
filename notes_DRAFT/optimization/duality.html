@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry -</title>
+<title>Alexandre Thiéry - Perturbed Optimization and Duality</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,21 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,13 +77,23 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry -">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Perturbed Optimization and Duality">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes_DRAFT/optimization/saddle.png">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry -">
+<meta property="og:image:height" content="654">
+<meta property="og:image:width" content="818">
+<meta name="twitter:title" content="Alexandre Thiéry - Perturbed Optimization and Duality">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes_DRAFT/optimization/saddle.png">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:image-height" content="654">
+<meta name="twitter:image-width" content="818">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -74,7 +103,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -84,29 +113,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../teaching/teaching.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notes/index_notes.html" rel="" target="">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html" rel="" target="">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -126,54 +155,109 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#semester-long-courses" id="toc-semester-long-courses" class="nav-link active" data-scroll-target="#semester-long-courses">Semester-Long Courses</a></li>
-  <li><a href="#lecture-series" id="toc-lecture-series" class="nav-link" data-scroll-target="#lecture-series">Lecture Series:</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes:</a></li>
+  <li><a href="#the-dual-problem" id="toc-the-dual-problem" class="nav-link active" data-scroll-target="#the-dual-problem">The Dual Problem</a></li>
+  <li><a href="#convexity-and-strong-duality" id="toc-convexity-and-strong-duality" class="nav-link" data-scroll-target="#convexity-and-strong-duality">Convexity and Strong Duality</a></li>
+  <li><a href="#fenchel-duality" id="toc-fenchel-duality" class="nav-link" data-scroll-target="#fenchel-duality">Fenchel Duality</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Perturbed Optimization and Duality</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">SDE</div>
+    <div class="quarto-category">markov</div>
+  </div>
+  </div>
 
 
-<section id="semester-long-courses" class="level2">
-<h2 class="anchored" data-anchor-id="semester-long-courses">Semester-Long Courses</h2>
-<ul>
-<li>YSC4216: Machine Learning, Yale-NUS (2024)</li>
-<li>DSA4212: Large Scale optimization, NUS (2017 – 2025)
-<ul>
-<li><a href="../teaching/DSA4212/assignments.html">List of possible projects</a></li>
-</ul></li>
-<li>YSC4236: Optimization for Large Scale Inference, Yale-NUS, (2022)</li>
-<li>YSC3252: Computational Statistics, Yale-NUS, (2022)</li>
-<li>DSA5843: Learning from Data: Neural Networks, NUS (2020–2021)</li>
-<li>ST3233: Applied Times Series, NUS, (2016, 2019, 2021)</li>
-<li>ST4240: Data Mining, NUS, (2014–2017)</li>
-<li>ST4231: Computationally Intensive Statistics, NUS (2014–2015)</li>
-<li>Multivariable Calculus II, Chennai (CMI), (2018)</li>
-</ul>
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">11 06 2024</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">11 06 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./saddle.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+<section id="the-dual-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-dual-problem">The Dual Problem</h3>
+<p><span class="citation" data-cites="ekeland1999convex">(<a href="#ref-ekeland1999convex" role="doc-biblioref">Ekeland and Temam 1999</a>)</span> describe the concept of perturbed optimization and how it relates to duality theory. It is interesting to derive standard <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange</a> and <a href="https://en.wikipedia.org/wiki/Fenchel%27s_duality_theorem">Fenchel</a> duality from this perspective. Consider a function <span class="math inline">\(f: E \to \bar{\mathbb{R}}\)</span> from <span class="math inline">\(E = \mathbb{R}^n\)</span> to the extended real numbers <span class="math inline">\(\bar{\mathbb{R}} = \mathbb{R}\cup \{-\infty, +\infty\}\)</span>. We are interested minimizing <span class="math inline">\(f\)</span>. We introduce a perturbation function <span class="math inline">\(\Phi: E \times F \to \bar{\mathbb{R}}\)</span> where <span class="math inline">\(F=\mathbb{R}^m\)</span> and such that</p>
+<p><span class="math display">\[
+f(x) = \Phi(x, 0) \quad \text{for all } x \in E.
+\]</span></p>
+<p>Our purpose is to compute <span class="math inline">\(v(0)\)</span> where the <strong>value function</strong> <span class="math inline">\(v: F \to \bar{\mathbb{R}}\)</span> is defined as</p>
+<p><span class="math display">\[
+v(y) = \inf_{x \in E} \Phi(x, y) \quad \text{for all } y \in F.
+\]</span></p>
+<p>The <a href="https://en.wikipedia.org/wiki/Convex_conjugate">convex conjugate</a> function <span class="math inline">\(\Phi^*: E^* \times F^* \to \bar{\mathbb{R}}\)</span> is defined as</p>
+<p><span class="math display">\[
+\Phi^*(p, q) = \sup_{x \in E, y \in F} \; \; \left&lt; p,x \right&gt; + \left&lt; q,y \right&gt; - \Phi(x, y)
+\]</span></p>
+<p>so that <span class="math inline">\(\Phi(x,y) + \Phi^*(p,q) \geq \left&lt; p,x \right&gt; + \left&lt; q,y \right&gt;\)</span> for all <span class="math inline">\((x,y,p,q)\)</span>. In particular, we have</p>
+<p><span class="math display">\[
+\Phi(x,0) + \Phi^*(0,q) \geq 0
+\]</span></p>
+<p>for all <span class="math inline">\(x \in E\)</span> and <span class="math inline">\(q \in F^*\)</span>. Since algebra directly shows that <span class="math inline">\(\Phi^*(0,q) = v^*(q)\)</span>, we have the fundamental inequality:</p>
+<p><span id="eq-dual"><span class="math display">\[
+v(0) = \inf_{x \in E} \; f(x) \; \geq \; \sup_{q \in F^*} \; -v^*(q) = v^{**}(0).
+\tag{1}\]</span></span></p>
+<p>This is the so-called <strong>dual problem</strong>. Note that it does indeed depend on the perturbation function <span class="math inline">\(\Phi\)</span> and not only on the function <span class="math inline">\(f\)</span>. If one can analyze the conjugate function <span class="math inline">\(v^*\)</span>, then one can obtain lower bounds on the infimum of <span class="math inline">\(f\)</span>. As first sight, <a href="#eq-dual">Equation&nbsp;1</a> may seem like a trivial result since for any function <span class="math inline">\(F\)</span> we have that <span class="math inline">\(F(0) + F^*(0) \geq 0\)</span> and getting hold of the conjugate function <span class="math inline">\(v^*\)</span> does not seem to be an easy task; we will see that this is not the case. One says that <a href="https://en.wikipedia.org/wiki/Strong_duality#:~:text=Strong%20duality%20is%20a%20condition,gap%20is%20equal%20to%200.">strong duality</a> holds if</p>
+<p><span id="eq-strong-duality"><span class="math display">\[
+v(0) = v^{**}(0).
+\tag{2}\]</span></span></p>
 </section>
-<section id="lecture-series" class="level2">
-<h2 class="anchored" data-anchor-id="lecture-series">Lecture Series:</h2>
-<ul>
-<li><a href="https://viasm.edu.vn/en/hdkh/somsaml2024">Summer school on Sstatistics &amp; ML, VIASM July 2024</a>
-<ul>
-<li>Slides available <a href="https://alexxthiery.github.io/viasm_2024/">here</a></li>
-</ul></li>
-<li><a href="https://viasm.edu.vn/en/hdkh/somsaml">Summer school on Bayesian statistics (5h Lecture), VIASM July 2023</a></li>
-</ul>
+<section id="convexity-and-strong-duality" class="level3">
+<h3 class="anchored" data-anchor-id="convexity-and-strong-duality">Convexity and Strong Duality</h3>
+<p>If one assumes that the objective function <span class="math inline">\(f(x)\)</span> is convex and the perturbation function <span class="math inline">\(\Phi(x,y)\)</span> is jointly convex in <span class="math inline">\((x,y)\)</span>, then the value function <span class="math inline">\(v\)</span> is also convex. Indeed, the function <span class="math inline">\(y \mapsto \inf_x C(x,y)\)</span> is convex as soon as the function <span class="math inline">\(C(x,y)\)</span> is convex in <span class="math inline">\((x,y)\)</span>. Since a function <span class="math inline">\(g\)</span> equals its biconjugate <span class="math inline">\(g^{**}(x)\)</span> at a point <span class="math inline">\(x\)</span> as soon its <a href="https://en.wikipedia.org/wiki/Subderivative">subdifferential</a> <span class="math inline">\(\partial g(x)\)</span> is nonempty, this shows that strong duality @#eq-strong-duality holds as soon as <span class="math inline">\(\partial v(0) \neq \emptyset\)</span>. Furthermore, in a finite dimensional space, a convex function is continuous and admits a subdifferential at any point within the interior of its domain. This shows that if <span class="math inline">\(0\)</span> belongs to the interior of the domain of <span class="math inline">\(v\)</span>, then <strong>strong duality holds</strong>. Since a convex function is continuous at <span class="math inline">\(x\)</span> if it is bounded in a neighborhood of <span class="math inline">\(x\)</span>, strong duality holds as soon as <span class="math inline">\(v\)</span> is bounded in a neighborhood of <span class="math inline">\(0\)</span>. By definition of the value function we have that <span class="math inline">\(v(y) \leq \Phi(x,y)\)</span>. This shows that <a href="https://en.wikipedia.org/wiki/Strong_duality#:~:text=Strong%20duality%20is%20a%20condition,gap%20is%20equal%20to%200.">strong duality</a> holds as soon <span class="math inline">\(v(0)\)</span> is finite and there exists <span class="math inline">\(x_0 \in E\)</span> such that the function <span class="math inline">\(\Phi_{x_0}: y \mapsto \Phi(x_0, y)\)</span> is continuous at <span class="math inline">\(0\)</span>.</p>
 </section>
-<section id="notes" class="level2">
-<h2 class="anchored" data-anchor-id="notes">Notes:</h2>
-<ul>
-<li><a href="../notes_students/probability_basics/probability_basics.html">Probability Basics</a></li>
-</ul>
+<section id="fenchel-duality" class="level3">
+<h3 class="anchored" data-anchor-id="fenchel-duality">Fenchel Duality</h3>
+<p>Consider the case of a function to minimize of the type:</p>
+<p><span class="math display">\[
+\inf_x \; f(x) = G(x) + H( A x)
+\]</span></p>
+<p>for a linear operator <span class="math inline">\(A: E \to F\)</span> and two convex functions <span class="math inline">\(G: E \to \bar{\mathbb{R}}\)</span> and <span class="math inline">\(H: F \to \bar{\mathbb{R}}\)</span>. One can consider the perturbation function</p>
+<p><span class="math display">\[\Phi(x,y) = G(x) + H(Ax - y).\]</span></p>
+<p>Algebra gives that <span class="math inline">\(\Phi^*(0,q) = G^*(A^\top q) + H^*(-q)\)</span> so that the dual problem reads</p>
+<p><span class="math display">\[
+\sup_{q \in F^*} \; -G^*(A^\top q) - H^*(-q).
+\]</span></p>
+<p>By the previous discussion, strong duality holds, for example, as soon as the primal problem is finite and there exists <span class="math inline">\(x_0\)</span> such that <span class="math inline">\(G(x_0) &lt; \infty\)</span> and the function <span class="math inline">\(H\)</span> is continuous at <span class="math inline">\(A x_0\)</span>.</p>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-ekeland1999convex" class="csl-entry" role="listitem">
+Ekeland, Ivar, and Roger Temam. 1999. <em>Convex Analysis and Variational Problems</em>. SIAM.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
