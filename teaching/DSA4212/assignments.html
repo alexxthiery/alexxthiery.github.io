@@ -137,6 +137,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <li><a href="#collaborative-filtering-90" id="toc-collaborative-filtering-90" class="nav-link" data-scroll-target="#collaborative-filtering-90">Collaborative Filtering [90%]</a></li>
   <li><a href="#natural-evolution-strategies-100" id="toc-natural-evolution-strategies-100" class="nav-link" data-scroll-target="#natural-evolution-strategies-100">Natural Evolution Strategies [100%]</a></li>
   <li><a href="#word-embeddings-100" id="toc-word-embeddings-100" class="nav-link" data-scroll-target="#word-embeddings-100">Word Embeddings [100%]</a></li>
+  <li><a href="#portfolio-optimization-100" id="toc-portfolio-optimization-100" class="nav-link" data-scroll-target="#portfolio-optimization-100">Portfolio Optimization [100%]</a></li>
   <li><a href="#transformer-architecture-100" id="toc-transformer-architecture-100" class="nav-link" data-scroll-target="#transformer-architecture-100">Transformer architecture [100%]</a></li>
   <li><a href="#topic-of-your-choice" id="toc-topic-of-your-choice" class="nav-link" data-scroll-target="#topic-of-your-choice">Topic of your choice</a></li>
   </ul>
@@ -253,6 +254,20 @@ E = \sum_{i=1}^{N} \sum_{j=1}^{N} \frac{1}{\|P_i - P_j\|}
 <li><a href="https://www.youtube.com/playlist?list=PLhWB2ZsrULv-wEM8JDKA1zk8_2Lc88I-s">Andrew Ng</a><br>
 </li>
 <li><a href="https://youtu.be/ISPId9Lhc1g?si=gJC_GF7Oj0sq9GVD">The illustrated Word2Vec</a></li>
+</ul>
+<hr>
+</section>
+<section id="portfolio-optimization-100" class="level3">
+<h3 class="anchored" data-anchor-id="portfolio-optimization-100">Portfolio Optimization [100%]</h3>
+<p><strong>Goal:</strong> You are tasked with implementing the mean-variance portfolio optimization framework. Your objective is to either maximize returns for a given level of risk or minimize risk for a desired return level. For this assignment:</p>
+<ul>
+<li><p><strong>Data Collection:</strong> Download historical financial data to estimate the expected returns, volatilities (standard deviations) of asset returns, and the covariance matrix of asset returns. You are required to optimize a portfolio of at least 50 stocks</p></li>
+<li><p><strong>Optimization:</strong> You must use the <a href="https://www.cvxpy.org">CVXPY Python library</a> to implement and solve the mean-variance optimization. The goal is to determine the optimal portfolio weights that balance risk and return.</p>
+<ul>
+<li>Efficient Frontier: Calculate and plot the efficient frontier, which represents the set of optimal portfolios for different risk-return trade-offs.</li>
+<li>Stability of Solutions: Study how stable the solutions are by testing your results across different time windows and datasets. Consider the impact of changes in volatility and return estimates on portfolio stability.</li>
+</ul></li>
+<li><p><strong>Discussion:</strong> Reflect on the limitations of the mean-variance framework, particularly with respect to the sensitivity of the results with respect to the inputs.</p></li>
 </ul>
 <hr>
 <!-- ### LSTM for time series prediction [100%]
