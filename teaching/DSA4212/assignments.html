@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.361">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -45,7 +45,8 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
@@ -138,6 +139,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <li><a href="#natural-evolution-strategies-100" id="toc-natural-evolution-strategies-100" class="nav-link" data-scroll-target="#natural-evolution-strategies-100">Natural Evolution Strategies [100%]</a></li>
   <li><a href="#word-embeddings-100" id="toc-word-embeddings-100" class="nav-link" data-scroll-target="#word-embeddings-100">Word Embeddings [100%]</a></li>
   <li><a href="#portfolio-optimization-100" id="toc-portfolio-optimization-100" class="nav-link" data-scroll-target="#portfolio-optimization-100">Portfolio Optimization [100%]</a></li>
+  <li><a href="#shampoo-optimizer" id="toc-shampoo-optimizer" class="nav-link" data-scroll-target="#shampoo-optimizer">Shampoo optimizer</a></li>
   <li><a href="#transformer-architecture-100" id="toc-transformer-architecture-100" class="nav-link" data-scroll-target="#transformer-architecture-100">Transformer architecture [100%]</a></li>
   <li><a href="#topic-of-your-choice" id="toc-topic-of-your-choice" class="nav-link" data-scroll-target="#topic-of-your-choice">Topic of your choice</a></li>
   </ul>
@@ -270,15 +272,11 @@ E = \sum_{i=1}^{N} \sum_{j=1}^{N} \frac{1}{\|P_i - P_j\|}
 <li><p><strong>Discussion:</strong> Reflect on the limitations of the mean-variance framework, particularly with respect to the sensitivity of the results with respect to the inputs.</p></li>
 </ul>
 <hr>
-<!-- ### LSTM for time series prediction [100%]
-**Goal:** Implement a simple LSTM in Python and from scratch, ie. not use the `LSTM(...)` function of a high-level library. You will then use your implementation to predict the next value in a time series dataset of your choice. Your report should not include any actual code. Instead, it should describe how a LSTM works, how you implemented it, and provide a discussion of the results.
-
-**Possible References:**
-
-- [Understanding LSTM Networks](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)
-- [Zico Kolter](https://youtu.be/q12VPh-bK7k?si=jVy3dUVITnTBQOFf)  
-- [The Unreasonable Effectiveness of Recurrent Neural Networks](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
-- [Can recurrent neural networks warp time?](https://arxiv.org/abs/1804.11188) -->
+</section>
+<section id="shampoo-optimizer" class="level3">
+<h3 class="anchored" data-anchor-id="shampoo-optimizer">Shampoo optimizer</h3>
+<p><strong>Goal:</strong> Shampoo is a very recent second-order-like optimizer that has shown great promise in training deep neural networks such as Large Language Models. The optimizer was named “Shampoo” as it attempts to build a good preconditioner for the optimization problem. The purpose of this assignment is to implement the Shampoo optimizer in Python + Jax and compare its performance with other optimizers such as Adam, SGD, and RMSprop. Your report should not include any actual code. Instead, it should describe how Shampoo works, how you implemented it, and provide a discussion of the results. It is not necessary to understand all the theoretical details of Shampoo, but you should be able to explain the main ideas behind it.</p>
+<p><strong>References:</strong> - <a href="https://arxiv.org/abs/1802.09568">Shampoo: Preconditioned Stochastic Tensor Optimization</a> - <a href="https://arxiv.org/abs/2406.17748">A New Perspective on Shampoo’s Preconditioner</a></p>
 <hr>
 </section>
 <section id="transformer-architecture-100" class="level3">
