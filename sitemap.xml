@@ -210,7 +210,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/about/about.html</loc>
-    <lastmod>2024-06-30T03:46:37.072Z</lastmod>
+    <lastmod>2024-11-23T14:54:27.556Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/index.html</loc>
@@ -234,7 +234,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</loc>
-    <lastmod>2024-06-15T10:43:15.399Z</lastmod>
+    <lastmod>2024-10-21T05:17:27.511Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</loc>
@@ -246,7 +246,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2024-07-30T14:19:49.250Z</lastmod>
+    <lastmod>2024-12-09T17:03:29.224Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
@@ -290,7 +290,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2024-07-30T14:19:42.114Z</lastmod>
+    <lastmod>2024-12-09T17:03:35.081Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
@@ -347,5 +347,13 @@
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_norm_flow.html</loc>
     <lastmod>2024-09-27T02:48:22.948Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/natural_grad/natur_grad.html</loc>
+    <lastmod>2024-12-09T16:02:10.638Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/conformal_inference/conformal.html</loc>
+    <lastmod>2024-12-09T17:03:07.094Z</lastmod>
   </url>
 </urlset>

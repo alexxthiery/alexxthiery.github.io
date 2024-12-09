@@ -61,6 +61,7 @@
   {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
+      "/notes/conformal_inference/conformal.html",
       "/notes/VIASM_2024/VIASM_2024.html",
       "/notes/HJB/HJB.html",
       "/notes/girsanov/girsanov.html",

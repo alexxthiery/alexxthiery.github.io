@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry -</title>
+<title>Alexandre Thiéry - Natural Gradient</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,21 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,15 +77,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry -">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Natural Gradient">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes_DRAFT/natural_grad/amari.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry -">
+<meta name="twitter:title" content="Alexandre Thiéry - Natural Gradient">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes_DRAFT/natural_grad/amari.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -76,7 +99,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -86,29 +109,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notes/index_notes.html" rel="" target="">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../about/about.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -124,89 +147,88 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#address" id="toc-address" class="nav-link active" data-scroll-target="#address">Address</a></li>
-  <li><a href="#employment-history" id="toc-employment-history" class="nav-link" data-scroll-target="#employment-history">Employment history</a></li>
-  <li><a href="#qualifications" id="toc-qualifications" class="nav-link" data-scroll-target="#qualifications">Qualifications</a></li>
-  <li><a href="#leadership" id="toc-leadership" class="nav-link" data-scroll-target="#leadership">Leadership</a></li>
-  <li><a href="#service" id="toc-service" class="nav-link" data-scroll-target="#service">Service</a></li>
-  <li><a href="#awards-and-honours" id="toc-awards-and-honours" class="nav-link" data-scroll-target="#awards-and-honours">Awards and honours</a></li>
-  <li><a href="#industrial-activities" id="toc-industrial-activities" class="nav-link" data-scroll-target="#industrial-activities">Industrial Activities</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Natural Gradient</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">optimization</div>
+    <div class="quarto-category">variational</div>
+  </div>
+  </div>
 
 
-<section id="address" class="level2">
-<h2 class="anchored" data-anchor-id="address">Address</h2>
-<p><strong>Email:</strong> a.h.thiery [at] nus.edu.sg<br>
-<strong>Office:</strong> <a href="https://goo.gl/maps/9qX6Fi9CpWFbX2VJ6">Building S16, Office #06-113</a></p>
-</section>
-<section id="employment-history" class="level2">
-<h2 class="anchored" data-anchor-id="employment-history">Employment history</h2>
-<ul>
-<li><strong>Associate Professor</strong>, Department of Statistics &amp; Data Sciences, NUS, 2020–present.</li>
-<li>Affiliate, NUS Centre for Data Science and Machine Learning, 2021–present</li>
-<li>Affiliate, NUS Institute of Data Science, 2028–present</li>
-<li>Affiliate, NUS Graduate School for Integrative Sciences and Engineering, 2017–present</li>
-<li><strong>Assistant Professor</strong>, Department of Statistics &amp; Probability, NUS, 2014–2019.</li>
-<li><strong>Research Fellow</strong>, Department of Statistics &amp; Probability, NUS, 2013</li>
-</ul>
-</section>
-<section id="qualifications" class="level2">
-<h2 class="anchored" data-anchor-id="qualifications">Qualifications</h2>
-<ul>
-<li>Ph.D., Probability &amp; Statistics, <a href="https://en.wikipedia.org/wiki/University_of_Warwick">Warwick University</a>, 2009-2013.</li>
-<li><a href="https://en.wikipedia.org/wiki/École_normale_supérieure_(Paris)">Ecole Normale Superieure of Paris</a>, Mathematics, 2005-2009
-<ul>
-<li>Research Assistant, <a href="https://www.statslab.cam.ac.uk/history-statistical-laboratory">Statslab (Cambridge, UK)</a></li>
-<li>MSc (Probability &amp; Finance), <a href="https://en.wikipedia.org/wiki/Pierre_and_Marie_Curie_University">University of Paris VI</a></li>
-<li>MSc (Partial Differential Equations &amp; Modeling), <a href="https://en.wikipedia.org/wiki/Pierre_and_Marie_Curie_University">University of Paris VI</a></li>
-</ul></li>
-</ul>
-</section>
-<section id="leadership" class="level2">
-<h2 class="anchored" data-anchor-id="leadership">Leadership</h2>
-<ul>
-<li>Deputy Director of <a href="https://ims.nus.edu.sg/">Institute for Mathematical Sciences</a>, 7/2020 – 12/2023</li>
-</ul>
-</section>
-<section id="service" class="level2">
-<h2 class="anchored" data-anchor-id="service">Service</h2>
-<ul>
-<li>Area Chair for AISTAT (2023–2025), ACML (2023), NeurIPS (2023, 2024), ICLR (2024, 2025)</li>
-<li>Associate Editor for Statistics &amp; Computing (2020–2022)</li>
-</ul>
-</section>
-<section id="awards-and-honours" class="level2">
-<h2 class="anchored" data-anchor-id="awards-and-honours">Awards and honours</h2>
-<ul>
-<li>NUS Faculty of Sciences Dean’s Chair Associate Professor, 2022–2025</li>
-<li>NUS Faculty Teaching Excellence Award, 2022</li>
-<li>NUS Faculty Teaching Excellence Award, 2019</li>
-<li>NUS Faculty Teaching Excellence Award, 2018</li>
-<li>NUS Young Scientist Award. (Faculty of Science: 1 awardee per year), 2017</li>
-<li>NUS Young Investigator Award. (Faculty of Science: 3 awardees per year), 2016</li>
-<li>John Copas prize for the best PhD dissertation, 2013</li>
-</ul>
-</section>
-<section id="industrial-activities" class="level2">
-<h2 class="anchored" data-anchor-id="industrial-activities">Industrial Activities</h2>
-<ul>
-<li>Co-founder of <a href="https://abyssprocessing.com">Abyss Processing</a>, start-up developing AI solutions for ophthalmology</li>
-<li>Consulting in the finance and health-care industries</li>
-</ul>
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">23 11 2024</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">23 11 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./amari.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
+<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Shun%27ichi_Amari">Shun’ichi Amari, founder of modern information geometry</a></figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a parametric family of probability distributions <span class="math inline">\(q_{\theta}(x)\)</span> indexed by <span class="math inline">\(\theta \in \Theta \subseteq \mathbb{R}^d\)</span>. We are interested in minimizing a functional <span class="math inline">\(\theta \mapsto J(q_{\theta})\)</span>, typically the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback-Leibler</a> divergence between <span class="math inline">\(q_{\theta}\)</span> and a target distribution <span class="math inline">\(\pi(x)\)</span>. One could indeed set <span class="math inline">\(F(\theta) = J(q_{\theta})\)</span> and use a variation of the gradient descent algorithm to minimize <span class="math inline">\(F\)</span>, i.e.&nbsp;<span class="math inline">\(\theta_{t+1} = \theta_t - \alpha_t \nabla F(\theta_t)\)</span> for some step size <span class="math inline">\(\alpha_t\)</span>. Although simple, this approach has the important drawback of depending very much one the choice of the parametrization of the family <span class="math inline">\(q_{\theta}\)</span>. Instead, one could for example consider an update of the type:</p>
+<p><span class="math display">\[
+\theta_{t+1} = \mathop{\mathrm{argmin}}_{\theta \in \Theta} \;  {\left\{   \textcolor{blue}{J(q_{\theta})} + \frac{1}{\alpha_t} \, D(q_{\theta} \| q_{\theta_t}) \right\}}
+\]</span></p>
+<p>for step size <span class="math inline">\(\alpha_t\)</span> and some divergence <span class="math inline">\(D\)</span> often taken to be the Kullback-Leibler divergence. This has the advantage of beging entirely independent of the parametrization of the family <span class="math inline">\(q_{\theta}\)</span>. Unfortunately, the right hand side of the above equation is not tractable in general. A middle ground consists in considering</p>
+<p><span id="eq-natural-grad"><span class="math display">\[
+\theta_{t+1} = \mathop{\mathrm{argmin}}_{\theta \in \Theta} \;  {\left\{   \textcolor{blue}{F(\theta_t) + \left&lt; \theta - \theta_t, \nabla_{\theta} F(\theta_t) \right&gt;} + \frac{1}{\alpha_t} \, D(q_{\theta} \| q_{\theta_t}) \right\}} .
+\tag{1}\]</span></span></p>
+<p>Furthermore, in the case <span class="math inline">\(D\)</span> is the Kullback-Leibler divergence, a Taylor expansion of the divergence around <span class="math inline">\(\theta_t\)</span> gives</p>
+<p><span class="math display">\[
+D_{\text{KL}}(q_{\theta} \| q_{\theta_t}) \approx \frac{1}{2} \left&lt; (\theta - \theta_t), \mathcal{I}(\theta_t) (\theta - \theta_t) \right&gt; \, + \, \mathcal{O}(\|\theta - \theta_t\|^3)
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal{I}(\theta_t)\)</span> is the <a href="https://en.wikipedia.org/wiki/Fisher_information">Fisher information matrix</a> at <span class="math inline">\(\theta_t\)</span>:</p>
+<p><span class="math display">\[
+\begin{align*}
+\mathcal{I}(\theta_t)
+&amp;=
+\mathbb{E}_{q_{\theta_t}} {\left[  \nabla_{\theta} \log q_{\theta_t}(X) \, \nabla_{\theta} \log q_{\theta_t}^\top(X) \right]} \\
+&amp;=
+- \mathbb{E}_{q_{\theta_t}}  {\left[ \nabla_{\theta}^2 \log q_{\theta_t} \right]} .
+\end{align*}
+\]</span></p>
+<p>Replacing <span class="math inline">\(D(q_{\theta} \| q_{\theta_t})\)</span> by <span class="math inline">\(\frac{1}{2} \left&lt; (\theta - \theta_t), \mathcal{I}(\theta_t) (\theta - \theta_t) \right&gt;\)</span> in <a href="#eq-natural-grad">Equation&nbsp;1</a> gives the so-called <strong>natural gradient</strong> update rule <span class="citation" data-cites="amari1998natural">(<a href="#ref-amari1998natural" role="doc-biblioref">Amari 1998</a>)</span>:</p>
+<p><span class="math display">\[
+\theta_{t+1} = \theta_t - \alpha_t \, \mathcal{I}(\theta_t)^{-1} \, \nabla_{\theta} F(\theta_t).
+\]</span></p>
+<p>In other words, the inverse of the Fisher information matrix acts as a preconditioner.</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-amari1998natural" class="csl-entry" role="listitem">
+Amari, Shun-Ichi. 1998. <span>“Natural Gradient Works Efficiently in Learning.”</span> <em>Neural Computation</em> 10 (2): 251–76.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

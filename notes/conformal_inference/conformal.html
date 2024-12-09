@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry -</title>
+<title>Alexandre Thiéry - Basic Conformal Inference</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,21 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,15 +77,23 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry -">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Basic Conformal Inference">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/conformal_inference/data.png">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry -">
+<meta property="og:image:height" content="1440">
+<meta property="og:image:width" content="1920">
+<meta name="twitter:title" content="Alexandre Thiéry - Basic Conformal Inference">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/conformal_inference/data.png">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:image-height" content="1440">
+<meta name="twitter:image-width" content="1920">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -76,7 +103,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -86,29 +113,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notes/index_notes.html" rel="" target="">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../about/about.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -120,93 +147,89 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Basic Conformal Inference</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">conformal</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">08 12 2024</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">08 12 2024</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#address" id="toc-address" class="nav-link active" data-scroll-target="#address">Address</a></li>
-  <li><a href="#employment-history" id="toc-employment-history" class="nav-link" data-scroll-target="#employment-history">Employment history</a></li>
-  <li><a href="#qualifications" id="toc-qualifications" class="nav-link" data-scroll-target="#qualifications">Qualifications</a></li>
-  <li><a href="#leadership" id="toc-leadership" class="nav-link" data-scroll-target="#leadership">Leadership</a></li>
-  <li><a href="#service" id="toc-service" class="nav-link" data-scroll-target="#service">Service</a></li>
-  <li><a href="#awards-and-honours" id="toc-awards-and-honours" class="nav-link" data-scroll-target="#awards-and-honours">Awards and honours</a></li>
-  <li><a href="#industrial-activities" id="toc-industrial-activities" class="nav-link" data-scroll-target="#industrial-activities">Industrial Activities</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<section id="address" class="level2">
-<h2 class="anchored" data-anchor-id="address">Address</h2>
-<p><strong>Email:</strong> a.h.thiery [at] nus.edu.sg<br>
-<strong>Office:</strong> <a href="https://goo.gl/maps/9qX6Fi9CpWFbX2VJ6">Building S16, Office #06-113</a></p>
-</section>
-<section id="employment-history" class="level2">
-<h2 class="anchored" data-anchor-id="employment-history">Employment history</h2>
-<ul>
-<li><strong>Associate Professor</strong>, Department of Statistics &amp; Data Sciences, NUS, 2020–present.</li>
-<li>Affiliate, NUS Centre for Data Science and Machine Learning, 2021–present</li>
-<li>Affiliate, NUS Institute of Data Science, 2028–present</li>
-<li>Affiliate, NUS Graduate School for Integrative Sciences and Engineering, 2017–present</li>
-<li><strong>Assistant Professor</strong>, Department of Statistics &amp; Probability, NUS, 2014–2019.</li>
-<li><strong>Research Fellow</strong>, Department of Statistics &amp; Probability, NUS, 2013</li>
-</ul>
-</section>
-<section id="qualifications" class="level2">
-<h2 class="anchored" data-anchor-id="qualifications">Qualifications</h2>
-<ul>
-<li>Ph.D., Probability &amp; Statistics, <a href="https://en.wikipedia.org/wiki/University_of_Warwick">Warwick University</a>, 2009-2013.</li>
-<li><a href="https://en.wikipedia.org/wiki/École_normale_supérieure_(Paris)">Ecole Normale Superieure of Paris</a>, Mathematics, 2005-2009
-<ul>
-<li>Research Assistant, <a href="https://www.statslab.cam.ac.uk/history-statistical-laboratory">Statslab (Cambridge, UK)</a></li>
-<li>MSc (Probability &amp; Finance), <a href="https://en.wikipedia.org/wiki/Pierre_and_Marie_Curie_University">University of Paris VI</a></li>
-<li>MSc (Partial Differential Equations &amp; Modeling), <a href="https://en.wikipedia.org/wiki/Pierre_and_Marie_Curie_University">University of Paris VI</a></li>
-</ul></li>
-</ul>
-</section>
-<section id="leadership" class="level2">
-<h2 class="anchored" data-anchor-id="leadership">Leadership</h2>
-<ul>
-<li>Deputy Director of <a href="https://ims.nus.edu.sg/">Institute for Mathematical Sciences</a>, 7/2020 – 12/2023</li>
-</ul>
-</section>
-<section id="service" class="level2">
-<h2 class="anchored" data-anchor-id="service">Service</h2>
-<ul>
-<li>Area Chair for AISTAT (2023–2025), ACML (2023), NeurIPS (2023, 2024), ICLR (2024, 2025)</li>
-<li>Associate Editor for Statistics &amp; Computing (2020–2022)</li>
-</ul>
-</section>
-<section id="awards-and-honours" class="level2">
-<h2 class="anchored" data-anchor-id="awards-and-honours">Awards and honours</h2>
-<ul>
-<li>NUS Faculty of Sciences Dean’s Chair Associate Professor, 2022–2025</li>
-<li>NUS Faculty Teaching Excellence Award, 2022</li>
-<li>NUS Faculty Teaching Excellence Award, 2019</li>
-<li>NUS Faculty Teaching Excellence Award, 2018</li>
-<li>NUS Young Scientist Award. (Faculty of Science: 1 awardee per year), 2017</li>
-<li>NUS Young Investigator Award. (Faculty of Science: 3 awardees per year), 2016</li>
-<li>John Copas prize for the best PhD dissertation, 2013</li>
-</ul>
-</section>
-<section id="industrial-activities" class="level2">
-<h2 class="anchored" data-anchor-id="industrial-activities">Industrial Activities</h2>
-<ul>
-<li>Co-founder of <a href="https://abyssprocessing.com">Abyss Processing</a>, start-up developing AI solutions for ophthalmology</li>
-<li>Consulting in the finance and health-care industries</li>
-</ul>
+
+<p>Unfortunately, I am totally ignorant about <a href="https://en.wikipedia.org/wiki/Conformal_prediction">conformal inference</a>. However, in today’s seminar, I attended a very interesting talk on the topic, and I think it’s time I try implementing the most basic version of it. It seems like a useful concept, and I might even explain it next semester in my simulation class. What I’ll describe below is the simplest version of conformal inference. There appear to be many extensions and variations of it, most of which I don’t yet understand. For now, I just want to spend a few minutes implementing it myself to ensure I grasp the basic idea.</p>
+<p>Consider the (simulated) 1D dataset <span class="math inline">\(\mathcal{D} = \{x_i, y_i\}_{i=1}^N\)</span> below; our goal is to build prediction confidence intervals <span class="math inline">\([L(x), U(x)]\)</span> for the target variable <span class="math inline">\(y\)</span> given a new input <span class="math inline">\(x\)</span>. Crucially, we would like these predictions to be well-calibrated in the sense that <span class="math inline">\(y \in [L(x), U(x)]\)</span> with probability <span class="math inline">\(90\%\)</span>, say.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./data.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">1D regression dataset</figcaption>
+</figure>
+</div>
+</div>
+<p>I am lazy so I will be using a simple KNN regressor to predict the target variable <span class="math inline">\(y\)</span> given a new input <span class="math inline">\(x\)</span>. For this purpose, split the dataset <span class="math inline">\(\mathcal{D}\)</span> into two parts <span class="math inline">\(\mathcal{D}_{\text{train}}\)</span> and <span class="math inline">\(\mathcal{D}_{\text{Cal}}\)</span>. The regressor is fitted on <span class="math inline">\(\mathcal{D}_{\text{train}}\)</span>. To calibrate the prediction intervals, compute the residuals <span class="math inline">\(r_i = |y_i - \hat{y}_i|\)</span> on the calibration set <span class="math inline">\(\mathcal{D}_{\text{Cal}}\)</span>, where <span class="math inline">\(\hat{y}_i = \hat{y}(x_i)\)</span> is the prediction of the regressor on <span class="math inline">\(x_i\)</span>. One can then compute the <span class="math inline">\(90\%\)</span> quantile <span class="math inline">\(\gamma_{90\%}\)</span> of the residuals: with probability <span class="math inline">\(90\%\)</span> we have that <span class="math inline">\(y_i \in [\hat{y}_i - \gamma_{90\%}, \hat{y}_i + \gamma_{90\%}]\)</span> on the calibration set, and this can be used to build the prediction intervals, as displayed below:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./conformal_basic.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">1D regression dataset: basic conformal inference</figcaption>
+</figure>
+</div>
+</div>
+<p>Not terribly impressive, but at least it is entirely straightforward to implement and it has the correct (marginal) coverage: for a new pair <span class="math inline">\((X,Y)\)</span> coming from the same distribution as the training data, the probability that <span class="math inline">\(Y\)</span> falls within the prediction interval is indeed <span class="math inline">\(90\%\)</span>, up to a bit of nitpicking. Note that it is much much less impressive than saying that</p>
+<p><span class="math display">\[\mathbb{P} {\left( Y \in [\hat{y}(x) - \gamma_{90\%}, \hat{y}(x) + \gamma_{90\%}] \; | \; X=x \right)}  = 90\%,\]</span></p>
+<p>which is clearly not true as can be seen from the figure above, but it is a good start. As a matter of fact, I’ve learned today from the very nice talk that without other assumptions, it is impossible to design a procedure that would guarantee the above so-called conditional coverage <span class="citation" data-cites="lei2014distribution">(<a href="#ref-lei2014distribution" role="doc-biblioref">Lei and Wasserman 2014</a>)</span>. But let’s face it, the figure above is terribly unimpressive. Nevertheless, one can indeed make it slightly less useless by calibrating using a different strategy. For example, I can use the training set to estimate the Mean Absolute Deviation (MAD) of the residuals <span class="math inline">\(\sigma(x) = \mathbb{E}[ |Y - \hat{y}(x) | \; | \; X=x]\)</span> (again with a naive KNN regressor) and use the calibration set to estimate the <span class="math inline">\(90\%\)</span> quantile <span class="math inline">\(\gamma_{90\%}\)</span> of the quantities <span class="math inline">\(|y_i - \hat{y}_i| / \sigma(x_i)\)</span>. This allows one to produce calibrated prediction intervals of the type <span class="math inline">\([\hat{y}_i - \gamma_{90\%} \sigma(x_i), \hat{y}_i + \gamma_{90\%} \sigma(x_i)]\)</span>, which are displayed below:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./conformal.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">1D regression dataset: less useless conformal inference</figcaption>
+</figure>
+</div>
+</div>
+<p>It is slightly more useful, and it is again surprisingly straightforward to implement, literally 5 lines of code. I think I will have to read more about this in the future and I am pretty sure I will introduce the idea to the next batch of students! The introduction</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-lei2014distribution" class="csl-entry" role="listitem">
+Lei, Jing, and Larry Wasserman. 2014. <span>“Distribution-Free Prediction Bands for Non-Parametric Regression.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 76 (1). Oxford University Press: 71–96.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -439,6 +462,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 
