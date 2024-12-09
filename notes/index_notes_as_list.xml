@@ -9,8 +9,60 @@
 <link>https://alexxthiery.github.io/notes/index_notes_as_list.html</link>
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
-<generator>quarto-1.3.433</generator>
-<lastBuildDate>Mon, 29 Jul 2024 17:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.353</generator>
+<lastBuildDate>Sat, 07 Dec 2024 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Basic Conformal Inference</title>
+  <link>https://alexxthiery.github.io/notes/conformal_inference/conformal.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Unfortunately, I am totally ignorant about <a href="https://en.wikipedia.org/wiki/Conformal_prediction">conformal inference</a>. However, in today’s seminar, I attended a very interesting talk on the topic, and I think it’s time I try implementing the most basic version of it. It seems like a useful concept, and I might even explain it next semester in my simulation class. What I’ll describe below is the simplest version of conformal inference. There appear to be many extensions and variations of it, most of which I don’t yet understand. For now, I just want to spend a few minutes implementing it myself to ensure I grasp the basic idea.</p>
+<p>Consider the (simulated) 1D dataset <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D%20=%20%5C%7Bx_i,%20y_i%5C%7D_%7Bi=1%7D%5EN"> below; our goal is to build prediction confidence intervals <img src="https://latex.codecogs.com/png.latex?%5BL(x),%20U(x)%5D"> for the target variable <img src="https://latex.codecogs.com/png.latex?y"> given a new input <img src="https://latex.codecogs.com/png.latex?x">. Crucially, we would like these predictions to be well-calibrated in the sense that <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5BL(x),%20U(x)%5D"> with probability <img src="https://latex.codecogs.com/png.latex?90%5C%25">, say.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/conformal_inference/data.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">1D regression dataset</figcaption>
+</figure>
+</div>
+</div>
+<p>I am lazy so I will be using a simple KNN regressor to predict the target variable <img src="https://latex.codecogs.com/png.latex?y"> given a new input <img src="https://latex.codecogs.com/png.latex?x">. For this purpose, split the dataset <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D"> into two parts <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D_%7B%5Ctext%7Btrain%7D%7D"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D_%7B%5Ctext%7BCal%7D%7D">. The regressor is fitted on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D_%7B%5Ctext%7Btrain%7D%7D">. To calibrate the prediction intervals, compute the residuals <img src="https://latex.codecogs.com/png.latex?r_i%20=%20%7Cy_i%20-%20%5Chat%7By%7D_i%7C"> on the calibration set <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D_%7B%5Ctext%7BCal%7D%7D">, where <img src="https://latex.codecogs.com/png.latex?%5Chat%7By%7D_i%20=%20%5Chat%7By%7D(x_i)"> is the prediction of the regressor on <img src="https://latex.codecogs.com/png.latex?x_i">. One can then compute the <img src="https://latex.codecogs.com/png.latex?90%5C%25"> quantile <img src="https://latex.codecogs.com/png.latex?%5Cgamma_%7B90%5C%25%7D"> of the residuals: with probability <img src="https://latex.codecogs.com/png.latex?90%5C%25"> we have that <img src="https://latex.codecogs.com/png.latex?y_i%20%5Cin%20%5B%5Chat%7By%7D_i%20-%20%5Cgamma_%7B90%5C%25%7D,%20%5Chat%7By%7D_i%20+%20%5Cgamma_%7B90%5C%25%7D%5D"> on the calibration set, and this can be used to build the prediction intervals, as displayed below:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/conformal_inference/conformal_basic.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">1D regression dataset: basic conformal inference</figcaption>
+</figure>
+</div>
+</div>
+<p>Not terribly impressive, but at least it is entirely straightforward to implement and it has the correct (marginal) coverage: for a new pair <img src="https://latex.codecogs.com/png.latex?(X,Y)"> coming from the same distribution as the training data, the probability that <img src="https://latex.codecogs.com/png.latex?Y"> falls within the prediction interval is indeed <img src="https://latex.codecogs.com/png.latex?90%5C%25">, up to a bit of nitpicking. Note that it is much much less impressive than saying that</p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%20%7B%5Cleft(%20Y%20%5Cin%20%5B%5Chat%7By%7D(x)%20-%20%5Cgamma_%7B90%5C%25%7D,%20%5Chat%7By%7D(x)%20+%20%5Cgamma_%7B90%5C%25%7D%5D%20%5C;%20%7C%20%5C;%20X=x%20%5Cright)%7D%20%20=%2090%5C%25,"></p>
+<p>which is clearly not true as can be seen from the figure above, but it is a good start. As a matter of fact, I’ve learned today from the very nice talk that without other assumptions, it is impossible to design a procedure that would guarantee the above so-called conditional coverage <span class="citation" data-cites="lei2014distribution">(Lei and Wasserman 2014)</span>. But let’s face it, the figure above is terribly unimpressive. Nevertheless, one can indeed make it slightly less useless by calibrating using a different strategy. For example, I can use the training set to estimate the Mean Absolute Deviation (MAD) of the residuals <img src="https://latex.codecogs.com/png.latex?%5Csigma(x)%20=%20%5Cmathbb%7BE%7D%5B%20%7CY%20-%20%5Chat%7By%7D(x)%20%7C%20%5C;%20%7C%20%5C;%20X=x%5D"> (again with a naive KNN regressor) and use the calibration set to estimate the <img src="https://latex.codecogs.com/png.latex?90%5C%25"> quantile <img src="https://latex.codecogs.com/png.latex?%5Cgamma_%7B90%5C%25%7D"> of the quantities <img src="https://latex.codecogs.com/png.latex?%7Cy_i%20-%20%5Chat%7By%7D_i%7C%20/%20%5Csigma(x_i)">. This allows one to produce calibrated prediction intervals of the type <img src="https://latex.codecogs.com/png.latex?%5B%5Chat%7By%7D_i%20-%20%5Cgamma_%7B90%5C%25%7D%20%5Csigma(x_i),%20%5Chat%7By%7D_i%20+%20%5Cgamma_%7B90%5C%25%7D%20%5Csigma(x_i)%5D">, which are displayed below:</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/conformal_inference/conformal.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">1D regression dataset: less useless conformal inference</figcaption>
+</figure>
+</div>
+</div>
+<p>It is slightly more useful, and it is again surprisingly straightforward to implement, literally 5 lines of code. I think I will have to read more about this in the future and I am pretty sure I will introduce the idea to the next batch of students! The introduction</p>
+
+
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-lei2014distribution" class="csl-entry">
+Lei, Jing, and Larry Wasserman. 2014. <span>“Distribution-Free Prediction Bands for Non-Parametric Regression.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 76 (1). Oxford University Press: 71–96.
+</div>
+</div></section></div> ]]></description>
+  <category>conformal</category>
+  <guid>https://alexxthiery.github.io/notes/conformal_inference/conformal.html</guid>
+  <pubDate>Sat, 07 Dec 2024 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>VIASM mini-course on diffusions and flows</title>
   <link>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</link>
@@ -33,7 +85,7 @@
  ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</guid>
-  <pubDate>Mon, 29 Jul 2024 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 29 Jul 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Doob, Girsanov and Bellman</title>
@@ -102,7 +154,7 @@
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/HJB/HJB.html</guid>
-  <pubDate>Mon, 10 Jun 2024 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 10 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Girsanov and Importance Sampling</title>
@@ -158,7 +210,7 @@
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/girsanov/girsanov.html</guid>
-  <pubDate>Sun, 02 Jun 2024 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 02 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Joe Doob &amp; Change of measures on path-space</title>
@@ -259,7 +311,7 @@
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/doob_transforms/doob.html</guid>
-  <pubDate>Mon, 13 May 2024 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 13 May 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RWM &amp; HMC on manifolds</title>
@@ -391,7 +443,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
   <category>MCMC</category>
   <category>manifold</category>
   <guid>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</guid>
-  <pubDate>Fri, 08 Mar 2024 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 08 Mar 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Metropolis-Hastings ratio with deterministic proposals</title>
@@ -458,7 +510,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</guid>
-  <pubDate>Sun, 17 Dec 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 17 Dec 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Averaging and homogenization</title>
@@ -588,7 +640,7 @@ Weinan, E. 2011. <em>Principles of Multiscale Modeling</em>. Cambridge Universit
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</guid>
-  <pubDate>Mon, 27 Nov 2023 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 27 Nov 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Ensemble Kalman Smoother (EnKS)</title>
@@ -639,7 +691,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</guid>
-  <pubDate>Fri, 17 Nov 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 17 Nov 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Asymptotic variance &amp; Poisson Equation</title>
@@ -720,7 +772,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
  ]]></description>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</guid>
-  <pubDate>Fri, 10 Nov 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 10 Nov 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Gaussian Assimilation &amp; the EnKF</title>
@@ -794,7 +846,7 @@ Ollivier, Yann, Ludovic Arnold, Anne Auger, and Nikolaus Hansen. 2017. <span>“
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</guid>
-  <pubDate>Sun, 22 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 22 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Deriving Langevin MCMC</title>
@@ -841,7 +893,7 @@ Titsias, Michalis K, and Omiros Papaspiliopoulos. 2018. <span>“Auxiliary Gradi
 </div></section></div> ]]></description>
   <category>MCMC</category>
   <guid>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</guid>
-  <pubDate>Wed, 18 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Wed, 18 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Wasserstein Gradients &amp; Langevin Diffusions</title>
@@ -895,7 +947,7 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</guid>
-  <pubDate>Sun, 15 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 15 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sanov’s Theorem</title>
@@ -959,7 +1011,7 @@ Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variatio
  ]]></description>
   <category>LargeDeviation</category>
   <guid>https://alexxthiery.github.io/notes/sanov/sanov.html</guid>
-  <pubDate>Sun, 08 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 08 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Auxiliary variable trick</title>
@@ -1035,7 +1087,7 @@ Zhang, Yichuan, Zoubin Ghahramani, Amos J Storkey, and Charles Sutton. 2012. <sp
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/auxiliary_variable_trick/auxiliary_variable_trick.html</guid>
-  <pubDate>Mon, 02 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 02 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Shearer’s lemma</title>
@@ -1074,7 +1126,7 @@ Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</guid>
-  <pubDate>Sun, 01 Oct 2023 17:00:00 GMT</pubDate>
+  <pubDate>Sun, 01 Oct 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: References and Readings</title>
@@ -1106,7 +1158,7 @@ Loomis, Lynn H, and Hassler Whitney. 1949. <span>“An Inequality Related to the
  ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</guid>
-  <pubDate>Fri, 29 Sep 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 29 Sep 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Shannon Source Coding Theorem</title>
@@ -1199,7 +1251,7 @@ Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.�
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</guid>
-  <pubDate>Mon, 25 Sep 2023 17:00:00 GMT</pubDate>
+  <pubDate>Mon, 25 Sep 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: Fano’s inequality</title>
@@ -1244,7 +1296,7 @@ Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.�
  ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</guid>
-  <pubDate>Fri, 22 Sep 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 22 Sep 2023 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Information Theory: Entropy and Basic Definitions</title>
@@ -1347,86 +1399,7 @@ MacKay, David JC. 2003. <em>Information Theory, Inference and Learning Algorithm
 </div></section></div> ]]></description>
   <category>infoTheory</category>
   <guid>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</guid>
-  <pubDate>Fri, 22 Sep 2023 17:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>From Denoising Diffusion to ODEs</title>
-  <link>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<section id="setting-goals" class="level3">
-<h3 class="anchored" data-anchor-id="setting-goals">Setting &amp; Goals</h3>
-<p>Consider an empirical data distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D">. In order to simulate approximate samples from <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D">, <a href="../../notes/DDPM/DDPM.html">Denoising Diffusion Probabilistic Models</a> (DDPM) simulate a forward diffusion process <img src="https://latex.codecogs.com/png.latex?%5C%7BX_t%5C%7D_%7B%5B0,T%5D%7D"> on an interval <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D">. The diffusion is initialized at the data distribution, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?X_0%20%5Csim%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D">, and is chosen so that that the distribution of <img src="https://latex.codecogs.com/png.latex?X_T"> is very close to a known and tractable reference distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bref%7D%7D">, e.g.&nbsp;a Gaussian distribution. Denote by <img src="https://latex.codecogs.com/png.latex?p_t(dx)"> the marginal distribution at time <img src="https://latex.codecogs.com/png.latex?0%20%5Cleq%20t%20%5Cleq%20T">, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7B%5Cmathbb%7BP%7D%7D%7D(X_t%20%5Cin%20dx)%20=%20p_t(dx)">. By choosing the forward distribution with simple and tractable transition probabilities, e.g.&nbsp;an Ornstein-Uhlenbeck, it is relatively easy to estimate <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20p_t(x)"> from simulated data: this can be formulated as a simple regression problem. This allows one to simulate the diffusion backward in time and generate approximate samples from <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D">. Why this is useful is another question…</p>
-<p>The fact that the mapping from data-samples at time <img src="https://latex.codecogs.com/png.latex?t=0"> to (approximate) Gaussian samples at time <img src="https://latex.codecogs.com/png.latex?t=T"> is stochastic and described by diffusion processes is cumbersome. This would be much more convenient to build a deterministic mapping between the data-distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D"> and the Gaussian reference distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Cmathrm%7Bref%7D%7D">: this would allows one to associate a likelihood to data samples and to easily “encode”/“decode” data-samples. To so this, one can try to replace diffusion by Ordinary Differential Equations.</p>
-</section>
-<section id="the-diffusion-ode-trick" class="level3">
-<h3 class="anchored" data-anchor-id="the-diffusion-ode-trick">The diffusion-ODE trick</h3>
-<p>Consider an arbitrary diffusion process <img src="https://latex.codecogs.com/png.latex?dX%20=%20%5Cmu(t,X)%20%5C,%20dt%20+%20dB"> with associated distribution <img src="https://latex.codecogs.com/png.latex?p_t(dx)"> at time <img src="https://latex.codecogs.com/png.latex?t">. The <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation that describes the evolution of <img src="https://latex.codecogs.com/png.latex?p_t"> reads</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cpartial_t%20p_t%20=%20-%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7D(%20p_t%20%5C,%20%5Cmu)%20+%20%5Cfrac12%20%5C,%20%5CDelta%20p_t%0A"></p>
-<p>If there were no diffusion term <img src="https://latex.codecogs.com/png.latex?dB"> and <img src="https://latex.codecogs.com/png.latex?X"> was describing instead the evolution of differential equation <img src="https://latex.codecogs.com/png.latex?dX/dt%20=%20F(t,X)">, the associated evolution of the density of <img src="https://latex.codecogs.com/png.latex?X"> would simply read</p>
-<p><span id="eq-continuity"><img src="https://latex.codecogs.com/png.latex?%0A%5Cpartial_t%20p_t%20=%20-%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7D(%20p_t%20%5C,%20F).%0A%5Ctag%7B1%7D"></span></p>
-<p>If one can find a vector field <img src="https://latex.codecogs.com/png.latex?F(t,x)"> such that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A-%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7D(%20p_t%20%5C,%20%5Cmu)%20+%20%5Cfrac12%20%5C,%20%5CDelta%20p_t%0A=%0A-%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7D(%20p_t%20%5C,%20F),%0A"></p>
-<p>then one can basically replace diffusions by ODEs. The diffusion-ODE trick is the simple remark that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AF(t,x)%20=%20%5Cmu(t,x)%20%5C;%20%7B%5Ccolor%7Bred%7D%20-%20%5Cfrac12%20%5C,%20%5Cnabla_x%20%5Clog%20p_t(x)%7D%0A"></p>
-<p>does exactly this, as algebra immediately shows it. The additional term <img src="https://latex.codecogs.com/png.latex?%7B%5Ccolor%7Bred%7D%20-%20%5Cfrac12%20%5C,%20%5Cnabla_x%20%5Clog%20p_t(x)%7D"> is intuitive. The coefficient <img src="https://latex.codecogs.com/png.latex?%7B%5Ccolor%7Bblue%7D%201/2%7D"> is because one is trying to match the term <img src="https://latex.codecogs.com/png.latex?%7B%5Ccolor%7Bblue%7D%20(1/2)%7D%20%5C,%20%5CDelta%20p_t"> in the Fokker-Planck equation. And the overall term <img src="https://latex.codecogs.com/png.latex?%7B%5Ccolor%7Bred%7D%20-%20%5Cfrac12%20%5C,%20%5Cnabla_x%20%5Clog%20p_t(x)%7D"> is just driving the ODE in direction where the probability density <img src="https://latex.codecogs.com/png.latex?p_t"> is small, i.e.&nbsp;it follows the negative gradient of the log-density: it is exactly trying to imitate the diffusion term <img src="https://latex.codecogs.com/png.latex?dB">.</p>
-<p>What this means is that a diffusion process <img src="https://latex.codecogs.com/png.latex?dX%20=%20%5Cmu(t,X)%20%5C,%20dt%20+%20dB"> started from <img src="https://latex.codecogs.com/png.latex?X_0%20%5Csim%20p_0"> and marginal distribution <img src="https://latex.codecogs.com/png.latex?X_t%20%5Csim%20p_t(dx)"> can be imitated by an ODE process <img src="https://latex.codecogs.com/png.latex?dY/dt%20=%20%5Cmu(t,Y)%20-%20%5Cfrac12%20%5C,%20%5Cnabla%20%5Clog%20p_t(Y)"> started from <img src="https://latex.codecogs.com/png.latex?p_0">. At any time <img src="https://latex.codecogs.com/png.latex?t%3E0">, the marginal distributions of <img src="https://latex.codecogs.com/png.latex?X_t"> and <img src="https://latex.codecogs.com/png.latex?Y_t"> both exactly equal <img src="https://latex.codecogs.com/png.latex?p_t(dx)">.</p>
-</section>
-<section id="the-diffusion-ode-trick-application-to-ddpm" class="level3">
-<h3 class="anchored" data-anchor-id="the-diffusion-ode-trick-application-to-ddpm">The diffusion-ODE trick: application to DDPM</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="sine_reverse_ODE.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="sine_reverse_ODE.mp4">Video</a></video></p>
-</figure>
-</div>
-<p>Consider a DDPM with forward dynamics given by an Ornstein-Uhlenbeck (OU) process</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ad%5Coverrightarrow%7BX%7D%20=%20-%5Cfrac12%20%5C,%20%5Coverrightarrow%7BX%7D%20%5C,%20dt%20+%20dB%0A"></p>
-<p>and initial condition <img src="https://latex.codecogs.com/png.latex?X_0%20%5Csim%20p_0%20%5Cequiv%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D">. As explained in these <a href="../../notes/DDPM/DDPM.html">notes</a>, it is relatively straightforward to estimate the score function</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BS%7D(t,x_t)%20%5C;%20=%20%5C;%20%5Cnabla%20%5Clog%20p_t(x_t)%0A"></p>
-<p>from data. This means that the forward OU process can be replaced by the forward ODE</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%7D%7Bdt%7D%20%5Coverrightarrow%7BY_t%7D%20=%20-%5Cfrac12%20%5C,%20%5Coverrightarrow%7BY_t%7D%20%20-%20%5Cfrac12%20%5Cmathcal%7BS%7D(t,%5Coverrightarrow%7BY_t%7D)%20=%20F(t,Y_t)%0A"></p>
-<p>with <img src="https://latex.codecogs.com/png.latex?F(t,x)%20=%20-%5Ctfrac%7B1%7D%7B2%7D%20x%20-%5Ctfrac%7B1%7D%7B2%7D%20%5Cmathcal%7BS%7D(t,x)">. Similarly, the reverse diffusion (i.e.&nbsp;the “denoising” diffusion) defined as <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BX%7D_s%20=%20X_%7BT-s%7D"> follows the dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?d%5Coverleftarrow%7BX%7D_s%20=%20%5Cfrac12%20%5Coverleftarrow%7BX%7D_s%20%5C,%20ds%20+%20%5Cmathcal%7BS%7D(T-s,%5Coverleftarrow%7BX%7D_s)%20+%20dW."></p>
-<p>As described for the first time in the beautiful article <span class="citation" data-cites="song2020score">(Song et al. 2020)</span>, the diffusion-ODE trick now shows that the denoising diffusion can be replaced by a denoising ODE with dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cfrac%7Bd%7D%7Bds%7D%20%5Coverleftarrow%7BY_s%7D%20&amp;=%20%5Cfrac12%20%5Coverleftarrow%7BY_s%7D%20%5C,%20ds%20+%20%5Cmathcal%7BS%7D(T-s,%5Coverleftarrow%7BY_s%7D)%20-%20%5Cfrac12%20%5C,%20%5Cmathcal%7BS%7D(T-s,%5Coverleftarrow%7BX%7D_s)%5C%5C%0A&amp;=%0A%5Cfrac12%20%5Coverleftarrow%7BY_s%7D%20%5C,%20ds%20+%20%5Cfrac12%20%5C,%20%5Cmathcal%7BS%7D(T-s,%5Coverleftarrow%7BY_s%7D)%20=%20-F(T-s,%20%5Coverleftarrow%7BY_s%7D).%0A%5Cend%7Balign%7D%0A"></p>
-<p>Interestingly [and I do not know whether there was an obvious way of seeing this from the start], this shows that the forward and backward ODE are actually the same but run forward and backward in time. They corresponds to the ODE described by the vector field</p>
-<p><span id="eq-vector-field"><img src="https://latex.codecogs.com/png.latex?%0AF(t,x)%20%5C;%20=%20%5C;%20-%5Cfrac%7B1%7D%7B2%7D%20x%20-%5Cfrac%7B1%7D%7B2%7D%20%5Cmathcal%7BS%7D(t,x).%0A%5Ctag%7B2%7D"></span></p>
-<p>The animation belows display the denoising ODE and the associated vector field Equation&nbsp;2.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><video src="sine_reverse_vector_field.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="sine_reverse_vector_field.mp4">Video</a></video></p>
-</figure>
-</div>
-</section>
-<section id="likelihood-computation" class="level2">
-<h2 class="anchored" data-anchor-id="likelihood-computation">Likelihood computation</h2>
-<p>With the diffusion-ODE trick, we have just seen that it is possible to build a vector fields <img src="https://latex.codecogs.com/png.latex?F%5B0,T%5D%20%5Ctimes%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D%5Ed"> such that the <em>forward</em> ODE</p>
-<p><span id="eq-forward-ODE"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%7D%7Bdt%7D%20%5Coverrightarrow%7BY_t%7D%20=%0AF(t,%5Coverrightarrow%7BY_t%7D)%0A%5Cqquad%20%5Ctextrm%7Binitialized%20at%7D%20%5Cqquad%0A%5Coverrightarrow%7BY%7D_0%20%5Csim%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D%0A%5Ctag%7B3%7D"></span></p>
-<p>and the <em>backward</em> ODE defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%7D%7Bds%7D%20%5Coverleftarrow%7BY_s%7D%20=%0A-F(T-s,%5Coverleftarrow%7BY_s%7D)%0A%5Cqquad%20%5Ctextrm%7Binitialized%20at%7D%20%5Cqquad%0A%5Coverleftarrow%7BY%7D_0%20%5Csim%20%5Cpi_%7B%5Cmathrm%7Bref%7D%7D%0A"></p>
-<p>are such that <img src="https://latex.codecogs.com/png.latex?%5Coverrightarrow%7BY%7D_T%20%5Capprox%20%5Cpi_%7B%5Cmathrm%7Bref%7D%7D"> and <img src="https://latex.codecogs.com/png.latex?%5Coverleftarrow%7BY%7D_T%20%5Capprox%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D">.</p>
-<p>In general, consider a vector field <img src="https://latex.codecogs.com/png.latex?F(t,x)"> and a bunch of particles distributed according to a distribution <img src="https://latex.codecogs.com/png.latex?p_t"> at time <img src="https://latex.codecogs.com/png.latex?t">. If each particle follows the vector field for an amount of time <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20%5Cll%201">, the particles that were in the vicinity of some <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> at time <img src="https://latex.codecogs.com/png.latex?t"> end up in the vicinity of <img src="https://latex.codecogs.com/png.latex?x%20+%20F(x,t)%20%5C,%20%5Cdelta"> at time <img src="https://latex.codecogs.com/png.latex?t+%5Cdelta">. At the same time, a volume element <img src="https://latex.codecogs.com/png.latex?dx"> around <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> gets stretch by a factor <img src="https://latex.codecogs.com/png.latex?1+%5Cdelta%20%5C,%20%5Cmathop%7B%5Cmathrm%7BTr%7D%7D%5B%5Cmathop%7B%5Cmathrm%7B%5Cmathrm%7BJac%7D%7D%7DF(x,t)%5D%20=%201%20+%20%5Cdelta%20%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7DF(x,t)"> while following the vector field <img src="https://latex.codecogs.com/png.latex?F">, which means that the density of particles at time <img src="https://latex.codecogs.com/png.latex?t+%5Cdelta"> and around <img src="https://latex.codecogs.com/png.latex?x%20+%20F(x,t)%20%5C,%20%5Cdelta"> equals <img src="https://latex.codecogs.com/png.latex?p_t(x)%20/%20%5B1%20+%20%5Cdelta%20%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7DF(x,t)%5D">. In other words <img src="https://latex.codecogs.com/png.latex?%5Clog%20p_%7Bt+%5Cdelta%7D(x%20+%20F(x,t)%20%5C,%20%5Cdelta)%20%5Capprox%20%5Clog%20p_t(x)%20-%20%5Cdelta%20%5C,%20%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7DF(x,t)">. This means that if we follows a trajectory of <img src="https://latex.codecogs.com/png.latex?%5Ctfrac%7Bd%7D%7Bdt%7D%20X_t%20=%20F(t,X_t)"> one gets</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clog%20p_T(X_T)%20=%20%5Clog%20p_0(X_0)%20-%20%5Cint_%7Bt=0%7D%5E%7BT%7D%20%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7DF(X_t,t)%20%5C,%20dt.%0A"></p>
-<p>That is the Lagrangian description of the density <img src="https://latex.codecogs.com/png.latex?p_t"> of particles. Indeed, one could directly get this identity by differentiating <img src="https://latex.codecogs.com/png.latex?p_t(X_t)"> with respect to time while using the continuity Equation&nbsp;1. When applied to the DDPM, this gives a way to assign likelihood the data samples, namely</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clog%20%5Cpi_%7B%5Cmathrm%7Bdata%7D%7D(x)%20=%20%5Clog%20%5Cpi_%7B%5Cmathrm%7Bref%7D%7D(%5Coverrightarrow%7BY_T%7D)%20+%20%5Cint_%7Bt=0%7D%5E%7BT%7D%20%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7DF(t,%20%5Coverrightarrow%7BY_t%7D)%5C,%20dt%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%5Coverrightarrow%7BY_t%7D"> is trajectory of the forward ODE Equation&nbsp;3 initialized as <img src="https://latex.codecogs.com/png.latex?%5Coverrightarrow%7BY_0%7D%20=%20x">. Note that in high-dimensional setting, it may be computationally expensive to compute the divergence term <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7Bdiv%7D%7DF(t,%20%5Coverrightarrow%7BY_t%7D)"> since it typically is <img src="https://latex.codecogs.com/png.latex?d"> times slower that a gradient computation; for this reason, it is often advocated to use the Hutchinson trace estimator to get an unbiased estimate of it at a much lower computational cost.</p>
-
-
-
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-song2020score" class="csl-entry">
-Song, Yang, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole. 2020. <span>“Score-Based Generative Modeling Through Stochastic Differential Equations.”</span> <em><span>ICLR</span> 2021</em>. <a href="https://arxiv.org/abs/2011.13456">https://arxiv.org/abs/2011.13456</a>.
-</div>
-</div></section></div> ]]></description>
-  <category>DDPM</category>
-  <category>score</category>
-  <guid>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</guid>
-  <pubDate>Sat, 01 Jul 2023 17:00:00 GMT</pubDate>
+  <pubDate>Fri, 22 Sep 2023 16:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
