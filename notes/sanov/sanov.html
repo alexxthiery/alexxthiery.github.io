@@ -181,7 +181,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 <section id="sanovs-theorem" class="level3">
 <h3 class="anchored" data-anchor-id="sanovs-theorem">Sanov’s Theorem</h3>
-<p>Consider a random variable <span class="math inline">\(X\)</span> on the finite alphabet <span class="math inline">\(\{a_1, \ldots, a_K\}\)</span> with <span class="math inline">\(\mathop{\mathrm{\mathbb{P}}}(X=a_k) = p_k\)</span>. For <span class="math inline">\(N \gg 1\)</span>, consider a sequence <span class="math inline">\((x_1, \ldots, x_N)\)</span> obtained by sampling <span class="math inline">\(N\)</span> times independently from <span class="math inline">\(X\)</span> and set</p>
+<p>Consider a random variable <span class="math inline">\(X\)</span> on the finite alphabet <span class="math inline">\(\{a_1, \ldots, a_K\}\)</span> with <span class="math inline">\(\mathbb{P}(X=a_k) = p_k\)</span>. For <span class="math inline">\(N \gg 1\)</span>, consider a sequence <span class="math inline">\((x_1, \ldots, x_N)\)</span> obtained by sampling <span class="math inline">\(N\)</span> times independently from <span class="math inline">\(X\)</span> and set</p>
 <p><span class="math display">\[
 \widehat{p}_k = \frac{1}{N} \, \sum_{i=1}^N \, \mathbf{1} {\left( x_i = a_k \right)}
 \]</span></p>
@@ -195,31 +195,31 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 \]</span></p>
 <p>is straightforward to compute and reads</p>
 <p><span class="math display">\[
-\mathop{\mathrm{\mathbb{P}}}(\widehat{p} = q) \; = \; \binom{N}{N q_1, \ldots, N q_K} \, p_1^{N q_1} \ldots p_R^{N q_K}.
+\mathbb{P}(\widehat{p} = q) \; = \; \binom{N}{N q_1, \ldots, N q_K} \, p_1^{N q_1} \ldots p_R^{N q_K}.
 \]</span></p>
 <p><a href="https://en.wikipedia.org/wiki/Stirling%27s_approximation">Stirling’s approximation</a> <span class="math inline">\(m! \asymp m \, \ln(m)\)</span> then gives that</p>
 <p><span class="math display">\[
-\mathop{\mathrm{\mathbb{P}}}(\widehat{p} = q) \; \asymp \;
-\exp {\left( -N \cdot \mathop{\mathrm{D_{\text{KL}}}}(q,p) \right)}
+\mathbb{P}(\widehat{p} = q) \; \asymp \;
+\exp {\left( -N \cdot D_{\text{KL}}(q,p) \right)}
 \]</span></p>
-<p>where <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(q,p) = \sum_{k=1}^K q_k \, \log[q_k / p_k]\)</span> is the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback–Leibler divergence</a> of <span class="math inline">\(q\)</span> from <span class="math inline">\(p\)</span>. In other words, as soon as <span class="math inline">\(q \neq p\)</span>, the probability of observing <span class="math inline">\(\widehat{p} \approx q\)</span> falls exponentially quickly to zero. With the language of <a href="https://en.wikipedia.org/wiki/Large_deviations_theory">Large Deviations</a>, one can make this statement slightly more precise, rigorous and general, but it is essentially the content of <a href="https://en.wikipedia.org/wiki/Sanov%27s_theorem">Sanov’s Theorem</a>.</p>
+<p>where <span class="math inline">\(D_{\text{KL}}(q,p) = \sum_{k=1}^K q_k \, \log[q_k / p_k]\)</span> is the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback–Leibler divergence</a> of <span class="math inline">\(q\)</span> from <span class="math inline">\(p\)</span>. In other words, as soon as <span class="math inline">\(q \neq p\)</span>, the probability of observing <span class="math inline">\(\widehat{p} \approx q\)</span> falls exponentially quickly to zero. With the language of <a href="https://en.wikipedia.org/wiki/Large_deviations_theory">Large Deviations</a>, one can make this statement slightly more precise, rigorous and general, but it is essentially the content of <a href="https://en.wikipedia.org/wiki/Sanov%27s_theorem">Sanov’s Theorem</a>.</p>
 </section>
 <section id="rare-events-happen-in-the-least-unlikely-manner" class="level3">
 <h3 class="anchored" data-anchor-id="rare-events-happen-in-the-least-unlikely-manner">Rare events happen in the least unlikely manner</h3>
-<p>Given a list of mutually exclusive events <span class="math inline">\(E_1, \ldots, E_R\)</span> and the knowledge that at least one of these events has taken place, the probability that the event <span class="math inline">\(E_k\)</span> was the one that happened is <span class="math inline">\(\mathop{\mathrm{\mathbb{P}}}(E_k) / [\mathop{\mathrm{\mathbb{P}}}(E_1) + \ldots + \mathop{\mathrm{\mathbb{P}}}(E_R)]\)</span>. The implication is that if all the events are rare, that is <span class="math inline">\(p_k \approx e^{-N \, I_k} \ll 1\)</span>, and it is known that one event has indeed occurred, there is a high probability that the event with the smallest <span class="math inline">\(I_k\)</span> value was the one that happened: the rare event took place in the least unlikely manner.</p>
-<p>Consider an iid sequence <span class="math inline">\((X_1, \ldots, X_N)\)</span> of <span class="math inline">\(N \gg 1\)</span> discrete real-valued random variables with <span class="math inline">\(\mathop{\mathrm{\mathbb{P}}}(X = a_k) = p_k\)</span> and mean <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}(X) \in \mathbb{R}\)</span>. Suppose one observes the rare event</p>
+<p>Given a list of mutually exclusive events <span class="math inline">\(E_1, \ldots, E_R\)</span> and the knowledge that at least one of these events has taken place, the probability that the event <span class="math inline">\(E_k\)</span> was the one that happened is <span class="math inline">\(\mathbb{P}(E_k) / [\mathbb{P}(E_1) + \ldots + \mathbb{P}(E_R)]\)</span>. The implication is that if all the events are rare, that is <span class="math inline">\(p_k \approx e^{-N \, I_k} \ll 1\)</span>, and it is known that one event has indeed occurred, there is a high probability that the event with the smallest <span class="math inline">\(I_k\)</span> value was the one that happened: the rare event took place in the least unlikely manner.</p>
+<p>Consider an iid sequence <span class="math inline">\((X_1, \ldots, X_N)\)</span> of <span class="math inline">\(N \gg 1\)</span> discrete real-valued random variables with <span class="math inline">\(\mathbb{P}(X = a_k) = p_k\)</span> and mean <span class="math inline">\(\mathbb{E}(X) \in \mathbb{R}\)</span>. Suppose one observes the rare event</p>
 <p><span id="eq-rare"><span class="math display">\[
 \frac{1}{N} \sum_{i=1}^N x_i  \geq \mu
 \tag{1}\]</span></span></p>
-<p>for some level <span class="math inline">\(\mu\)</span> significantly above <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}(X)\)</span>. Naturally, the least unlikely way for this to happen is if <span class="math inline">\((x_1 + \ldots + x_N) / N \, \approx \, \mu\)</span>. Furthermore, one may be interested in the empirical distribution <span class="math inline">\(\widehat{p}\)</span> associated to the sequence <span class="math inline">\((x_1, \ldots, x_N)\)</span> when the rare event <a href="#eq-rare">Equation&nbsp;1</a> does happen. The least unlikely empirical distribution is the one that minimizes <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> under the constraint that</p>
+<p>for some level <span class="math inline">\(\mu\)</span> significantly above <span class="math inline">\(\mathbb{E}(X)\)</span>. Naturally, the least unlikely way for this to happen is if <span class="math inline">\((x_1 + \ldots + x_N) / N \, \approx \, \mu\)</span>. Furthermore, one may be interested in the empirical distribution <span class="math inline">\(\widehat{p}\)</span> associated to the sequence <span class="math inline">\((x_1, \ldots, x_N)\)</span> when the rare event <a href="#eq-rare">Equation&nbsp;1</a> does happen. The least unlikely empirical distribution is the one that minimizes <span class="math inline">\(D_{\text{KL}}(\widehat{p}, p)\)</span> under the constraint that</p>
 <p><span id="eq-contraint"><span class="math display">\[
 \sum_{i=1}^K a_k \, \widehat{p}_k = \mu.
 \tag{2}\]</span></span></p>
-<p>The function <span class="math inline">\(\widehat{p} \mapsto \mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> is convex and the introduction of Lagrange multipliers shows that the solution to this constraint minimization problem is given by the Boltzmann distribution <span class="math inline">\(p_{\beta_\mu}\)</span> defined as</p>
+<p>The function <span class="math inline">\(\widehat{p} \mapsto D_{\text{KL}}(\widehat{p}, p)\)</span> is convex and the introduction of Lagrange multipliers shows that the solution to this constraint minimization problem is given by the Boltzmann distribution <span class="math inline">\(p_{\beta_\mu}\)</span> defined as</p>
 <p><span id="eq-boltz"><span class="math display">\[
 p_{\beta_\mu}(a_k) = \frac{ p_k \, e^{-\beta_{\mu} \, a_k} }{Z(\beta_{\mu})}.
 \tag{3}\]</span></span></p>
-<p>The parameter <span class="math inline">\(\beta_{\mu} \in \mathbb{R}\)</span> is chosen so that the constraint <a href="#eq-contraint">Equation&nbsp;2</a> be satisfied and the minus sign is to follow the “physics” convention. Note in passing that, in fact, the joint function <span class="math inline">\((\widehat{p},p) \mapsto \mathop{\mathrm{D_{\text{KL}}}}(\widehat{p}, p)\)</span> is convex! As usual, if one defines the log-partition function as <span class="math inline">\(\Phi(\beta) = -\log Z(\beta)\)</span>, with</p>
+<p>The parameter <span class="math inline">\(\beta_{\mu} \in \mathbb{R}\)</span> is chosen so that the constraint <a href="#eq-contraint">Equation&nbsp;2</a> be satisfied and the minus sign is to follow the “physics” convention. Note in passing that, in fact, the joint function <span class="math inline">\((\widehat{p},p) \mapsto D_{\text{KL}}(\widehat{p}, p)\)</span> is convex! As usual, if one defines the log-partition function as <span class="math inline">\(\Phi(\beta) = -\log Z(\beta)\)</span>, with</p>
 <p><span class="math display">\[
 Z(\beta) \; = \; \sum_{k=1}^K \, p_k \, e^{-\beta \, a_k},
 \]</span></p>
@@ -227,17 +227,17 @@ Z(\beta) \; = \; \sum_{k=1}^K \, p_k \, e^{-\beta \, a_k},
 <p><span class="math display">\[
 \beta_{\mu} \; = \; \mathop{\mathrm{argmin}}_{\beta \in \mathbb{R}} \; \left&lt; \mu, \beta \right&gt; - \Phi(\beta).
 \]</span></p>
-<p>Naturally, one can now also estimate the probability of the event <span class="math inline">\(\mathop{\mathrm{\mathbb{P}}}[(X_1 + \ldots + X_N)/N \approx \alpha]\)</span> happening since one now knows that it is equivalent (on a log scale) to <span class="math inline">\(\exp[-N \, \mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p)]\)</span>. Algebra gives</p>
+<p>Naturally, one can now also estimate the probability of the event <span class="math inline">\(\mathbb{P}[(X_1 + \ldots + X_N)/N \approx \mu]\)</span> happening since one now knows that it is equivalent (on a log scale) to <span class="math inline">\(\exp[-N \, D_{\text{KL}}(p_{\beta_\mu}, p)]\)</span>. Algebra gives</p>
 <p><span class="math display">\[
 \begin{align}
-\mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p)
+D_{\text{KL}}(p_{\beta_\mu}, p)
 &amp;= \Phi(\beta_\mu) - \left&lt; \mu, \beta_\mu \right&gt;\\
 &amp;= \max_{\beta \in \mathbb{R}} \; \Phi(\beta) - \left&lt; \mu, \beta \right&gt;.
 \end{align}
 \]</span></p>
-<p>As a sanity check, note that since <span class="math inline">\(\Phi(0)=0\)</span>, we have that <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(p_{\beta_\mu}, p) \geq 0\)</span>, as required. The statement that</p>
+<p>As a sanity check, note that since <span class="math inline">\(\Phi(0)=0\)</span>, we have that <span class="math inline">\(D_{\text{KL}}(p_{\beta_\mu}, p) \geq 0\)</span>, as required. The statement that</p>
 <p><span class="math display">\[
-\frac{1}{N} \, \log \mathop{\mathrm{\mathbb{P}}} {\left\{ \frac{X_1 + \ldots + X_N}{N} \; \approx \; \mu \right\}}  \; = \; - I(\mu)
+\frac{1}{N} \, \log \mathbb{P} {\left\{ \frac{X_1 + \ldots + X_N}{N} \; \approx \; \mu \right\}}  \; = \; - I(\mu)
 \]</span></p>
 <p>with a (Large Deviation) rate function given by</p>
 <p><span class="math display">\[
