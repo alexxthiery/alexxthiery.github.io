@@ -250,7 +250,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
-    <lastmod>2024-06-15T10:43:16.951Z</lastmod>
+    <lastmod>2025-02-17T05:53:00.372Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/doob_transforms/doob.html</loc>
@@ -359,5 +359,29 @@
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/markov.html</loc>
     <lastmod>2025-02-06T15:09:20.324Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/coupling.html</loc>
+    <lastmod>2025-02-17T05:39:19.979Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/drift.html</loc>
+    <lastmod>2025-02-17T05:39:20.371Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/sobolev.html</loc>
+    <lastmod>2025-02-17T05:39:20.708Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/isoperimetric.html</loc>
+    <lastmod>2025-02-17T05:39:20.980Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/conductance.html</loc>
+    <lastmod>2025-02-17T05:39:21.292Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/spectral.html</loc>
+    <lastmod>2025-02-17T05:39:21.581Z</lastmod>
   </url>
 </urlset>
