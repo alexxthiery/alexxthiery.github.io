@@ -231,7 +231,15 @@ dX = \tfrac{\sigma^2}{2} \nabla \log \pi(X) \, dt + \sigma \, dB,
 <p><span class="math display">\[
 d\overleftarrow{X}_t =  \tfrac{\sigma^2}{2} \nabla \log \pi(\overleftarrow{X}_t) \, dt \; + {\color{red} \sigma^2 \, \nabla \log [p_{T-t} / \pi](\overleftarrow{X}_t) \, dt} \; + \; \sigma \, dB.
 \]</span></p>
-<p>Note that there is no minus sign in front of the original drift term. This highlight that, when at stationarity, the reverse diffusion indeed follows the same dynamics as the forward diffusion. The popular “denoising diffusion models” <span class="citation" data-cites="ho2020denoising">(<a href="#ref-ho2020denoising" role="doc-biblioref">Ho, Jain, and Abbeel 2020</a>)</span> can be seen as discretizations of the backward process <a href="#eq-rev-diffusion">Equation&nbsp;3</a>, employing various techniques to estimate the additional drift term from data.</p>
+<p>Note that there is no minus sign in front of the original drift term. This highlight that, when at stationarity, the reverse diffusion indeed follows the same dynamics as the forward diffusion. More generally, consider a bridging sequence of distributions <span class="math inline">\(\pi_t(dx)\)</span> indexed by time parameter <span class="math inline">\(t \in [0,T]\)</span>. If one can find a control function <span class="math inline">\(c_t(x)\)</span> such that the controlled Langevin diffusion</p>
+<p><span class="math display">\[
+dX_t = \tfrac{\sigma^2}{2} \, \nabla \log \pi_t(X_t) \, dt  \textcolor{blue}{+ c_t(X_t)} \, dt + \sigma \, dB,
+\]</span></p>
+<p>is such that <span class="math inline">\(X_t \sim \pi_t(dx)\)</span> for all time <span class="math inline">\(0 \leq t \leq T\)</span>, then the reverse diffusion reads is</p>
+<p><span class="math display">\[
+d\overleftarrow{X}_t =  \tfrac{\sigma^2}{2} \, \nabla \log \pi_{T-t}(\overleftarrow{X}_t) \, dt  \textcolor{red}{- c_{T-t}(\overleftarrow{X}_t)} \, dt + \sigma \, dB.
+\]</span></p>
+<p>A discussion on how his relates to a generalizations of the <a href="https://en.wikipedia.org/wiki/Crooks_fluctuation_theorem">Crooks fluctuation theorem</a> can be found in this other <a href="../../notes/jarzynski/jarzynski.html">note</a>. The popular “denoising diffusion models” <span class="citation" data-cites="ho2020denoising">(<a href="#ref-ho2020denoising" role="doc-biblioref">Ho, Jain, and Abbeel 2020</a>)</span> can be seen as discretizations of the backward process <a href="#eq-rev-diffusion">Equation&nbsp;3</a>, employing various techniques to estimate the additional drift term from data.</p>
 </section>
 <section id="denoising-score-matching-tweedie-formula" class="level2">
 <h2 class="anchored" data-anchor-id="denoising-score-matching-tweedie-formula">Denoising Score Matching &amp; Tweedie formula</h2>
