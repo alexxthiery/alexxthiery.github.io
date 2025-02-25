@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2024-06-15T10:42:58.263Z</lastmod>
+    <lastmod>2025-02-23T02:19:05.683Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/posts/hello_world/index.html</loc>
@@ -226,7 +226,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2024-06-15T10:43:14.645Z</lastmod>
+    <lastmod>2025-02-23T02:30:27.657Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/sanov/sanov.html</loc>
@@ -246,11 +246,11 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2024-12-09T17:03:29.224Z</lastmod>
+    <lastmod>2025-02-25T04:58:57.683Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
-    <lastmod>2025-02-17T05:53:00.372Z</lastmod>
+    <lastmod>2025-02-25T05:00:44.882Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/doob_transforms/doob.html</loc>
@@ -290,7 +290,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2024-12-09T17:03:35.081Z</lastmod>
+    <lastmod>2025-02-25T04:59:04.379Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
@@ -358,7 +358,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/markov.html</loc>
-    <lastmod>2025-02-06T15:09:20.324Z</lastmod>
+    <lastmod>2025-02-22T14:34:41.500Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/coupling.html</loc>
@@ -383,5 +383,9 @@
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/spectral.html</loc>
     <lastmod>2025-02-17T05:39:21.581Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/jarzynski/jarzynski.html</loc>
+    <lastmod>2025-02-25T04:59:34.792Z</lastmod>
   </url>
 </urlset>
