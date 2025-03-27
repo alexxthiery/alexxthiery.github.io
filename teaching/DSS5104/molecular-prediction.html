@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.361">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - ST3247 Assignments</title>
+<title>Alexandre Thiéry - Molecular Properties Prediction</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -45,8 +45,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
@@ -59,22 +58,16 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - ST3247 Assignments">
+<meta property="og:title" content="Alexandre Thiéry - Molecular Properties Prediction">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://alexxthiery.github.io/teaching/SAW/polymer-selfavoiding.png">
+<meta property="og:image" content="https://alexxthiery.github.io/teaching/DSS5104/3d_caffeine.gif">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta property="og:image:height" content="1500">
-<meta property="og:image:width" content="1500">
-<meta name="twitter:title" content="Alexandre Thiéry - ST3247 Assignments">
+<meta name="twitter:title" content="Alexandre Thiéry - Molecular Properties Prediction">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://alexxthiery.github.io/teaching/SAW/polymer-selfavoiding.png">
+<meta name="twitter:image" content="https://alexxthiery.github.io/teaching/DSS5104/3d_caffeine.gif">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:image-height" content="1500">
-<meta name="twitter:image-width" content="1500">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -137,10 +130,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#problem-statement" id="toc-problem-statement" class="nav-link" data-scroll-target="#problem-statement">Problem Statement</a></li>
-  <li><a href="#organization-of-the-report" id="toc-organization-of-the-report" class="nav-link" data-scroll-target="#organization-of-the-report">Organization of the report</a></li>
-  <li><a href="#practical-details" id="toc-practical-details" class="nav-link" data-scroll-target="#practical-details">Practical Details</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><strong>Overview</strong></a></li>
+  <li><a href="#dataset-tox21" id="toc-dataset-tox21" class="nav-link" data-scroll-target="#dataset-tox21"><strong>Dataset: Tox21</strong></a></li>
+  <li><a href="#molecular-representations" id="toc-molecular-representations" class="nav-link" data-scroll-target="#molecular-representations"><strong>Molecular Representations</strong></a></li>
+  <li><a href="#modeling-with-gnns" id="toc-modeling-with-gnns" class="nav-link" data-scroll-target="#modeling-with-gnns"><strong>Modeling with GNNs</strong></a></li>
+  <li><a href="#assignment-tasks" id="toc-assignment-tasks" class="nav-link" data-scroll-target="#assignment-tasks"><strong>Assignment Tasks</strong></a></li>
+  <li><a href="#evaluation-metric" id="toc-evaluation-metric" class="nav-link" data-scroll-target="#evaluation-metric"><strong>Evaluation Metric</strong></a></li>
+  <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables"><strong>Deliverables</strong></a></li>
+  <li><a href="#why-this-matters-in-practice" id="toc-why-this-matters-in-practice" class="nav-link" data-scroll-target="#why-this-matters-in-practice"><strong>Why This Matters in Practice</strong></a></li>
   </ul>
 </nav>
     </div>
@@ -149,9 +146,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ST3247 Assignments</h1>
+<h1 class="title">Molecular Properties Prediction</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">DSA4212</div>
+    <div class="quarto-category">DSS5104</div>
   </div>
   </div>
 
@@ -167,66 +164,123 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 </header>
 
-<!-- \begin{figure}[h]
-\centering
-\includegraphics[width=0.3\textwidth]{polymer-selfavoiding.png}
-\caption{A 2D self-avoiding walk}
-\end{figure} -->
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./polymer-selfavoiding.png" class="img-fluid figure-img" style="width:35.0%"></p>
-<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Self-avoiding_walk">A 2D self-avoiding walk</a></figcaption>
+<p><img src="./3d_caffeine.gif" class="img-fluid figure-img" style="width:35.0%"></p>
 </figure>
 </div>
 </div>
-<section id="introduction" class="level3">
-<h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
-<p>A 2D <a href="https://en.wikipedia.org/wiki/Self-avoiding_walk">self-avoiding</a> random walk (SAW) is a path on the square lattice <span class="math inline">\(\mathbb{Z}^2\)</span> that does not visit the same site more than once. Unlike <a href="https://en.wikipedia.org/wiki/Random_walk">standard random walks</a>, which allow revisits to previously occupied sites, self-avoiding walks impose a strict non-recrossing condition, making them a fundamental model in statistical mechanics, polymer physics, combinatorics and probability theory. Self-avoiding walks are particularly interesting because they provide insights into the behavior of polymers, have connections to critical phenomena in statistical physics, have led to new results in combinatorial mathematics and probability theory. From a mathematical perspective, SAWs are notoriously difficult to analyze due to the combinatorial explosion of possible paths. Even determining the number of possible SAWs of a given length on a lattice remains a challenging combinatorial problem. The difficulty arises from the correlations introduced by the self-avoidance constraint, making standard probabilistic techniques inapplicable.</p>
-<p>In this assignment, you will focus on estimating the number <span class="math inline">\(c_L\)</span> of self-avoiding walks of a given length <span class="math inline">\(L\)</span> on the 2D square lattice, as illustrated in the figure above. This remains an open problem with no exact formula known up to this date. As this problem is important to many areas of mathematics, a number of advanced computational techniques have been developed to study them. The purpose of this project is for you to explore some of these techniques and deepen your understanding of Monte Carlo methods.</p>
+<hr>
+<section id="overview" class="level3">
+<h3 class="anchored" data-anchor-id="overview"><strong>Overview</strong></h3>
+<p>The goal of this assignment is to explore the use of <strong>deep learning</strong>, and in particular <strong>Graph Neural Networks (GNNs)</strong>, for <strong>molecular property prediction</strong>. While traditional cheminformatics has relied on handcrafted features like molecular fingerprints, recent advances in graph-based learning allow us to learn directly from the molecular graph structure. This assignment challenges you to understand both paradigms, classical feature engineering and deep graph representation learning, and critically compare their strengths and limitations.</p>
+<p>You will work with the <strong>Tox21 dataset</strong> , which consists of thousands of molecules labeled for activity against 12 different toxicity-related biological targets. Your task is to build and evaluate both traditional machine learning models and modern GNN-based approaches to predict molecular activity.</p>
+<hr>
 </section>
-<section id="problem-statement" class="level3">
-<h3 class="anchored" data-anchor-id="problem-statement">Problem Statement</h3>
-<p>Consider the two-dimensional square lattice, denoted as <span class="math inline">\(\mathbb{Z}^2 = \{(x, y) : x, y \in \mathbb{Z}\}\)</span>. A self-avoiding walk (SAW) of length <span class="math inline">\(L\)</span> is a sequence of <span class="math inline">\(L+1\)</span> distinct vertices <span class="math inline">\((x_0, y_0), (x_1, y_1), \dots, (x_L, y_L)\)</span> in <span class="math inline">\(\mathbb{Z}^2\)</span> such that each successive vertex <span class="math inline">\(z_{i+1} = (x_{i+1}, y_{i+1})\)</span> is a nearest neighbor of <span class="math inline">\(z_i = (x_i, y_i)\)</span> for all <span class="math inline">\(i = 0, 1, \dots, L-1\)</span>. We denote such a walk as <span class="math inline">\(z_{0:L} = (z_0, z_1, \dots, z_L)\)</span> and assume that it begins at the origin, i.e., <span class="math inline">\(z_0 = (0, 0)\)</span>. The <a href="https://oeis.org/A001411">number of self-avoiding walks</a> of length <span class="math inline">\(L\)</span> is denoted by <span class="math inline">\(c_L\)</span>, with known values <span class="math inline">\(c_1 = 4\)</span> and <span class="math inline">\(c_2 = 12\)</span>. This quantity serves as the normalization constant for the uniform distribution <span class="math inline">\(\mathbb{P}_L\)</span> over all self-avoiding walks of length <span class="math inline">\(L\)</span> since we have</p>
-<p><span class="math display">\[
-\mathbb{P}_L(z_{0:L}) = \frac{1}{c_L} \mathbf{1}\{z_{0:L} \text{ is a SAW of length } L\}.
-\]</span></p>
-<p>This means that the Monte-Carlo techniques for evaluating normalization constants can be applied to estimate <span class="math inline">\(c_L\)</span>. The number of self-avoiding walks grows exponentially with <span class="math inline">\(L\)</span>, and it is known that <span class="math inline">\(c_L \approx \mu^L\)</span>, where <span class="math inline">\(\mu \approx 2.6\)</span> is called the connective constant. However, the exact value of <span class="math inline">\(\mu\)</span> remains unknown. <strong>The main objective of this assignment</strong> is to estimate <span class="math inline">\(\mu\)</span>, or equivalently, the quantity <span class="math inline">\(\lambda = \log \mu\)</span>:</p>
-<p><span class="math display">\[
-\lambda = \lim_{N \to \infty} \; \frac{1}{N} \log c_N.
-\]</span></p>
-<p>Computing <span class="math inline">\(c_N\)</span> directly is infeasible for large <span class="math inline">\(N\)</span> due to its exponential growth. Moreover, Monte Carlo methods are challenging to apply since the self-avoiding constraint makes uniform sampling difficult. For instance, in a standard random walk of length <span class="math inline">\(L\)</span>, there are <span class="math inline">\(4^L\)</span> possible paths, but only a small fraction are self-avoiding. Given that <span class="math inline">\(c_L \approx \mu^L\)</span> with <span class="math inline">\(\mu \approx 2.6\)</span>, the probability that a random walk is self-avoiding is approximately <span class="math inline">\((\mu/4)^L\)</span>. For <span class="math inline">\(L = 20\)</span>, this probability is roughly <span class="math inline">\(0.02\%\)</span>.</p>
+<section id="dataset-tox21" class="level3">
+<h3 class="anchored" data-anchor-id="dataset-tox21"><strong>Dataset: Tox21</strong></h3>
+<p>The Tox21 dataset (available on CANVAS) is a benchmark in computational toxicology. It includes:</p>
+<ul>
+<li><strong>Compounds</strong> represented as <strong>SMILES strings</strong></li>
+<li><strong>12 binary classification tasks</strong> (e.g., activation of nuclear receptors or stress pathways)</li>
+<li><strong>~8,000 molecules</strong> for training/testing</li>
+<li><strong>Multi-label setup</strong> (a molecule can be active in multiple assays)</li>
+</ul>
+<p>The dataset has been preprocessed and split into training, validation, and test sets.</p>
+<hr>
 </section>
-<section id="organization-of-the-report" class="level3">
-<h3 class="anchored" data-anchor-id="organization-of-the-report">Organization of the report</h3>
-<p>The first few sections of your report should be as follows:</p>
+<section id="molecular-representations" class="level3">
+<h3 class="anchored" data-anchor-id="molecular-representations"><strong>Molecular Representations</strong></h3>
+<section id="smiles-simplified-molecular-input-line-entry-system" class="level4">
+<h4 class="anchored" data-anchor-id="smiles-simplified-molecular-input-line-entry-system"><strong>SMILES (Simplified Molecular-Input Line-Entry System)</strong></h4>
+<p>SMILES is a textual representation of chemical structures, where atoms and bonds are encoded as ASCII strings (e.g., <code>CC(=O)Oc1ccccc1C(=O)O</code> for aspirin). While convenient for storage and parsing, SMILES must be converted to structured formats (e.g., molecular graphs) to be usable for learning, or features need to be extracted for classical ML.</p>
+</section>
+<section id="from-smiles-to-graphs" class="level4">
+<h4 class="anchored" data-anchor-id="from-smiles-to-graphs"><strong>From SMILES to Graphs</strong></h4>
+<p>You can use cheminformatics libraries like <strong>RDKit</strong> to convert a SMILES string into a molecular graph, where:</p>
+<ul>
+<li><strong>Nodes</strong> = atoms (with features like element, degree, charge)</li>
+<li><strong>Edges</strong> = bonds (with features like bond type)</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="modeling-with-gnns" class="level3">
+<h3 class="anchored" data-anchor-id="modeling-with-gnns"><strong>Modeling with GNNs</strong></h3>
+<p>GNNs operate directly on molecular graphs by <strong>passing messages between atoms</strong>, aggregating neighborhood information, and learning rich, hierarchical molecular representations. In this assignment, you may explore architectures such as:</p>
+<ul>
+<li>Graph Convolutional Networks (GCNs)</li>
+<li>Message Passing Neural Networks (MPNNs)</li>
+<li>AttentiveFP or D-MPNN (ChemProp)</li>
+</ul>
+<p>You do not have to analyse all of these architectures: choose one or two that you find interesting and implement them. These models typically include:</p>
+<ul>
+<li>Atom/bond featurization</li>
+<li>Message passing layers</li>
+<li>A readout/pooling step to produce a fixed-size molecular embedding</li>
+<li>A final MLP for classification</li>
+</ul>
+<p>You may use any high-level libraries of your choice to implement GNNs. You can also use existing implementations of the models you choose. The purpose of this assignment is not to implement the models from scratch, but to understand how GNNs work, how to train them and leverage them for molecular property prediction.</p>
+<hr>
+</section>
+<section id="assignment-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="assignment-tasks"><strong>Assignment Tasks</strong></h3>
+<section id="part-1-classical-ml-baseline-with-molecular-fingerprints" class="level4">
+<h4 class="anchored" data-anchor-id="part-1-classical-ml-baseline-with-molecular-fingerprints"><strong>Part 1: Classical ML Baseline with Molecular Fingerprints</strong></h4>
 <ol type="1">
-<li><p><strong>Introduction:</strong> Briefly introduce the problem and describe clearly what the main goal of the assignment is. This section is to make sure that you have understood the problem statement correctly. This section can be brief.<br>
-</p></li>
-<li><p><strong>Basic deterministic methods:</strong> Implement a method that can compute <span class="math inline">\(c_N\)</span> for small values of <span class="math inline">\(L\)</span>, at least up to <span class="math inline">\(L=10\)</span>. This will be useful to validate your Monte Carlo methods.</p></li>
-<li><p><strong>Basic Monte Carlo I:</strong> Implement a simple Monte-Carlo method that generates standard random walks of length <span class="math inline">\(L\)</span> and estimates the fraction of self-avoiding walks.</p></li>
-<li><p><strong>Basic Monte Carlo II:</strong> Implement a more sophisticated Monte-Carlo method that generates a walk of length <span class="math inline">\(L\)</span> by sampling the next step <span class="math inline">\(z_{i+1}\)</span> uniformly from the set of possible neighbors of <span class="math inline">\(z_i\)</span> that do not lead to a self-intersection. If there is no such neighbor, which can happen, the walk remains still at <span class="math inline">\(z_i\)</span> until the end of the walk, i.e.&nbsp;<span class="math inline">\(z_{i+1} = z_i\)</span> until <span class="math inline">\(i = L-1\)</span>. Discuss how can this procedure be used to estimate <span class="math inline">\(c_N\)</span>.</p></li>
+<li>Use <strong>RDKit</strong> to compute <strong>ECFP4 (Extended Connectivity Fingerprints)</strong> for all molecules: these are features that characterize the local environment of each atom in the molecule. ECFP4 is a widely used fingerprint for molecular similarity and property prediction. You are free to also explore other types of fingerprints/features (e.g., MACCS keys, Morgan fingerprints) if you wish. For this, do not hesitate to read the literature and/or brainstorm with a LLM-assistant.</li>
+<li>Train <strong>Random Forest</strong> or <strong>Gradient Boosting</strong> classifiers (e.g., XGBoost) using these fingerprints.</li>
+<li>Report performance on all 12 targets.</li>
 </ol>
-<p>After the above <span class="math inline">\(4\)</span> sections, you are then tasked with exploring more advanced Monte Carlo methods to estimate <span class="math inline">\(\lambda\)</span> and <span class="math inline">\((\log c_N)/N\)</span> for large values of <span class="math inline">\(N\)</span>.</p>
+<p>This will serve as a baseline for comparison with GNNs. You may also explore other classical models (e.g., SVM, logistic regression) or additional features (e.g., molecular descriptors) if you wish.</p>
 </section>
-<section id="practical-details" class="level3">
-<h3 class="anchored" data-anchor-id="practical-details">Practical Details</h3>
-<p><strong>Submission:</strong> A single submission is required for each group. The submission is on canvas. The submission should include a report and the code. The code can be submitted as a zip file (not exceeding 10 MB) or as a link to a public repository (e.g., github). The report should be in PDF format and should <strong>not</strong> include the code. The report should be at most 10 pages long, including figures and references. It is entirely possible to obtain a full grade with a report that is significantly shorter than 10 pages: do <strong>not</strong> write a longer report just to meet the page limit. Although not compulsory, you are encouraged to use Latex to write the report – equations are straightforward to write and this produce neat reports. A template is available <a href="https://www.overleaf.com/read/hrstqvkjhzff#a35f95">here</a> and with your NUS email, you can get a free account on <a href="https://www.overleaf.com/">Overleaf</a> for collaborative editing.</p>
-<p><strong>Criteria:</strong> In this project, you will be evaluated on the following criteria:</p>
+<section id="part-2-graph-neural-network-modeling" class="level4">
+<h4 class="anchored" data-anchor-id="part-2-graph-neural-network-modeling"><strong>Part 2: Graph Neural Network Modeling</strong></h4>
+<ol type="1">
+<li>Convert each SMILES string into a <strong>molecular graph</strong>.</li>
+<li>Build a GNN model using any of the recommended architectures.</li>
+<li>Train and evaluate on the same prediction tasks and metrics.</li>
+</ol>
+<p>If time permits:</p>
+<ol type="1">
+<li>combine GNNs with some of the classical features you have explored in Part 1.</li>
+<li>compare to RNNs (eg. LSTM, biLSTM, 1D-CNN) that operate on the SMILES strings directly.</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="evaluation-metric" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metric"><strong>Evaluation Metric</strong></h3>
+<p>Use <strong>Area Under the ROC Curve (AUC ROC)</strong> for each of the 12 targets, and report: - Individual AUC scores - Mean and median AUC across tasks</p>
+<hr>
+</section>
+<section id="deliverables" class="level3">
+<h3 class="anchored" data-anchor-id="deliverables"><strong>Deliverables</strong></h3>
+<p>You must submit the following:</p>
+<ol type="1">
+<li><strong>A written report (PDF)</strong>
 <ul>
-<li>Your exploration and understanding of various Monte Carlo methods for estimating <span class="math inline">\(\lambda\)</span>. You will be evaluated on the quality and breadth of your numerical experiments, your critical analysis of the results, as well as the extend to which you have attempted to explore the problem and the literature.</li>
-<li>50% of the grade is based on the content of the report. The clarity and organization of your report are important.</li>
-<li>50% of the grade is based on the quality of the code. The code should be well-documented and easy to read.</li>
-<li>It is entirely fine to use a LLM-assistant to improve the quality of your writing and code, as well as for brainstorming ideas.</li>
-</ul>
-<p>All sources (github repositories, papers, blog posts, etc.) should be properly cited. Failure to do so will be considered plagiarism. Although it is fine (and even encouraged) to discuss the assignments with other students/groups, the report and the code should be entirely your own work. You are encouraged to research extensively, experiment with different approaches, and explore creative ideas. A deep understanding of the methods used and the ability to explain them clearly is crucial. Do not just copy code from the internet without understanding it. This project is open-ended, and you are expected to explore the problem in depth.</p>
-<p>As a last remark, the assignment is designed to be challenging. Do not be discouraged if you find it difficult. The goal is to learn and to improve your skills. If you are stuck, do not hesitate to ask for help and reach out to me. Furthermore, it may be a good idea to build a proper git repository to keep track of your progress and to showcase your work when applying for internships or jobs. There is a lot of room for creativity in this project and exploring new ideas is encouraged.</p>
-<p><strong>Deadlines:</strong></p>
-<ul>
-<li><strong>Friday 28 March 2025:</strong> I am giving you the opportunity to submit a draft of your report; you can add a section with the title “Questions” where you can ask me specific questions about the project. I will provide feedback on the draft, and you can use this feedback to improve your final submission. The draft should include the first <span class="math inline">\(4\)</span> sections of the report highlighted above. The draft should be submitted on canvas. Note that this draft is optional, but I highly recommend that you submit it. This draft will not be graded: its only purpose is to provide you with feedback and improve your final submission.<br>
+<li>A report of at most 10 pages; shorter is better if concise</li>
+<li>Clearly describe your methodology, experiments, results, and findings<br>
 </li>
-<li><strong>Friday 18 April 2025:</strong> Final submission of the report and the code. The report should be submitted on canvas. The code can be submitted as a zip file (not exceeding 10 MB) or as a link to a public repository (e.g., github). The report should be in PDF format and should <strong>not</strong> include the code. The report should be at most 10 pages long, including figures and references. It is entirely possible to obtain a full grade with a report that is significantly shorter than 10 pages: do <strong>not</strong> write a longer report just to meet the page limit. <strong>Do include the name and student number of all group members in the report.</strong></li>
-</ul>
+<li>Include key plots or tables where relevant (e.g., ROC curves, performance comparisons)</li>
+<li>Do not include code in the report</li>
+</ul></li>
+<li><strong>Code</strong>
+<ul>
+<li>Submit as a <strong>GitHub repo</strong> or <strong>zip file</strong><br>
+</li>
+<li>Should include all scripts/notebooks for data loading, feature generation, model training, and evaluation<br>
+</li>
+<li>Make your code clean and reproducible</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+<section id="why-this-matters-in-practice" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-in-practice"><strong>Why This Matters in Practice</strong></h3>
+<p>Drug discovery increasingly depends on accurate, data-driven prediction of molecular properties. While traditional cheminformatics models still play a role, deep learning, especially GNNs, offers a powerful way to move beyond hand-designed descriptors.</p>
 
 
 </section>
