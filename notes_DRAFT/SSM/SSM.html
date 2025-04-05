@@ -221,7 +221,7 @@ w^i_{t+1}  \propto \frac{f(x^{i}_{t+1} | x^{i}_{t}) \, g(y_{t+1} | x^i_{t+1})}{q
 <h2 class="anchored" data-anchor-id="smoothing">Smoothing:</h2>
 <p>When estimating parameters in time-series models, it is often crucial to evaluate sums like</p>
 <p><span class="math display">\[
-\sum_{t=0}^{t-1} \mathop{\mathrm{\mathbb{E}}}[ s_t(x_t, x_{t+1}) | y_{0:T}]
+\sum_{t=0}^{t-1} \mathbb{E}[ s_t(x_t, x_{t+1}) | y_{0:T}]
 \]</span></p>
 <p>where <span class="math inline">\(s_t(\cdot, \cdot)\)</span> is a specific function. For instance, in the Expectation-Maximization (EM) algorithm, we have <span class="math inline">\(s_t(x_t, x_{t+1}) = \log[ f(x_{t+1}|x_t) , g(y_{t+1}|x_{t+1})]\)</span>. Essentially, this means it is important to accurately approximate the <span class="math inline">\((x_t, x_{t+1})\)</span>-marginals of the smoothing distribution.</p>
 <section id="forward-only-and-fixed-lag-approximation" class="level3">

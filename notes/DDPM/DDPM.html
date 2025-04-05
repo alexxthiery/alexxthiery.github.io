@@ -192,7 +192,7 @@ dX = - \frac12 X \, dt + dW.
 \alpha_s \, x + \sigma_s \, \mathbf{n}
 \]</span></p>
 <p>with <span class="math inline">\(\alpha_s^2 + \sigma_s^2 = 1\)</span> and <span class="math inline">\(\alpha_s = e^{-s/2}\)</span> and <span class="math inline">\(\mathbf{n}\sim \pi_{\mathrm{ref}} = \mathcal{N}(0,I)\)</span>. The forward probability transitions are tractable and given by <span id="eq-OU-forward"><span class="math display">\[
-\mathop{\mathrm{\mathbb{P}}}(X_{t+s} \in dy \, | \, X_t = x )
+\mathbb{P}(X_{t+s} \in dy \, | \, X_t = x )
 \; \propto \;
 \exp {\left\{ -\frac{(y - \alpha_s \, x)^2}{2 \, \sigma^2_s} \right\}}  \, dy.
 \tag{2}\]</span></span></p>
@@ -228,7 +228,7 @@ d\overleftarrow{X}_t = {\color{red} + }\frac12 \overleftarrow{X}_t \, dt
 <p><span id="eq-score"><span class="math display">\[
 \nabla_{x_t} \log p_t(x_t)
 \;=\;
-\mathop{\mathrm{\mathbb{E}}}[  \textcolor{blue}{ \nabla_{x_t} \log p(x_t \mid x_0) } \mid x_t]
+\mathbb{E}[  \textcolor{blue}{ \nabla_{x_t} \log p(x_t \mid x_0) } \mid x_t]
 \tag{4}\]</span></span></p>
 <p>and <a href="#eq-score">Equation&nbsp;4</a> is true for any diffusion process, not only the OU process. Nevertheless, when applied to the OU process of <a href="#eq-OU">Equation&nbsp;1</a> with tractable transition probabilities <span class="math inline">\(p(x_t \mid x_0)\)</span> as described in <a href="#eq-OU-forward">Equation&nbsp;2</a>, algebra gives that</p>
 <p><span id="eq-score-denoising"><span class="math display">\[
@@ -236,13 +236,13 @@ d\overleftarrow{X}_t = {\color{red} + }\frac12 \overleftarrow{X}_t \, dt
 \tag{5}\]</span></span></p>
 <p>where <span class="math inline">\(\widehat{x}_0(x_t,t)\)</span> is a “denoising” estimate of the initial position <span class="math inline">\(x_0\)</span> given a noisy estimate <span class="math inline">\(X_t=x_t\)</span> at time <span class="math inline">\(t\)</span>, i.e.</p>
 <p><span class="math display">\[
-\textcolor{green}{ \widehat{x}_0(x_t,t) \; = \; \mathop{\mathrm{\mathbb{E}}}[X_0  \; \mid \; X_t = x_t] }.
+\textcolor{green}{ \widehat{x}_0(x_t,t) \; = \; \mathbb{E}[X_0  \; \mid \; X_t = x_t] }.
 \]</span></p>
 <p>Note that this derivation fundamentally relies on the tractability of the transition density of the OU process, although any other linear Gaussian diffusion could have been used. For simplifying notation, I will often write <span class="math inline">\(\widehat{x}_0(x_t, t)\)</span> as <span class="math inline">\(\widehat{x}_0(x_t)\)</span> when it is clear that <span class="math inline">\(x_t\)</span> is a sample obtained at time <span class="math inline">\(0 \leq t \leq T\)</span>. <a href="#eq-score-denoising">Equation&nbsp;5</a> means that to estimate the score, one only needs to train a denoising function <span class="math inline">\(\widehat{x}^{\theta}_0: [0,T] \times \mathbb{R}^d \to \mathbb{R}^d\)</span> parametrized by a parameter <span class="math inline">\(\theta \in \Theta\)</span> so that it approximates the true conditional expectation,</p>
 <p><span class="math display">\[
 \widehat{x}^{\theta}_0(t,x_t)
 \; \approx \;
-\widehat{x}_0(t,x_t) = \mathop{\mathrm{\mathbb{E}}}[X_0 \mid X_t=x_t].
+\widehat{x}_0(t,x_t) = \mathbb{E}[X_0 \mid X_t=x_t].
 \]</span></p>
 <p>It is a standard regression problem: take a bunch of pairs <span class="math inline">\((x_0, x_t)\)</span> that can be generated as</p>
 <p><span class="math display">\[
@@ -252,24 +252,24 @@ x_t \sim p(dx_t \mid x_0) = \alpha_t x_0 + \sigma_t \, \mathbf{n}
 \]</span></p>
 <p>and minimize the Mean Squared Error (MSE) loss, i.e.</p>
 <p><span class="math display">\[
-\theta \mapsto \mathop{\mathrm{\mathbb{E}}} {\left[  \|\widehat{x}^{\theta}_0(t, x_t) - x_0\|^2  \right]} .
+\theta \mapsto \mathbb{E} {\left[  \|\widehat{x}^{\theta}_0(t, x_t) - x_0\|^2  \right]} .
 \]</span></p>
-<p>This can be implemented with a stochastic gradient descent method or any other stochastic optimization procedure. Indeed, this implicitly relies on the standard fact that the expectation of a squared integrable random variable <span class="math inline">\(Z\)</span> is the minimizer of the function <span class="math inline">\(\gamma \mapsto \mathop{\mathrm{\mathbb{E}}}[(\gamma-Z)^2]\)</span>. The score is then defined as</p>
+<p>This can be implemented with a stochastic gradient descent method or any other stochastic optimization procedure. Indeed, this implicitly relies on the standard fact that the expectation of a squared integrable random variable <span class="math inline">\(Z\)</span> is the minimizer of the function <span class="math inline">\(\gamma \mapsto \mathbb{E}[(\gamma-Z)^2]\)</span>. The score is then defined as</p>
 <p><span class="math display">\[
 \mathcal{S}^{\theta}(t,x) \; = \; -\frac{x - \alpha_t \, \widehat{x}^{\theta}_0(t,x)}{\sigma^2_t}.
 \]</span></p>
 <p>One of the important take-away is that a <strong>denoiser</strong>, i.e.&nbsp;a function that estimates the conditional expectation of <span class="math inline">\(X_0\)</span> given <span class="math inline">\(X_t=x\)</span>, can be upgraded to a <strong>sampler</strong>! Furthermore, for a given estimate <span class="math inline">\(\mathcal{S}^\theta(t,x_t)\)</span> of the score function, one can easily obtain bounds on the quality of the resulting approximation of the data distribution. For example, if <span class="math inline">\(q^{\theta}\)</span> denotes the probability distribution on path-space induced by the reverse diffusion with approximate score <span class="math inline">\(\mathcal{S}^{\theta}\)</span> while <span class="math inline">\(p\)</span> denotes the actual probability distribution generated by reverse diffusion, the chain rule for the KL divergence gives</p>
 <p><span class="math display">\[
-\mathop{\mathrm{D_{\text{KL}}}}(\pi_{\mathrm{data}}, q^{\theta}_0) = \mathop{\mathrm{D_{\text{KL}}}}(p_0, q^{\theta}_0)
-\leq \mathop{\mathrm{D_{\text{KL}}}}(p, q^{\theta}).
+D_{\text{KL}}(\pi_{\mathrm{data}}, q^{\theta}_0) = D_{\text{KL}}(p_0, q^{\theta}_0)
+\leq D_{\text{KL}}(p, q^{\theta}).
 \]</span></p>
 <p>As described in <a href="../../notes/girsanov/girsanov.html">these notes</a>, Girsanov’s theorem gives that</p>
 <p><span class="math display">\[
-\mathop{\mathrm{D_{\text{KL}}}}(p, q^{\theta}) = \frac12 \, \mathop{\mathrm{\mathbb{E}}} {\left\{ \int_{0}^T \|\mathcal{S}^{\theta}(t,X_t) - \nabla_x \log p_t(X_t) \|^2 \, dt \right\}} .
+D_{\text{KL}}(p, q^{\theta}) = \frac12 \, \mathbb{E} {\left\{ \int_{0}^T \|\mathcal{S}^{\theta}(t,X_t) - \nabla_x \log p_t(X_t) \|^2 \, dt \right\}} .
 \]</span></p>
-<p>If there were a time-dependent volatility <span class="math inline">\(\gamma_t\)</span> in the dynamics, i.e.&nbsp;<span class="math inline">\(dX = \mu(X) \, dt + \gamma_t \, dW\)</span> instead of the one in <a href="#eq-OU">Equation&nbsp;1</a>, the expression would remain essentially the same, with the only difference that the error term <span class="math inline">\(\|\mathcal{S}^{\theta}(t,X_t) - \nabla_x \log p_t(X_t) \|^2\)</span> would be scaled by a factor <span class="math inline">\(\gamma^2_t\)</span>. Indeed, this means that when the approximation of the score is perfect, i.e.&nbsp;<span class="math inline">\(\mathcal{S}^{\theta}(t,x_t) \equiv \nabla_x \log p_t(x_t)\)</span>, the data distribution is perfectly recovered, as expected. When expressed in terms of the denoiser <span class="math inline">\(\widehat{x}\)</span>, the upper-bound on <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(\pi_{\mathrm{data}}, q^{\theta}_0)\)</span> reads</p>
+<p>If there were a time-dependent volatility <span class="math inline">\(\gamma_t\)</span> in the dynamics, i.e.&nbsp;<span class="math inline">\(dX = \mu(X) \, dt + \gamma_t \, dW\)</span> instead of the one in <a href="#eq-OU">Equation&nbsp;1</a>, the expression would remain essentially the same, with the only difference that the error term <span class="math inline">\(\|\mathcal{S}^{\theta}(t,X_t) - \nabla_x \log p_t(X_t) \|^2\)</span> would be scaled by a factor <span class="math inline">\(\gamma^2_t\)</span>. Indeed, this means that when the approximation of the score is perfect, i.e.&nbsp;<span class="math inline">\(\mathcal{S}^{\theta}(t,x_t) \equiv \nabla_x \log p_t(x_t)\)</span>, the data distribution is perfectly recovered, as expected. When expressed in terms of the denoiser <span class="math inline">\(\widehat{x}\)</span>, the upper-bound on <span class="math inline">\(D_{\text{KL}}(\pi_{\mathrm{data}}, q^{\theta}_0)\)</span> reads</p>
 <p><span class="math display">\[
-\frac12 \, \mathop{\mathrm{\mathbb{E}}} {\left\{ \int_{0}^T  {\left( \frac{\alpha_t}{\sigma_t^2} \right)} ^2 \, \|\widehat{x}^{\theta}_0(t,X_t) - \mathop{\mathrm{\mathbb{E}}}[X_0 \mid X_t] \|^2 \, dt \right\}} .
+\frac12 \, \mathbb{E} {\left\{ \int_{0}^T  {\left( \frac{\alpha_t}{\sigma_t^2} \right)} ^2 \, \|\widehat{x}^{\theta}_0(t,X_t) - \mathbb{E}[X_0 \mid X_t] \|^2 \, dt \right\}} .
 \]</span></p>
 <p>Since <span class="math inline">\((\alpha_t / \sigma_t) \to \infty\)</span> as <span class="math inline">\(t \to 0\)</span>, this shows that it is probably a good idea to approximate denoiser <span class="math inline">\(\widehat{x}_0(t,x_t)\)</span> much better for small times <span class="math inline">\(t \to 0\)</span> than for large times <span class="math inline">\(t \to T\)</span>.</p>
 </section>
@@ -277,17 +277,17 @@ x_t \sim p(dx_t \mid x_0) = \alpha_t x_0 + \sigma_t \, \mathbf{n}
 <h3 class="anchored" data-anchor-id="denoiser-practical-parametrization">Denoiser: practical parametrization</h3>
 <p>In practice, it may not be efficient, or stable, to try to directly parametrize the denoiser <span class="math inline">\(\widehat{x}^\theta_0(t, x_t)\)</span> with a neural network and simply minimize the loss</p>
 <p><span id="eq-loss-naive"><span class="math display">\[
-\mathop{\mathrm{\mathbb{E}}}\|X_0 - \widehat{x}^{\theta}_0(t, X_t)\|^2.
+\mathbb{E}\|X_0 - \widehat{x}^{\theta}_0(t, X_t)\|^2.
 \tag{6}\]</span></span></p>
 <p>For example, for <span class="math inline">\(t \approx 0\)</span>, we have that <span class="math inline">\(\widehat{x}_0(t,X_t) \approx X_t \approx X_0\)</span> so that it is very easy to reconstruct <span class="math inline">\(X_0\)</span> from <span class="math inline">\(X_t\)</span>. On the contrary, for large <span class="math inline">\(t\)</span>, there is almost no information contained within <span class="math inline">\(X_t\)</span> to reconstruct <span class="math inline">\(X_0\)</span>. This means that the typical value of the naive loss <a href="#eq-loss-naive">Equation&nbsp;6</a> depends widely on <span class="math inline">\(t\)</span>, which makes it difficult to optimize: with this parametrization, since large values of the loss will be typically concentrated to large values of <span class="math inline">\(t\)</span>, the denoiser will not be accurate for <span class="math inline">\(t \approx 0\)</span>, which is exactly the opposite than what is required, as discussed at the end of the previous section. Since <span class="math inline">\(x_t = \alpha_t \, x_0 + \sigma_t \, \mathbf{n}\)</span>, one can defined the Signal-to-Noise-Ratio as</p>
 <p><span class="math display">\[\mathrm{SNR}(t) = \frac{\alpha_t}{\sigma_t}.\]</span></p>
 <p>In order to normalize by the reconstruction difficulty, it makes more sense to train a denoiser by minimizing the loss:</p>
 <p><span class="math display">\[
-\mathop{\mathrm{\mathbb{E}}} {\left[  \mathrm{SNR}^2(t) \times \|X_0 - \widehat{x}^{\theta}_0(t, X_t)\|^2  \right]} .
+\mathbb{E} {\left[  \mathrm{SNR}^2(t) \times \|X_0 - \widehat{x}^{\theta}_0(t, X_t)\|^2  \right]} .
 \]</span></p>
 <p>It turns out that it is entirely equivalent to minimizing the loss</p>
 <p><span class="math display">\[
-\mathop{\mathrm{\mathbb{E}}} {\left[  \| \mathbf{n}- \widehat{\mathbf{n}}^{\theta}(t, X_t)\|^2  \right]} .
+\mathbb{E} {\left[  \| \mathbf{n}- \widehat{\mathbf{n}}^{\theta}(t, X_t)\|^2  \right]} .
 \]</span></p>
 <p>where <span class="math inline">\(x_t = \alpha_t \, x_0 + \sigma_t \, \mathbf{n}\)</span> while the denoiser <span class="math inline">\(\widehat{x}^{\theta}_0\)</span> and noise estimator <span class="math inline">\(\widehat{\mathbf{n}}^{\theta}\)</span> are parametrized so that</p>
 <p><span class="math display">\[
@@ -330,7 +330,7 @@ d\overleftarrow{X}_s =
 <p><span class="math display">\[
 \left\{
 \begin{aligned}
-\mathop{\mathrm{\mathbb{E}}}[ \overleftarrow{X}_{\overline{s} + \delta} ]
+\mathbb{E}[ \overleftarrow{X}_{\overline{s} + \delta} ]
 \quad &amp;= \quad \mu + \lambda \, (\overleftarrow{x}_{\overline{s}} - \mu)\\
 \mathop{\mathrm{Var}}[ \overleftarrow{X}_{\overline{s} + \delta} ]
 \quad &amp;= \quad

@@ -189,17 +189,17 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <p><span id="eq-change-pb"><span class="math display">\[
 \frac{d\mathbb{Q}}{d\mathbb{P}}(x_{[0,T]}) = \frac{1}{\mathcal{Z}} \, \exp[g(X_T)]
 \tag{1}\]</span></span></p>
-<p>for a (typically unknown) normalization constant <span class="math inline">\(\mathcal{Z}\)</span> and some function <span class="math inline">\(g: \mathcal{X}\to \mathbb{R}\)</span>. For example, collecting a noisy observation <span class="math inline">\(y_T \sim \mathcal{F}(X_T) + \textrm{(noise)}\)</span> at time <span class="math inline">\(T\)</span>, the distribution <span class="math inline">\(\mathbb{Q}\)</span> defined with the log-likelihood function <span class="math inline">\(g(x) = \log \mathop{\mathrm{\mathbb{P}}}(y_T \mid X_T=x)\)</span> describes the dynamics of the Markov process <span class="math inline">\(X_t\)</span> conditioned on the observation <span class="math inline">\(y_T\)</span>; we will use this interpretation in the following since this is the most common use case and gives the most intuitive interpretation. Doob h-transforms are a powerful tool to describe the dynamics of the conditioned process.</p>
-<p>For convenience, let us use the notation <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}_x[\ldots] \equiv \mathop{\mathrm{\mathbb{E}}}[\ldots \mid x_t=x]\)</span>. For a test function <span class="math inline">\(\varphi: \mathcal{X}\to \mathbb{R}\)</span> and a time increment <span class="math inline">\(\delta &gt; 0\)</span>, we have</p>
+<p>for a (typically unknown) normalization constant <span class="math inline">\(\mathcal{Z}\)</span> and some function <span class="math inline">\(g: \mathcal{X}\to \mathbb{R}\)</span>. For example, collecting a noisy observation <span class="math inline">\(y_T \sim \mathcal{F}(X_T) + \textrm{(noise)}\)</span> at time <span class="math inline">\(T\)</span>, the distribution <span class="math inline">\(\mathbb{Q}\)</span> defined with the log-likelihood function <span class="math inline">\(g(x) = \log \mathbb{P}(y_T \mid X_T=x)\)</span> describes the dynamics of the Markov process <span class="math inline">\(X_t\)</span> conditioned on the observation <span class="math inline">\(y_T\)</span>; we will use this interpretation in the following since this is the most common use case and gives the most intuitive interpretation. Doob h-transforms are a powerful tool to describe the dynamics of the conditioned process.</p>
+<p>For convenience, let us use the notation <span class="math inline">\(\mathbb{E}_x[\ldots] \equiv \mathbb{E}[\ldots \mid x_t=x]\)</span>. For a test function <span class="math inline">\(\varphi: \mathcal{X}\to \mathbb{R}\)</span> and a time increment <span class="math inline">\(\delta &gt; 0\)</span>, we have</p>
 <p><span id="eq-def"><span class="math display">\[
 \begin{align*}
-\mathop{\mathrm{\mathbb{E}}}[\varphi(x_{t+\delta}) | x_t, y_T] &amp;= \mathop{\mathrm{\mathbb{E}}}_{x_t}[\varphi(x_{t+\delta}) \, \exp(g(x_T)) ] \, / \, \mathop{\mathrm{\mathbb{E}}}_{x_t}[\exp(g(x_T))]\\
-&amp;= \frac{ \mathop{\mathrm{\mathbb{E}}}_{x_t}[\varphi(x_{t+\delta}) \, h(t+\delta, x_{t+\delta})] }{h(t, x)}.
+\mathbb{E}[\varphi(x_{t+\delta}) | x_t, y_T] &amp;= \mathbb{E}_{x_t}[\varphi(x_{t+\delta}) \, \exp(g(x_T)) ] \, / \, \mathbb{E}_{x_t}[\exp(g(x_T))]\\
+&amp;= \frac{ \mathbb{E}_{x_t}[\varphi(x_{t+\delta}) \, h(t+\delta, x_{t+\delta})] }{h(t, x)}.
 \end{align*}
 \tag{2}\]</span></span></p>
 <p>We have introduced the important function <span class="math inline">\(h:[0,T] \times \mathcal{X}\to \mathbb{R}\)</span> defined as</p>
 <p><span class="math display">\[
-h(t, x) \; = \; \mathop{\mathrm{\mathbb{E}}} {\left[  \exp[g(x_T)] \mid x_t = x \right]}  \; = \; \mathbb{P}(y_T \mid x_t = x).
+h(t, x) \; = \; \mathbb{E} {\left[  \exp[g(x_T)] \mid x_t = x \right]}  \; = \; \mathbb{P}(y_T \mid x_t = x).
 \]</span></p>
 <p>One can readily check that the function <span class="math inline">\(h\)</span> satisfies the <a href="https://en.wikipedia.org/wiki/Kolmogorov_equations">Kolmogorov equation</a></p>
 <p><span class="math display">\[
@@ -208,7 +208,7 @@ h(t, x) \; = \; \mathop{\mathrm{\mathbb{E}}} {\left[  \exp[g(x_T)] \mid x_t = x 
 <p>with boundary condition <span class="math inline">\(h(T,x) = \exp[g(x)]\)</span>. Furthermore, denoting by <span class="math inline">\(\mathcal{L}\)</span> the infinitesimal generator of the Markov process <span class="math inline">\(X_t\)</span>, we have:</p>
 <p><span id="eq-kolmogorov"><span class="math display">\[
 \begin{align*}
-\mathop{\mathrm{\mathbb{E}}}_{x_t}[\varphi(x_{t+\delta}) &amp; h(t+\delta, x_{t+\delta}) ]
+\mathbb{E}_{x_t}[\varphi(x_{t+\delta}) &amp; h(t+\delta, x_{t+\delta}) ]
 \; \approx \;
 \varphi(x_t) h(t, x_t) \\
 &amp;+ \; \delta \, (\partial_t + \mathcal{L})[h \, \varphi] \, (t, x_t)
@@ -217,7 +217,7 @@ h(t, x) \; = \; \mathop{\mathrm{\mathbb{E}}} {\left[  \exp[g(x_T)] \mid x_t = x 
 \tag{3}\]</span></span></p>
 <p>The infinitesimal generator <span class="math inline">\(\mathcal{L}^{\star}\)</span> of the conditioned process is</p>
 <p><span class="math display">\[
-\mathcal{L}^{\star} \varphi(t, x_t) = \lim_{\delta \to 0^+} \; \frac{\mathop{\mathrm{\mathbb{E}}}[\varphi(x_{t+\delta}) | x_t, y_T] - \varphi(x_t)}{\delta}.
+\mathcal{L}^{\star} \varphi(t, x_t) = \lim_{\delta \to 0^+} \; \frac{\mathbb{E}[\varphi(x_{t+\delta}) | x_t, y_T] - \varphi(x_t)}{\delta}.
 \]</span></p>
 <p>Plugging <a href="#eq-kolmogorov">Equation&nbsp;3</a> within <a href="#eq-def">Equation&nbsp;2</a> directly gives that</p>
 <p><span class="math display">\[
@@ -228,7 +228,7 @@ h(t, x) \; = \; \mathop{\mathrm{\mathbb{E}}} {\left[  \exp[g(x_T)] \mid x_t = x 
 \tag{4}\]</span></span></p>
 <p>for some function <span class="math inline">\(f:[0,T] \times \mathcal{X}\to \mathbb{R}\)</span>. One can define the function <span class="math inline">\(h\)</span> similarly as</p>
 <p><span id="eq-h-gen"><span class="math display">\[
-\textcolor{green}{ h(t, x_t) \; = \; \mathop{\mathrm{\mathbb{E}}} {\left[  \exp {\left\{ \int_{t}^T f(X_s) \, ds + g(x_T) \right\}}  \mid x_t \right]} }.
+\textcolor{green}{ h(t, x_t) \; = \; \mathbb{E} {\left[  \exp {\left\{ \int_{t}^T f(X_s) \, ds + g(x_T) \right\}}  \mid x_t \right]} }.
 \tag{5}\]</span></span></p>
 <p>This function satisfies the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac formula</a> <span class="math inline">\((\partial_t + \mathcal{L}+ f) \, h = 0\)</span> and one obtains entirely similarly that the probability distribution <span class="math inline">\(\mathbb{Q}\)</span> describes a Markov process with infinitesimal generator</p>
 <p><span id="eq-doob-transforms"><span class="math display">\[
@@ -263,7 +263,7 @@ dX^\star = b(X^\star) \, dt + \sigma(X^\star) \,  {\left\{  dW +  \textcolor{blu
 <h3 class="anchored" data-anchor-id="brownian-bridge">Brownian bridge</h3>
 <p>What about a Brownian motion in <span class="math inline">\(\mathbb{R}^D\)</span> conditioned to hit the state <span class="math inline">\(x_\star \in \mathbb{R}^D\)</span> at time <span class="math inline">\(t=T\)</span>, i.e.&nbsp;a <a href="https://en.wikipedia.org/wiki/Brownian_bridge">Brownian bridge</a>? In that case, the function <span class="math inline">\(h\)</span> is given by</p>
 <p><span class="math display">\[
-h(t,x) = \mathop{\mathrm{\mathbb{P}}}(B_T = x_\star \mid B_t = x)
+h(t,x) = \mathbb{P}(B_T = x_\star \mid B_t = x)
 =
 \exp {\left\{ -\frac{\|x-x_\star\|^2}{2 \, (T-t)} \right\}}  / \mathcal{Z}_{T-t}
 \]</span></p>
@@ -277,13 +277,13 @@ dX^\star \;=\;  \textcolor{blue}{- \frac{X^\star - x_\star}{T-t} \, dt} + dB.
 <h3 class="anchored" data-anchor-id="positive-brownian-motion">Positive Brownian motion</h3>
 <p>What about a scalar Brownian conditioned to stay positive at all times? Let us consider <span class="math inline">\(T\)</span> and let us condition first on the event that the Brownian motion stays positive within <span class="math inline">\([0,T]\)</span> and later consider the limit <span class="math inline">\(T \to \infty\)</span>. The function <span class="math inline">\(h\)</span> reads</p>
 <p><span class="math display">\[
-h(t,x) = \mathop{\mathrm{\mathbb{P}}} {\left( \text{$B_t$ stays $&gt;0$ on $[t,T]$} \mid B_t=x \right)} .
+h(t,x) = \mathbb{P} {\left( \text{$B_t$ stays $&gt;0$ on $[t,T]$} \mid B_t=x \right)} .
 \]</span></p>
 <p>This can easily be calculated with the <a href="https://en.wikipedia.org/wiki/Reflection_principle_(Wiener_process)">reflection principle</a>. It equals</p>
 <p><span class="math display">\[
-h(t,x) = 1 - 2 \, \mathop{\mathrm{\mathbb{P}}}(B_T &lt; 0 \mid B_T = x)
+h(t,x) = 1 - 2 \, \mathbb{P}(B_T &lt; 0 \mid B_T = x)
 =
-\mathop{\mathrm{\mathbb{P}}}(\sqrt{T-t} \, \| \xi \| &lt; x)
+\mathbb{P}(\sqrt{T-t} \, \| \xi \| &lt; x)
 \]</span></p>
 <p>for a standard Gaussian <span class="math inline">\(\xi \sim \mathcal{N}(0,1)\)</span>. Plugging this into <a href="#eq-diffusion-doob">Equation&nbsp;7</a> gives that the additional drift term is</p>
 <p><span class="math display">\[
@@ -299,7 +299,7 @@ dX^\star \;=\; \frac{1}{X^{\star}} + dB.
 <h3 class="anchored" data-anchor-id="brownian-motion-staying-in-a-domain">Brownian motion staying in a domain</h3>
 <p>What about a Brownian motion conditioned to stay within a domain <span class="math inline">\(\mathcal{D}\)</span> forever? As before, consider an time horizon <span class="math inline">\(T\)</span> and define the function <span class="math inline">\(h\)</span> as</p>
 <p><span class="math display">\[
-h(t,x) = \mathop{\mathrm{\mathbb{P}}} {\left( \text{$B_t$ stays in $\mathcal{D}$ on $[t,T]$} \mid B_t=x \right)} .
+h(t,x) = \mathbb{P} {\left( \text{$B_t$ stays in $\mathcal{D}$ on $[t,T]$} \mid B_t=x \right)} .
 \]</span></p>
 <p>One can see that the function <span class="math inline">\(h\)</span> satisfies the PDE</p>
 <p><span class="math display">\[

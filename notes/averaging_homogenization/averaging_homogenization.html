@@ -245,7 +245,7 @@ dX \, = \; \overline{\mu}(X) \, dt + \overline{\sigma}(X) \, dW
 \right.
 \tag{1}\]</span></span></p>
 <p>One standard approach for proving this type of results is to write the Kolmogorov equations</p>
-<p><span class="math display">\[\frac{d}{dt}\varphi^{\varepsilon}(x,y,t) = \mathcal{L}^{\varepsilon} \varphi^{\varepsilon}(x,y,t)\]</span> for <span class="math inline">\(\varphi^{\varepsilon}(x,y,t) = \mathop{\mathrm{\mathbb{E}}}[\varphi(X^{\varepsilon}_{t}, Y^{\varepsilon}_{t}, t) | X^{\varepsilon}_{0}=x, Y^{\varepsilon}_{0}=y]\)</span> and perform a <a href="https://en.wikipedia.org/wiki/Method_of_matched_asymptotic_expansions">multiscale expansion</a> <span class="citation" data-cites="hinch_1991">(<a href="#ref-hinch_1991" role="doc-biblioref">Hinch 1991</a>)</span> <span class="citation" data-cites="pavliotis2008multiscale">(<a href="#ref-pavliotis2008multiscale" role="doc-biblioref">Pavliotis and Stuart 2008</a>)</span> <span class="citation" data-cites="weinan2011principles">(<a href="#ref-weinan2011principles" role="doc-biblioref">Weinan 2011</a>)</span></p>
+<p><span class="math display">\[\frac{d}{dt}\varphi^{\varepsilon}(x,y,t) = \mathcal{L}^{\varepsilon} \varphi^{\varepsilon}(x,y,t)\]</span> for <span class="math inline">\(\varphi^{\varepsilon}(x,y,t) = \mathbb{E}[\varphi(X^{\varepsilon}_{t}, Y^{\varepsilon}_{t}, t) | X^{\varepsilon}_{0}=x, Y^{\varepsilon}_{0}=y]\)</span> and perform a <a href="https://en.wikipedia.org/wiki/Method_of_matched_asymptotic_expansions">multiscale expansion</a> <span class="citation" data-cites="hinch_1991">(<a href="#ref-hinch_1991" role="doc-biblioref">Hinch 1991</a>)</span> <span class="citation" data-cites="pavliotis2008multiscale">(<a href="#ref-pavliotis2008multiscale" role="doc-biblioref">Pavliotis and Stuart 2008</a>)</span> <span class="citation" data-cites="weinan2011principles">(<a href="#ref-weinan2011principles" role="doc-biblioref">Weinan 2011</a>)</span></p>
 <p><span id="eq-multiscale"><span class="math display">\[
 \varphi^{\varepsilon}(x,y,t)
 =
@@ -330,7 +330,7 @@ I(x) &amp;=
 \frac{1}{T} \iint_{[0,T]^2}
 \partial_x H(x,Y^{[x]}_{u}) \, H(x,Y^{[x]}_{v}) \, 1_{v&lt;u}  \, du \, dv \\
 &amp;\to
-\int \rho_x(dy) \, H(x,y) \,   {\left\{  \int_{s=0}^{\infty} \mathop{\mathrm{\mathbb{E}}}[\partial_x H(\hat{x}, Y^{[x]}_s) \, |  Y^{[x]}_0=y] \, ds  \right\}} .
+\int \rho_x(dy) \, H(x,y) \,   {\left\{  \int_{s=0}^{\infty} \mathbb{E}[\partial_x H(\hat{x}, Y^{[x]}_s) \, |  Y^{[x]}_0=y] \, ds  \right\}} .
 \end{align}
 \]</span></p>
 <p>In conclusion, the fast-slow system</p>
@@ -360,7 +360,7 @@ I(x)
 \end{align}
 \right.
 \tag{6}\]</span></span></p>
-<p>For the drift function, the scaling <span class="math inline">\(T^{-1} \int_{0&lt;u&lt;v&lt;T} (\ldots)\)</span> may look a bit surprising at first sight as one may expect <span class="math inline">\(T^{-2} \int_{0&lt;u&lt;v&lt;T} (\ldots)\)</span> instead. Note that since the process <span class="math inline">\(Y^{[x]}\)</span> mixes on a time scale <span class="math inline">\(\mathcal{O}(1)\)</span> and the centering condition <span class="math inline">\(\int H(x, y) \rho_x(dy)=0\)</span> holds, the expectation <span class="math inline">\(\mathop{\mathrm{\mathbb{E}}}[H(x, Y^{[x]}_u) \, \partial_x H(x, Y^{[x]}_v)]\)</span> goes to zero as soon as <span class="math inline">\(|u-v| \gg 1\)</span>. This means that only the subset <span class="math inline">\(|u-v| = \mathcal{O}(1)\)</span> of <span class="math inline">\([0,T]^2\)</span> really matters in that double integral, hence the <span class="math inline">\((1/T)\)</span> normalization factor.</p>
+<p>For the drift function, the scaling <span class="math inline">\(T^{-1} \int_{0&lt;u&lt;v&lt;T} (\ldots)\)</span> may look a bit surprising at first sight as one may expect <span class="math inline">\(T^{-2} \int_{0&lt;u&lt;v&lt;T} (\ldots)\)</span> instead. Note that since the process <span class="math inline">\(Y^{[x]}\)</span> mixes on a time scale <span class="math inline">\(\mathcal{O}(1)\)</span> and the centering condition <span class="math inline">\(\int H(x, y) \rho_x(dy)=0\)</span> holds, the expectation <span class="math inline">\(\mathbb{E}[H(x, Y^{[x]}_u) \, \partial_x H(x, Y^{[x]}_v)]\)</span> goes to zero as soon as <span class="math inline">\(|u-v| \gg 1\)</span>. This means that only the subset <span class="math inline">\(|u-v| = \mathcal{O}(1)\)</span> of <span class="math inline">\([0,T]^2\)</span> really matters in that double integral, hence the <span class="math inline">\((1/T)\)</span> normalization factor.</p>
 </section>
 <section id="closed-form-solution-poisson-equation" class="level3">
 <h3 class="anchored" data-anchor-id="closed-form-solution-poisson-equation">Closed form solution &amp; Poisson equation:</h3>
@@ -371,7 +371,7 @@ I(x) &amp;=
 \frac{1}{T} \iint_{[0,T]^2}
 H(x,Y^{[x]}_{v}) \, \partial_x H(x,Y^{[x]}_{u}) \, 1_{v&lt;u}  \, du \, dv \\
 &amp;\to
-\int \rho_x(dy) \, H(x,y) \, \partial_{\hat{x}}  {\left\{  \int_{s=0}^{\infty} \mathop{\mathrm{\mathbb{E}}}[H(\hat{x}, Y^{[x]}_s) \, |Y^{[x]}_0=y] \, ds  \right\}} \\
+\int \rho_x(dy) \, H(x,y) \, \partial_{\hat{x}}  {\left\{  \int_{s=0}^{\infty} \mathbb{E}[H(\hat{x}, Y^{[x]}_s) \, |Y^{[x]}_0=y] \, ds  \right\}} \\
 &amp;=
 -\int \rho_x(dy) \, H(x,y) \, \partial_{x} \Phi(x,y)\\
 &amp;= -\left&lt; H(x, \cdot), \partial_x \Phi(x, \cdot) \right&gt;_{\rho_x}
@@ -412,7 +412,7 @@ dX = \sqrt{2/\lambda} \, dW
 \to
 2 \, \int_{0}^{\infty} C(r) \, dr = 2/\lambda
 \]</span></p>
-<p>where <span class="math inline">\(C(r) = \mathop{\mathrm{\mathbb{E}}}[Y_t Y_{t+r}] = \exp[-\lambda r]\)</span> is the autocorrelation function of the fast OU process, as explained <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">here</a>. The fact that the effective diffusion is (twice) the integrated autocorrelation of the fast process is an example of <a href="https://en.wikipedia.org/wiki/Green–Kubo_relations">Green-Kubo relations</a>.</p>
+<p>where <span class="math inline">\(C(r) = \mathbb{E}[Y_t Y_{t+r}] = \exp[-\lambda r]\)</span> is the autocorrelation function of the fast OU process, as explained <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">here</a>. The fact that the effective diffusion is (twice) the integrated autocorrelation of the fast process is an example of <a href="https://en.wikipedia.org/wiki/Green–Kubo_relations">Green-Kubo relations</a>.</p>
 </section>
 <section id="example-overdamped-langevin-dynamics" class="level3">
 <h3 class="anchored" data-anchor-id="example-overdamped-langevin-dynamics">Example: Overdamped Langevin Dynamics</h3>
