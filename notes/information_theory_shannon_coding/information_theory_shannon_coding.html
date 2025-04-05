@@ -251,7 +251,7 @@ p_{\text{success}} = (1 - 2^{-K \, I(X;Y)})^{2^N-1} \approx (1 - 2^{-K \, I(X;Y)
 <p><span class="math display">\[
 M \rightarrow X \rightarrow Y \rightarrow \widehat{M}.
 \]</span></p>
-<p>Fano’s inequality points out that the error probability, <span class="math inline">\(p_E = \mathop{\mathrm{\mathbb{P}}}(\widehat{M} \neq M)\)</span> is such that</p>
+<p>Fano’s inequality points out that the error probability, <span class="math inline">\(p_E = \mathbb{P}(\widehat{M} \neq M)\)</span> is such that</p>
 <p><span class="math display">\[
 \begin{align}
 H(M | \widehat{M})
@@ -283,7 +283,7 @@ x_\star \; = \; \mathop{\mathrm{argmin}}_{x \in \mathcal{C}} \; \|x - y_\star\|_
 \]</span></p>
 <p>The nearest neighbor <span class="math inline">\(x_\star\)</span> can be relatively efficiently computed with a nearest-neighbor routine (eg. <a href="https://github.com/facebookresearch/faiss/wiki">FAISS</a>). The figure below reports the probability of error (i.e.&nbsp;“Block Error Rate”),</p>
 <p><span class="math display">\[
-\text{(Block Error Rate)} \; = \; \mathop{\mathrm{\mathbb{P}}}(x_\star \neq x^{[i]})
+\text{(Block Error Rate)} \; = \; \mathbb{P}(x_\star \neq x^{[i]})
 \]</span></p>
 <p>when the codeword <span class="math inline">\(x^{[i]}\)</span> is chosen uniformly at random within the codebook.</p>
 <div style="text-align:center;">

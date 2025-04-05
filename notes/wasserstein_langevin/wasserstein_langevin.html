@@ -196,7 +196,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </div>
 <p>Consider a target probability density <span class="math inline">\(\pi(x) = \frac{\overline{\pi}(x)}{\mathcal{Z}}\)</span> on <span class="math inline">\(\mathbb{R}^D\)</span> that is known up to a normalizing constant <span class="math inline">\(\mathcal{Z}&gt; 0\)</span>. We also have a different probability density <span class="math inline">\(p_0(x)\)</span>. The goal is to gradually tweak <span class="math inline">\(p_0(x)\)</span> so that it eventually matches <span class="math inline">\(\pi(x)\)</span>. More concretely, we aim to perform a gradient descent on the space of probability distributions to reduce the functional</p>
 <p><span class="math display">\[
-\mathcal{F}(p) \; = \; \mathop{\mathrm{D_{\text{KL}}}} {\left( p, \pi \right)}  \; = \; \int p(x) \, \log  {\left\{ \frac{p(x)}{\overline{\pi}(x)} \right\}}  \, dx \, + \, \textrm{(constant)}.
+\mathcal{F}(p) \; = \; D_{\text{KL}} {\left( p, \pi \right)}  \; = \; \int p(x) \, \log  {\left\{ \frac{p(x)}{\overline{\pi}(x)} \right\}}  \, dx \, + \, \textrm{(constant)}.
 \]</span></p>
 <p>This approach can be discretized: assume <span class="math inline">\(N \gg 1\)</span> particles <span class="math inline">\(X_0^1, \ldots, X_0^N \in \mathbb{R}^D\)</span> forming an empirical distribution that approximates <span class="math inline">\(p_0(dx)\)</span>,</p>
 <p><span class="math display">\[
@@ -212,11 +212,11 @@ p_{\delta_t}(dx) \; \approx \; \frac{1}{N} \sum_{i=1}^N \, \delta_{X_{\delta_t}^
 \tag{1}\]</span></span></p>
 <p>What is the optimal drift function <span class="math inline">\(\mu: \mathbb{R}^D \to \mathbb{R}^D\)</span> that ensures that <span class="math inline">\(p_{\delta_t}\)</span> comes as close as possible to <span class="math inline">\(\pi\)</span>? Typically, we select <span class="math inline">\(\mu:\mathbb{R}^D \to \mathbb{R}^D\)</span> such that the quantity <span class="math inline">\(\mathcal{F}(p_{\delta_t})\)</span> is minimized, provided that <span class="math inline">\(p_{\delta_t}\)</span> is not drastically different from <span class="math inline">\(p_0\)</span>. One method is to use the <span class="math inline">\(L^2\)</span> <a href="https://en.wikipedia.org/wiki/Wasserstein_metric">Wasserstein distance</a> and assume the constraint</p>
 <p><span id="eq-wass"><span class="math display">\[
-\mathop{\mathrm{D_{\text{Wass}}}}(p_{0}, p_{\delta_t}) \approx \int p_0(x) \, \| \delta_t \, \mu(x) \|^2 \, dx \leq \varepsilon
+D_{\text{Wass}}(p_{0}, p_{\delta_t}) \approx \int p_0(x) \, \| \delta_t \, \mu(x) \|^2 \, dx \leq \varepsilon
 \tag{2}\]</span></span></p>
 <p>for a parameter <span class="math inline">\(\varepsilon\ll 1\)</span>. More pragmatically, it is generally easier (eg. proximal methods) to minimize the joint objective</p>
 <p><span id="eq-joint-obj"><span class="math display">\[
-\mathcal{F}(p_{\delta_t}) + \frac{1}{2 \varepsilon} \, \mathop{\mathrm{D_{\text{Wass}}}}(p_{0}, p_{\delta_t}).
+\mathcal{F}(p_{\delta_t}) + \frac{1}{2 \varepsilon} \, D_{\text{Wass}}(p_{0}, p_{\delta_t}).
 \tag{3}\]</span></span></p>
 <p>Based on equations <a href="#eq-fokker">Equation&nbsp;1</a> and <a href="#eq-wass">Equation&nbsp;2</a>, a first-order expansion shows that the joint objective <a href="#eq-joint-obj">Equation&nbsp;3</a> can be approximated by</p>
 <p><span id="eq-quad"><span class="math display">\[
@@ -235,7 +235,7 @@ p_{\delta_t}(dx) \; \approx \; \frac{1}{N} \sum_{i=1}^N \, \delta_{X_{\delta_t}^
 <p><span class="math display">\[
 dX_t \; = \; -\nabla \log \overline{\pi}(X_t) \, dt \; + \; \sqrt{2} \, dW_t.
 \]</span></p>
-<p>This can be shown by writing down the associated Fokker-Planck equation. This heuristic discussion shows that minimizing <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(p, \pi)\)</span> by introducing a gradient flow in the space of probability distributions with the Wasserstein metric essentially produces a standard overdamped Langevin diffusion. Indeed, transforming this heuristic discussion into a formal statement is not trivial: the constructive proof in <span class="citation" data-cites="jordan1998variational">(<a href="#ref-jordan1998variational" role="doc-biblioref">Jordan, Kinderlehrer, and Otto 1998</a>)</span> is now usually referred to as the JKO scheme.</p>
+<p>This can be shown by writing down the associated Fokker-Planck equation. This heuristic discussion shows that minimizing <span class="math inline">\(D_{\text{KL}}(p, \pi)\)</span> by introducing a gradient flow in the space of probability distributions with the Wasserstein metric essentially produces a standard overdamped Langevin diffusion. Indeed, transforming this heuristic discussion into a formal statement is not trivial: the constructive proof in <span class="citation" data-cites="jordan1998variational">(<a href="#ref-jordan1998variational" role="doc-biblioref">Jordan, Kinderlehrer, and Otto 1998</a>)</span> is now usually referred to as the JKO scheme.</p>
 <p>The above derivation shows that the Wasserstein distance plays particularly well with minimizing functionals of the space of probability distributions. The same heuristic discussion shows that minimizing a functional of the type</p>
 <p><span class="math display">\[
 \mathcal{F}(p) \; = \; \int \Phi[p(x)] \, \nu(dx)
@@ -245,7 +245,7 @@ dX_t \; = \; -\nabla \log \overline{\pi}(X_t) \, dt \; + \; \sqrt{2} \, dW_t.
 \int -\nabla \cdot \Big\{  \textcolor{red}{[\delta_t \, \mu]}(x) \, p(x) \Big\} \Phi'[p(x)] \, \nu(dx)
 \, + \, \frac{1}{2 \varepsilon} \, \int p_0(x) \, \|  \textcolor{red}{[\delta_t \, \mu]}(x) \|^2 \, dx.
 \]</span></p>
-<p>This can be approached identically to what as been done in the case of minimizing <span class="math inline">\(\mathop{\mathrm{D_{\text{KL}}}}(p, \pi)\)</span>.</p>
+<p>This can be approached identically to what as been done in the case of minimizing <span class="math inline">\(D_{\text{KL}}(p, \pi)\)</span>.</p>
 
 
 
