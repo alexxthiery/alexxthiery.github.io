@@ -168,7 +168,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">18 11 2023</p>
+        <p class="date-modified">18 04 2025</p>
       </div>
     </div>
       
@@ -186,6 +186,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <li><a href="#ensemble-kalman-updates" id="toc-ensemble-kalman-updates" class="nav-link active" data-scroll-target="#ensemble-kalman-updates">Ensemble Kalman Updates</a>
   <ul class="collapse">
   <li><a href="#empirical-version-non-linearity-and-non-gaussianity" id="toc-empirical-version-non-linearity-and-non-gaussianity" class="nav-link" data-scroll-target="#empirical-version-non-linearity-and-non-gaussianity">Empirical version: non-linearity and non-Gaussianity</a></li>
+  <li><a href="#matherons-rule" id="toc-matherons-rule" class="nav-link" data-scroll-target="#matherons-rule">Matheron’s Rule</a></li>
   <li><a href="#derivative-free-optimization" id="toc-derivative-free-optimization" class="nav-link" data-scroll-target="#derivative-free-optimization">Derivative-Free optimization</a></li>
   </ul></li>
   </ul>
@@ -294,9 +295,17 @@ K \; = \; P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}
 </div>
 </div>
 </section>
+<section id="matherons-rule" class="level3">
+<h3 class="anchored" data-anchor-id="matherons-rule">Matheron’s Rule</h3>
+<p>Consider a jointly Gaussian random vector <span class="math inline">\((X,Y) \in \mathbb{R}^{D_x + D_y}\)</span>. To sample from the conditional distribution <span class="math inline">\(X|Y=y_\star\)</span>, one can sample first sample <span class="math inline">\((X,Y)\)</span> from the unconditional distribution and then set:</p>
+<p><span class="math display">\[
+\widetilde{X} \; = \; X + \mathop{\mathrm{Cov}}(X,Y) \, \mathop{\mathrm{Var}}(Y)^{-1} (y_\star - Y).
+\]</span></p>
+<p>The sample <span class="math inline">\(\widetilde{X}\)</span> is a sample from the conditional distribution <span class="math inline">\(X|Y=y_\star\)</span> and the proof is straightforward: it suffices to compute the first two moments pf the Gaussian vector <span class="math inline">\(\widetilde{X}\)</span> and check that they are equal to what they should be. This method is often called the <strong>Matheron’s rule</strong> and <span class="citation" data-cites="wilson2020efficiently">(<a href="#ref-wilson2020efficiently" role="doc-biblioref">Wilson et al. 2020</a>)</span> mentions that this “notion of conditioning by kriging was first presented by Matheron in the early 1970s. Naturally, this provides another avenue to derive the EnKF update equations, as has been described by a number of authors <span class="citation" data-cites="doucet2010note">(<a href="#ref-doucet2010note" role="doc-biblioref">Doucet 2010</a>)</span>. Given samples <span class="math inline">\(x_i\)</span> from the Gaussian prior, generate samples <span class="math inline">\(y_i = \mathcal{H}(x_i) + \xi_i\)</span> for <span class="math inline">\(\xi_i \sim \mathcal{N}(0,R)\)</span>: this gives pairs samples <span class="math inline">\((x_i,y_i)\)</span> from the joint”prior”. One can obtain samples from the posterior by setting <span class="math inline">\(\widetilde{x}_i = x_i + \mathop{\mathrm{Cov}}(x,y) \, \mathop{\mathrm{Var}}(y)^{-1} (y_\star - y_i)\)</span>. Naturally, the matrix <span class="math inline">\(\mathop{\mathrm{Cov}}(x,y)\)</span> can be estimated as <span class="math inline">\(\widehat{\mathop{\mathrm{Cov}}}([x_i]_i, [\mathcal{H}(x_i)]_i)\)</span> and <span class="math inline">\(\mathop{\mathrm{Var}}(y)\)</span> is estimated as <span class="math inline">\(\widehat{\mathop{\mathrm{Var}}}([\mathcal{H}(x_i)]_i) + R\)</span>. This, indeed, is the EnKF update equation.</p>
+</section>
 <section id="derivative-free-optimization" class="level3">
 <h3 class="anchored" data-anchor-id="derivative-free-optimization">Derivative-Free optimization</h3>
-<p>Interestingly enough, the remarks above can be design in a relatively principled manner a derivative free optimizer <span class="citation" data-cites="huang2022efficient">(<a href="#ref-huang2022efficient" role="doc-biblioref">Huang et al. 2022</a>)</span>. For example, assume one would like to minimize a functional of the type</p>
+<p>Interestingly enough, the remarks above can be used to design in a relatively principled manner a derivative free optimizer <span class="citation" data-cites="huang2022efficient">(<a href="#ref-huang2022efficient" role="doc-biblioref">Huang et al. 2022</a>)</span>. For example, assume one would like to minimize a functional of the type</p>
 <p><span class="math display">\[
 \Psi(x) \; = \; \|y_\star - \mathcal{H}(x)\|^2_{R^{-1}}.
 \]</span></p>
@@ -312,11 +321,17 @@ y_\star = \mathcal{H}(x) + \varepsilon^{-1} \, \xi
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-doucet2010note" class="csl-entry" role="listitem">
+Doucet, Arnaud. 2010. <span>“A Note on Efficient Conditional Simulation of Gaussian Distributions.”</span> <em>Departments of Computer Science and Statistics, University of British Columbia</em> 1020.
+</div>
 <div id="ref-huang2022efficient" class="csl-entry" role="listitem">
 Huang, Daniel Zhengyu, Jiaoyang Huang, Sebastian Reich, and Andrew M Stuart. 2022. <span>“Efficient Derivative-Free Bayesian Inference for Large-Scale Inverse Problems.”</span> <em>Inverse Problems</em> 38 (12). IOP Publishing: 125006.
 </div>
 <div id="ref-ollivier2017information" class="csl-entry" role="listitem">
 Ollivier, Yann, Ludovic Arnold, Anne Auger, and Nikolaus Hansen. 2017. <span>“Information-Geometric Optimization Algorithms: A Unifying Picture via Invariance Principles.”</span> <em>The Journal of Machine Learning Research</em> 18 (1). JMLR. org: 564–628.
+</div>
+<div id="ref-wilson2020efficiently" class="csl-entry" role="listitem">
+Wilson, James, Viacheslav Borovitskiy, Alexander Terenin, Peter Mostowsky, and Marc Deisenroth. 2020. <span>“Efficiently Sampling Functions from Gaussian Process Posteriors.”</span> In <em>International Conference on Machine Learning</em>, 10292–302. PMLR.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
