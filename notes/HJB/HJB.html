@@ -149,7 +149,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">11 06 2024</p>
+        <p class="date-modified">28 04 2025</p>
       </div>
     </div>
       
@@ -160,7 +160,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#change-of-measure" id="toc-change-of-measure" class="nav-link active" data-scroll-target="#change-of-measure">Change of measure</a></li>
+  <li><a href="#variational-formulation" id="toc-variational-formulation" class="nav-link" data-scroll-target="#variational-formulation">Variational Formulation</a></li>
+  <li><a href="#stochastic-control" id="toc-stochastic-control" class="nav-link" data-scroll-target="#stochastic-control">Stochastic Control</a></li>
+  <li><a href="#hamilton-jacobi-bellman" id="toc-hamilton-jacobi-bellman" class="nav-link" data-scroll-target="#hamilton-jacobi-bellman">Hamilton-Jacobi-Bellman</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -176,6 +185,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </figure>
 </div>
 </div>
+<section id="change-of-measure" class="level3">
+<h3 class="anchored" data-anchor-id="change-of-measure">Change of measure</h3>
 <p>Consider a diffusion in <span class="math inline">\(\mathbb{R}^D\)</span> with deterministic starting position <span class="math inline">\(x_0 \in \mathbb{R}^D\)</span> and dynamics</p>
 <p><span class="math display">\[
 dX_t = b(X_t)dt + \sigma(X_t) \, dW_t
@@ -199,53 +210,98 @@ dX^\star = b(X^\star)dt + \sigma(X^\star) \,  {\left\{  dW_t +  \textcolor{blue}
 <p><span class="math display">\[
 \textcolor{green}{h(t,x) = \mathbb{E} {\left[  \exp  {\left\{  \int_t^T f(X_s) \, ds + g(X_T)  \right\}}   \mid X_t = x  \right]} }.
 \]</span></p>
-<p>The expression <span class="math inline">\( \textcolor{blue}{u^\star(t, x)} \; = \; \sigma^\top(x) \, \nabla \log[  \textcolor{green}{h(t,x)} ]\)</span> is quite intuitive; in order to describe the tilted measure <span class="math inline">\(\mathbb{Q}\)</span> that places more probability mass on trajectories such that <span class="math inline">\(\int_0^T f(X_s) \, ds + g(X_T)\)</span> is large, the optimal control <span class="math inline">\(u^\star(t,x)\)</span> should be in the direction of states such that the “reward-to-go” quantity <span class="math inline">\(\int_t^T f(X_s) \, ds + g(X_T)\)</span> is large.</p>
-<p>To obtain a variational description of the optimal control function <span class="math inline">\( \textcolor{blue}{u^\star}\)</span>, it suffices to express it as the solution of an optimization problem. It turns out that KL-divergences between diffusion processes are the right tool for this: we will write <span class="math inline">\(\mathbb{Q}\)</span> as the minimizer of <span class="math inline">\(D_{\text{KL}}(\mathbb{P}^u \| \mathbb{Q})\)</span> for a class of tractable probability distributions <span class="math inline">\(\mathbb{P}^u\)</span> described by controlled diffusions. As described in these notes on the <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a>, for any control function <span class="math inline">\(u(t,x)\)</span>, the controlled diffusion <span class="math inline">\(X^u\)</span> with dynamics</p>
+<p>The expression <span class="math inline">\( \textcolor{blue}{u^\star(t, x)} \; = \; \sigma^\top(x) \, \nabla \log[  \textcolor{green}{h(t,x)} ]\)</span> is intuitive; to describe the tilted measure <span class="math inline">\(\mathbb{Q}\)</span> that places more probability mass on trajectories such that <span class="math inline">\(\exp {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}} \)</span> is large, the optimal control <span class="math inline">\(u^\star(t,x)\)</span> should point towards promising states, i.e.&nbsp;states such that the expected “reward-to-go” quantity <span class="math inline">\(\mathbb{E} {\left[  \exp  {\left\{  \int_t^T f(X_s) \, ds + g(X_T)  \right\}}  \mid X_t = x  \right]} \)</span> is large.</p>
+</section>
+<section id="variational-formulation" class="level3">
+<h3 class="anchored" data-anchor-id="variational-formulation">Variational Formulation</h3>
+<p>To obtain a variational description of the optimal control function <span class="math inline">\( \textcolor{blue}{u^\star}\)</span>, it suffices to express it as the solution of an optimization problem of the form</p>
 <p><span class="math display">\[
-dX^u = b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^u)} \, dt  \right\}}
+u^\star \; = \; \mathop{\mathrm{argmin}}\; \textrm{Dist} {\left( \mathbb{P}^{u} \, , \, \mathbb{Q} \right)}
 \]</span></p>
-<p>and started at <span class="math inline">\(x_0\)</span> induces a probability distribution <span class="math inline">\(\mathbb{P}^u\)</span> on path-space given by</p>
-<p><span id="eq-girsanov"><span class="math display">\[
-\frac{d\mathbb{P}}{d\mathbb{P}^u}(x)
-\; = \;
-\exp {\left\{ -\frac 12 \int_{0}^{T} \|u(s,X^u_S)\|^2 \, ds - \int_{0}^{T} u(s,X^u_s)^\top \, dW_s \right\}} .
+<p>for an appropriately chosen distance. The KL-divergence is natural since it elegantly deals with the intractable constant <span class="math inline">\(\mathcal{Z}\)</span> and the ratio <span class="math inline">\(d \mathbb{P}^{u} / d \mathbb{Q}\)</span> is easy to compute. <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a> gives that that for a controlled diffusion</p>
+<p><span id="eq-Xu"><span class="math display">\[
+dX^u = b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^{u})} \, dt  \right\}}
 \tag{3}\]</span></span></p>
-<p>This allows one to write down explicitly the expression for the negative KL divergence</p>
-<p><span class="math display">\[
--D_{\text{KL}}(\mathbb{P}^u \| \mathbb{Q}) =
-\mathbb{E}_u {\left[   \log {\left\{ \frac{d\mathbb{Q}}{d\mathbb{P}^u}(X^u) \right\}}  \right]}
+<p>with associated path measure <span class="math inline">\(\mathbb{P}^u\)</span>, we have that <span class="math display">\[
+\frac{d\mathbb{Q}}{d\mathbb{P}^u}(X^u) =
+\exp {\left\{  \int_{0}^{T} -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \, ds - \int_{0}^{T} u(s,X^u_s)^\top \, dW_s + g(X^u_T)  \right\}}  / \mathcal{Z}.
 \]</span></p>
-<p>between <span class="math inline">\(\mathbb{P}^u\)</span> and the tilted distribution <span class="math inline">\(\mathbb{Q}\)</span>. The notation <span class="math inline">\(\mathbb{E}_u\)</span> denotes the expectation with respect to the controlled diffusion <span class="math inline">\(X^u\)</span>. The negative KL is, up to a constant, the usual Evidence Lower Bound (ELBO) used in variational inference. Since the quantity <span class="math inline">\(\log {\left\{ \frac{d\mathbb{Q}}{d\mathbb{P}^u}(X^u) \right\}} \)</span> can be expressed as</p>
+<p>Minimizing the <span class="math inline">\(D_{\text{KL}}(\mathbb{P}^u,\mathbb{Q})\)</span> shows that the optimal control and the normalization constant <span class="math inline">\(\mathcal{Z}\)</span> are:</p>
 <p><span class="math display">\[
-\log {\left\{ \frac{d\mathbb{P}}{d\mathbb{P}^u}(X^u) \right\}}  - \log(\mathcal{Z})
-+ \int_0^T f(X^u_s) \, ds + g(X^u_T)
+(-\log \mathcal{Z}, \, u^\star)
+\; = \;
+(\inf_{u} , \, \mathop{\mathrm{argmin}}_{u}) \;
+\mathbb{E} {\left[  \int_{0}^{T} \tfrac 12 \|u(s,X^u_s)\|^2 - f(X^u_s)  \, ds - g(X^u_T)  \right]} .
 \]</span></p>
-<p>it follows from <a href="#eq-girsanov">Equation&nbsp;3</a> that <span class="math inline">\(-D_{\text{KL}}(\mathbb{P}^u \| \mathbb{Q})\)</span> equals</p>
+<p>Minimizing this loss attempts to find a control that drives the quantity <span class="math inline">\(\int_{0}^{T} f(X^u_s) \, ds + g(X^u_T)\)</span> large while keeping the control effort <span class="math inline">\(\int_{0}^{T} \|u(s,X^u_s)\|^2 \, ds\)</span> small. Equivalently, this can be expressed as a maximization problem,</p>
 <p><span class="math display">\[
--\log(\mathcal{Z}) +
-\mathbb{E} {\left[  \int_{0}^{T}  {\left\{  -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \right\}}  \, ds + g(X^u_T) \right]} .
+(\log \mathcal{Z}, \, u^\star)
+\; = \;
+(\sup_{u} , \, \mathop{\mathrm{argmax}}_{u}) \;
+\mathbb{E} {\left[  \int_{0}^{T} -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \, ds + g(X^u_T)  \right]} .
 \]</span></p>
-<p>Since the KL divergence is positive and the optimal control <span class="math inline">\(u^\star\)</span> in <a href="#eq-u-star">Equation&nbsp;2</a> drives the KL divergence to zero, we have that</p>
-<p><span class="math display">\[
-\max_u \; \text{ELBO}(u) = \log \mathcal{Z}
-\]</span></p>
-<p>where the minimization is over all (reasonably well-behaved) control functions <span class="math inline">\(u: [0,T] \times \mathbb{R}^D \to \mathbb{R}^D\)</span> and</p>
-<p><span class="math display">\[
-\text{ELBO}(u) \; = \; \mathbb{E} {\left[  \int_{0}^{T}  {\left\{  -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \right\}}  \, ds + g(X^u_T) \right]} .
-\]</span></p>
-<p>For maximizing the ELBO, the control needs to drive the trajectories to regions where <span class="math inline">\(\int_{0}^{T} f(X^u_s) \, ds + g(X^u_T)\)</span> is large while at the same time keep the control effort <span class="math inline">\(\int_{0}^{T} \|u(s,X^u_s)\|^2 \, ds\)</span> small. The optimal control <span class="math inline">\(u^\star\)</span> is given by <a href="#eq-u-star">Equation&nbsp;2</a> and <a href="#eq-normalizing-constant">Equation&nbsp;1</a> gives that</p>
-<p><span class="math display">\[
-\begin{align}
+<p>Note that since <span class="math inline">\(\mathbb{P}^{u_{\star}} = \mathbb{Q}\)</span>, the optimal control <span class="math inline">\(u^\star\)</span> is such that for <strong>any trajectory</strong> we have:</p>
+<p><span id="eq-logZ-pathwise"><span class="math display">\[
 \log \mathcal{Z}
-&amp;= \log \mathbb{E} {\left[  \exp  {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}}   \right]} \\
-&amp;= \log[  \textcolor{green}{ h(0,x_0) } ].
-\end{align}
-\]</span></p>
-<p>Since there was nothing really special about the starting point <span class="math inline">\(x_0\)</span> and the time horizon <span class="math inline">\(T&gt;0\)</span>, the above derivation gives the solution to the following stochastic optimal control problem. It is written as a maximization problem although a large part of the control and physics literature writes it as an equivalent minimization problem. Consider the reward-to-go function (a.k.a. value function) defined as</p>
+\; = \;
+\int_{0}^{T} -\tfrac12 \|u^\star(s,X^{u^{\star}}_s)\|^2 + f(X^{u^{\star}}_s) \, ds + g(X^{u^{\star}}_T) - \int_{0}^{T} u^{\star}(s,X^{u^{\star}}_s)^\top \, dW_s .
+\tag{4}\]</span></span></p>
+
+<!-- It turns out that KL-divergences between diffusion processes are the right tool for this: we will write $\bbQ$ as the minimizer of $\kl(\bbP^u \| \bbQ)$ for a class of tractable probability distributions $\bbP^u$ described by controlled diffusions. As described in these notes on the [Girsanov Theorem](../girsanov/girsanov.qmd), for any control function $u(t,x)$, the controlled diffusion $X^u$ with dynamics
+
+$$
+dX^u = b(X^u)dt + \sigma(X^u) \, \curBK{ dW_t + \blue{u(t, X^u)} \, dt }
+$$
+
+and started at $x_0$ induces a probability distribution $\bbP^u$ on path-space given by
+
+$$
+\frac{d\bbP}{d\bbP^u}(x)
+\; = \; 
+\exp\curBK{-\frac12 \int_{0}^{T} \|u(s,X^u_S)\|^2 \, ds - \int_{0}^{T} u(s,X^u_s)^\top \, dW_s}.
+$${#eq-girsanov}
+
+This allows one to write down explicitly the expression for the negative KL divergence 
+
+$$
+-\kl(\bbP^u \| \bbQ) = 
+\bbE_u\sqBK{  \log\curBK{\frac{d\bbQ}{d\bbP^u}(X^u)}}
+$$
+
+between $\bbP^u$ and the tilted distribution $\bbQ$. The notation $\bbE_u$ denotes the expectation with respect to the controlled diffusion $X^u$.
+The negative KL is, up to a constant, the usual Evidence Lower Bound (ELBO) used in variational inference. Since the quantity $\log\curBK{\frac{d\bbQ}{d\bbP^u}(X^u)}$ can be expressed as
+
+$$
+\log\curBK{\frac{d\bbP}{d\bbP^u}(X^u)} - \log(\cZ)
++ \int_0^T f(X^u_s) \, ds + g(X^u_T)
+$$
+
+it follows from @eq-girsanov that $-\kl(\bbP^u \| \bbQ)$ equals
+
+$$
+-\log(\cZ) + 
+\E\sqBK{ \int_{0}^{T} \curBK{ -\tfrac12 \|u(s,X^u_s)\|^2 + f(X^u_s) } \, ds + g(X^u_T)}.
+$$
+
+Since the KL divergence is positive and the optimal control $u^\star$ in @eq-u-star drives the KL divergence to zero, we have that 
+
+$$
+\max_u \; \text{ELBO}(u) = \log \cZ
+$$
+
+where the minimization is over all (reasonably well-behaved) control functions $u: [0,T] \times \bbR^D \to \bbR^D$ and 
+
+$$
+\text{ELBO}(u) \; = \; \E\sqBK{ \int_{0}^{T} \curBK{ -\tfrac12 \|u(s,X^u_s)\|^2 + f(X^u_s) } \, ds + g(X^u_T)}.
+$$ -->
+</section>
+<section id="stochastic-control" class="level3">
+<h3 class="anchored" data-anchor-id="stochastic-control">Stochastic Control</h3>
+<p>In the previous section, there was nothing special about the starting point <span class="math inline">\(x_0\)</span> and the time horizon <span class="math inline">\(T&gt;0\)</span>. This means that the same derivation gives the solution to the following stochastic optimal control problem. Consider the reward-to-go function (a.k.a. value function) defined as</p>
 <p><span class="math display">\[
-V(t,x) = \sup_u \; \mathbb{E} {\left[  \int_{t}^{T}  {\left\{  -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \right\}}  \, ds + g(X^u_T) \mid X_t = x \right]} .
+V(t,x) = \sup_u \; \mathbb{E} {\left[  \int_{t}^{T} -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s) \, ds + g(X^u_T) \mid X_t = x \right]}
 \]</span></p>
-<p>We have that</p>
+<p>where <span class="math inline">\(X^u\)</span> is the controlled diffusion <a href="#eq-Xu">Equation&nbsp;3</a>. We have that</p>
 <p><span class="math display">\[
 \begin{align}
 V(t,x)
@@ -257,8 +313,11 @@ V(t,x)
 <p><span id="eq-u-star-V"><span class="math display">\[
 u^\star(t,x) = \sigma^\top(x) \nabla \log[  \textcolor{green}{ h(t,x) }]
 = \sigma^\top(x) \, \nabla V(t,x) .
-\tag{4}\]</span></span></p>
+\tag{5}\]</span></span></p>
 <p>The expression <span class="math inline">\(\sigma^\top(x) \, \nabla V(t,x)\)</span> is intuitive: since we are trying to maximize the reward-to-go function, the optimal control should be in the direction of the gradient of the reward-to-go function.</p>
+</section>
+<section id="hamilton-jacobi-bellman" class="level3">
+<h3 class="anchored" data-anchor-id="hamilton-jacobi-bellman">Hamilton-Jacobi-Bellman</h3>
 <p>Finally, let us mention that one can easily derive the <a href="https://en.wikipedia.org/wiki/Hamilton–Jacobi–Bellman_equation">Hamilton-Jacobi-Bellman</a> equation for the reward-to-go function <span class="math inline">\(V(t,x)\)</span>. We have</p>
 <p><span class="math display">\[
 V(t,x) = \sup_u \; \mathbb{E} {\left[  \int_{t}^T C_s \, ds + g(X^u_T) \right]}
@@ -281,13 +340,23 @@ u^\star(t,x)
 &amp;= \sigma^\top(x) \, \nabla V(t,x),
 \end{align}
 \]</span></p>
-<p>as we already knew from <a href="#eq-u-star-V">Equation&nbsp;4</a>. This implies that the reward-to-go function <span class="math inline">\(V(t,x)\)</span> satisfies the HJB equation</p>
+<p>as we already knew from <a href="#eq-u-star-V">Equation&nbsp;5</a>. This implies that the reward-to-go function <span class="math inline">\(V(t,x)\)</span> satisfies the HJB equation</p>
 <p><span id="eq-hjb"><span class="math display">\[
 {\left( \partial_t + \mathcal{L} \right)} V + \frac12 \| \sigma^\top \nabla V \|^2 + f = 0
-\tag{5}\]</span></span></p>
-<p>with terminal condition <span class="math inline">\(V(T,x) = g(x)\)</span>. Another route to derive <a href="#eq-hjb">Equation&nbsp;5</a> is to simply use the fact that <span class="math inline">\(V(t,x) = \log h(t,x)\)</span>; since the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac</a> gives that the function <span class="math inline">\(h(t,x)\)</span> satisfies <span class="math inline">\((\partial_t + \mathcal{L}+ f) h = 0\)</span>, the conclusion follows from a few lines of algebra by starting writing <span class="math inline">\(\partial_t V = h^{-1} \, \partial_t h = -h^{-1}(\mathcal{L}+ f)[h]\)</span>, expanding <span class="math inline">\(\mathcal{L}h\)</span> and expressing everything back in terms of <span class="math inline">\(V\)</span>. The term <span class="math inline">\(\|\sigma^\top \nabla V\|^2\)</span> naturally arises when expressing the diffusion term <span class="math inline">\(\sigma \sigma^\top : \nabla^2 h\)</span> as a function of the second derivative of <span class="math inline">\(V\)</span>; it is the idea of the standard <a href="https://en.wikipedia.org/wiki/Cole–Hopf_transformation">Cole-Hopf transformation</a>.</p>
+\tag{6}\]</span></span></p>
+<p>with terminal condition <span class="math inline">\(V(T,x) = g(x)\)</span>. Another route to derive <a href="#eq-hjb">Equation&nbsp;6</a> is to simply use the fact that <span class="math inline">\(V(t,x) = \log h(t,x)\)</span>; since the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac</a> gives that the function <span class="math inline">\(h(t,x)\)</span> satisfies <span class="math inline">\((\partial_t + \mathcal{L}+ f) h = 0\)</span>, the conclusion follows from a few lines of algebra by starting writing <span class="math inline">\(\partial_t V = h^{-1} \, \partial_t h = -h^{-1}(\mathcal{L}+ f)[h]\)</span>, expanding <span class="math inline">\(\mathcal{L}h\)</span> and expressing everything back in terms of <span class="math inline">\(V\)</span>. The term <span class="math inline">\(\|\sigma^\top \nabla V\|^2\)</span> naturally arises when expressing the diffusion term <span class="math inline">\(\sigma \sigma^\top : \nabla^2 h\)</span> as a function of the second derivative of <span class="math inline">\(V\)</span>; it is the idea of the standard <a href="https://en.wikipedia.org/wiki/Cole–Hopf_transformation">Cole-Hopf transformation</a>.</p>
+<p>Finally, Ito’s lemma and <a href="#eq-hjb">Equation&nbsp;6</a> give that for <span class="math inline">\(t_1 &lt; t_2\)</span>, the optimally controlled diffusion <span class="math inline">\(X^{u^\star}\)</span> satisfies:</p>
+<p><span class="math display">\[
+V(t_2, X^{u^\star}_{t_2})
+-
+V(t_1, X^{u^\star}_{t_1}) =
+\int_{t_1}^{t_2} \tfrac12 \, \|u^\star(s,X^{u^\star}_s)\|^2 - f(X^{u^\star}_s) \, ds
++ \int_{t_1}^{t_2} u^\star(s,X^{u^\star}_s)^\top \, dW_s.
+\]</span></p>
+<p>Naturally, writing this expression in between time <span class="math inline">\(t_1=0\)</span> and <span class="math inline">\(t_2=T\)</span> gives the expression <a href="#eq-logZ-pathwise">Equation&nbsp;4</a> for the log-normalizing constant <span class="math inline">\(\log \mathcal{Z}\)</span>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
