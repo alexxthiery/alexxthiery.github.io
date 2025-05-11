@@ -218,15 +218,15 @@ dX^\star = b(X^\star)dt + \sigma(X^\star) \,  {\left\{  dW_t +  \textcolor{blue}
 <p><span class="math display">\[
 u^\star \; = \; \mathop{\mathrm{argmin}}\; \textrm{Dist} {\left( \mathbb{P}^{u} \, , \, \mathbb{Q} \right)}
 \]</span></p>
-<p>for an appropriately chosen distance. The KL-divergence is natural since it elegantly deals with the intractable constant <span class="math inline">\(\mathcal{Z}\)</span> and the ratio <span class="math inline">\(d \mathbb{P}^{u} / d \mathbb{Q}\)</span> is easy to compute. <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a> gives that that for a controlled diffusion</p>
+<p>for an appropriately chosen distance. Here <span class="math inline">\(\mathbb{P}^{u}\)</span> is the probability distribution of the controlled diffusion <span class="math inline">\(X^u\)</span> with dynamics</p>
 <p><span id="eq-Xu"><span class="math display">\[
-dX^u = b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^{u})} \, dt  \right\}}
+dX^u = b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^u)} \, dt  \right\}}
 \tag{3}\]</span></span></p>
-<p>with associated path measure <span class="math inline">\(\mathbb{P}^u\)</span>, we have that <span class="math display">\[
+<p>for some control function <span class="math inline">\(u: [0,T] \times \mathbb{R}^D \to \mathbb{R}^D\)</span>. Note that we have that <span class="math inline">\(\mathbb{Q}= \mathbb{P}^{u^\star}\)</span>. The KL-divergence is natural (pseudo) distance since it elegantly deals with the intractable constant <span class="math inline">\(\mathcal{Z}\)</span> and the ratio <span class="math inline">\(d \mathbb{P}^{u} / d \mathbb{Q}\)</span> is easy to compute. <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a> gives that <span class="math display">\[
 \frac{d\mathbb{Q}}{d\mathbb{P}^u}(X^u) =
 \exp {\left\{  \int_{0}^{T} -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \, ds - \int_{0}^{T} u(s,X^u_s)^\top \, dW_s + g(X^u_T)  \right\}}  / \mathcal{Z}.
 \]</span></p>
-<p>Minimizing the <span class="math inline">\(D_{\text{KL}}(\mathbb{P}^u,\mathbb{Q})\)</span> shows that the optimal control and the normalization constant <span class="math inline">\(\mathcal{Z}\)</span> are:</p>
+<p>From this expression, one can readily write <span class="math inline">\(D_{\text{KL}}(\mathbb{P}^u,\mathbb{Q})\)</span>. Minimizing <span class="math inline">\(D_{\text{KL}}(\mathbb{P}^u,\mathbb{Q})\)</span> shows that the optimal control and the normalization constant <span class="math inline">\(\mathcal{Z}\)</span> are:</p>
 <p><span class="math display">\[
 (-\log \mathcal{Z}, \, u^\star)
 \; = \;
