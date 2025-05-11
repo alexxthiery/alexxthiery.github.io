@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Alexandre Thiéry - Adjoint method for sensitivities</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Adjoint method for sensitivities">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/adjoint_method/pontryagin.jpg">
+<meta property="og:site-name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry - Adjoint method for sensitivities">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/adjoint_method/pontryagin.jpg">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
+ <span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
+ <span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
+ <span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Adjoint method for sensitivities</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">GP</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">10 05 2025</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">10 05 2025</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#table-of-contents" id="toc-table-of-contents" class="nav-link active" data-scroll-target="#table-of-contents">Table of Contents</a>
+  <ul class="collapse">
+  <li><a href="#linear-systems" id="toc-linear-systems" class="nav-link" data-scroll-target="#linear-systems">Linear Systems</a></li>
+  <li><a href="#adjoint-method" id="toc-adjoint-method" class="nav-link" data-scroll-target="#adjoint-method">Adjoint Method</a></li>
+  <li><a href="#pde-inverse-problems" id="toc-pde-inverse-problems" class="nav-link" data-scroll-target="#pde-inverse-problems">PDE Inverse Problems</a></li>
+  <li><a href="#controlled-diffusions" id="toc-controlled-diffusions" class="nav-link" data-scroll-target="#controlled-diffusions">Controlled Diffusions</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./pontryagin.jpg" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Lev_Pontryagin">Lev Pontryagin</a> (1908 - 1988)</figcaption>
+</figure>
+</div>
+</div>
+<section id="table-of-contents" class="level2">
+<h2 class="anchored" data-anchor-id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#linear-systems">Linear Systems</a></li>
+<li><a href="#adjoint-method">Adjoint Method</a></li>
+<li><a href="#pde-inverse-problems">PDE Inverse Problems</a></li>
+<li><a href="#controlled-diffusions">Controlled Diffusions</a></li>
+</ul>
+<p>The adjoint method is, at its core, the same idea as <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> or <a href="https://en.wikipedia.org/wiki/Automatic_differentiation">reverse-mode</a> automatic differentiation. In practice, though, it’s often helpful to understand how it works under the hood. Basic implementations of backprop can be sub-optimal or impractical, especially in settings like PDE-constrained optimization or stochastic optimal control.</p>
+<section id="linear-systems" class="level3">
+<h3 class="anchored" data-anchor-id="linear-systems">Linear Systems</h3>
+<p>For a parameter <span class="math inline">\(\theta \in \mathbb{R}^{d_\theta}\)</span>, consider <span class="math inline">\(x = x(\theta)\)</span> the solution of the linear system</p>
+<p><span class="math display">\[
+A x = b,
+\]</span></p>
+<p>where the matrix <span class="math inline">\(A = A(\theta) \in \mathbb{R}^{d_x \times d_x}\)</span> and the vector <span class="math inline">\(b = b(\theta) \in \mathbb{R}^{d_x}\)</span> depend on <span class="math inline">\(\theta\)</span>. This setup is typical when discretizing PDEs: <span class="math inline">\(A\)</span> arises from the differential operator, and <span class="math inline">\(b\)</span> from the source term. We are interested in a loss function of the type</p>
+<p><span class="math display">\[
+\mathcal{L} = F(\theta, x),
+\]</span></p>
+<p>with <span class="math inline">\(F: \mathbb{R}^{d_\theta} \times \mathbb{R}^{d_x} \to \mathbb{R}\)</span>. We aim to compute the gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\theta\)</span>. Applying the chain rule,</p>
+<p><span class="math display">\[
+D_\theta \mathcal{L}= F_\theta - F_x A^{-1} \left( A_\theta \, x - b_\theta \right).
+\]</span></p>
+<p>The notation <span class="math inline">\(F_\theta = \nabla_\theta F^\top \in \mathbb{R}^{1, d_\theta}\)</span> denotes the Jacobian of <span class="math inline">\(F\)</span> with respect to <span class="math inline">\(\theta\)</span>, and similarly for <span class="math inline">\(F_x\)</span> and <span class="math inline">\(A_\theta\)</span> and <span class="math inline">\(b_\theta\)</span>. When <span class="math inline">\(d_x \gg 1\)</span> and <span class="math inline">\(d_\theta \gg 1\)</span>, directly computing <span class="math inline">\(A^{-1}\)</span> is infeasible. Naively evaluating <span class="math inline">\(A^{-1} (A_\theta x - b_\theta)\)</span> would require <span class="math inline">\(d_\theta\)</span> linear solves, which is too expensive. A better approach is to first compute <span class="math inline">\(\lambda^\top = F_x A^{-1}\)</span> by solving the adjoint system</p>
+<p><span class="math display">\[
+A^\top \lambda = F_x^\top.
+\]</span></p>
+<p>This requires only one linear solve. Once <span class="math inline">\(\lambda\)</span> is computed, the gradient simplifies to</p>
+<p><span class="math display">\[
+D_\theta \mathcal{L}= F_\theta - \lambda^\top (A_\theta x - b_\theta).
+\]</span></p>
+</section>
+<section id="adjoint-method" class="level3">
+<h3 class="anchored" data-anchor-id="adjoint-method">Adjoint Method</h3>
+<p>Now consider a more general situation where <span class="math inline">\(x \in \mathbb{R}^{d_x}\)</span> and <span class="math inline">\(\theta \in \mathbb{R}^{d_\theta}\)</span> are related by an implicit equation</p>
+<p><span class="math display">\[
+\Phi(x, \theta) = 0
+\]</span></p>
+<p>for some function <span class="math inline">\(\Phi: \mathbb{R}^{d_x} \times \mathbb{R}^{d_\theta} \to \mathbb{R}^{d_x}\)</span> that satisfies the usual conditions of the implicit function <a href="https://en.wikipedia.org/wiki/Implicit_function_theorem">theorem</a>. Differentiating gives <span class="math inline">\(x_\theta = -\Phi_x^{-1} \Phi_\theta\)</span>. As before, we want the gradient with respect to <span class="math inline">\(\theta\)</span> of <span class="math inline">\(\mathcal{L} = F(x, \theta)\)</span>. It equals <span class="math inline">\(D_\theta \mathcal{L}= F_\theta - F_x \Phi_x^{-1} \Phi_\theta\)</span> and can also be expressed as <span class="math inline">\(D_\theta \mathcal{L}= F_\theta - \lambda^\top \Phi_\theta\)</span> where <span class="math inline">\(\lambda \in \mathbb{R}^{d_x}\)</span> is the solution of the adjoint system</p>
+<p><span id="eq-adjoint"><span class="math display">\[
+\Phi_x^\top \lambda = F_x^\top.
+\tag{1}\]</span></span></p>
+<p>Another way to present this computation is to note that, for any vector <span class="math inline">\(\lambda \in \mathbb{R}^{d_x}\)</span>, we have</p>
+<p><span class="math display">\[
+\mathcal{L} = F(\theta, x) - \lambda^\top \Phi(x, \theta)
+\]</span></p>
+<p>since <span class="math inline">\(\Phi(x, \theta) = 0\)</span> for all choices of <span class="math inline">\(\theta\)</span>. Introducing the “adjoint” variable <span class="math inline">\(\lambda\)</span> allows one to eliminate cumbersome terms in the gradient. Differentiate with respect to <span class="math inline">\(\theta\)</span> gives</p>
+<p><span class="math display">\[
+D_\theta \mathcal{L}= F_\theta - \lambda^\top \Phi_\theta +  {\left(  F_x - \lambda^\top \Phi_x \right)}  x_\theta.
+\]</span></p>
+<p>The term <span class="math inline">\(x_\theta \in \mathbb{R}^{d_x, d_\theta}\)</span> is cumbersome, and we would like to eliminate it. To do this, it suffices to choose <span class="math inline">\(\lambda\)</span> so that the term <span class="math inline">\(F_x - \lambda^\top \Phi_x\)</span> vanishes, which is again the adjoint system <a href="#eq-adjoint">Equation&nbsp;1</a>.</p>
+</section>
+<section id="pde-inverse-problems" class="level3">
+<h3 class="anchored" data-anchor-id="pde-inverse-problems">PDE Inverse Problems</h3>
+<p>Let us see how this works in the context of PDE-constrained optimization. Let <span class="math inline">\(\Omega \subset \mathbb{R}^d\)</span> be a domain and let <span class="math inline">\(\kappa: \Omega \to \mathbb{R}\)</span> be a scalar field. Consider the PDE</p>
+<p><span id="eq-elliptic"><span class="math display">\[
+\nabla  {\left(  e^{\kappa(x)} \nabla u  \right)}  = f,
+\tag{2}\]</span></span></p>
+<p>where <span class="math inline">\(f\)</span> is a given source term. The field <span class="math inline">\(\kappa\)</span> describes the diffusion, or permeability, properties of the medium. We are interested in the solution <span class="math inline">\(u\)</span> of the PDE on a bounded domain <span class="math inline">\(\Omega \subset \mathbb{R}^d\)</span> with Dirichlet boundary conditions <span class="math inline">\(u(x) = 0\)</span> for <span class="math inline">\(x \in \partial \Omega\)</span>. For each field <span class="math inline">\(\kappa\)</span>, the elliptic PDE determines a unique solution <span class="math inline">\(u\)</span>. We are interested in minimizing the quantity</p>
+<p><span class="math display">\[
+\mathcal{L}(\kappa) = \int_\Omega F(u(x)) \, dx,
+\]</span></p>
+<p>for some given function <span class="math inline">\(F: \mathbb{R} \to \mathbb{R}\)</span>. A common case is</p>
+<p><span class="math display">\[
+\mathcal{L}(\kappa) = \frac{1}{2} \, \int_\Omega \left| u(x) - u^\star(x) \right|^2 \, w(x) \, dx,
+\]</span></p>
+<p>where <span class="math inline">\(u^\star\)</span> is a target solution and <span class="math inline">\(w(x)&gt;0\)</span> is a weight. The goal is to adjust the field <span class="math inline">\(\kappa\)</span> so that <span class="math inline">\(u\)</span> matches <span class="math inline">\(u^\star\)</span> as closely as possible. To carry out the minimization of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\kappa\)</span>, one needs the gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\kappa\)</span>. To that end, define the augmented functional</p>
+<p><span class="math display">\[
+\mathcal{L} = \int_\Omega F(u(x)) \, dx - \int_\Omega \lambda \left( \nabla \cdot (e^{\kappa} \nabla u) - f \right) \, dx,
+\]</span></p>
+<p>for an auxiliary field <span class="math inline">\(\lambda : \Omega \to \mathbb{R}\)</span> that will be chosen later. As before, a good choice of <span class="math inline">\(\lambda\)</span> can simplify the gradient expression. Let <span class="math inline">\(\delta \kappa\)</span> be a perturbation of <span class="math inline">\(\kappa\)</span>. This induces a perturbation <span class="math inline">\(u + \delta u\)</span> in the solution and the first order variation of <span class="math inline">\(\mathcal{L}\)</span> reads:</p>
+<p><span class="math display">\[
+\delta \mathcal{L} = \int_\Omega F'(u) \, \delta u \, dx - \int_\Omega \lambda \, \nabla \cdot (e^{\kappa} \nabla \delta u) \, dx - \int_\Omega \lambda \, \nabla \cdot (e^{\kappa} \delta \kappa \nabla u) \, dx.
+\]</span></p>
+<p>The term involving <span class="math inline">\(\delta u\)</span> is inconvenient. Assuming <span class="math inline">\(\lambda\)</span> also satisfies Dirichlet boundary conditions, which we can indeed assume seems we are free to define <span class="math inline">\(\lambda\)</span> in any manner we want, we integrate by parts:</p>
+<p><span class="math display">\[
+\delta \mathcal{L} = \int_\Omega \left( F'(u) - \nabla \cdot (e^{\kappa} \nabla \lambda) \right) \delta u \, dx - \int_\Omega \lambda \, \nabla \cdot (e^{\kappa} \delta \kappa \nabla u) \, dx.
+\]</span></p>
+<p>To eliminate the <span class="math inline">\(\delta u\)</span> term, choose <span class="math inline">\(\lambda\)</span> to satisfy the adjoint equation</p>
+<p><span id="eq-adjoint-elliptic"><span class="math display">\[
+\nabla \cdot (e^{\kappa} \nabla \lambda) = F'(u),
+\tag{3}\]</span></span></p>
+<p>with Dirichlet boundary conditions. Then, an integration by parts gives</p>
+<p><span class="math display">\[
+\begin{align*}
+\delta \mathcal{L}
+&amp;= -\int_\Omega \lambda \, \nabla \cdot (e^{\kappa} \delta \kappa \nabla u) \, dx\\
+&amp;= \int_\Omega e^{\kappa} \, \left&lt;  \nabla u, \nabla \lambda  \right&gt; \, \delta \kappa \, dx
+= \left&lt; g, \delta \kappa \right&gt;_{L^2(\Omega)}.
+\end{align*}
+\]</span></p>
+<p>This means that the <span class="math inline">\(L^2\)</span> gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\kappa\)</span> is given by:</p>
+<p><span class="math display">\[
+g = e^{\kappa} \, \left&lt;  \nabla u, \nabla \lambda  \right&gt;,
+\]</span></p>
+<p>where <span class="math inline">\(\lambda: \Omega \to \mathbb{R}\)</span> solves the adjoint system <a href="#eq-adjoint-elliptic">Equation&nbsp;3</a>. This shows that the gradient of the objective can be computed at the same computational cost as the solution the original PDE <a href="#eq-elliptic">Equation&nbsp;2</a>. This expression can be used directly in gradient-based optimization schemes.</p>
+</section>
+<section id="controlled-diffusions" class="level3">
+<h3 class="anchored" data-anchor-id="controlled-diffusions">Controlled Diffusions</h3>
+<p>Consider the ODE on <span class="math inline">\([0, T]\)</span>:</p>
+<p><span id="eq-ode-forward"><span class="math display">\[
+\dot{x} = b(t, \theta, x),
+\tag{4}\]</span></span></p>
+<p>with initial condition <span class="math inline">\(x(0) = \mu(\theta)\)</span>, where <span class="math inline">\(x \in \mathbb{R}^{d_x}\)</span> and <span class="math inline">\(\theta \in \mathbb{R}^{d_\theta}\)</span>. The drift term <span class="math inline">\(b\)</span> is parameterized by <span class="math inline">\(\theta\)</span>. We want the sensitivity of the functional</p>
+<p><span class="math display">\[
+\mathcal{L} = \int_0^T f(t, \theta, x(t)) \, dt + g(\theta, x(T)),
+\]</span></p>
+<p>where <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are given functions. As before, introduce an auxiliary function <span class="math inline">\(\lambda(t) \in \mathbb{R}^{d_x}\)</span> and write:</p>
+<p><span class="math display">\[
+\mathcal{L} = \mathcal{L} - \int_0^T \lambda^\top (\dot{x} - b(t, \theta, x)) \, dt.
+\]</span></p>
+<p>Differentiating with respect to <span class="math inline">\(\theta\)</span> gives:</p>
+<p><span class="math display">\[
+\begin{aligned}
+D_\theta \mathcal{L}
+&amp;= \int_0^T \left( f_\theta + \lambda^\top b_\theta \right) dt + g_\theta(\theta, x(T)) + \lambda^\top(0) \mu_\theta \\
+&amp;\quad + \left( g_x - \lambda^\top(T) \right) x_\theta(T)
++ \int_0^T \left( f_x + \dot{\lambda}^\top + \lambda^\top b_x \right) x_\theta(t) \, dt.
+\end{aligned}
+\]</span></p>
+<p>To eliminate the dependence on <span class="math inline">\(x_\theta(t)\)</span>, choose <span class="math inline">\(\lambda\)</span> to satisfy the adjoint system:</p>
+<p><span id="eq-adjoint-ode"><span class="math display">\[
+\begin{cases}
+\dot{\lambda}(t) = -\nabla_x f - b_x^\top \lambda(t), \\
+\lambda(T) = \nabla_x g.
+\end{cases}
+\tag{5}\]</span></span></p>
+<p>This is a linear ODE with a given terminal condition that needs to be solved backward in time. This means that for computing the gradient of <span class="math inline">\(\mathcal{L}\)</span>, one can first solve the forward ODE <a href="#eq-ode-forward">Equation&nbsp;4</a> to obtain <span class="math inline">\(x(t)\)</span>, and then solve the adjoint system <a href="#eq-adjoint-ode">Equation&nbsp;5</a> backward in time to obtain <span class="math inline">\(\lambda(t)\)</span>. The gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\theta\)</span> is then given by</p>
+<p><span id="eq-gradient-ode"><span class="math display">\[
+D_\theta \mathcal{L}
+= \int_0^T \left( f_\theta + \lambda^\top b_\theta \right) dt + g_\theta(\theta, x(T)) + \lambda^\top(0) \mu_\theta.
+\tag{6}\]</span></span></p>
+<p>The term <span class="math inline">\(\lambda^\top b_\theta\)</span> is a vector jacobian product, and can be computed efficiently. This formulation is often referred to as the “continuous adjoint method” or “adjoint sensitivity analysis” or “optimize-then-discretize” and dates back to the work of <span class="citation" data-cites="pontryagin2018mathematical">(<a href="#ref-pontryagin2018mathematical" role="doc-biblioref">Pontryagin 1962</a>)</span>. A naive implementation of <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> can be inefficient memory-wise since quantities such as <span class="math inline">\(f_\theta\)</span> would typically be stored along the forward pass. When <span class="math inline">\(d_\theta \gg 1\)</span>, as is for example the case when the drift is parameterized by a neural network, this can be impractical. Instead, it may be more efficient to store the forward trajectory <span class="math inline">\(x(t)\)</span> only, and recompute all the other quantities during the backward pass. Similarly, if implicit methods are used to solve the ODE instead if a simple Euler scheme, backpropagation through the implicit solver can be tricky. Note that nothing really changes when considering a <a href="https://en.wikipedia.org/wiki/Stochastic_differential_equation">SDE</a> with additive noise instead,</p>
+<p><span class="math display">\[
+dx = b(t, \theta, x) \, dt + \sigma(t) \, dW_t.
+\]</span></p>
+<p>Extremely informally, one can more or less apply the same reasoning as above to the controlled ODE with drift <span class="math inline">\(b(t, \theta, x) + \sigma(t) \, dW_t/dt\)</span>. Again, it suffices to solve the SDE forward in time to obtains <span class="math inline">\(x(t)\)</span> and then solve the same adjoint system <a href="#eq-adjoint-ode">Equation&nbsp;5</a> backward in time to obtain <span class="math inline">\(\lambda(t)\)</span>: it is still an ordinary differential equation. The gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\theta\)</span> is then given by the same expression <a href="#eq-gradient-ode">Equation&nbsp;6</a>. For SDEs with multiplicative noise, the adjoint system is slightly more complicated, but hardly changes the overall picture. Finally, note that if <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> do not depend on <span class="math inline">\(\theta\)</span> and one chooses <span class="math inline">\(\theta = x_0\)</span> and the initial condition <span class="math inline">\(\mu_{x_0} = x_0\)</span>, <a href="#eq-gradient-ode">Equation&nbsp;6</a> shows that <span class="math inline">\(D_{x_0} \mathcal{L}=  {\left( \nabla_{x_0} \mathcal{L} \right)} ^\top = \lambda(0)^\top\)</span>. More generally, this shows that:</p>
+<p><span class="math display">\[
+\lambda(t) = \nabla_{x(t)} \,  {\left\{  \int_t^T f(s, \theta, x(s)) \, ds + g(\theta, x(T)) \right\}} .
+\]</span></p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-pontryagin2018mathematical" class="csl-entry" role="listitem">
+Pontryagin, Lev Semenovich. 1962. <em>Mathematical Theory of Optimal Processes</em>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
