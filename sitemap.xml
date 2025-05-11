@@ -246,7 +246,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2025-04-19T16:54:36.298Z</lastmod>
+    <lastmod>2025-05-11T17:59:22.547Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
@@ -427,5 +427,9 @@
   <url>
     <loc>https://alexxthiery.github.io/notes/sparse_GP/sparse_gp.html</loc>
     <lastmod>2025-04-19T16:53:35.546Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_method/adjoint.html</loc>
+    <lastmod>2025-05-11T18:00:02.683Z</lastmod>
   </url>
 </urlset>
