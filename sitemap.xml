@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://alexxthiery.github.io/notes_students/probability_basics/probability_basics.html</loc>
-    <lastmod>2025-04-05T11:32:02.779Z</lastmod>
+    <lastmod>2025-05-12T14:59:43.768Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</loc>
@@ -18,11 +18,11 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/SSM/SSM.html</loc>
-    <lastmod>2025-04-05T11:32:03.178Z</lastmod>
+    <lastmod>2025-05-12T14:59:44.174Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/SSM/SSM_references.html</loc>
-    <lastmod>2025-04-05T11:32:03.556Z</lastmod>
+    <lastmod>2025-05-12T14:59:44.567Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/index_pubs.html</loc>
@@ -218,95 +218,95 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</loc>
-    <lastmod>2025-04-05T11:32:07.220Z</lastmod>
+    <lastmod>2025-05-12T14:59:48.789Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
-    <lastmod>2025-04-05T11:32:07.653Z</lastmod>
+    <lastmod>2025-05-12T14:59:49.171Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2025-04-05T11:32:08.107Z</lastmod>
+    <lastmod>2025-05-12T14:59:49.618Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/sanov/sanov.html</loc>
-    <lastmod>2025-04-05T11:32:08.489Z</lastmod>
+    <lastmod>2025-05-12T14:59:49.990Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</loc>
-    <lastmod>2025-04-18T13:42:44.772Z</lastmod>
+    <lastmod>2025-05-12T14:59:50.852Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</loc>
-    <lastmod>2025-04-18T13:42:45.249Z</lastmod>
+    <lastmod>2025-05-12T14:59:51.279Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</loc>
-    <lastmod>2025-04-05T11:32:10.162Z</lastmod>
+    <lastmod>2025-05-12T14:59:51.638Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2025-05-11T17:59:22.547Z</lastmod>
+    <lastmod>2025-05-12T14:59:52.005Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
-    <lastmod>2025-05-11T18:00:46.125Z</lastmod>
+    <lastmod>2025-05-12T14:59:52.380Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/doob_transforms/doob.html</loc>
-    <lastmod>2025-04-28T12:50:25.319Z</lastmod>
+    <lastmod>2025-05-12T14:59:52.794Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</loc>
-    <lastmod>2025-04-05T11:32:11.665Z</lastmod>
+    <lastmod>2025-05-12T14:59:53.128Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</loc>
-    <lastmod>2025-04-05T11:32:12.002Z</lastmod>
+    <lastmod>2025-05-12T14:59:53.498Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</loc>
-    <lastmod>2025-04-05T11:32:12.932Z</lastmod>
+    <lastmod>2025-05-12T14:59:54.471Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</loc>
-    <lastmod>2025-04-05T11:32:13.271Z</lastmod>
+    <lastmod>2025-05-12T14:59:54.856Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/HJB/HJB.html</loc>
-    <lastmod>2025-05-11T18:09:20.337Z</lastmod>
+    <lastmod>2025-05-12T14:59:55.268Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</loc>
-    <lastmod>2025-04-05T11:32:14.104Z</lastmod>
+    <lastmod>2025-05-12T14:59:55.731Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</loc>
-    <lastmod>2025-04-05T11:32:14.600Z</lastmod>
+    <lastmod>2025-05-12T14:59:56.661Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</loc>
-    <lastmod>2025-04-05T11:32:15.378Z</lastmod>
+    <lastmod>2025-05-12T14:59:57.471Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2025-04-05T11:32:15.994Z</lastmod>
+    <lastmod>2025-05-12T14:59:58.090Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
-    <lastmod>2025-04-05T11:32:16.514Z</lastmod>
+    <lastmod>2025-05-12T14:59:58.605Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</loc>
-    <lastmod>2025-04-05T11:32:16.874Z</lastmod>
+    <lastmod>2025-05-12T14:59:58.969Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</loc>
-    <lastmod>2025-04-05T11:32:17.169Z</lastmod>
+    <lastmod>2025-05-12T14:59:59.250Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/auxiliary_variable_trick/auxiliary_variable_trick.html</loc>
-    <lastmod>2025-04-05T11:32:17.597Z</lastmod>
+    <lastmod>2025-05-12T14:59:59.648Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/teaching.html</loc>
@@ -334,11 +334,11 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</loc>
-    <lastmod>2025-04-05T11:32:14.874Z</lastmod>
+    <lastmod>2025-05-12T14:59:56.957Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/optimization/duality.html</loc>
-    <lastmod>2025-04-05T11:32:03.924Z</lastmod>
+    <lastmod>2025-05-12T14:59:44.927Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_Out_Distribution_Diffusion.html</loc>
@@ -350,43 +350,43 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/natural_grad/natur_grad.html</loc>
-    <lastmod>2025-04-05T11:32:06.238Z</lastmod>
+    <lastmod>2025-05-12T14:59:47.386Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/conformal_inference/conformal.html</loc>
-    <lastmod>2025-04-05T11:32:06.672Z</lastmod>
+    <lastmod>2025-05-12T14:59:48.250Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/markov.html</loc>
-    <lastmod>2025-04-05T11:32:05.619Z</lastmod>
+    <lastmod>2025-05-12T14:59:46.777Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/coupling.html</loc>
-    <lastmod>2025-04-05T11:32:04.240Z</lastmod>
+    <lastmod>2025-05-12T14:59:45.217Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/drift.html</loc>
-    <lastmod>2025-04-05T11:32:04.518Z</lastmod>
+    <lastmod>2025-05-12T14:59:45.494Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/sobolev.html</loc>
-    <lastmod>2025-04-05T11:32:04.797Z</lastmod>
+    <lastmod>2025-05-12T14:59:45.852Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/isoperimetric.html</loc>
-    <lastmod>2025-04-05T11:32:05.068Z</lastmod>
+    <lastmod>2025-05-12T14:59:46.155Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/conductance.html</loc>
-    <lastmod>2025-04-05T11:32:05.336Z</lastmod>
+    <lastmod>2025-05-12T14:59:46.462Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes_DRAFT/markov/spectral.html</loc>
-    <lastmod>2025-04-05T11:32:05.936Z</lastmod>
+    <lastmod>2025-05-12T14:59:47.078Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/jarzynski/jarzynski.html</loc>
-    <lastmod>2025-05-11T18:10:11.864Z</lastmod>
+    <lastmod>2025-05-12T14:59:53.929Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/SAW/SAW.html</loc>
@@ -422,14 +422,14 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/SAW/SAW.html</loc>
-    <lastmod>2025-04-05T11:32:08.981Z</lastmod>
+    <lastmod>2025-05-12T14:59:50.466Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/sparse_GP/sparse_gp.html</loc>
-    <lastmod>2025-04-19T16:53:35.546Z</lastmod>
+    <lastmod>2025-05-12T14:59:56.162Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_method/adjoint.html</loc>
-    <lastmod>2025-05-12T03:55:57.400Z</lastmod>
+    <lastmod>2025-05-12T14:59:47.836Z</lastmod>
   </url>
 </urlset>
