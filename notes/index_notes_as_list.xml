@@ -112,7 +112,9 @@
 Pontryagin, Lev Semenovich. 1962. <em>Mathematical Theory of Optimal Processes</em>.
 </div>
 </div></section></div> ]]></description>
-  <category>GP</category>
+  <category>ODE</category>
+  <category>PDE</category>
+  <category>Adjoint</category>
   <guid>https://alexxthiery.github.io/notes/adjoint_method/adjoint.html</guid>
   <pubDate>Fri, 09 May 2025 16:00:00 GMT</pubDate>
 </item>
