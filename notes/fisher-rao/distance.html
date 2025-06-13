@@ -222,19 +222,27 @@ d_f(\rho_1, \rho_2) = \int_{\mathbb{R}^d} f \left( \frac{d\rho_1}{d\rho_2} \righ
 <p><span class="math display">\[
 d_f(\rho + d \rho, \, \rho) =  \textrm{(cst)} \times \int \left( \frac{d \rho}{\rho} \right)^2 \, \rho(dx) + o(\|d \rho\|^2).
 \]</span></p>
-<p>This means that all these divergences describe the same local geometry, defined by the Fisher-Rao information metric. Furthermore, it is relatively straightforward to derive the global geometry induced by the <a href="https://en.wikipedia.org/wiki/Fisher_information_metric">Fisher information metric</a>. Consider the mapping <span class="math inline">\(\rho \mapsto \sqrt{\rho}\)</span>, which maps a density <span class="math inline">\(\rho\)</span> to an element of the unit sphere of <span class="math inline">\(L^2\)</span>-norm: <span class="math inline">\(\sqrt{\rho} \in \mathcal{S}\)</span>. Since</p>
+<p>This means that all these divergences describe the same local geometry, defined by the Fisher-Rao information metric. Furthermore, it is relatively straightforward to derive the global geometry induced by the <a href="https://en.wikipedia.org/wiki/Fisher_information_metric">Fisher information metric</a>. Consider the mapping <span class="math inline">\(\rho \mapsto \sqrt{\rho}\)</span>, which maps a density <span class="math inline">\(\rho\)</span> to an element of the unit sphere <span class="math inline">\(\mathcal{S}\)</span> of <span class="math inline">\(L^2(\mathbb{R}^d)\)</span>. Since</p>
 <p><span class="math display">\[
 \| \sqrt{\rho_1} - \sqrt{\rho_2} \|_{L^2}^2 = d_f(\rho_1, \rho_2)
 \]</span></p>
-<p>for <span class="math inline">\(f(x) = |1 - \sqrt{x}|^2\)</span>, the geometry induced by the Fisher information metric is the same as the geometry induced by the <span class="math inline">\(L^2\)</span>-norm on the unit sphere of <span class="math inline">\(L^2(\mathbb{R}^d)\)</span>. This implies that the geodesic distance between two densities <span class="math inline">\(\rho_1\)</span> and <span class="math inline">\(\rho_2\)</span> is given (up to an irrelevant constant) by the <span class="math inline">\(L^2\)</span>-geodesic distance between the points <span class="math inline">\(\sqrt{\rho_1} \in \mathcal{S}\)</span> and <span class="math inline">\(\sqrt{\rho_2} \in \mathcal{S}\)</span>. In other words, the geodesic distance is given by</p>
+<p>for <span class="math inline">\(f(x) = |1 - \sqrt{x}|^2\)</span>, and we have just seen that any <span class="math inline">\(f\)</span>-divergence is locally equivalent to the Fisher-Rao metric, it follows that the geometry induced by the Fisher-Rao information information metric is the same as the geometry induced by the <span class="math inline">\(L^2\)</span>-norm on the unit sphere of <span class="math inline">\(L^2(\mathbb{R}^d)\)</span>. This implies that the geodesic distance between two densities <span class="math inline">\(\rho_1\)</span> and <span class="math inline">\(\rho_2\)</span> is given (up to an irrelevant constant) by the <span class="math inline">\(L^2\)</span>-geodesic distance between the points <span class="math inline">\(\sqrt{\rho_1} \in \mathcal{S}\)</span> and <span class="math inline">\(\sqrt{\rho_2} \in \mathcal{S}\)</span>. In other words, the geodesic distance, i.e.&nbsp;the Fisher-Rao distance, is given by</p>
 <p><span class="math display">\[
-\arccos \left( \langle \sqrt{\rho_1}, \sqrt{\rho_2} \rangle_{L^2} \right).
+d_{FR}(\rho_1, \rho_2) = \arccos \left( \langle \sqrt{\rho_1}, \sqrt{\rho_2} \rangle_{L^2} \right).
 \]</span></p>
-<p>The geodesic path is the large arc of circle, <span class="math inline">\(t \mapsto \rho_t\)</span>, where <span class="math inline">\(\rho_t \propto \left((1-t) \sqrt{\rho_1} + t \sqrt{\rho_2} \right)^2\)</span> for <span class="math inline">\(t \in [0,1]\)</span>. This shows, for example, that the Fisher-Rao geodesic between two Gaussian densities is composed of densities that are Gaussian mixtures; i.e., the geodesic is not composed of Gaussian densities in general. In other words, probability mass is not transported along the geodesic but reshaped, unlike the Wasserstein metric, which describes transport of probability mass. Note in passing that the <a href="https://en.wikipedia.org/wiki/Hellinger_distance">Hellinger distance</a>, defined as</p>
+<p>The geodesic path is a great circle, <span class="math inline">\(t \mapsto \rho_t\)</span>, where <span class="math inline">\(\rho_t \propto \left((1-t) \sqrt{\rho_1} + t \sqrt{\rho_2} \right)^2\)</span> for <span class="math inline">\(t \in [0,1]\)</span>. This shows, for example, that the Fisher-Rao geodesic between two Gaussian densities is composed of densities that are Gaussian mixtures; i.e., the geodesic is not composed of Gaussian densities in general. In other words, probability mass is not transported along the geodesic but reshaped, unlike the Wasserstein metric, which describes transport of probability mass. Note in passing that the <a href="https://en.wikipedia.org/wiki/Hellinger_distance">Hellinger distance</a>, defined as</p>
 <p><span class="math display">\[
-d_H(\rho_1, \rho_2) = \int \left( \sqrt{\rho_1(x)} - \sqrt{\rho_2(x)} \right)^2 \, dx,
+d_H(\rho_1, \rho_2)^2 = \int \left( \sqrt{\rho_1(x)} - \sqrt{\rho_2(x)} \right)^2 \, dx,
 \]</span></p>
-<p>is just just a slightly rescaled version of the Fisher-Rao distance since they are related by a deterministic function. In this sense, the Hellinger distance is a Fisher-Rao distance, and consequently the correct way to measure distances between probability densities for many applications.</p>
+<p>is just just a slightly rescaled version of the Fisher-Rao distance since they are related by a deterministic function, i.e.&nbsp;<span class="math inline">\(d_H = \sqrt{2(1-\cos(d_{FR}))}\)</span>. In this sense, the Hellinger distance is equivalent to the Fisher-Rao distance, and both describe a “correct” way to measure distances between probability densities for many applications.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./FR_geodesic.gif" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Here is how a geodesic paths looks like under the Fisher-Rao metric</figcaption>
+</figure>
+</div>
+</div>
 </section>
 <section id="gradient-flow" class="level3">
 <h3 class="anchored" data-anchor-id="gradient-flow">Gradient flow</h3>
@@ -252,6 +260,14 @@ d_H(\rho_1, \rho_2) = \int \left( \sqrt{\rho_1(x)} - \sqrt{\rho_2(x)} \right)^2 
 w_i \mapsto \frac{ w_i \, (\pi(x_i) / \rho(x_i))^{\varepsilon}}{\sum_{j=1}^N w_j \, (\pi(x_j) / \rho(x_j))^{\varepsilon}}
 \]</span></p>
 <p>for a small <span class="math inline">\(\varepsilon&gt; 0\)</span> time-step. Indeed, it is because <span class="math inline">\(\partial_t \rho(x) = v(x)\)</span>, where <span class="math inline">\(\mathbb{E}_{\rho}[v]=0\)</span>, can be discretized by updating the weights as <span class="math inline">\(w_i \mapsto w_i \, \exp[\varepsilon\, v(x_i)] / Z\)</span>. This is very much related to the resampling step in sequential Monte Carlo methods, and the recent article <span class="citation" data-cites="crucinio2025sequential">(<a href="#ref-crucinio2025sequential" role="doc-biblioref">Crucinio and Pathiraja 2025</a>)</span> make these connections explicit.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./FR_gradient_flow.gif" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Minimising <span class="math inline">\(D_{\text{KL}}(\rho, \pi)\)</span> with Fisher-Rao gradient flow</figcaption>
+</figure>
+</div>
+</div>
 
 
 
