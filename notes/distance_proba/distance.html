@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Wasserstein Gradients &amp; Langevin Diffusions</title>
+<title>Alexandre Thiéry - Fisher-Rao Geometry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,13 +81,13 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Wasserstein Gradients &amp; Langevin Diffusions">
+<meta property="og:title" content="Alexandre Thiéry - Fisher-Rao Geometry">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://alexxthiery.github.io/notes/wasserstein_langevin/langevin.gif">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/distance_proba/rao.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Wasserstein Gradients &amp; Langevin Diffusions">
+<meta name="twitter:title" content="Alexandre Thiéry - Fisher-Rao Geometry">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://alexxthiery.github.io/notes/wasserstein_langevin/langevin.gif">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/distance_proba/rao.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -146,9 +146,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Wasserstein Gradients &amp; Langevin Diffusions</h1>
+      <h1 class="title">Fisher-Rao Geometry</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">diffusion</div>
+                <div class="quarto-category">probability</div>
               </div>
                   </div>
   </div>
@@ -160,16 +160,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">16 10 2023</p>
+        <p class="date">13 06 2025</p>
       </div>
     </div>
     
-      <div>
-      <div class="quarto-title-meta-heading">Modified</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date-modified">16 10 2023</p>
-      </div>
-    </div>
       
     </div>
     
@@ -178,7 +172,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#fisher-rao-metric" id="toc-fisher-rao-metric" class="nav-link active" data-scroll-target="#fisher-rao-metric">Fisher-Rao metric</a></li>
+  <li><a href="#gradient-flow" id="toc-gradient-flow" class="nav-link" data-scroll-target="#gradient-flow">Gradient flow</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -189,70 +190,75 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./langevin.gif" class="img-fluid figure-img" style="width:95.0%"></p>
-<figcaption class="figure-caption">Overdamped Langevin Diffusion as a gradient flow on the space of probability distributions endowed with the <span class="math inline">\(2\)</span>-Wasserstein metric</figcaption>
+<p><img src="./rao.jpg" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/C._R._Rao">Calyampudi Radhakrishna Rao</a> (1920 – 2023)</figcaption>
 </figure>
 </div>
 </div>
-<p>Consider a target probability density <span class="math inline">\(\pi(x) = \frac{\overline{\pi}(x)}{\mathcal{Z}}\)</span> on <span class="math inline">\(\mathbb{R}^D\)</span> that is known up to a normalizing constant <span class="math inline">\(\mathcal{Z}&gt; 0\)</span>. We also have a different probability density <span class="math inline">\(p_0(x)\)</span>. The goal is to gradually tweak <span class="math inline">\(p_0(x)\)</span> so that it eventually matches <span class="math inline">\(\pi(x)\)</span>. More concretely, we aim to perform a gradient descent on the space of probability distributions to reduce the functional</p>
+<section id="fisher-rao-metric" class="level3">
+<h3 class="anchored" data-anchor-id="fisher-rao-metric">Fisher-Rao metric</h3>
+<p>Suppose we want to define a distance on the space of probability densities on <span class="math inline">\(\mathbb{R}^d\)</span>. A natural but naive approach is to use an <span class="math inline">\(L^2\)</span>-type distance:</p>
 <p><span class="math display">\[
-\mathcal{F}(p) \; = \; D_{\text{KL}} {\left( p, \pi \right)}  \; = \; \int p(x) \, \log  {\left\{ \frac{p(x)}{\overline{\pi}(x)} \right\}}  \, dx \, + \, \textrm{(constant)}.
+d(\rho_1, \rho_2)^2 = \int_{\mathbb{R}^d} |\rho_1(x) - \rho_2(x)|^2 \, dx,
 \]</span></p>
-<p>This approach can be discretized: assume <span class="math inline">\(N \gg 1\)</span> particles <span class="math inline">\(X_0^1, \ldots, X_0^N \in \mathbb{R}^D\)</span> forming an empirical distribution that approximates <span class="math inline">\(p_0(dx)\)</span>,</p>
+<p>where <span class="math inline">\(\rho_i\)</span> are densities with respect to the Lebesgue measure. However, this definition has several shortcomings. For instance, if we change the base measure to <span class="math inline">\(\mu(x) \, dx\)</span> for some positive density <span class="math inline">\(\mu\)</span>, and define the distance as</p>
 <p><span class="math display">\[
-p_0(dx) \; \approx \; \frac{1}{N} \sum_{i=1}^N \, \delta_{X_0^i}(dx).
+\int \left|\frac{\rho_1(x)}{\mu(x)} - \frac{\rho_2(x)}{\mu(x)}\right|^2 \mu(x) \, dx,
 \]</span></p>
-<p>Define <span class="math inline">\(X_{\delta}^i = X_0^i + \delta_t \, \mu(X_0^i)\)</span> where <span class="math inline">\(\delta_t \ll 1\)</span> denotes a time discretization parameter and <span class="math inline">\(\mu:\mathbb{R}^D \to \mathbb{R}^D\)</span> is a “drift” function. Finding a suitable ‘drift function’ is the main problem. According to the <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation, the computed empirical distribution</p>
+<p>we obtain a different value. Perhaps more troubling, the distance is not invariant under reparametrizations. Let <span class="math inline">\(T\)</span> be a diffeomorphism of <span class="math inline">\(\mathbb{R}^d\)</span>, and set <span class="math inline">\(y = T(x)\)</span>. Then the transformed densities become <span class="math inline">\(\rho^Y_i(y) = \rho^X_i(x) \, |J_T(x)|^{-1}\)</span>, where <span class="math inline">\(J_T\)</span> is the Jacobian determinant. In general,</p>
 <p><span class="math display">\[
-p_{\delta_t}(dx) \; \approx \; \frac{1}{N} \sum_{i=1}^N \, \delta_{X_{\delta_t}^i}(dx)
+\int |\rho^Y_1(y) - \rho^Y_2(y)|^2 \, dy \neq \int |\rho^X_1(x) - \rho^X_2(x)|^2 \, dx,
 \]</span></p>
-<p>approximates <span class="math inline">\(p_{\delta_t}(x)\)</span> given by</p>
-<p><span id="eq-fokker"><span class="math display">\[
-\frac{p_{\delta_t}(x)- p_0(x)}{\delta_t} \; = \; -\nabla \cdot  {\left[ \mu(x) \, p_0(x) \right]} .
-\tag{1}\]</span></span></p>
-<p>What is the optimal drift function <span class="math inline">\(\mu: \mathbb{R}^D \to \mathbb{R}^D\)</span> that ensures that <span class="math inline">\(p_{\delta_t}\)</span> comes as close as possible to <span class="math inline">\(\pi\)</span>? Typically, we select <span class="math inline">\(\mu:\mathbb{R}^D \to \mathbb{R}^D\)</span> such that the quantity <span class="math inline">\(\mathcal{F}(p_{\delta_t})\)</span> is minimized, provided that <span class="math inline">\(p_{\delta_t}\)</span> is not drastically different from <span class="math inline">\(p_0\)</span>. One method is to use the <span class="math inline">\(L^2\)</span> <a href="https://en.wikipedia.org/wiki/Wasserstein_metric">Wasserstein distance</a> and assume the constraint</p>
-<p><span id="eq-wass"><span class="math display">\[
-D_{\text{Wass}}(p_{0}, p_{\delta_t}) \approx \int p_0(x) \, \| \delta_t \, \mu(x) \|^2 \, dx \leq \varepsilon
-\tag{2}\]</span></span></p>
-<p>for a parameter <span class="math inline">\(\varepsilon\ll 1\)</span>. More pragmatically, it is generally easier (eg. proximal methods) to minimize the joint objective</p>
-<p><span id="eq-joint-obj"><span class="math display">\[
-\mathcal{F}(p_{\delta_t}) + \frac{1}{2 \varepsilon} \, D_{\text{Wass}}(p_{0}, p_{\delta_t}).
-\tag{3}\]</span></span></p>
-<p>Based on equations <a href="#eq-fokker">Equation&nbsp;1</a> and <a href="#eq-wass">Equation&nbsp;2</a>, a first-order expansion shows that the joint objective <a href="#eq-joint-obj">Equation&nbsp;3</a> can be approximated by</p>
-<p><span id="eq-quad"><span class="math display">\[
-\begin{align}
--\int &amp;\nabla \cdot \Big\{  \textcolor{red}{[\delta_t \mu]}(x) \, p_0(x) \Big\} \, \log  {\left\{  \frac{p_0(x)}{\overline{\pi}(x)}  \right\}} \, dx \, \\ &amp;\qquad + \qquad \, \frac{1}{2 \varepsilon} \, \int p_0(x) \, \|  \textcolor{red}{[\delta_t \, \mu]}(x) \|^2 \, dx,
-\end{align}
-\tag{4}\]</span></span></p>
-<p>a relatively straightforward quadratic function of the drift function <span class="math inline">\(\mu: \mathbb{R}^D \to \mathbb{R}^D\)</span>. The optimal drift function, ie. the minimizer of <a href="#eq-quad">Equation&nbsp;4</a>, is given by <span class="math display">\[
-\mu(x) \; = \; - {\left(  \frac{\varepsilon}{\delta_t}  \right)}  \, \nabla \log  {\left\{  \frac{p_0(x)}{\overline{\pi}(x) }  \right\}} .
-\]</span></p>
-<p>Put simply, this suggests that we should select the drift function proportional to <span class="math inline">\(-\nabla \log[p_0(x) / \overline{\pi}(x)]\)</span>. To implement this scheme, we begin by sampling <span class="math inline">\(N \gg 1\)</span> particles <span class="math inline">\(X_0^i \sim p_0(dx)\)</span> and let evolve each particle according to the following differential equation</p>
+<p>so the distance depends on the choice of coordinates. That is, measuring in Cartesian or polar coordinates yields different results—an undesirable feature. Ideally, we seek a distance that is invariant under reparametrizations and changes of base measure, such as the <a href="https://en.wikipedia.org/wiki/Total_variation_distance_of_probability_measures">total variation distance</a>,</p>
 <p><span class="math display">\[
-\frac{d}{dt} X_t^i \; = \; - \nabla \log  {\left\{  \frac{p_t(X_t^i) }{ \overline{\pi}(X_t^i) }  \right\}}
+d_{TV}(\rho_1, \rho_2) = \int_{\mathbb{R}^d} |\rho_1(x) - \rho_2(x)| \, dx.
 \]</span></p>
-<p>where <span class="math inline">\(p_t\)</span> is the density of the set of particles at time <span class="math inline">\(t\)</span>. It is the usual <a href="../../notes/DDPM_deterministic/DDPM_deterministic.html">diffusion-ODE trick</a> for describing the evolution of the density of an <a href="https://en.wikipedia.org/wiki/Brownian_dynamics">overdamped Langevin diffusion</a>,</p>
+<p>One potential drawback of the total variation distance is that it is not differentiable, which can make it difficult to use in optimization problems. An alternative is to consider <a href="https://en.wikipedia.org/wiki/F-divergence"><span class="math inline">\(f\)</span>-divergences</a>, defined as</p>
 <p><span class="math display">\[
-dX_t \; = \; \nabla \log \overline{\pi}(X_t) \, dt \; + \; \sqrt{2} \, dW_t.
+d_f(\rho_1, \rho_2) = \int_{\mathbb{R}^d} f \left( \frac{d\rho_1}{d\rho_2} \right) \rho_2(dx),
 \]</span></p>
-<p>This can be shown by writing down the associated Fokker-Planck equation. This heuristic discussion shows that minimizing <span class="math inline">\(D_{\text{KL}}(p, \pi)\)</span> by introducing a gradient flow in the space of probability distributions with the Wasserstein metric essentially produces a standard overdamped Langevin diffusion. Indeed, transforming this heuristic discussion into a formal statement is not trivial: the constructive proof in <span class="citation" data-cites="jordan1998variational">(<a href="#ref-jordan1998variational" role="doc-biblioref">Jordan, Kinderlehrer, and Otto 1998</a>)</span> is now usually referred to as the JKO scheme.</p>
-<p>The above derivation shows that the Wasserstein distance plays particularly well with minimizing functionals of the space of probability distributions. The same heuristic discussion shows that minimizing a functional of the type</p>
+<p>where <span class="math inline">\(f\)</span> is a convex function with <span class="math inline">\(f(1) = 0\)</span>. These divergences are differentiable and invariant under reparametrizations and changes of base measure, although they are not symmetric and thus not true distances. Locally, however, all <span class="math inline">\(f\)</span>-divergences are equivalent, as a second-order Taylor expansion shows:</p>
 <p><span class="math display">\[
-\mathcal{F}(p) \; = \; \int \Phi[p(x)] \, \nu(dx)
+d_f(\rho + d \rho, \, \rho) =  \textrm{(cst)} \times \int \left( \frac{d \rho}{\rho} \right)^2 \, \rho(dx) + o(\|d \rho\|^2).
 \]</span></p>
-<p>for some cost function <span class="math inline">\(\Phi: (0, \infty) \to \mathbb{R}\)</span> and distribution <span class="math inline">\(\nu(dx)\)</span> leads to choosing a drift function <span class="math inline">\(\mu:\mathbb{R}\to \mathbb{R}\)</span> minimizing</p>
+<p>This means that all these divergences describe the same local geometry, defined by the Fisher-Rao information metric. Furthermore, it is relatively straightforward to derive the global geometry induced by the <a href="https://en.wikipedia.org/wiki/Fisher_information_metric">Fisher information metric</a>. Consider the mapping <span class="math inline">\(\rho \mapsto \sqrt{\rho}\)</span>, which maps a density <span class="math inline">\(\rho\)</span> to an element of the unit sphere of <span class="math inline">\(L^2\)</span>-norm: <span class="math inline">\(\sqrt{\rho} \in \mathcal{S}\)</span>. Since</p>
 <p><span class="math display">\[
-\int -\nabla \cdot \Big\{  \textcolor{red}{[\delta_t \, \mu]}(x) \, p(x) \Big\} \Phi'[p(x)] \, \nu(dx)
-\, + \, \frac{1}{2 \varepsilon} \, \int p_0(x) \, \|  \textcolor{red}{[\delta_t \, \mu]}(x) \|^2 \, dx.
+\| \sqrt{\rho_1} - \sqrt{\rho_2} \|_{L^2}^2 = d_f(\rho_1, \rho_2)
 \]</span></p>
-<p>This can be approached identically to what as been done in the case of minimizing <span class="math inline">\(D_{\text{KL}}(p, \pi)\)</span>.</p>
+<p>for <span class="math inline">\(f(x) = |1 - \sqrt{x}|^2\)</span>, the geometry induced by the Fisher information metric is the same as the geometry induced by the <span class="math inline">\(L^2\)</span>-norm on the unit sphere of <span class="math inline">\(L^2(\mathbb{R}^d)\)</span>. This implies that the geodesic distance between two densities <span class="math inline">\(\rho_1\)</span> and <span class="math inline">\(\rho_2\)</span> is given (up to an irrelevant constant) by the <span class="math inline">\(L^2\)</span>-geodesic distance between the points <span class="math inline">\(\sqrt{\rho_1} \in \mathcal{S}\)</span> and <span class="math inline">\(\sqrt{\rho_2} \in \mathcal{S}\)</span>. In other words, the geodesic distance is given by</p>
+<p><span class="math display">\[
+\arccos \left( \langle \sqrt{\rho_1}, \sqrt{\rho_2} \rangle_{L^2} \right).
+\]</span></p>
+<p>The geodesic path is the large arc of circle, <span class="math inline">\(t \mapsto \rho_t\)</span>, where <span class="math inline">\(\rho_t \propto \left((1-t) \sqrt{\rho_1} + t \sqrt{\rho_2} \right)^2\)</span> for <span class="math inline">\(t \in [0,1]\)</span>. This shows, for example, that the Fisher-Rao geodesic between two Gaussian densities is composed of densities that are Gaussian mixtures; i.e., the geodesic is not composed of Gaussian densities in general. In other words, probability mass is not transported along the geodesic but reshaped, unlike the Wasserstein metric, which describes transport of probability mass. Note in passing that the <a href="https://en.wikipedia.org/wiki/Hellinger_distance">Hellinger distance</a>, defined as</p>
+<p><span class="math display">\[
+d_H(\rho_1, \rho_2) = \int \left( \sqrt{\rho_1(x)} - \sqrt{\rho_2(x)} \right)^2 \, dx,
+\]</span></p>
+<p>is just just a slightly rescaled version of the Fisher-Rao distance since they are related by a deterministic function. In this sense, the Hellinger distance is a Fisher-Rao distance, and consequently the correct way to measure distances between probability densities for many applications.</p>
+</section>
+<section id="gradient-flow" class="level3">
+<h3 class="anchored" data-anchor-id="gradient-flow">Gradient flow</h3>
+<p>What do gradient flows look like in this Fisher-Rao geometry? For example, for a given distribution <span class="math inline">\(\pi\)</span>, the gradient flow of <span class="math inline">\(\rho \mapsto \mathrm{KL}(\rho, \pi)\)</span> under the Wasserstein metric is given by the <a href="https://en.wikipedia.org/wiki/Continuity_equation">transport equation</a>:</p>
+<p><span class="math display">\[
+\partial_t \rho = -\nabla \cdot \left( \rho \, \nabla \log \frac{\pi}{\rho} \right),
+\]</span></p>
+<p>which describes the Langevin dynamics of the process <span class="math inline">\(dX = \nabla \log \pi(X) \, dt + \sqrt{2} \, dB\)</span>, as informally described in these <a href="../../notes/wasserstein_langevin/wasserstein_langevin.html">notes</a>. So what does the gradient flow of <span class="math inline">\(\rho \mapsto \mathrm{KL}(\rho, \pi)\)</span> look like in the Fisher-Rao geometry?</p>
+<p>To answer this, one can consider the square-root mapping <span class="math inline">\(\rho \mapsto \sqrt{\rho} \equiv \Phi(\rho) \in \mathcal{S}\)</span>, express everything in terms of <span class="math inline">\(\Phi(\rho)\)</span>, compute the <span class="math inline">\(L^2\)</span>-gradient on the unit sphere <span class="math inline">\(\mathcal{S}\)</span> (which is straightforward), and finally map back to the density <span class="math inline">\(\rho\)</span> using the inverse mapping <span class="math inline">\(\Phi^{-1}\)</span>. One readily finds that the gradient flow is described by:</p>
+<p><span class="math display">\[
+\partial_t \rho = \log \frac{\pi}{\rho} - \mathbb{E}_\rho \left[ \log \frac{\pi}{\rho} \right].
+\]</span></p>
+<p>This is quite intuitive: the flow tries to increase <span class="math inline">\(\rho\)</span> in regions where <span class="math inline">\(\rho \ll \pi\)</span> and decrease <span class="math inline">\(\rho\)</span> in regions where <span class="math inline">\(\rho \gg \pi\)</span>. Discretizing this flow can naturally be done using sampling-based methods. If <span class="math inline">\(\sum_{i=1}^N w_i \, \delta(x_i)\)</span> is a system of <span class="math inline">\(N\)</span> weighted particles approximating <span class="math inline">\(\rho\)</span>, following the Fisher-Rao gradient flow corresponds to updating the weights as</p>
+<p><span class="math display">\[
+w_i \mapsto \frac{ w_i \, (\pi(x_i) / \rho(x_i))^{\varepsilon}}{\sum_{j=1}^N w_j \, (\pi(x_j) / \rho(x_j))^{\varepsilon}}
+\]</span></p>
+<p>for a small <span class="math inline">\(\varepsilon&gt; 0\)</span> time-step. Indeed, it is because <span class="math inline">\(\partial_t \rho(x) = v(x)\)</span>, where <span class="math inline">\(\mathbb{E}_{\rho}[v]=0\)</span>, can be discretized by updating the weights as <span class="math inline">\(w_i \mapsto w_i \, \exp[\varepsilon\, v(x_i)] / Z\)</span>. This is very much related to the resampling step in sequential Monte Carlo methods, and the recent article <span class="citation" data-cites="crucinio2025sequential">(<a href="#ref-crucinio2025sequential" role="doc-biblioref">Crucinio and Pathiraja 2025</a>)</span> make these connections explicit.</p>
 
 
 
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-jordan1998variational" class="csl-entry" role="listitem">
-Jordan, Richard, David Kinderlehrer, and Felix Otto. 1998. <span>“The Variational Formulation of the Fokker–Planck Equation.”</span> <em>SIAM Journal on Mathematical Analysis</em> 29 (1). SIAM: 1–17.
+<div id="ref-crucinio2025sequential" class="csl-entry" role="listitem">
+Crucinio, Francesca R, and Sahani Pathiraja. 2025. <span>“Sequential Monte Carlo Approximations of Wasserstein–Fisher–Rao Gradient Flows.”</span> <em>arXiv Preprint arXiv:2506.05905</em>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
