@@ -61,6 +61,7 @@
   {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
+      "/notes/infinite_products/inft_prod.html",
       "/notes/fisher-rao/distance.html",
       "/notes/adjoint_method/adjoint.html",
       "/notes/sparse_GP/sparse_gp.html",

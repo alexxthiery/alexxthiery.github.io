@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Notes</title>
+<title>Alexandre Thiéry - Infinite Products</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,18 +23,18 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -58,15 +58,19 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Notes">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry - Infinite Products">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/infinite_products/hadamard.jpg">
 <meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Notes">
+<meta name="twitter:title" content="Alexandre Thiéry - Infinite Products">
 <meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/infinite_products/hadamard.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed">
@@ -76,7 +80,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -86,29 +90,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html" rel="" target="">
+    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
  <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html" rel="" target="">
+    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html" rel="" target="">
+    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
  <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
  <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html" rel="" target="">
+    <a class="nav-link" href="../../about/about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -123,9 +127,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
+      <h1 class="title">Infinite Products</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">complex_analysis</div>
               </div>
                   </div>
   </div>
@@ -137,7 +141,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">15 06 2025</p>
       </div>
     </div>
     
@@ -153,11 +157,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theorygeometry" id="toc-information-theorygeometry" class="nav-link" data-scroll-target="#information-theorygeometry">Information Theory/Geometry</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
-  <li><a href="#other" id="toc-other" class="nav-link" data-scroll-target="#other">Other</a></li>
+  <li><a href="#some-natural-examples" id="toc-some-natural-examples" class="nav-link active" data-scroll-target="#some-natural-examples">Some natural examples</a></li>
   </ul>
 </nav>
     </div>
@@ -167,66 +167,55 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">dates</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-<li><a href="../notes/VIASM_2024/VIASM_2024.html">VIASM mini-course on diffusions and flows</a></li>
-</ul>
-</section>
-<section id="information-theorygeometry" class="level3">
-<h3 class="anchored" data-anchor-id="information-theorygeometry">Information Theory/Geometry</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-<li><a href="../notes/fisher-rao/distance.html">Fisher-Rao Geometry</a></li>
-</ul>
-</section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
-<ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation &amp; the EnKF</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html">Ensemble Kalman Smoothers</a></li>
-<li><a href="../notes/MCMC_deterministic_proposals/MCMC_deterministic.html">MCMC with deterministic proposals</a></li>
-<li><a href="../notes/MCMC_on_manifold/mcmc_manifold.html">RWM &amp; HMC on Manifolds</a></li>
-<li><a href="../notes/SAW/SAW.html">Self-Avoiding-Walks</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-<li><a href="../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson Equation &amp; Asymptotic Variance</a></li>
-<li><a href="../notes/averaging_homogenization/averaging_homogenization.html">Averaging and Homogenization</a></li>
-<li><a href="../notes/doob_transforms/doob.html">Joe Doob &amp; Change of measures on path space</a></li>
-<li><a href="../notes/girsanov/girsanov.html">Girsanov and importance sampling</a></li>
-<li><a href="../notes/HJB/HJB.html">Doob, Girsanov and Bellman</a></li>
-<li><a href="../notes/conformal_inference/conformal.html">Basic Conformal Inference</a></li>
-<li><a href="../notes/jarzynski/jarzynski.html">Jarzynski and Crooks</a></li>
-<li><a href="../notes/sparse_GP/sparse_gp.html">Sparse Gaussian Processes</a></li>
-</ul>
-</section>
-<section id="other" class="level3">
-<h3 class="anchored" data-anchor-id="other">Other</h3>
-<ul>
-<li><a href="../notes/adjoint_method/adjoint.html">Adjoint Method for Sensitivities</a></li>
-<li><a href="../notes/infinite_products/inft_prod.html">Infinite Products</a></li>
-</ul>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./hadamard.jpg" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Jacques_Hadamard">Jacques Hadamard</a> (1865 – 1963)</figcaption>
+</figure>
+</div>
+</div>
+<p>Any polynomial <span class="math inline">\(P(z)\)</span> can be expressed as the product of its zeros, <span class="math inline">\(P(z) = c \prod_{k=1}^n (z - z_k)\)</span>. Now, consider an entire function <span class="math inline">\(f(z)\)</span> with an infinite number of zeros <span class="math inline">\(z_k\)</span>. Necessarily, the zeros must accumulate only at infinity, and one could be tempted to compare <span class="math inline">\(f\)</span> to <span class="math inline">\(c \, \prod_{k \geq 1} (z - z_k)\)</span>. Indeed, this does not work since there is no hope that the product converges. Instead, it seems more reasonable to consider <span class="math inline">\(c \, \prod_{k \geq 1} (1 - z/z_k)\)</span> since for a given <span class="math inline">\(z\)</span>, this product has a better chance to converge for <span class="math inline">\((1 - z/z_k) \to 1\)</span> for <span class="math inline">\(k \to \infty\)</span>. For simplicity, one can assume that the <span class="math inline">\(z_k\)</span> are non-zero, since otherwise, one can just add a factor <span class="math inline">\(z^m\)</span> to the product, where <span class="math inline">\(m\)</span> is the multiplicity of the zero at <span class="math inline">\(0\)</span>.</p>
+<p>There are indeed a few issues. First, one needs the condition <span class="math inline">\(\sum_{k \geq 1} 1/|z_k|\)</span> to ensure convergence. Second, even if this condition is satisfied, any function of the type <span class="math inline">\(e^{g(z)} \, \prod_{k \geq 1} (1 - z/z_k)\)</span>, where <span class="math inline">\(g\)</span> is an entire function, would also share the same zeros. The first issue is quite easily taken care of. Instead of considering terms of the type <span class="math inline">\((1 - z/z_k)\)</span>, one needs to consider terms that converge much faster to <span class="math inline">\(1\)</span> as <span class="math inline">\(z_k \to \infty\)</span>, and only vanish at <span class="math inline">\(z_k\)</span>. A natural choice is <span class="math inline">\(E_p(z/z_k)\)</span> with</p>
+<p><span class="math display">\[
+E_p(z) = (1 - z) \, \exp\left(z + \frac{z^2}{2} + \cdots + \frac{z^p}{p}\right) \approx_0 1 - \frac{z^{p+1}}{p+1}.
+\]</span></p>
+<p>It is then easy to see, for example, that the product <span class="math inline">\(\prod_k E_k(z/z_k)\)</span> is well defined for <span class="math inline">\(z \in \mathbb{C}\)</span> and precisely vanishes at the <span class="math inline">\(z_k\)</span>. If one knew that the zeros satisfied <span class="math inline">\(\sum_{k \geq 1} 1/|z_k|^{p+1} &lt; \infty\)</span>, then one could use instead <span class="math inline">\(\prod_k E_p(z/z_k)\)</span>. Nevertheless, it is not extremely useful in practice since, as mentioned above, one can always multiply by an entire function <span class="math inline">\(e^{g(z)}\)</span> to obtain another entire function with the same zeros.</p>
+<p>To make progress, one can impose some growth condition on the entire function <span class="math inline">\(f(z)\)</span>. For example, one says that an entire function <span class="math inline">\(f(z)\)</span> is of order <span class="math inline">\(\rho\)</span> if</p>
+<p><span class="math display">\[
+|f(z)| \leq C_{\varepsilon} \, \exp\left(|z|^{\rho + \varepsilon}\right) \qquad \text{for all } \varepsilon&gt; 0.
+\]</span></p>
+<p>For example, one can readily see that the sine function is of order <span class="math inline">\(1\)</span>, and any polynomial is of order <span class="math inline">\(0\)</span>. If one knows that the entire function <span class="math inline">\(f(z)\)</span> is of order <span class="math inline">\(\rho\)</span> and has zeros <span class="math inline">\(z_k\)</span> (counted with multiplicity), then <a href="https://en.wikipedia.org/wiki/Hadamard_factorization_theorem">Hadamard’s factorization theorem</a> states that, in fact, the function <span class="math inline">\(f\)</span> can be expressed as</p>
+<p><span class="math display">\[
+f(z) = e^{P(z)}\, z^m \, \prod_{k \geq 1} E_{d} \left(\frac{z}{z_k}\right)
+\]</span></p>
+<p>where <span class="math inline">\(m\)</span> is the multiplicity of the zero at <span class="math inline">\(0\)</span>, <span class="math inline">\(d = \lfloor \rho \rfloor\)</span>, and <span class="math inline">\(P(z)\)</span> is a polynomial of degree at most <span class="math inline">\(d\)</span>.</p>
+<section id="some-natural-examples" class="level3">
+<h3 class="anchored" data-anchor-id="some-natural-examples">Some natural examples</h3>
+<p>One can then asks oneself what are some natural entire functions that vanish at some predetermined set of zeros. For example, one would be a function that vanish on all the integers. Such a function cannot be of order less than one since otherwise it could be writtem as <span class="math inline">\(z \, \prod_{k \geq 1} (1-z/k)(1+z/k)\)</span>, but this product does not converge. Any entire function of order <span class="math inline">\(1\)</span> that has a simple zero at each integer is of the form</p>
+<p><span class="math display">\[
+f(z) = e^{az + b} \, z \, \prod_{k \geq 1}(1-z/k)(1+z/k) e^{z/z_k} \, e^{-z/z_k} = e^{az + b} \, z \, \prod_{k \geq 1} (1-z^2/k^2).
+\]</span></p>
+<p>Checking the Taylor expansion of sine at zero, one finds that the celebrated formula:</p>
+<p><span class="math display">\[
+\sin(\pi z) = \pi \, z \, \prod_{k \geq 1} \left(1 - \frac{z^2}{k^2}\right)
+\]</span></p>
+<p>and a similar interesting example by taking the derivatives of <span class="math inline">\(log \sin(\pi z)\)</span>. Now, what about a function that vanishes on all the negative integers? Again, such a function needs to be of order at least one. Hadamard’s factorization theorem then tells us that such a function is, up to a multiplicative constant, of the form</p>
+<p><span class="math display">\[
+g(z) = e^{az} \, z \, \prod_{k \geq 1} (1 + z/k) e^{-z/k}.
+\]</span></p>
+<p>Naturally, since such a function vanishes on all the negative integers, one of the first things one would like to try is to look at <span class="math inline">\(g(z+1)\)</span> and relate it to <span class="math inline">\(g\)</span> itself. Since <span class="math inline">\(g(z+1)\)</span> vanishes on <span class="math inline">\(\{-1, -2, \ldots\}\)</span>, one knows that it can be expressed as <span class="math inline">\(e^{a'z + b'} \, z \, \prod_{k \geq 1} (1 + z/k) e^{-z/k}\)</span> so that <span class="math inline">\(z \, g(z+1)\)</span> is almost the same as <span class="math inline">\(g(z)\)</span>. One can then do some algebra to choose the constant <span class="math inline">\(a\)</span> so that <span class="math inline">\(z \, g(z+1) = g(z)\)</span>. One finds that the correct choice is the <a href="https://en.wikipedia.org/wiki/Euler's_constant">Euler-Mascheroni constant</a>,</p>
+<p><span class="math display">\[
+a = \gamma = \lim_{n \to \infty} \left( \sum_{k=1}^n \frac{1}{k} - \log n \right).
+\]</span></p>
+<p>This gives the final expression for <span class="math inline">\(g(z)\)</span> as</p>
+<p><span class="math display">\[
+e^{\gamma z} \, z \, \prod_{k \geq 1} (1 + z/k) e^{-z/k}.
+\]</span></p>
+<p>Furthermore, since <span class="math inline">\(g(z)/z \to 1\)</span> as <span class="math inline">\(s \to 0\)</span>, it follows that <span class="math inline">\(g(1)=1\)</span>. from which the identity <span class="math inline">\(z \, g(z+1) = g(z)\)</span> gives that <span class="math inline">\(1/g(n+1) = n!\)</span>. In other words, <span class="math inline">\(g(z)\)</span> is an analytic continuation on teh whole complex plane of the inverse of the <a href="https://en.wikipedia.org/wiki/Gamma_function">Gamma function</a>,</p>
+<p><span class="math display">\[
+\Gamma(z) = e^{-\gamma z} \, z^{-1} \, \prod_{k \geq 1} (1 + z/k)^{-1} e^{z/k}.
+\]</span></p>
 
 
 </section>
