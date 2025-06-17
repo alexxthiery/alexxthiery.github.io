@@ -221,6 +221,7 @@ g(z) = e^{\gamma z} \, z \, \prod_{k \geq 1} (1 + z/k) e^{-z/k}.
 <p><span class="math display">\[
 \Gamma(z) = e^{-\gamma z} \, z^{-1} \, \prod_{k \geq 1} (1 + z/k)^{-1} e^{z/k}.
 \]</span></p>
+<p>This generalizes the usual definition <span class="math inline">\(\Gamma(z) = \int_0^\infty t^{z-1} e^{-t} \, dt\)</span> valid for <span class="math inline">\(\Re(z) &gt; 0\)</span> to the whole complex plane.</p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -236,9 +237,9 @@ g(z) = e^{\gamma z} \, z \, \prod_{k \geq 1} (1 + z/k) e^{-z/k}.
 </section>
 <section id="zeta-function" class="level3">
 <h3 class="anchored" data-anchor-id="zeta-function">Zeta function</h3>
-<p>Let’s conclude these note by the derivation of the analytic continuation of the Riemann <a href="https://en.wikipedia.org/wiki/Riemann_zeta_function">zeta function</a> <span class="math inline">\(\zeta(s) = \sum_{n=1}^\infty n^{-s}\)</span> defined for <span class="math inline">\(\Re(s) &gt; 1\)</span> to the whole complex plane since I have always found it very elegant. The common trick that is used in many places to do a change of variable in the definition of the Gamma function to obtains that</p>
-<p><span class="math display">\[n^{-s} = \Gamma(s)^{-1} \, \int_0^\infty e^{-nt} t^{s-1} \, dt\]</span></p>
-<p>valid for <span class="math inline">\(\Re(s) &gt; 0\)</span>. This allows one to obtain express the zeta function as:</p>
+<p>Let’s conclude these notes by deriving the analytic continuation of the Riemann <a href="https://en.wikipedia.org/wiki/Riemann_zeta_function">zeta function</a> <span class="math inline">\(\zeta(s) = \sum_{n=1}^\infty n^{-s}\)</span>, originnaly defined for <span class="math inline">\(\Re(s) &gt; 1\)</span>, to the whole complex plane. I have always found this proof very elegant. A common trick that is used in many places is to do a change of variable in the definition of the Gamma function to obtains that</p>
+<p><span class="math display">\[n^{-s} = \Gamma(s)^{-1} \, \int_0^\infty e^{-nt} t^{s-1} \, dt.\]</span></p>
+<p>It is valid for <span class="math inline">\(\Re(s) &gt; 0\)</span>. This allows one to obtain express the zeta function as:</p>
 <p><span id="eq-boring"><span class="math display">\[
 \begin{align}
 \zeta(s)
