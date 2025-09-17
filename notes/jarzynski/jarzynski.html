@@ -277,7 +277,7 @@ y_T &amp;\sim \pi_T.
 <p><span class="math display">\[
 \frac{\mathbb{P}^Y}{\mathbb{P}^X}(\underline{z}) =
 \frac{\pi_T(z_T)}{\pi_0(z_0)} \,
-\exp {\left\{ \sum_{k=0}^{N-1} \left&lt; z_{t_{k+1}} - z_{t_k}, \frac{\nabla U_{t_k}(z_{t_k}) + \nabla U_{t_{k+1}}(z_{t_{k+1}})}{2}  \right&gt; + \mathcal{O}(\delta^2) \right\}} .
+\exp {\left\{ \sum_{k=0}^{N-1} \left&lt; z_{t_{k+1}} - z_{t_k}, \frac{\nabla U_{t_k}(z_{t_k}) + \nabla U_{t_{k+1}}(z_{t_{k+1}})}{2}  \right&gt; \right\}}   + \mathcal{O}(\delta^{1/2}).
 \]</span></p>
 <p>One could probably use some <a href="https://en.wikipedia.org/wiki/Stratonovich_integral">Stratonovich</a> calculus to study this, but I always forget these things, so let’s use Ito instead. Write</p>
 <p><span class="math display">\[\frac{\nabla U_{t_k}(z_{t_k}) + \nabla U_{t_{k+1}}(z_{t_{k+1}})}{2}
