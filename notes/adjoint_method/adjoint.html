@@ -248,26 +248,26 @@ window.Quarto = {
 <li><a href="#pde-inverse-problems">PDE Inverse Problems</a></li>
 <li><a href="#controlled-diffusions">Controlled Diffusions</a></li>
 </ul>
-<p>The adjoint method is, at its core, the same idea as <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> or <a href="https://en.wikipedia.org/wiki/Automatic_differentiation">reverse-mode</a> automatic differentiation. In practice, though, it’s often helpful to understand how it works under the hood. Basic implementations of backprop can be sub-optimal or impractical, especially in settings like PDE-constrained optimization or stochastic optimal control.</p>
+<p>The adjoint method is, at its core, the same idea as <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> or <a href="https://en.wikipedia.org/wiki/Automatic_differentiation">reverse-mode</a> automatic differentiation. In practice, though, it’s often helpful to understand how it works under the hood. Basic implementations of backprop can be sub-optimal or impractical (eg. memory intensive), especially in settings like <a href="https://en.wikipedia.org/wiki/PDE-constrained_optimization">PDE-constrained optimization</a> or stochastic optimal control.</p>
 <section id="linear-systems" class="level3">
 <h3 class="anchored" data-anchor-id="linear-systems">Linear Systems</h3>
 <p>For a parameter <span class="math inline">\(\theta \in \mathbb{R}^{d_\theta}\)</span>, consider <span class="math inline">\(x = x(\theta)\)</span> the solution of the linear system</p>
 <p><span class="math display">\[
 A x = b,
 \]</span></p>
-<p>where the matrix <span class="math inline">\(A = A(\theta) \in \mathbb{R}^{d_x \times d_x}\)</span> and the vector <span class="math inline">\(b = b(\theta) \in \mathbb{R}^{d_x}\)</span> depend on <span class="math inline">\(\theta\)</span>. This setup is typical when discretizing PDEs: <span class="math inline">\(A\)</span> arises from the differential operator, and <span class="math inline">\(b\)</span> from the source term. We are interested in a loss function of the type</p>
+<p>where both the matrix <span class="math inline">\(A = A(\theta) \in \mathbb{R}^{d_x \times d_x}\)</span> and the vector <span class="math inline">\(b = b(\theta) \in \mathbb{R}^{d_x}\)</span> depend on <span class="math inline">\(\theta\)</span>. This setup is typical when discretizing PDEs: <span class="math inline">\(A\)</span> arises from the differential operator, and <span class="math inline">\(b\)</span> from the source term. We are interested in a loss function of the type</p>
 <p><span class="math display">\[
-\mathcal{L} = F(\theta, x),
+\mathcal{L}(\theta) = F(\theta, x(\theta)),
 \]</span></p>
-<p>with <span class="math inline">\(F: \mathbb{R}^{d_\theta} \times \mathbb{R}^{d_x} \to \mathbb{R}\)</span>. We aim to compute the derivative of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\theta\)</span>. Applying the chain rule,</p>
+<p>with <span class="math inline">\(F: \mathbb{R}^{d_\theta} \times \mathbb{R}^{d_x} \to \mathbb{R}\)</span>. We aim to compute the derivative of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\theta\)</span>. The chain rule gives</p>
 <p><span class="math display">\[
-D_\theta \mathcal{L}= F_\theta - F_x A^{-1} \left( A_\theta \, x - b_\theta \right) \; \in \mathbb{R}^{1, d_\theta},
+D_\theta \mathcal{L}= F_\theta - F_x A^{-1} \left( A_\theta \, x - b_\theta \right) \; \in \mathbb{R}^{1, d_\theta}.
 \]</span></p>
-<p>The notation <span class="math inline">\(F_\theta = \nabla_\theta F^\top \in \mathbb{R}^{1, d_\theta}\)</span> denotes the Jacobian of <span class="math inline">\(F\)</span> with respect to <span class="math inline">\(\theta\)</span>, and similarly for <span class="math inline">\(F_x\)</span> and <span class="math inline">\(A_\theta\)</span> and <span class="math inline">\(b_\theta\)</span>. Throughout the notes, we will mainly be computing Jacobian matrices; for scalar functions, the jacobian is the transpose of the gradient. When <span class="math inline">\(d_x \gg 1\)</span> and <span class="math inline">\(d_\theta \gg 1\)</span>, directly computing <span class="math inline">\(A^{-1}\)</span> is infeasible. Naively evaluating <span class="math inline">\(A^{-1} (A_\theta x - b_\theta)\)</span> would require <span class="math inline">\(d_\theta\)</span> linear solves, which is too expensive. A better approach is to first compute <span class="math inline">\(\lambda^\top = F_x A^{-1}\)</span> by solving the adjoint system</p>
+<p>The notation <span class="math inline">\(F_\theta = \nabla_\theta F^\top \in \mathbb{R}^{1, d_\theta}\)</span> denotes the Jacobian of <span class="math inline">\(F\)</span> with respect to <span class="math inline">\(\theta\)</span>, and similarly notations are used for <span class="math inline">\(F_x\)</span> and <span class="math inline">\(A_\theta\)</span> and <span class="math inline">\(b_\theta\)</span>. As usual, the jacobian can be thought of as the transpose of the gradient for scalar functions. When <span class="math inline">\(d_x \gg 1\)</span> and <span class="math inline">\(d_\theta \gg 1\)</span>, directly computing <span class="math inline">\(A^{-1}\)</span> is not feasible. Naively evaluating <span class="math inline">\(A^{-1} (A_\theta x - b_\theta)\)</span> would require <span class="math inline">\(d_\theta\)</span> linear solves, each of one of complexity cubic in <span class="math inline">\(d_x\)</span>. A better approach is to first compute <span class="math inline">\(\lambda^\top = F_x A^{-1}\)</span> by solving the so-called adjoint system</p>
 <p><span class="math display">\[
 A^\top \lambda = F_x^\top.
 \]</span></p>
-<p>This requires only one linear solve. Once <span class="math inline">\(\lambda\)</span> is computed, the jacobian simplifies to</p>
+<p>This requires only one linear solve. Once <span class="math inline">\(\lambda \in \mathbb{R}^{d_x}\)</span> is computed, the jacobian simplifies to</p>
 <p><span class="math display">\[
 D_\theta \mathcal{L}= F_\theta - \lambda^\top (A_\theta x - b_\theta).
 \]</span></p>
@@ -278,19 +278,19 @@ D_\theta \mathcal{L}= F_\theta - \lambda^\top (A_\theta x - b_\theta).
 <p><span class="math display">\[
 \Phi(x, \theta) = 0
 \]</span></p>
-<p>for some function <span class="math inline">\(\Phi: \mathbb{R}^{d_x} \times \mathbb{R}^{d_\theta} \to \mathbb{R}^{d_x}\)</span> that satisfies the usual conditions of the implicit function <a href="https://en.wikipedia.org/wiki/Implicit_function_theorem">theorem</a>. Differentiating gives <span class="math inline">\(x_\theta = -\Phi_x^{-1} \Phi_\theta\)</span>. As before, we want the sensitivity with respect to <span class="math inline">\(\theta\)</span> of <span class="math inline">\(\mathcal{L} = F(x, \theta)\)</span>. It equals <span class="math inline">\(D_\theta \mathcal{L}= F_\theta - F_x \Phi_x^{-1} \Phi_\theta\)</span> and can also be expressed as <span class="math inline">\(D_\theta \mathcal{L}= F_\theta - \lambda^\top \Phi_\theta\)</span> where <span class="math inline">\(\lambda \in \mathbb{R}^{d_x}\)</span> is the solution of the adjoint system</p>
+<p>for some function <span class="math inline">\(\Phi: \mathbb{R}^{d_x} \times \mathbb{R}^{d_\theta} \to \mathbb{R}^{d_x}\)</span> that satisfies the usual conditions for the implicit function <a href="https://en.wikipedia.org/wiki/Implicit_function_theorem">theorem</a> to hold. Differentiating gives <span class="math inline">\(x_\theta = -\Phi_x^{-1} \Phi_\theta\)</span>. As before, we want the sensitivity with respect to <span class="math inline">\(\theta\)</span> of <span class="math inline">\(\mathcal{L}(\theta) = F(x(\theta), \theta)\)</span>. It equals <span class="math inline">\(D_\theta \mathcal{L}= F_\theta - F_x \Phi_x^{-1} \Phi_\theta\)</span> and can also be expressed as <span class="math inline">\(D_\theta \mathcal{L}= F_\theta - \lambda^\top \Phi_\theta\)</span> where <span class="math inline">\(\lambda \in \mathbb{R}^{d_x}\)</span> is the solution of the adjoint system</p>
 <p><span id="eq-adjoint"><span class="math display">\[
 \Phi_x^\top \lambda = F_x^\top.
 \tag{1}\]</span></span></p>
-<p>Another way to present this computation is to note that, for any vector <span class="math inline">\(\lambda \in \mathbb{R}^{d_x}\)</span>, we have</p>
+<p>Another way to present this computation is to note that, for <strong>any</strong> vector <span class="math inline">\(\lambda \in \mathbb{R}^{d_x}\)</span>, we have</p>
 <p><span class="math display">\[
-\mathcal{L} = F(\theta, x) - \lambda^\top \Phi(x, \theta)
+\mathcal{L}(\theta) = F(x(\theta), \theta) - \lambda^\top \Phi(x(\theta), \theta)
 \]</span></p>
-<p>since <span class="math inline">\(\Phi(x, \theta) = 0\)</span> for all choices of <span class="math inline">\(\theta\)</span>. Introducing the “adjoint” variable <span class="math inline">\(\lambda\)</span> allows one to eliminate cumbersome terms when computing <span class="math inline">\(D_\theta \mathcal{L}\)</span>. Differentiate with respect to <span class="math inline">\(\theta\)</span> gives</p>
+<p>since <span class="math inline">\(\Phi(x(\theta), \theta) \equiv 0\)</span>. As will soon become clear, introducing the “adjoint” variable <span class="math inline">\(\lambda\)</span> allows one to eliminate cumbersome terms when computing <span class="math inline">\(D_\theta \mathcal{L}\)</span>. Differentiation with respect to <span class="math inline">\(\theta\)</span> gives</p>
 <p><span class="math display">\[
 D_\theta \mathcal{L}= F_\theta - \lambda^\top \Phi_\theta +  {\left(  F_x - \lambda^\top \Phi_x \right)}  x_\theta.
 \]</span></p>
-<p>The term <span class="math inline">\(x_\theta \in \mathbb{R}^{d_x, d_\theta}\)</span> is cumbersome, and we would like to eliminate it. To do this, it suffices to choose <span class="math inline">\(\lambda\)</span> so that the term <span class="math inline">\(F_x - \lambda^\top \Phi_x\)</span> vanishes, which is again the adjoint system <a href="#eq-adjoint" class="quarto-xref">Equation&nbsp;1</a>.</p>
+<p>The term <span class="math inline">\(x_\theta = -\Phi_x^{-1} \Phi_\theta \in \mathbb{R}^{d_x, d_\theta}\)</span> is cumbersome (eg. intractable in high-dimensional settings), and we would like to eliminate it. To this end, it suffices to choose <span class="math inline">\(\lambda\)</span> so that the term <span class="math inline">\(F_x - \lambda^\top \Phi_x\)</span> vanishes; indeed, this is exactly the adjoint-system <a href="#eq-adjoint" class="quarto-xref">Equation&nbsp;1</a>.</p>
 </section>
 <section id="pde-inverse-problems" class="level3">
 <h3 class="anchored" data-anchor-id="pde-inverse-problems">PDE Inverse Problems</h3>
@@ -339,44 +339,48 @@ g = e^{\kappa} \, \left&lt;  \nabla u, \nabla \lambda  \right&gt;,
 </section>
 <section id="controlled-diffusions" class="level3">
 <h3 class="anchored" data-anchor-id="controlled-diffusions">Controlled Diffusions</h3>
-<p>Consider the ODE on <span class="math inline">\([0, T]\)</span>:</p>
+<p>Consider the <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODE</a> on <span class="math inline">\([0, T]\)</span>:</p>
 <p><span id="eq-ode-forward"><span class="math display">\[
 \dot{x} = b(t, \theta, x),
 \tag{4}\]</span></span></p>
-<p>with initial condition <span class="math inline">\(x(0) = \mu(\theta)\)</span>, where <span class="math inline">\(x \in \mathbb{R}^{d_x}\)</span> and <span class="math inline">\(\theta \in \mathbb{R}^{d_\theta}\)</span>. The drift term <span class="math inline">\(b\)</span> is parameterized by <span class="math inline">\(\theta\)</span>. We want the sensitivity of the functional</p>
+<p>with initial condition <span class="math inline">\(x(0) = \mu(\theta)\)</span>, where <span class="math inline">\(x \in \mathbb{R}^{d_x}\)</span> and <span class="math inline">\(\theta \in \mathbb{R}^{d_\theta}\)</span>. The drift term <span class="math inline">\(b(t, \theta, x) \in \mathbb{R}^{d_x}\)</span> is parameterized by <span class="math inline">\(\theta\)</span>. We want the sensitivity of the functional</p>
 <p><span class="math display">\[
-\mathcal{L} = \int_0^T f(t, \theta, x(t)) \, dt + g(\theta, x(T)),
+\mathcal{L}(\theta) = \int_0^T f(t, \theta, x(t)) \, dt + g(\theta, x(T)),
 \]</span></p>
-<p>where <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are given functions. As before, introduce an auxiliary function <span class="math inline">\(\lambda(t) \in \mathbb{R}^{d_x}\)</span> and write:</p>
+<p>where <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are given functions. As before, it is often helpful to introduce an auxiliary function <span class="math inline">\(\lambda(t) \in \mathbb{R}^{d_x}\)</span> and write:</p>
 <p><span class="math display">\[
-\mathcal{L} = \mathcal{L} - \int_0^T \lambda^\top (\dot{x} - b(t, \theta, x)) \, dt.
+\mathcal{L}(\theta) = \mathcal{L}(\theta) - \int_0^T \lambda^\top \, \underbrace{  {\left(  \dot{x} - b  \right)}  }_{\equiv 0} \, dt.
 \]</span></p>
-<p>Differentiating with respect to <span class="math inline">\(\theta\)</span> gives:</p>
+<p>Differentiating with respect to <span class="math inline">\(\theta\)</span> and integrating by parts gives:</p>
 <p><span class="math display">\[
 \begin{aligned}
 D_\theta \mathcal{L}
-&amp;= \int_0^T \left( f_\theta + \lambda^\top b_\theta \right) dt + g_\theta(\theta, x(T)) + \lambda^\top(0) \mu_\theta \\
-&amp;\quad + \left( g_x - \lambda^\top(T) \right) x_\theta(T)
+&amp;= \int_0^T \left( f_\theta + \lambda^\top b_\theta \right) \, dt + g_\theta(\theta, x(T)) + \lambda^\top(0) \mu_\theta \\
+&amp;\quad + \left( g_x - \lambda^\top(T) \right) \, x_\theta(T)
 + \int_0^T \left( f_x + \dot{\lambda}^\top + \lambda^\top b_x \right) x_\theta(t) \, dt.
 \end{aligned}
 \]</span></p>
-<p>To eliminate the dependence on <span class="math inline">\(x_\theta(t)\)</span>, choose <span class="math inline">\(\lambda\)</span> to satisfy the adjoint system:</p>
+<p>To eliminate the dependence on <span class="math inline">\(x_\theta(t)\)</span>, choose <span class="math inline">\(\lambda(t)\)</span> to satisfy the adjoint system:</p>
 <p><span id="eq-adjoint-ode"><span class="math display">\[
 \begin{cases}
 \dot{\lambda}(t) = -\nabla_x f - b_x^\top \lambda(t), \\
 \lambda(T) = \nabla_x g.
 \end{cases}
 \tag{5}\]</span></span></p>
-<p>This is a linear ODE with a given terminal condition that needs to be solved backward in time. This means that for computing the derivative of <span class="math inline">\(\mathcal{L}\)</span>, one can first solve the forward ODE <a href="#eq-ode-forward" class="quarto-xref">Equation&nbsp;4</a> to obtain <span class="math inline">\(x(t)\)</span>, and then solve the adjoint system <a href="#eq-adjoint-ode" class="quarto-xref">Equation&nbsp;5</a> backward in time to obtain <span class="math inline">\(\lambda(t)\)</span>. The Jacobian (i.e.&nbsp;transpose of the gradient) of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\theta\)</span> is then given by</p>
+<p>This is a linear ODE with a terminal condition <span class="math inline">\(\lambda(T) = \nabla_x g\)</span> that needs to be solved backward in time. This means that for computing the derivative of <span class="math inline">\(\mathcal{L}\)</span>, one can first solve the forward ODE <a href="#eq-ode-forward" class="quarto-xref">Equation&nbsp;4</a> to obtain <span class="math inline">\(x(t)\)</span>, and then solve the adjoint system <a href="#eq-adjoint-ode" class="quarto-xref">Equation&nbsp;5</a> backward in time to obtain <span class="math inline">\(\lambda(t)\)</span>. The Jacobian (i.e.&nbsp;transpose of the gradient) of <span class="math inline">\(\mathcal{L}\)</span> is then given by</p>
 <p><span id="eq-gradient-ode"><span class="math display">\[
 D_\theta \mathcal{L}
 = \int_0^T \left( f_\theta + \lambda^\top b_\theta \right) dt + g_\theta(\theta, x(T)) + \lambda^\top(0) \mu_\theta.
 \tag{6}\]</span></span></p>
-<p>The term <span class="math inline">\(\lambda^\top b_\theta\)</span> is a vector jacobian product, and can be computed efficiently. This formulation is often referred to as the “continuous adjoint method” or “adjoint sensitivity analysis” or “optimize-then-discretize” and dates back to the work of <span class="citation" data-cites="pontryagin2018mathematical">(<a href="#ref-pontryagin2018mathematical" role="doc-biblioref">Pontryagin 1962</a>)</span>. A naive implementation of <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> can be inefficient memory-wise since quantities such as <span class="math inline">\(f_\theta\)</span> would typically be stored along the forward pass. When <span class="math inline">\(d_\theta \gg 1\)</span>, as is for example the case when the drift is parameterized by a neural network, this can be impractical. Instead, it may be more efficient to store the forward trajectory <span class="math inline">\(x(t)\)</span> only, and recompute all the other quantities during the backward pass. Similarly, if implicit methods are used to solve the ODE instead if a simple Euler scheme, backpropagation through the implicit solver can be tricky. Note that nothing really changes when considering a <a href="https://en.wikipedia.org/wiki/Stochastic_differential_equation">SDE</a> with additive noise instead,</p>
+<p>The term <span class="math inline">\(\lambda^\top b_\theta\)</span> is a vector jacobian product, and can be computed efficiently. This formulation is often referred to as the “continuous adjoint method” or “adjoint sensitivity analysis” or “optimize-then-discretize” and dates back to the work of <span class="citation" data-cites="pontryagin2018mathematical">(<a href="#ref-pontryagin2018mathematical" role="doc-biblioref">Pontryagin 1962</a>)</span>. A naive implementation of <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> can be inefficient memory-wise since quantities such as <span class="math inline">\(f_\theta\)</span> would typically be stored along the forward pass. When <span class="math inline">\(d_\theta \gg 1\)</span>, as is for example the case when the drift is parameterized by a neural network, this can be impractical. Instead, it may be more efficient to store the forward trajectory <span class="math inline">\(x(t)\)</span> only, and recompute all the other quantities during the backward pass; there is a slight computational cost but potentially very large memory savings. In machine-learning settings, this often means the possibility to exploit much larger batch sizes. Similarly, if implicit methods are used to solve the ODE instead of a simple <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler-Maruyama</a> scheme, backpropagation through the implicit solver can be tricky.</p>
+<p>Nothing really changes when considering a <a href="https://en.wikipedia.org/wiki/Stochastic_differential_equation">SDE</a> with additive noise instead,</p>
 <p><span class="math display">\[
 dx = b(t, \theta, x) \, dt + \sigma(t) \, dW_t.
 \]</span></p>
-<p>Extremely informally, one can more or less apply the same reasoning as above to the controlled ODE with drift <span class="math inline">\(b(t, \theta, x) + \sigma(t) \, dW_t/dt\)</span>. Again, it suffices to solve the SDE forward in time to obtains <span class="math inline">\(x(t)\)</span> and then solve the same adjoint system <a href="#eq-adjoint-ode" class="quarto-xref">Equation&nbsp;5</a> backward in time to obtain <span class="math inline">\(\lambda(t)\)</span>: it is still an ordinary differential equation. The derivative of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\theta\)</span> is then given by the same expression <a href="#eq-gradient-ode" class="quarto-xref">Equation&nbsp;6</a>. For SDEs with multiplicative noise, the adjoint system is slightly more complicated, but hardly changes the overall picture. Finally, note that if <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> do not depend on <span class="math inline">\(\theta\)</span> and one chooses <span class="math inline">\(\theta = x_0\)</span> and the initial condition <span class="math inline">\(\mu_{x_0} = x_0\)</span>, <a href="#eq-gradient-ode" class="quarto-xref">Equation&nbsp;6</a> shows that <span class="math inline">\(D_{x_0} \mathcal{L}=  {\left( \nabla_{x_0} \mathcal{L} \right)} ^\top = \lambda(0)^\top\)</span>. More generally, this shows that:</p>
+<p>Informally, one can apply the same reasoning as previously to the controlled ODE: <span class="math display">\[
+\dot{x} \, = \, b(t, \theta, x) + \sigma(t) \, dW_t/dt.
+\]</span></p>
+<p>Again, it suffices to solve the SDE forward in time to obtains <span class="math inline">\(x(t)\)</span> and then solve the same exact same adjoint ODE <a href="#eq-adjoint-ode" class="quarto-xref">Equation&nbsp;5</a> backward in time to obtain <span class="math inline">\(\lambda(t)\)</span>: it is still an ordinary differential equation. The derivative of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\theta\)</span> is then given by the same expression <a href="#eq-gradient-ode" class="quarto-xref">Equation&nbsp;6</a>. For SDEs with multiplicative noise, the adjoint system is slightly more complicated, but hardly changes the overall picture. Finally, note that in the case the two functions <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> do not depend on <span class="math inline">\(\theta\)</span> and one chooses <span class="math inline">\(\theta = x_0\)</span> and the initial condition <span class="math inline">\(\mu_{x_0} = x_0\)</span>, <a href="#eq-gradient-ode" class="quarto-xref">Equation&nbsp;6</a> shows that <span class="math inline">\(D_{x_0} \mathcal{L}=  {\left( \nabla_{x_0} \mathcal{L} \right)} ^\top = \lambda(0)^\top\)</span>. More generally, this shows that:</p>
 <p><span class="math display">\[
 \lambda(t) = \nabla_{x(t)} \,  {\left\{  \int_t^T f(s, \theta, x(s)) \, ds + g(\theta, x(T)) \right\}} .
 \]</span></p>
