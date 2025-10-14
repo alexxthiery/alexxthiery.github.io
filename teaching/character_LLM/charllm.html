@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -164,6 +184,7 @@ window.Quarto = {
   <li><a href="#problem-statement" id="toc-problem-statement" class="nav-link" data-scroll-target="#problem-statement">Problem Statement</a></li>
   <li><a href="#organization-of-the-report" id="toc-organization-of-the-report" class="nav-link" data-scroll-target="#organization-of-the-report">Organization of the Report</a></li>
   <li><a href="#experimentation-hints" id="toc-experimentation-hints" class="nav-link" data-scroll-target="#experimentation-hints">Experimentation Hints</a></li>
+  <li><a href="#some-potentially-interesting-references" id="toc-some-potentially-interesting-references" class="nav-link" data-scroll-target="#some-potentially-interesting-references">Some potentially interesting references:</a></li>
   <li><a href="#submission" id="toc-submission" class="nav-link" data-scroll-target="#submission">Submission</a></li>
   <li><a href="#evaluation-criteria" id="toc-evaluation-criteria" class="nav-link" data-scroll-target="#evaluation-criteria">Evaluation Criteria</a></li>
   <li><a href="#final-remarks" id="toc-final-remarks" class="nav-link" data-scroll-target="#final-remarks">Final Remarks</a></li>
@@ -250,8 +271,20 @@ Predicting multiple future characters could change training dynamics, though it 
 <li><p><strong>Model Tuning:</strong><br>
 The choice of hidden size, number of layers, and attention heads can strongly influence performance and training time. Feedforward dimension and dropout may help balance capacity and regularization. Various <a href="https://machinelearningmastery.com/positional-encodings-in-transformer-models/">positional encodings</a> (sinusoidal, learned, rotary) or injecting them at different layers could impact how well the model captures long-range dependencies. Simpler recurrent alternatives such as <a href="https://en.wikipedia.org/wiki/Long_short-term_memory">LSTMs</a> might perform surprisingly well on this dataset and are worth comparing. If it happens that a LSTM outperforms a transformer, it would be an interesting finding to discuss in your report.</p></li>
 <li><p><strong>Optimization:</strong><br>
-Hyperparameters like batch size, optimizer, learning rate, and scheduling strategy often dominate performance differences. Gradient clipping, mixed precision can improve training stability and efficiency. Smaller exploratory runs are crucial and should guide settings before committing to longer training. When training large LLMs, this is especially true since the final training run can take days and be extremely costly. For example, it is often worth it to large number of smaller runs and explore some scaling laws (e.g., how does performance scale with model size, data size, compute budget, etc). —</p></li>
+Hyperparameters like batch size, optimizer, learning rate, and scheduling strategy often dominate performance differences. Gradient clipping, mixed precision can improve training stability and efficiency. Smaller exploratory runs are crucial and should guide settings before committing to longer training. When training large LLMs, this is especially true since the final training run can take days and be extremely costly. For example, it is often worth it to large number of smaller runs and explore some scaling laws (e.g., how does performance scale with model size, data size, compute budget, etc).</p></li>
 </ul>
+</section>
+<section id="some-potentially-interesting-references" class="level3">
+<h3 class="anchored" data-anchor-id="some-potentially-interesting-references">Some potentially interesting references:</h3>
+<ul>
+<li><strong>“Attention is all you need”</strong>, <span class="citation" data-cites="vaswani2017attention">Vaswani et al. (<a href="#ref-vaswani2017attention" role="doc-biblioref">2017</a>)</span> : The seminal paper introducing the transformer architecture, which has become the foundation for many modern language models.</li>
+<li><strong>“Character-level language modeling with deeper self-attention”</strong>, <span class="citation" data-cites="al2019character">Al-Rfou et al. (<a href="#ref-al2019character" role="doc-biblioref">2019</a>)</span> : Explores character-level language modeling using deep self-attention mechanisms, demonstrating the effectiveness of transformers for this task.</li>
+<li><strong>“Scaling laws for neural language models”</strong>, <span class="citation" data-cites="kaplan2020scaling">Kaplan et al. (<a href="#ref-kaplan2020scaling" role="doc-biblioref">2020</a>)</span> : Describes empirical scaling laws for language models, showing how performance improves with model size, dataset size, and compute budget.</li>
+<li><strong>“Training compute-optimal large language models”</strong>, <span class="citation" data-cites="hoffmann2022training">Hoffmann et al. (<a href="#ref-hoffmann2022training" role="doc-biblioref">2022</a>)</span> : Proposes strategies for training large language models efficiently, balancing model size and training duration to optimize performance.</li>
+<li><strong>“Roformer: Enhanced transformer with rotary position embedding”</strong>, <span class="citation" data-cites="su2024roformer">Su et al. (<a href="#ref-su2024roformer" role="doc-biblioref">2024</a>)</span> : Introduces the Roformer architecture, which incorporates rotary position embeddings to improve the performance of transformers on various NLP tasks.</li>
+<li><a href="https://github.com/KellerJordan/modded-nanogpt">Tricks of the Trade for Training Large Neural Networks</a>: A collection of practical tips and techniques for training large neural networks effectively, including optimization strategies and architecture choices.</li>
+</ul>
+<hr>
 </section>
 <section id="submission" class="level3">
 <h3 class="anchored" data-anchor-id="submission">Submission</h3>
@@ -291,9 +324,26 @@ Correctness, readability, and documentation.</li>
 <p>This project is designed to be exploratory and open-ended. There is no single “correct” solution—creativity and thoughtful experimentation are key. If you get stuck, don’t hesitate to reach out for guidance. Consider maintaining a proper <strong>git repository</strong> to track progress and document results. You will learn a lot about the inner workings of transformers, optimization, and large-scale training by engaging deeply with this project.</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-al2019character" class="csl-entry" role="listitem">
+Al-Rfou, Rami, Dokook Choe, Noah Constant, Mandy Guo, and Llion Jones. 2019. <span>“Character-Level Language Modeling with Deeper Self-Attention.”</span> In <em>Proceedings of the AAAI Conference on Artificial Intelligence</em>, 33:3159–66. 01.
+</div>
+<div id="ref-hoffmann2022training" class="csl-entry" role="listitem">
+Hoffmann, Jordan, Sebastian Borgeaud, Arthur Mensch, Elena Buchatskaya, Trevor Cai, Eliza Rutherford, Diego de Las Casas, et al. 2022. <span>“Training Compute-Optimal Large Language Models.”</span> <em>arXiv Preprint arXiv:2203.15556</em>.
+</div>
+<div id="ref-kaplan2020scaling" class="csl-entry" role="listitem">
+Kaplan, Jared, Sam McCandlish, Tom Henighan, Tom B Brown, Benjamin Chess, Rewon Child, Scott Gray, Alec Radford, Jeffrey Wu, and Dario Amodei. 2020. <span>“Scaling Laws for Neural Language Models.”</span> <em>arXiv Preprint arXiv:2001.08361</em>.
+</div>
+<div id="ref-su2024roformer" class="csl-entry" role="listitem">
+Su, Jianlin, Murtadha Ahmed, Yu Lu, Shengfeng Pan, Wen Bo, and Yunfeng Liu. 2024. <span>“Roformer: Enhanced Transformer with Rotary Position Embedding.”</span> <em>Neurocomputing</em> 568. Elsevier: 127063.
+</div>
+<div id="ref-vaswani2017attention" class="csl-entry" role="listitem">
+Vaswani, Ashish, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. 2017. <span>“Attention Is All You Need.”</span> <em>Advances in Neural Information Processing Systems</em> 30.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
