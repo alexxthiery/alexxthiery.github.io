@@ -288,11 +288,13 @@ Some details:
 Some details:
 </summary>
 <p style="color: blue;">
-An interpretation of the conditioned process is as follows. Suppose for example that every <span class="math inline">\(\delta\)</span> units of time, one observes a noisy measurement of the state with log-likelihood <span class="math inline">\(f(t, x) \, \delta\)</span>, as well as a final observation at time <span class="math inline">\(T\)</span> with log-likelihood <span class="math inline">\(g(x)\)</span>. For example, this could be a noisy measurement with Gaussian noise of variance proportional to <span class="math inline">\(1/\delta\)</span>; in other words, one very frequently observes the state with very noisy measurements. Then, given the observation path <span class="math inline">\(y_{0:T}\)</span>, the log-likelihood of the entire path is approximately given by <span class="math inline">\(\int_0^T f(s, X_s) \, ds\)</span>. Conditioning on these frequent observations then leads to the change of measure in <a href="#eq-change-gen" class="quarto-xref">Equation&nbsp;4</a>. The computations of the conditioned generator then follow similarly as before, <span class="math display">\[
+An interpretation of the conditioned process is as follows. Suppose for example that every <span class="math inline">\(\delta\)</span> units of time, one observes a noisy measurement <span class="math inline">\(y_t\)</span> of the state <span class="math inline">\(x_t\)</span> with log-likelihood <span class="math inline">\(f(t, x_t) \, \delta\)</span>, as well as a final observation at time <span class="math inline">\(T\)</span> with log-likelihood <span class="math inline">\(g(x_T)\)</span>. For example, this could be a stream of noisy measurements with Gaussian noise of variance proportional to <span class="math inline">\(1/\delta\)</span> concluded at time <span class="math inline">\(T\)</span> with a final measurement; in other words, one very frequently observes the state with very noisy measurements and finally makes a more precise observation at time <span class="math inline">\(T\)</span>. In the regime <span class="math inline">\(\delta \to 0\)</span>, the log-likelihood of that stream <span class="math inline">\(y_{0:T}\)</span> of observations is precisely: <span class="math display">\[
+\int_0^T f(s, X_s) \, ds + g(X_T).
+\]</span> Conditioning on these frequent observations then leads to the change of measure in <a href="#eq-change-gen" class="quarto-xref">Equation&nbsp;4</a>. The computations of the conditioned generator then follow similarly as before. We have: <span class="math display">\[
 \begin{align*}
 \mathbb{E}[\varphi(x_{t+\delta}) | x_t, y_{0:T}] &amp;= \mathbb{E}[\varphi(x_{t+\delta}) | x_t, y_{t:T}]\\
 &amp;=
-\frac{ \mathbb{E}_{x_t}[\varphi(x_{t+\delta}) \, \exp {\left\{ \int_{t}^T f(s, X_s) \, ds + g(x_T) \right\}} ] }{h(t, x)}.
+\frac{ \mathbb{E}_{x_t}[\varphi(x_{t+\delta}) \, \exp {\left\{ \int_{t}^T f(s, X_s) \, ds + g(x_T) \right\}} ] }{h(t, x)}
 \end{align*}
 \]</span> where <span class="math inline">\(h\)</span> is defined in <a href="#eq-h-gen" class="quarto-xref">Equation&nbsp;5</a>. The rest of the computation follows similarly as before. First, express <span class="math inline">\(\exp {\left\{ \int_{t}^T f(s, X_s) \, ds + g(x_T) \right\}} \)</span> as <span class="math display">\[
 \exp {\left\{ \int_{t}^{t+\delta} f(s, X_s) \, ds \right\}}  \, \exp {\left\{ \int_{t+\delta}^T f(s, X_s) \, ds + g(x_T) \right\}} ,
@@ -304,7 +306,7 @@ An interpretation of the conditioned process is as follows. Suppose for example 
 &amp;=
 \frac{ \mathbb{E}_{x_t}[\varphi(x_{t+\delta}) \, h(t+\delta, x_{t+\delta})] }{h(t, x)} + \delta \, \varphi(x_t) \, f(t, x_t) + o(\delta).
 \end{align*}
-\]</span> The rest of the computation then follows as before.
+\]</span> The rest of the computations are then identical to before.
 </p>
 </details>
 <p>To see how this works, let us see a few examples:</p>
