@@ -283,6 +283,30 @@ Some details:
 <p><span id="eq-doob-transforms"><span class="math display">\[
 \textcolor{green}{\mathcal{L}^{\star} \varphi\; = \; \mathcal{L}\varphi+ \frac{\mathcal{L}[h \, \varphi]}{h} +  {\left(  \frac{\partial_t h} {h} + f \right)}  \, \varphi.}
 \tag{6}\]</span></span></p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+An interpretation of the conditioned process is as follows. Suppose for example that every <span class="math inline">\(\delta\)</span> units of time, one observes a noisy measurement of the state with log-likelihood <span class="math inline">\(f(t, x) \, \delta\)</span>, as well as a final observation at time <span class="math inline">\(T\)</span> with log-likelihood <span class="math inline">\(g(x)\)</span>. For example, this could be a noisy measurement with Gaussian noise of variance proportional to <span class="math inline">\(1/\delta\)</span>; in other words, one very frequently observes the state with very noisy measurements. Then, given the observation path <span class="math inline">\(y_{0:T}\)</span>, the log-likelihood of the entire path is approximately given by <span class="math inline">\(\int_0^T f(s, X_s) \, ds\)</span>. Conditioning on these frequent observations then leads to the change of measure in <a href="#eq-change-gen" class="quarto-xref">Equation&nbsp;4</a>. The computations of the conditioned generator then follow similarly as before, <span class="math display">\[
+\begin{align*}
+\mathbb{E}[\varphi(x_{t+\delta}) | x_t, y_{0:T}] &amp;= \mathbb{E}[\varphi(x_{t+\delta}) | x_t, y_{t:T}]\\
+&amp;=
+\frac{ \mathbb{E}_{x_t}[\varphi(x_{t+\delta}) \, \exp {\left\{ \int_{t}^T f(s, X_s) \, ds + g(x_T) \right\}} ] }{h(t, x)}.
+\end{align*}
+\]</span> where <span class="math inline">\(h\)</span> is defined in <a href="#eq-h-gen" class="quarto-xref">Equation&nbsp;5</a>. The rest of the computation follows similarly as before. First, express <span class="math inline">\(\exp {\left\{ \int_{t}^T f(s, X_s) \, ds + g(x_T) \right\}} \)</span> as <span class="math display">\[
+\exp {\left\{ \int_{t}^{t+\delta} f(s, X_s) \, ds \right\}}  \, \exp {\left\{ \int_{t+\delta}^T f(s, X_s) \, ds + g(x_T) \right\}} ,
+\]</span> and write that <span class="math inline">\(\exp {\left\{ \int_{t}^{t+\delta} f(s, X_s) \, ds \right\}}  = 1 + f(t, x_t) \, \delta + o(\delta)\)</span> for small <span class="math inline">\(\delta\)</span>. Then conditioned on <span class="math inline">\(x_{t+\delta}\)</span> to obtain: <span class="math display">\[
+\begin{align*}
+\mathbb{E}[\varphi(x_{t+\delta}) | x_t, y_{t:T}]
+&amp;=
+\frac{ \mathbb{E}_{x_t}[\varphi(x_{t+\delta}) \, (1 + f(t, x_t) \, \delta) \, h(t+\delta, x_{t+\delta})] }{h(t, x)} + o(\delta)\\
+&amp;=
+\frac{ \mathbb{E}_{x_t}[\varphi(x_{t+\delta}) \, h(t+\delta, x_{t+\delta})] }{h(t, x)} + \delta \, \varphi(x_t) \, f(t, x_t) + o(\delta).
+\end{align*}
+\]</span> The rest of the computation then follows as before.
+</p>
+</details>
 <p>To see how this works, let us see a few examples:</p>
 <section id="general-diffusions" class="level3">
 <h3 class="anchored" data-anchor-id="general-diffusions">General diffusions</h3>
