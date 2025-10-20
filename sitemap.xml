@@ -302,7 +302,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2025-06-16T14:56:41.671Z</lastmod>
+    <lastmod>2025-10-20T08:49:53.769Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
@@ -362,7 +362,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2025-06-16T14:56:49.310Z</lastmod>
+    <lastmod>2024-02-09T10:06:09.000Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
@@ -451,5 +451,9 @@
   <url>
     <loc>https://alexxthiery.github.io/teaching/character_LLM/charllm.html</loc>
     <lastmod>2025-10-14T02:52:00.435Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/shrodinger_bridge/shrodinger.html</loc>
+    <lastmod>2025-10-20T08:48:14.045Z</lastmod>
   </url>
 </urlset>
