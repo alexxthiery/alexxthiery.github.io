@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Shrodinger Bridges – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Shrodinger Bridges – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/shrodinger_bridge/erwin.jpg">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Shrodinger Bridges – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/shrodinger_bridge/erwin.jpg">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Shrodinger Bridges</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">markov</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">19 10 2025</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">19 10 2025</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#static-shrödinger-bridge-problem" id="toc-static-shrödinger-bridge-problem" class="nav-link active" data-scroll-target="#static-shrödinger-bridge-problem">Static Shrödinger Bridge Problem</a></li>
+  <li><a href="#dynamic-schrödinger-bridge-problem" id="toc-dynamic-schrödinger-bridge-problem" class="nav-link" data-scroll-target="#dynamic-schrödinger-bridge-problem">Dynamic Schrödinger Bridge Problem</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./erwin.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/Erwin_Schr%C3%B6dinger">Erwin Schrödinger</a> (1887 – 1961)</figcaption>
+</figure>
+</div>
+</div>
+<p>Consider two discrete probability distributions <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> over <span class="math inline">\([[1,n]]\)</span>. We would like to find a <a href="https://en.wikipedia.org/wiki/Coupling_(probability)">coupling</a> <span class="math inline">\(\pi(x_0,x_1)\)</span> between <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> such that, under this coupling <span class="math inline">\((x_0,X_1) \sim \pi\)</span>, the distance <span class="math inline">\(d(x_0,X_1)\)</span> between <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span> is small. Naturally, this can be formulated as the following <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a> problem:</p>
+<p><span class="math display">\[
+\mathop{\mathrm{argmin}}_{\pi \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \pi(x_0,x_1),
+\]</span></p>
+<p>where <span class="math inline">\(\Pi(\nu_0, \nu_1)\)</span> is the set of couplings between <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span>. It is a <a href="https://en.wikipedia.org/wiki/Linear_programming">linear program</a> and can be solved efficiently when <span class="math inline">\(n\)</span> is not too large. However, the optimal transport plan <span class="math inline">\(\pi\)</span> is often very sparse since it puts mass on at most <span class="math inline">\((2n-1)\)</span> pairs <span class="math inline">\((x_0,x_1)\)</span>. This can be undesirable in some applications. Furthermore, small changes in the distributions <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> can lead to large changes in the optimal transport plan. This sensitivity can be problematic in practice, especially when the distributions are estimated from data.</p>
+<section id="static-shrödinger-bridge-problem" class="level3">
+<h3 class="anchored" data-anchor-id="static-shrödinger-bridge-problem">Static Shrödinger Bridge Problem</h3>
+<p>A standard way to address these issues is to add an entropic regularization term to the objective function. The resulting problem is known as the Schrödinger bridge problem and can be formulated as follows. Consider a reference joint distribution <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1)\)</span> over <span class="math inline">\([[1,n]] \times [[1,n]]\)</span> and find the coupling <span class="math inline">\(\pi(x_0,x_1)\)</span> that minimizes the Kullback-Leibler divergence to <span class="math inline">\(\mu_{\mathrm{ref}}\)</span> while matching the marginals <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span>:</p>
+<p><span id="eq-kl-contrained"><span class="math display">\[
+\mathop{\mathrm{argmin}}_{\pi \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} \pi(x_0,x_1) \log \frac{\pi(x_0,x_1)}{\mu_{\mathrm{ref}}(x_0,x_1)}.
+\tag{1}\]</span></span></p>
+<p>Furthermore, one can readily see that the optimal coupling <span class="math inline">\(\pi\)</span> only depends on the conditional distributions of the reference measure <span class="math inline">\(\mu_{\mathrm{ref}}\)</span>, i.e.&nbsp;the conditional law <span class="math inline">\(\mu_{\mathrm{ref}}(x_1|x_0)\)</span> and <span class="math inline">\(\mu_{\mathrm{ref}}(x_0|x_1)\)</span>. A common choice for the reference measure is a distribution of the form <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1) \propto \exp(-d(x_0,x_1)/\varepsilon)\)</span>. This choice encourages the coupling <span class="math inline">\(\pi\)</span> to put more mass on pairs <span class="math inline">\((x_0,x_1)\)</span> that are close according to the distance <span class="math inline">\(d\)</span> and the resulting optimization problem can be rewritten as:</p>
+<p><span id="eq-entropic-ot"><span class="math display">\[
+\mathop{\mathrm{argmin}}_{\pi \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \pi(x_0,x_1)  \textcolor{blue}{\; - \; \varepsilon\, \mathrm{H}(\pi)}
+\tag{2}\]</span></span></p>
+<p>where <span class="math inline">\(\mathrm{H}(\pi) = - \sum_{x_0,x_1} \pi(x_0,x_1) \log \pi(x_0,x_1)\)</span> is the <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">entropy</a> of the coupling <span class="math inline">\(\pi\)</span>. Note that since the marginals of <span class="math inline">\(\pi\)</span> are fixed, it is also equivalent to replacing the entropy term by the negative Kullback-Leibler divergence to the independent coupling <span class="math inline">\(\nu_0(x_0) \otimes \nu_1(x_1)\)</span>,</p>
+<p><span class="math display">\[
+\mathop{\mathrm{argmin}}_{\pi \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \pi(x_0,x_1)  \textcolor{blue}{\; + \; \varepsilon\, D_{\text{KL}}(\pi \mid \nu_0 \otimes \nu_1)},
+\]</span></p>
+<p>which can be slightly easier to deal with when working with continuous distributions (the <a href="https://en.wikipedia.org/wiki/Differential_entropy">differential entropy</a> <span class="math inline">\(\mathrm{H}(\pi)\)</span> is not an informationally meaningful quantity because it depends on the choice of coordinates and scale). The entropic regularization term encourages the coupling to be more spread out, which can lead to more robust solutions. The parameter <span class="math inline">\(\varepsilon\)</span> controls the trade-off between minimizing the transport cost and maximizing the entropy of the coupling. As <span class="math inline">\(\varepsilon\to 0\)</span>, the solution approaches the optimal transport plan, while as <span class="math inline">\(\varepsilon\to \infty\)</span>, the solution approaches the independent coupling <span class="math inline">\(\pi(x_0,x_1) = \nu_0(x_0) \nu_1(x_1)\)</span>. Writing the <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange dual</a> formulation of the problem <a href="#eq-entropic-ot" class="quarto-xref">Equation&nbsp;2</a> provides fast algorithms to solve it such as the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">iterative proportional fitting</a> procedure (IPFP), also known as the Sinkhorn-Knopp algorithm in the optimal transport literature. Importantly, it also almost immediately shows that the optimal coupling has a very simple form,</p>
+<p><span id="eq-schrodinger-solution"><span class="math display">\[
+\pi(x_0,x_1) = f(x_0)  \, \mu_{\mathrm{ref}}(x_0,x_1) \, g(x_1),
+\tag{3}\]</span></span></p>
+<p>for two positive potential functions <span class="math inline">\(f(x_0)\)</span> and <span class="math inline">\(g(x_1)\)</span>. These potentials function need to satisfy the marginal constraints,</p>
+<p><span class="math display">\[
+\left\{
+\begin{align*}
+\nu_0(x_0) &amp;= \mu_{\mathrm{ref}}(x_0) \, f(x_0) \, g(0, x_0)\\
+\nu_1(x_1) &amp;= \mu_{\mathrm{ref}}(x_1) \, g(x_1) \, f(1, x_1),
+\end{align*}
+\right.
+\]</span></p>
+<p>where we defined the quantities <span class="math inline">\(g(0,x_0)\)</span> and <span class="math inline">\(f(1,x_1)\)</span> as follows:</p>
+<p><span class="math display">\[
+\left\{
+\begin{align*}
+g(0,x_0) &amp;= \sum_{x_1} \mu_{\mathrm{ref}}(x_1 \mid x_0) \, g(x_1) = \mathbb{E}_{\mu_{\mathrm{ref}}}[g(X_1) \mid X_0 = x_0],\\
+f(1,x_1) &amp;= \sum_{x_0} \mu_{\mathrm{ref}}(x_0 \mid x_1) \, f(x_0) = \mathbb{E}_{\mu_{\mathrm{ref}}}[f(X_0) \mid X_1 = x_1].
+\end{align*}
+\right.
+\]</span></p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+The Lagrangian of the constrained convex optimization <a href="#eq-kl-contrained" class="quarto-xref">Equation&nbsp;1</a> reads: <span class="math display">\[
+\begin{align*}
+\sum_{x_0,x_1} \pi(x_0,x_1) \log \frac{\pi(x_0,x_1)}{\mu_{\mathrm{ref}}(x_0,x_1)}
+&amp;+ \sum_x \alpha(x_0) \left( \nu_0(x_0) - \sum_y \pi(x_0,x_1) \right)\\
+&amp;+ \sum_y \beta(x_1) \left( \nu_1(x_1) - \sum_x \pi(x_0,x_1) \right).
+\end{align*}
+\]</span> There is no need to impose a constraint on the total mass of <span class="math inline">\(\pi\)</span> since it is automatically satisfied by the marginal constraints. For a fixed set of dual variables <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, minimizing the Lagrangian with respect to <span class="math inline">\(\pi\)</span> leads to optimum <span class="math inline">\(\pi_{\alpha, \beta}(x_0,x_1) = \mu_{\mathrm{ref}}(x_0,x_1) \, e^{\alpha(x_0) + \beta(x_1) -1}\)</span>, hence proving <a href="#eq-schrodinger-solution" class="quarto-xref">Equation&nbsp;3</a>. Plugging this expression back into the Lagrangian gives: <span class="math display">\[
+\mathcal{L}(\alpha, \beta) = \sum_x \alpha(x_0) \, \nu_0(x_0) + \sum_y \beta(x_1) \, \nu_1(x_1) - \sum_{x_0,x_1} \pi_{\alpha, \beta}(x_0,x_1).
+\]</span> If one chooses to alternate between maximizing <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> while keeping the other fixed, this corresponds to alternately enforcing the marginal constraints on <span class="math inline">\(\pi_{\alpha, \beta}\)</span>, i.e.&nbsp;the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">Iterative proportional fitting</a> procedure (IPFP) also known as the Sinkhorn-Knopp algorithm in the optimal transport literature. Directly maximizing the Lagrange dual <span class="math inline">\(\mathcal{L}(\alpha, \beta)\)</span> using gradient ascent methods such as <a href="https://en.wikipedia.org/wiki/Limited-memory_BFGS">L-BFGS</a> is also possible and can lead to faster convergence in some cases. Note that the dual problem only has <span class="math inline">\(2n\)</span> variables, while the primal problem has <span class="math inline">\(n^2\)</span> variables!
+</p>
+</details>
+</section>
+<section id="dynamic-schrödinger-bridge-problem" class="level3">
+<h3 class="anchored" data-anchor-id="dynamic-schrödinger-bridge-problem">Dynamic Schrödinger Bridge Problem</h3>
+<p>Now, suppose that the reference distribution <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1)\)</span> is given as the two-time marginal of a Markov process <span class="math inline">\((X_t)_{t \in [0,1]}\)</span> with initial distribution <span class="math inline">\(\mu_{\mathrm{ref},0}(dx)\)</span> and transition kernels <span class="math inline">\(p_{s,t}(x,y)\)</span>. Since the solution to the static Schrödinger bridge problem only depends on the conditional distributions of the reference measure <span class="math inline">\(\mu_{\mathrm{ref}}\)</span>, one can always assume without loss of generality that the reference process starts from the initial distribution <span class="math inline">\(\nu_0\)</span>. For example, <span class="math inline">\((X_t)\)</span> could be the solution of a stochastic differential equation. We still denotes by <span class="math inline">\(\mu_{\mathrm{ref}}([x_t]_{t \in [0,1]})\)</span> the distribution of the full path <span class="math inline">\((X_t)_{t \in [0,1]}\)</span>. The dynamic Schrödinger bridge problem consists in finding a new Markov process <span class="math inline">\((X_t)_{t \in [0,1]}\)</span>, with distribution <span class="math inline">\(\pi([x_t]_{t \in [0,1]})\)</span> on path space, such that the starting and ending marginals are <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> respectively, while minimizing the Kullback-Leibler divergence to the reference path distribution <span class="math inline">\(\mu_{\mathrm{ref}}\)</span>. The chain rule for Kullback-Leibler divergences shows that this problem is equivalent to the static Schrödinger bridge problem <a href="#eq-kl-contrained" class="quarto-xref">Equation&nbsp;1</a>. One can first solve the corresponding static problem with respect to the two-time marginal <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1)\)</span> to obtain the Schrödinger coupling <span class="math inline">\(\pi(x_0,x_1)\)</span>, and then fill in the dynamics in between times <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span> by using the same transition kernels as the reference process but conditioned on the endpoints. In other words, once the static Schrödinger bridge problem is solved, one can construct the solution to the dynamic Schrödinger bridge problem as follows:</p>
+<ol type="1">
+<li>Sample the endpoints <span class="math inline">\((X_0, X_1) \sim \pi(x_0,x_1)\)</span> from the static Schrödinger bridge coupling. d d</li>
+<li>Sample the intermediate points of the path according to the conditional distribution of the reference process given the endpoints, i.e.&nbsp;<span class="math inline">\((X_t)_{t \in (0,1)} \sim \mu_{\mathrm{ref}}([x_t]_{t \in [0,1]} \mid X_0, X_1)\)</span>.</li>
+</ol>
+<p>A typical setting is when the reference process <span class="math inline">\((X_t)\)</span> is given as the solution of a stochastic differential equation of the form</p>
+<p><span class="math display">\[
+dX_t = b_t(X_t) \, dt + \sigma \, dW_t,
+\]</span></p>
+<p>started from the initial distribution <span class="math inline">\(\nu_0(x_0)\)</span>. The solution to the dynamic Schrödinger bridge problem is given by the twisted path distribution:</p>
+<p><span class="math display">\[
+\frac{d\pi}{d\mu_{\mathrm{ref}}}(x_{[0,1]}) = f(X_0) \, g(X_1),
+\]</span></p>
+<p>for potential functions <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> satisfying the marginal constraints. The marginal distribution at time <span class="math inline">\(t \in [0,1]\)</span> of the Schrödinger bridge process is given by:</p>
+<p><span class="math display">\[\pi_t(x_t) = \mu_{\mathrm{ref}}(x_t) \, f(t,x_t) \, g(t,x_t)\]</span></p>
+<p>where, as previously, we defined the quantities:</p>
+<p><span class="math display">\[\left\{
+\begin{align*}
+f(t,x_t) &amp;= \int f(x_0) \, \mu_{\mathrm{ref}}(x_0 \mid x_t) \, dx_0,\\
+g(t,x_t) &amp;= \int g(x_1) \, \mu_{\mathrm{ref}}(x_1 \mid x_t) \, dx_1.
+\end{align*}
+\right.
+\]</span></p>
+<p>Naturally, the dynamics of the Schrödinger bridge process can be described as a new stochastic differential equation obtained by applying a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> to the reference SDE,</p>
+<p><span class="math display">\[
+dX_t = b_t(X_t) \, dt +  \textcolor{blue}{ \sigma \sigma^\top \nabla_x \log g(t, X_t) dt} + \sigma \, dW_t,
+\]</span></p>
+<p>where, as explained in these previous <a href="../../notes/doob_transforms/doob.html">notes</a> the <span class="math inline">\(h\)</span>-function is given by the usual formula,</p>
+<p><span class="math display">\[
+g(t, x_t) = \mathbb{E}_{\mu_{\mathrm{ref}}}[g(X_1) \mid X_t = x_t] = \int g(x_1) \, \mu_{\mathrm{ref}}(x_1 \mid x_t) \, dx_1.
+\]</span></p>
+<p>It is a difficult problem since the potentials <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">Shi et al. (<a href="#ref-shi2023diffusion" role="doc-biblioref">2023</a>)</span>; <span class="citation" data-cites="de2021diffusion">De Bortoli et al. (<a href="#ref-de2021diffusion" role="doc-biblioref">2021</a>)</span>; <span class="citation" data-cites="vargas2021solving">Vargas et al. (<a href="#ref-vargas2021solving" role="doc-biblioref">2021</a>)</span>; <span class="citation" data-cites="chen2021likelihood">Chen, Liu, and Theodorou (<a href="#ref-chen2021likelihood" role="doc-biblioref">2021</a>)</span>.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-chen2021likelihood" class="csl-entry" role="listitem">
+Chen, Tianrong, Guan-Horng Liu, and Evangelos A Theodorou. 2021. <span>“Likelihood Training of Schrodinger Bridge Using Forward-Backward Sdes Theory.”</span> <em>arXiv Preprint arXiv:2110.11291</em>.
+</div>
+<div id="ref-de2021diffusion" class="csl-entry" role="listitem">
+De Bortoli, Valentin, James Thornton, Jeremy Heng, and Arnaud Doucet. 2021. <span>“Diffusion Schrodinger Bridge with Applications to Score-Based Generative Modeling.”</span> <em>Advances in Neural Information Processing Systems</em> 34: 17695–709.
+</div>
+<div id="ref-shi2023diffusion" class="csl-entry" role="listitem">
+Shi, Yuyang, Valentin De Bortoli, Andrew Campbell, and Arnaud Doucet. 2023. <span>“Diffusion Schrodinger Bridge Matching.”</span> <em>Advances in Neural Information Processing Systems</em> 36: 62183–223.
+</div>
+<div id="ref-vargas2021solving" class="csl-entry" role="listitem">
+Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. <span>“Solving Schrodinger Bridges via Maximum Likelihood.”</span> <em>Entropy</em> 23 (9). MDPI: 1134.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
