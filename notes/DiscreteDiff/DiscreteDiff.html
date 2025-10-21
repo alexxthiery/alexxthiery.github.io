@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Notes – Alexandre Thiéry</title>
+<title>Masked Discrete Diffusion – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,22 +20,42 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -61,12 +81,41 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Notes – Alexandre Thiéry">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Masked Discrete Diffusion – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Notes – Alexandre Thiéry">
+<meta name="twitter:title" content="Masked Discrete Diffusion – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -79,7 +128,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -89,29 +138,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html"> 
+    <a class="nav-link" href="../../people/index_people.html"> 
 <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html"> 
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
 <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html"> 
+    <a class="nav-link" href="../../teaching/teaching.html"> 
 <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" aria-current="page"> 
+    <a class="nav-link" href="../../notes/index_notes.html"> 
 <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html"> 
+    <a class="nav-link" href="../../about/about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -126,9 +175,10 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
+      <h1 class="title">Masked Discrete Diffusion</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">DDPM</div>
+                <div class="quarto-category">score</div>
               </div>
                   </div>
   </div>
@@ -140,10 +190,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">21 10 2025</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">21 10 2025</p>
+      </div>
+    </div>
       
     </div>
     
@@ -156,11 +212,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theorygeometry" id="toc-information-theorygeometry" class="nav-link" data-scroll-target="#information-theorygeometry">Information Theory/Geometry</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
-  <li><a href="#other" id="toc-other" class="nav-link" data-scroll-target="#other">Other</a></li>
+  <li><a href="#masked-discrete-diffusion" id="toc-masked-discrete-diffusion" class="nav-link active" data-scroll-target="#masked-discrete-diffusion">Masked Discrete Diffusion</a></li>
+  <li><a href="#extension-to-sequences" id="toc-extension-to-sequences" class="nav-link" data-scroll-target="#extension-to-sequences">Extension to Sequences</a></li>
   </ul>
 </nav>
     </div>
@@ -171,73 +224,133 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">dates</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-<li><a href="../notes/VIASM_2024/VIASM_2024.html">VIASM mini-course on diffusions and flows</a></li>
-</ul>
+<!-- 
+Consider a finite state space $\{M, 1,2, \ldots, V\}$ where $M$ is a special state corresponding to a masked value and $1, \ldots, V$ correspond to the possible values of a token (e.g., a word in a vocabulary of size $V$). On the time interval $[0,T]$, we consider a continuous Markov chain with initial distribution $p_0$ and infinitesimal rate matrix $Q_t \in \bbR^{(V+1) \times (V+1)}$,
+
+$$
+\P(X_{t+h} = j \mid X_t = i) = Q_t(i,j) \, h + o(h).
+$$
+
+Bayes' rule immediately shows that the time-reversal of this Markov chain is also a Markov chain with infinitesimal rate matrix $Q^{\star}_t$ satisfying:
+
+$$
+Q^{\star}_t(i,j) = \frac{p_t(j)}{p_t(i)} \, Q_t(j,i),
+$$
+
+where $p_t$ is the marginal distribution of $X_t$. We have 
+
+$$\P(X_{t-h} = j \mid X_t = i) = Q^{\star}_t(i,j) \, h + o(h).$$
+
+We are interested in modeling a Markov chain that progressively masks the initial value into the masked state $M$ as time $t$ goes from $0$ to $T$. Furthermore, only transitions towards the masked state $M$ are allowed, and once the process has jumped to the masked state $M$, it stays there forever. This means that outside the diagonal, the only non-zero entries of the infinitesimal rate matrix $Q_t$ are of the form $Q_t(i,M)$ for $i \in \{1, \ldots, V\}$. For convenience, we denote by $\tau$ the (almost surely unique) jump time of this Markov chain. We assume that $\tau < T$ almost surely, so that the process ends up at time $T$ at the masked state $M$ with probability one.
+
+Now, to model text sequences of length $L$ for example, we consider $L$ independent copies of this Markov chain, i.e., $\overline{X}_t = (X_t^1, \ldots, X_t^L)$ where each $X_t^i$ is an independent Markov chain with infinitesimal rate matrix $Q_t$. This Markov process ends up at time $T$ at a fully masked sequence $\overline{X}_T = (M, \ldots, M)$ with probability one. If one can accurately model the time-reversal of this process, one can use this time-reversal to progressively unmask a fully masked sequence into a realistic sequence. That is the basic idea behind the (discrete) diffusion models. In our case, since jump times are almost surely distinct, the rate matrix of the joint process $\overline{X}_t$ is only non-zero when a single coordinate jumps. This means that, if $x,y \in \{M,1,\ldots,V\}^L$ differ by a single coordinate, say the $i$-th coordinate, then the infinitesimal rate matrix $\overline{Q}_t$ of the joint process satisfies:
+
+$$
+\overline{Q}_t(x,y) = Q_t(x_i,y_i).
+$$
+
+Similarly, the time-reversal of this joint process has infinitesimal rate matrix $\overleftarrow{\overline{Q}}_t$ satisfying:
+
+$$
+\overline{Q}^{\star}_t(x,y) = \frac{\overline{p}_t(y)}{\overline{p}_t(x)} \, Q_t(y_i,x_i),
+$$
+
+where $\overline{p}_t$ is the marginal distribution of $\overline{X}_t$. Now, $x$ and $y$ differ by a single coordinate $i$ so that, necessarily, $x_i = M$ and $y_i \in \{1, \ldots, V\}$. Let us denote by $S$ the set of indices $j$ such that $x_j \neq M$ (i.e., the set of unmasked coordinates in $x$). To observe that $x$ at time $t$, this means that the jump time of the $(L - |S|)$ masked coordinates must be smaller than $t$, while the jump time of the $|S|$ unmasked coordinates must be larger than $t$:
+
+$$
+\overline{p}_t(x) = \P(\tau < t)^{L-|S|} \, \P(\tau \geq t)^{|S|} \, \blue{ \overline{p}_0(x_{S}) }.
+$$
+
+Similarly, to observe $y$ at time $t$, the jump time of the $(L - |S| - 1)$ masked coordinates must be smaller than $t$, the jump time of the $|S|+1$ unmasked coordinates must be larger than $t$:
+
+$$
+\overline{p}_t(y) = \P(\tau < t)^{L-|S|-1} \, \P(\tau \geq t)^{|S|+1} \, \blue{ \overline{p}_0(x_{S}) \, \overline{p}_0(x_i \mid x_{S}) }.
+$$
+
+This means that the time-reversal rate matrix satisfies:
+
+$$
+\overline{Q}^{\star}_t(x,y) = R(t) \, \blue{\overline{p}_0(x_i \mid x_{S}) } \, Q_t(M, x_i),
+$$
+
+with time-dependent scalar $R(t) = \frac{\P(\tau \geq t)}{\P(\tau < t)}$. This means that, in practice, in order to model the time-reversal of this masked discrete diffusion process, one only needs to model the conditional distribution $\blue{\overline{p}_0(x_i \mid x_{S}) }$ of the data distribution $\overline{p}_0$. Standard BERT-like, masked language models, and transformers are perfectly suited to model such conditional distributions. This also shows that these discrete diffusion processes are in fact almost identical to masked language models, so one should not be surprised that they achieve similar performance on text generation tasks.
+
+--- -->
+<section id="masked-discrete-diffusion" class="level3">
+<h3 class="anchored" data-anchor-id="masked-discrete-diffusion">Masked Discrete Diffusion</h3>
+<p>We consider a finite state space <span class="math display">\[
+\mathcal{X} = \{M, 1,2, \ldots, V\},
+\]</span> where <span class="math inline">\(M\)</span> is a special <strong>masked</strong> state and <span class="math inline">\(1, \ldots, V\)</span> correspond to token values in a vocabulary of size <span class="math inline">\(V\)</span>. On the time interval <span class="math inline">\([0,T]\)</span>, we define a continuous-time Markov chain with initial distribution <span class="math inline">\(p_0\)</span> and time-dependent infinitesimal rate matrix <span class="math inline">\(Q_t \in \mathbb{R}^{(V+1)\times(V+1)}\)</span>, such that <span class="math display">\[
+\mathbb{P}(X_{t+h} = j \mid X_t = i) = Q_t(i,j) \, h + o(h).
+\]</span></p>
+<p>Bayes’ rule implies that the time-reversal of this Markov chain is itself Markov, with infinitesimal rate matrix <span class="math inline">\(Q_t^{\star}\)</span> satisfying <span class="math display">\[
+Q_t^{\star}(i,j) = \frac{p_t(j)}{p_t(i)} \, Q_t(j,i),
+\]</span> where <span class="math inline">\(p_t\)</span> is the marginal distribution of <span class="math inline">\(X_t\)</span>. We have: <span class="math display">\[
+\mathbb{P}(X_{t-h} = j \mid X_t = i) = Q_t^{\star}(i,j) \, h + o(h).
+\]</span></p>
+<p>We are interested in modeling a Markov chain that progressively masks the initial value into the masked state <span class="math inline">\(M\)</span> as time <span class="math inline">\(t\)</span> goes from <span class="math inline">\(0\)</span> to <span class="math inline">\(T\)</span>. Transitions are only allowed from any token <span class="math inline">\(i \in \{1,\dots,V\}\)</span> to the masked state <span class="math inline">\(M\)</span>, and once in <span class="math inline">\(M\)</span> the process remains there. Thus, outside the diagonal, the only nonzero entries of <span class="math inline">\(Q_t\)</span> are <span class="math inline">\(Q_t(i,M)\)</span>. As it will be useful later, we denote by <span class="math inline">\(\tau\)</span> the jump time to <span class="math inline">\(M\)</span> and we assume <span class="math inline">\(\tau &lt; T\)</span> almost surely, so that <span class="math inline">\(X_T = M\)</span> with probability one.</p>
 </section>
-<section id="information-theorygeometry" class="level3">
-<h3 class="anchored" data-anchor-id="information-theorygeometry">Information Theory/Geometry</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-<li><a href="../notes/fisher-rao/distance.html">Fisher-Rao Geometry</a></li>
-</ul>
-</section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
-<ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation &amp; the EnKF</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html">Ensemble Kalman Smoothers</a></li>
-<li><a href="../notes/MCMC_deterministic_proposals/MCMC_deterministic.html">MCMC with deterministic proposals</a></li>
-<li><a href="../notes/MCMC_on_manifold/mcmc_manifold.html">RWM &amp; HMC on Manifolds</a></li>
-<li><a href="../notes/SAW/SAW.html">Self-Avoiding-Walks</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-<li><a href="../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson Equation &amp; Asymptotic Variance</a></li>
-<li><a href="../notes/averaging_homogenization/averaging_homogenization.html">Averaging and Homogenization</a></li>
-<li><a href="../notes/doob_transforms/doob.html">Joe Doob &amp; Change of measures on path space</a></li>
-<li><a href="../notes/girsanov/girsanov.html">Girsanov and importance sampling</a></li>
-<li><a href="../notes/HJB/HJB.html">Doob, Girsanov and Bellman</a></li>
-<li><a href="../notes/conformal_inference/conformal.html">Basic Conformal Inference</a></li>
-<li><a href="../notes/jarzynski/jarzynski.html">Jarzynski and Crooks</a></li>
-<li><a href="../notes/sparse_GP/sparse_gp.html">Sparse Gaussian Processes</a></li>
-<li><a href="../notes/shrodinger_bridge/shrodinger.html">Shrodinger Bridges</a></li>
-<li><a href="../notes/DiscreteDiff/DiscreteDiff.html">Masked Discrete Diffusion</a></li>
-</ul>
-</section>
-<section id="other" class="level3">
-<h3 class="anchored" data-anchor-id="other">Other</h3>
-<ul>
-<li><a href="../notes/adjoint_method/adjoint.html">Adjoint Method for Sensitivities</a></li>
-<li><a href="../notes/infinite_products/inft_prod.html">Infinite Products</a></li>
-</ul>
+<section id="extension-to-sequences" class="level3">
+<h3 class="anchored" data-anchor-id="extension-to-sequences">Extension to Sequences</h3>
+<p>We are interested in modeling sequences of length <span class="math inline">\(L\)</span> (or binary images, or genomic sequences, etc…), each coordinate taking value in <span class="math inline">\(\{1,2,\ldots,V\}\)</span>. We denote by <span class="math inline">\(\overline{p}_0\)</span> the data distribution over such sequences. For this purpose, we consider <span class="math inline">\(L\)</span> independent copies of the above Markov chain, one per coordinate: <span class="math display">\[
+\overline{X}_t = (X_t^1, \ldots, X_t^L),
+\]</span> each with rate matrix <span class="math inline">\(Q_t\)</span>. At time <span class="math inline">\(T\)</span>, the process reaches the fully masked sequence <span class="math inline">\(\overline{X}_T = (M, \ldots, M)\)</span> with probability one. Since jump times <span class="math inline">\(\tau_i\)</span> of each coordinate are almost surely distinct, the infinitesimal rate matrix <span class="math inline">\(\overline{Q}_t\)</span> of the joint process is nonzero only when a single coordinate changes. If <span class="math inline">\(x,\widehat{x} \in \mathcal{X}^L\)</span> differ by a single coordinate <span class="math inline">\(i\)</span>, we have <span class="math display">\[
+\overline{Q}_t(x,\widehat{x}) = Q_t(x_i, \widehat{x}_i).
+\]</span></p>
+<p>As before, the time-reversal has infinitesimal rate matrix <span class="math inline">\(\overline{Q}_t^{\star}\)</span> satisfying <span class="math display">\[
+\overline{Q}_t^{\star}(x,\widehat{x}) = \frac{\overline{p}_t(\widehat{x})}{\overline{p}_t(x)} \, Q_t(\widehat{x}_i, x_i),
+\]</span></p>
+<p>where <span class="math inline">\(\overline{p}_t\)</span> is the marginal distribution of <span class="math inline">\(\overline{X}_t\)</span>. Since <span class="math inline">\(x\)</span> and <span class="math inline">\(\widehat{x}\)</span> differ at coordinate <span class="math inline">\(i\)</span>, for <span class="math inline">\(\overline{Q}_t^{\star}(x,\widehat{x})\)</span> to be non-zero, necessarily <span class="math inline">\(x_i = M\)</span> and <span class="math inline">\(\widehat{x}_i \in \{1,\ldots,V\}\)</span>. Let <span class="math inline">\(S = \{j : x_j \neq M\}\)</span> be the set of unmasked coordinates in <span class="math inline">\(x\)</span>. To observe configuration <span class="math inline">\(x\)</span> at time <span class="math inline">\(t\)</span>, the <span class="math inline">\((L - |S|)\)</span> masked coordinates must have <span class="math inline">\(\tau &lt; t\)</span> and the <span class="math inline">\(|S|\)</span> unmasked ones <span class="math inline">\(\tau \ge t\)</span>: <span class="math display">\[
+\overline{p}_t(x) = \mathbb{P}(\tau &lt; t)^{L-|S|} \, \mathbb{P}(\tau \ge t)^{|S|} \, \overline{p}_0(x_S).
+\]</span></p>
+<p>Similarly, <span class="math display">\[
+\overline{p}_t(\widehat{x}) = \mathbb{P}(\tau &lt; t)^{L-|S|-1} \, \mathbb{P}(\tau \ge t)^{|S|+1} \,
+\overline{p}_0(x_S)\, \overline{p}_0(\widehat{x}_i \mid x_S).
+\]</span></p>
+<p>This shows that the time-reversal rate matrix becomes <span class="math display">\[
+\overline{Q}_t^{\star}(x,\widehat{x}) = R(t)\, \overline{p}_0(\widehat{x}_i \mid x_S)\, Q_t(\widehat{x}_i, M),
+\]</span></p>
+<p>with time dependent scalar <span class="math inline">\(R(t) = \frac{\mathbb{P}(\tau \ge t)}{\mathbb{P}(\tau &lt; t)}\)</span>. To simulate the reverse process that progressively unmasks a fully masked sequence, one only needs to model the conditional distribution <span class="math inline">\(\overline{p}_0(\widehat{x}_i \mid x_S)\)</span> of the data distribution <span class="math inline">\(\overline{p}_0\)</span>. This is precisely the prediction task of masked language models such as BERT, which estimate token probabilities conditioned on visible context. In conclusion, discrete diffusion models with one-way masking are mathematically almost identical to masked language models. Hence their similar behavior and performance on text generation tasks are not coincidental. This line of research was developed in a very interesting stream of papers, including <span class="citation" data-cites="ou2024your">(<a href="#ref-ou2024your" role="doc-biblioref">Ou et al. 2024</a>)</span>, <span class="citation" data-cites="sahoo2024simple">(<a href="#ref-sahoo2024simple" role="doc-biblioref">Sahoo et al. 2024</a>)</span>, <span class="citation" data-cites="shi2024simplified">(<a href="#ref-shi2024simplified" role="doc-biblioref">Shi et al. 2024</a>)</span>.</p>
+<!-- @article{ou2024your,
+  title={Your absorbing discrete diffusion secretly models the conditional distributions of clean data},
+  author={Ou, Jingyang and Nie, Shen and Xue, Kaiwen and Zhu, Fengqi and Sun, Jiacheng and Li, Zhenguo and Li, Chongxuan},
+  journal={arXiv preprint arXiv:2406.03736},
+  year={2024}
+}
+
+@article{sahoo2024simple,
+  title={Simple and effective masked diffusion language models},
+  author={Sahoo, Subham and Arriola, Marianne and Schiff, Yair and Gokaslan, Aaron and Marroquin, Edgar and Chiu, Justin and Rush, Alexander and Kuleshov, Volodymyr},
+  journal={Advances in Neural Information Processing Systems},
+  volume={37},
+  pages={130136--130184},
+  year={2024}
+}
+
+@article{shi2024simplified,
+  title={Simplified and generalized masked diffusion for discrete data},
+  author={Shi, Jiaxin and Han, Kehang and Wang, Zhe and Doucet, Arnaud and Titsias, Michalis},
+  journal={Advances in neural information processing systems},
+  volume={37},
+  pages={103131--103167},
+  year={2024}
+} -->
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-ou2024your" class="csl-entry" role="listitem">
+Ou, Jingyang, Shen Nie, Kaiwen Xue, Fengqi Zhu, Jiacheng Sun, Zhenguo Li, and Chongxuan Li. 2024. <span>“Your Absorbing Discrete Diffusion Secretly Models the Conditional Distributions of Clean Data.”</span> <em>arXiv Preprint arXiv:2406.03736</em>.
+</div>
+<div id="ref-sahoo2024simple" class="csl-entry" role="listitem">
+Sahoo, Subham, Marianne Arriola, Yair Schiff, Aaron Gokaslan, Edgar Marroquin, Justin Chiu, Alexander Rush, and Volodymyr Kuleshov. 2024. <span>“Simple and Effective Masked Diffusion Language Models.”</span> <em>Advances in Neural Information Processing Systems</em> 37: 130136–84.
+</div>
+<div id="ref-shi2024simplified" class="csl-entry" role="listitem">
+Shi, Jiaxin, Kehang Han, Zhe Wang, Arnaud Doucet, and Michalis Titsias. 2024. <span>“Simplified and Generalized Masked Diffusion for Discrete Data.”</span> <em>Advances in Neural Information Processing Systems</em> 37: 103131–67.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
