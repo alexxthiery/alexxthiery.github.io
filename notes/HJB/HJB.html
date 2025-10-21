@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Alexandre Thiéry - Doob, Girsanov and Bellman</title>
+<title>Doob, Girsanov and Bellman – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -26,15 +26,16 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -44,8 +45,10 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
@@ -58,68 +61,95 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Alexandre Thiéry - Doob, Girsanov and Bellman">
-<meta property="og:description" content="">
+<meta property="og:title" content="Doob, Girsanov and Bellman – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:image" content="https://alexxthiery.github.io/notes/HJB/bellman.jpg">
-<meta property="og:site-name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Alexandre Thiéry - Doob, Girsanov and Bellman">
-<meta name="twitter:description" content="">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Doob, Girsanov and Bellman – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:image" content="https://alexxthiery.github.io/notes/HJB/bellman.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../people/index_people.html" rel="" target="">
- <span class="menu-text">Research Team</span></a>
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../publications/index_pubs.html" rel="" target="">
- <span class="menu-text">Publications</span></a>
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../teaching/teaching.html" rel="" target="">
- <span class="menu-text">Teaching</span></a>
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../notes/index_notes.html" rel="" target="">
- <span class="menu-text">Notes</span></a>
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../about/about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../../notes/index_notes_as_list.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
+          </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -149,7 +179,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">28 04 2025</p>
+        <p class="date-modified">21 10 2025</p>
       </div>
     </div>
       
@@ -177,30 +207,41 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
+
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./bellman.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
-<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Richard_E._Bellman">Richard Bellman</a> (1920 – 1984)</figcaption>
+<figcaption><a href="https://en.wikipedia.org/wiki/Richard_E._Bellman">Richard Bellman</a> (1920 – 1984)</figcaption>
 </figure>
 </div>
 </div>
 <section id="change-of-measure" class="level3">
 <h3 class="anchored" data-anchor-id="change-of-measure">Change of measure</h3>
-<p>Consider a diffusion in <span class="math inline">\(\mathbb{R}^D\)</span> with deterministic starting position <span class="math inline">\(x_0 \in \mathbb{R}^D\)</span> and dynamics</p>
+<p>Consider a diffusion in <span class="math inline">\(\mathbb{R}^D\)</span> given by:</p>
 <p><span class="math display">\[
-dX_t = b(X_t)dt + \sigma(X_t) \, dW_t
+\left\{
+\begin{align*}
+dX_t &amp;= b(X_t)dt + \sigma(X_t) \, dW_t\\
+X_0 &amp;\sim p_0(x_0)
+\end{align*}
+\right.
 \]</span></p>
-<p>for a drift and volatility functions <span class="math inline">\(b: \mathbb{R}^D \to \mathbb{R}^D\)</span> and <span class="math inline">\(\sigma: \mathbb{R}^D \to \mathbb{R}^{D \times D}\)</span>. On the time interval <span class="math inline">\([0,T]\)</span>, this defines a probability <span class="math inline">\(\mathbb{P}\)</span> on the path-space <span class="math inline">\(C([0,T];\mathbb{R}^D)\)</span>. For two functions <span class="math inline">\(f: [0,T] \times \mathbb{R}^D \to \mathbb{R}\)</span> and <span class="math inline">\(g: \mathbb{R}^D \to \mathbb{R}\)</span>, consider the probability distribution <span class="math inline">\(\mathbb{Q}\)</span> defined as</p>
+<p>for an initial distribution <span class="math inline">\(p_0\)</span> and for drift and volatility functions <span class="math inline">\(b: \mathbb{R}^D \to \mathbb{R}^D\)</span> and <span class="math inline">\(\sigma: \mathbb{R}^D \to \mathbb{R}^{D \times D}\)</span>. On the time interval <span class="math inline">\([0,T]\)</span>, this defines a probability <span class="math inline">\(\mathbb{P}\)</span> on the path-space <span class="math inline">\(C([0,T];\mathbb{R}^D)\)</span>. For two functions <span class="math inline">\(f: [0,T] \times \mathbb{R}^D \to \mathbb{R}\)</span> and <span class="math inline">\(g: \mathbb{R}^D \to \mathbb{R}\)</span>, consider the probability distribution <span class="math inline">\(\mathbb{Q}\)</span> defined as</p>
 <p><span class="math display">\[
 \frac{d \mathbb{Q}}{d \mathbb{P}} = \frac{1}{\mathcal{Z}} \exp  {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}}
 \]</span></p>
 <p>where <span class="math inline">\(\mathcal{Z}\)</span> denotes the normalizing constant <span id="eq-normalizing-constant"><span class="math display">\[
 \mathcal{Z}\; = \; \mathbb{E} {\left[  \exp  {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}}   \right]} .
 \tag{1}\]</span></span></p>
-<p>The distribution <span class="math inline">\(\mathbb{Q}\)</span> places more probability mass on trajectories such that <span class="math inline">\(\int_0^T f(X_s) \, ds + g(X_T)\)</span> is large. As described in these notes on <a href="../../notes/doob_transforms/doob.html">Doob h-transforms</a>, the tilted probability distribution <span class="math inline">\(\mathbb{Q}\)</span> can be described by a diffusion process <span class="math inline">\(X^\star\)</span> with dynamics</p>
+<p>The distribution <span class="math inline">\(\mathbb{Q}\)</span> places more probability mass on trajectories such that <span class="math inline">\(\int_0^T f(X_s) \, ds + g(X_T)\)</span> is large. As described in these notes on <a href="../../notes/doob_transforms/doob.html">Doob h-transforms</a>, the path distribution <span class="math inline">\(\mathbb{Q}\)</span> can be described by a diffusion process <span class="math inline">\(X^\star\)</span> with dynamics</p>
 <p><span class="math display">\[
-dX^\star = b(X^\star)dt + \sigma(X^\star) \,  {\left\{  dW_t +  \textcolor{blue}{u^\star(t, X^\star)} \, dt  \right\}} .
+\left\{
+\begin{align*}
+dX^\star &amp;= b(X^\star)dt + \sigma(X^\star) \,  {\left\{  dW_t +  \textcolor{blue}{u^\star(t, X^\star)} \, dt  \right\}} \\
+X^\star_0 &amp;\sim q_0(x_0) = p_0(x_0) \, h(0,x_0) / \mathcal{Z}
+\end{align*}
+\right.
 \]</span></p>
 <p>The control function <span class="math inline">\( \textcolor{blue}{u^\star: [0,T] \times \mathbb{R}^D \to \mathbb{R}^D}\)</span> is of the gradient form</p>
 <p><span id="eq-u-star"><span class="math display">\[
@@ -210,43 +251,65 @@ dX^\star = b(X^\star)dt + \sigma(X^\star) \,  {\left\{  dW_t +  \textcolor{blue}
 <p><span class="math display">\[
 \textcolor{green}{h(t,x) = \mathbb{E} {\left[  \exp  {\left\{  \int_t^T f(X_s) \, ds + g(X_T)  \right\}}   \mid X_t = x  \right]} }.
 \]</span></p>
-<p>The expression <span class="math inline">\( \textcolor{blue}{u^\star(t, x)} \; = \; \sigma^\top(x) \, \nabla \log[  \textcolor{green}{h(t,x)} ]\)</span> is intuitive; to describe the tilted measure <span class="math inline">\(\mathbb{Q}\)</span> that places more probability mass on trajectories such that <span class="math inline">\(\exp {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}} \)</span> is large, the optimal control <span class="math inline">\(u^\star(t,x)\)</span> should point towards promising states, i.e.&nbsp;states such that the expected “reward-to-go” quantity <span class="math inline">\(\mathbb{E} {\left[  \exp  {\left\{  \int_t^T f(X_s) \, ds + g(X_T)  \right\}}  \mid X_t = x  \right]} \)</span> is large.</p>
+<p>The expression <span class="math inline">\( \textcolor{blue}{u^\star(t, x)} \; = \; \sigma^\top(x) \, \nabla \log[  \textcolor{green}{h(t,x)} ]\)</span> is intuitive; to describe the tilted measure <span class="math inline">\(\mathbb{Q}\)</span> that places more probability mass on trajectories such that <span class="math inline">\(\exp {\left\{  \int_0^T f(X_s) \, ds + g(X_T)  \right\}} \)</span> is large, the optimal control <span class="math inline">\(u^\star(t,x)\)</span> should point towards promising states, i.e.&nbsp;states such that the expected “reward-to-go” quantity <span class="math inline">\(\mathbb{E} {\left[  \exp  {\left\{  \int_t^T f(X_s) \, ds + g(X_T)  \right\}}   \mid X_t = x  \right]} \)</span> is large.</p>
 </section>
 <section id="variational-formulation" class="level3">
 <h3 class="anchored" data-anchor-id="variational-formulation">Variational Formulation</h3>
 <p>To obtain a variational description of the optimal control function <span class="math inline">\( \textcolor{blue}{u^\star}\)</span>, it suffices to express it as the solution of an optimization problem of the form</p>
 <p><span class="math display">\[
-u^\star \; = \; \mathop{\mathrm{argmin}}\; \textrm{Dist} {\left( \mathbb{P}^{u} \, , \, \mathbb{Q} \right)}
+u^\star \; = \; \mathop{\mathrm{argmin}}\; \textrm{Dist} {\left( q \otimes \mathbb{P}^{u} \, , \, \mathbb{Q} \right)}
 \]</span></p>
-<p>for an appropriately chosen distance. Here <span class="math inline">\(\mathbb{P}^{u}\)</span> is the probability distribution of the controlled diffusion <span class="math inline">\(X^u\)</span> with dynamics</p>
+<p>for an appropriately chosen distance. Here <span class="math inline">\(q \otimes \mathbb{P}^{u}\)</span> is the probability distribution of the controlled diffusion <span class="math inline">\(X^u\)</span> with dynamics</p>
 <p><span id="eq-Xu"><span class="math display">\[
-dX^u = b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^u)} \, dt  \right\}}
+\left\{
+\begin{align*}
+dX^u &amp;= b(X^u)dt + \sigma(X^u) \,  {\left\{  dW_t +  \textcolor{blue}{u(t, X^u)} \, dt  \right\}} \\
+X^u_0 &amp;\sim q(x_0)
+\end{align*}
+\right.
 \tag{3}\]</span></span></p>
-<p>for some control function <span class="math inline">\(u: [0,T] \times \mathbb{R}^D \to \mathbb{R}^D\)</span>. Note that we have that <span class="math inline">\(\mathbb{Q}= \mathbb{P}^{u^\star}\)</span>. The KL-divergence is natural (pseudo) distance since it elegantly deals with the intractable constant <span class="math inline">\(\mathcal{Z}\)</span> and the ratio <span class="math inline">\(d \mathbb{P}^{u} / d \mathbb{Q}\)</span> is easy to compute. <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a> gives that <span class="math display">\[
-\frac{d\mathbb{Q}}{d\mathbb{P}^u}(X^u) =
-\exp {\left\{  \int_{0}^{T} -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \, ds - \int_{0}^{T} u(s,X^u_s)^\top \, dW_s + g(X^u_T)  \right\}}  / \mathcal{Z}.
-\]</span></p>
-<p>From this expression, one can readily write <span class="math inline">\(D_{\text{KL}}(\mathbb{P}^u,\mathbb{Q})\)</span>. Minimizing <span class="math inline">\(D_{\text{KL}}(\mathbb{P}^u,\mathbb{Q})\)</span> shows that the optimal control and the normalization constant <span class="math inline">\(\mathcal{Z}\)</span> are:</p>
+<p>for some control function <span class="math inline">\(u: [0,T] \times \mathbb{R}^D \to \mathbb{R}^D\)</span> and initial distribution <span class="math inline">\(q(x_0)\)</span>. Note that we have that <span class="math inline">\(\mathbb{Q}= q_0 \otimes \mathbb{P}^{u^\star}\)</span>. The KL-divergence is natural (pseudo) distance since it elegantly deals with the intractable constant <span class="math inline">\(\mathcal{Z}\)</span> and the ratio <span class="math inline">\(d \mathbb{P}^{u} / d \mathbb{Q}\)</span> is easy to compute. <a href="../../notes/girsanov/girsanov.html">Girsanov Theorem</a> gives that</p>
 <p><span class="math display">\[
-(-\log \mathcal{Z}, \, u^\star)
+\begin{align*}
+\frac{d\mathbb{Q}}{d[q \otimes \mathbb{P}^u]}(X^u) &amp;=
+\frac{p_0(X^u_0)}{q(X^u_0)} \, \exp\Big\{ \int_{0}^{T} (f-\tfrac12 \|u\|^2)(s, X^u_s)  \, ds\\
+&amp;- \int_{0}^{T} u(s,X^u_s)^\top \, dW_s + g(X^u_T) \Big\} / \mathcal{Z}.
+\end{align*}
+\]</span></p>
+<p>From this expression, one can readily write <span class="math inline">\(D_{\text{KL}}(q \otimes \mathbb{P}^u,\mathbb{Q})\)</span>. Minimizing <span class="math inline">\(D_{\text{KL}}(q \otimes \mathbb{P}^u,\mathbb{Q})\)</span> over the control <span class="math inline">\(u\)</span> and the initial distribution <span class="math inline">\(q\)</span> shows that the optimal control is: <!-- and the normalization constant $\cZ$ are: --></p>
+<!-- $$
+(-\log \cZ, \, u^\star)
 \; = \;
-(\inf_{u} , \, \mathop{\mathrm{argmin}}_{u}) \;
-\mathbb{E} {\left[  \int_{0}^{T} \tfrac 12 \|u(s,X^u_s)\|^2 - f(X^u_s)  \, ds - g(X^u_T)  \right]} .
+(\inf_{u} , \, \argmin_{u}) \;
+\bbE\sqBK{ \int_{0}^{T} \tfrac12 \|u(s,X^u_s)\|^2 - f(X^u_s)  \, ds - g(X^u_T) }.
+$$ -->
+<p><span class="math display">\[
+(q_0, u^\star)
+\; = \;
+\mathop{\mathrm{argmin}}_{q,u} \; D_{\text{KL}}(q, p_0) +
+\mathbb{E} {\left[  \int_{0}^{T} (f-\tfrac 12 \|u\|^2)(s, X^u_s)  \, ds - g(X^u_T)  \right]} .
 \]</span></p>
 <p>Minimizing this loss attempts to find a control that drives the quantity <span class="math inline">\(\int_{0}^{T} f(X^u_s) \, ds + g(X^u_T)\)</span> large while keeping the control effort <span class="math inline">\(\int_{0}^{T} \|u(s,X^u_s)\|^2 \, ds\)</span> small. Equivalently, this can be expressed as a maximization problem,</p>
+<!-- $$
+(\log \cZ, \, u^\star)
+\; = \;
+(\sup_{u} , \, \argmax_{u}) \;
+\bbE\sqBK{ \int_{0}^{T} -\tfrac12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \, ds + g(X^u_T) }.
+$$ -->
 <p><span class="math display">\[
-(\log \mathcal{Z}, \, u^\star)
+(q_0, \, u^\star)
 \; = \;
-(\sup_{u} , \, \mathop{\mathrm{argmax}}_{u}) \;
-\mathbb{E} {\left[  \int_{0}^{T} -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s)  \, ds + g(X^u_T)  \right]} .
+\mathop{\mathrm{argmax}}_{q,u} \;
+\mathbb{E} {\left[  \int_{0}^{T} (f-\tfrac 12 \|u\|^2)(s, X^u_s)  \, ds + g(X^u_T)  \right]}  - D_{\text{KL}}(q, p_0).
 \]</span></p>
-<p>Note that since <span class="math inline">\(\mathbb{P}^{u_{\star}} = \mathbb{Q}\)</span>, the optimal control <span class="math inline">\(u^\star\)</span> is such that for <strong>any trajectory</strong> we have:</p>
+<p>Note that since <span class="math inline">\(q_0 \otimes \mathbb{P}^{u_{\star}} = \mathbb{Q}= \mathbb{P}\, e^{g} / \mathcal{Z}\)</span>, the optimal control <span class="math inline">\(u^\star\)</span> is such that for <strong>any trajectory</strong> we have:</p>
 <p><span id="eq-logZ-pathwise"><span class="math display">\[
+\begin{align*}
 \log \mathcal{Z}
-\; = \;
-\int_{0}^{T} -\tfrac12 \|u^\star(s,X^{u^{\star}}_s)\|^2 + f(X^{u^{\star}}_s) \, ds + g(X^{u^{\star}}_T) - \int_{0}^{T} u^{\star}(s,X^{u^{\star}}_s)^\top \, dW_s .
+= \log \frac{p_0(X^{u^{\star}}_0)}{q_0(X^{u^{\star}}_0)} &amp;+ \, \int_{0}^{T} (f-\tfrac12 \|u^\star\|^2)(s, X^u_s) \, ds + g(X^{u^{\star}}_T) \\
+&amp;\quad - \int_{0}^{T} u^{\star}(s,X^{u^{\star}}_s)^\top \, dW_s .
+\end{align*}
 \tag{4}\]</span></span></p>
-
 <!-- It turns out that KL-divergences between diffusion processes are the right tool for this: we will write $\bbQ$ as the minimizer of $\kl(\bbP^u \| \bbQ)$ for a class of tractable probability distributions $\bbP^u$ described by controlled diffusions. As described in these notes on the [Girsanov Theorem](../girsanov/girsanov.qmd), for any control function $u(t,x)$, the controlled diffusion $X^u$ with dynamics
 
 $$
@@ -299,9 +362,9 @@ $$ -->
 <h3 class="anchored" data-anchor-id="stochastic-control">Stochastic Control</h3>
 <p>In the previous section, there was nothing special about the starting point <span class="math inline">\(x_0\)</span> and the time horizon <span class="math inline">\(T&gt;0\)</span>. This means that the same derivation gives the solution to the following stochastic optimal control problem. Consider the reward-to-go function (a.k.a. value function) defined as</p>
 <p><span class="math display">\[
-V(t,x) = \sup_u \; \mathbb{E} {\left[  \int_{t}^{T} -\tfrac 12 \|u(s,X^u_s)\|^2 + f(X^u_s) \, ds + g(X^u_T) \mid X_t = x \right]}
+V(t,x) = \sup_u \; \mathbb{E} {\left[  \int_{t}^{T}(f-\tfrac 12 \|u\|^2)(s, X^u_s) \, ds + g(X^u_T) \mid X_t = x \right]}
 \]</span></p>
-<p>where <span class="math inline">\(X^u\)</span> is the controlled diffusion <a href="#eq-Xu">Equation&nbsp;3</a>. We have that</p>
+<p>where <span class="math inline">\(X^u\)</span> is the controlled diffusion <a href="#eq-Xu" class="quarto-xref">Equation&nbsp;3</a>. We have that</p>
 <p><span class="math display">\[
 \begin{align}
 V(t,x)
@@ -340,261 +403,430 @@ u^\star(t,x)
 &amp;= \sigma^\top(x) \, \nabla V(t,x),
 \end{align}
 \]</span></p>
-<p>as we already knew from <a href="#eq-u-star-V">Equation&nbsp;5</a>. This implies that the reward-to-go function <span class="math inline">\(V(t,x)\)</span> satisfies the HJB equation</p>
+<p>as we already knew from <a href="#eq-u-star-V" class="quarto-xref">Equation&nbsp;5</a>. This implies that the reward-to-go function <span class="math inline">\(V(t,x)\)</span> satisfies the HJB equation</p>
 <p><span id="eq-hjb"><span class="math display">\[
 {\left( \partial_t + \mathcal{L} \right)} V + \frac12 \| \sigma^\top \nabla V \|^2 + f = 0
 \tag{6}\]</span></span></p>
-<p>with terminal condition <span class="math inline">\(V(T,x) = g(x)\)</span>. Another route to derive <a href="#eq-hjb">Equation&nbsp;6</a> is to simply use the fact that <span class="math inline">\(V(t,x) = \log h(t,x)\)</span>; since the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac</a> gives that the function <span class="math inline">\(h(t,x)\)</span> satisfies <span class="math inline">\((\partial_t + \mathcal{L}+ f) h = 0\)</span>, the conclusion follows from a few lines of algebra by starting writing <span class="math inline">\(\partial_t V = h^{-1} \, \partial_t h = -h^{-1}(\mathcal{L}+ f)[h]\)</span>, expanding <span class="math inline">\(\mathcal{L}h\)</span> and expressing everything back in terms of <span class="math inline">\(V\)</span>. The term <span class="math inline">\(\|\sigma^\top \nabla V\|^2\)</span> naturally arises when expressing the diffusion term <span class="math inline">\(\sigma \sigma^\top : \nabla^2 h\)</span> as a function of the second derivative of <span class="math inline">\(V\)</span>; it is the idea of the standard <a href="https://en.wikipedia.org/wiki/Cole–Hopf_transformation">Cole-Hopf transformation</a>.</p>
-<p>Finally, Ito’s lemma and <a href="#eq-hjb">Equation&nbsp;6</a> give that for <span class="math inline">\(t_1 &lt; t_2\)</span>, the optimally controlled diffusion <span class="math inline">\(X^{u^\star}\)</span> satisfies:</p>
+<p>with terminal condition <span class="math inline">\(V(T,x) = g(x)\)</span>. Another route to derive <a href="#eq-hjb" class="quarto-xref">Equation&nbsp;6</a> is to simply use the fact that <span class="math inline">\(V(t,x) = \log h(t,x)\)</span>; since the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac</a> gives that the function <span class="math inline">\(h(t,x)\)</span> satisfies <span class="math inline">\((\partial_t + \mathcal{L}+ f) h = 0\)</span>, the conclusion follows from a few lines of algebra by starting writing <span class="math inline">\(\partial_t V = h^{-1} \, \partial_t h = -h^{-1}(\mathcal{L}+ f)[h]\)</span>, expanding <span class="math inline">\(\mathcal{L}h\)</span> and expressing everything back in terms of <span class="math inline">\(V\)</span>. The term <span class="math inline">\(\|\sigma^\top  \nabla V\|^2\)</span> naturally arises when expressing the diffusion term <span class="math inline">\(\sigma \sigma^\top : \nabla^2 h\)</span> as a function of the second derivative of <span class="math inline">\(V\)</span>; it is the idea of the standard <a href="https://en.wikipedia.org/wiki/Cole–Hopf_transformation">Cole-Hopf transformation</a>.</p>
+<p>Finally, Ito’s lemma and <a href="#eq-hjb" class="quarto-xref">Equation&nbsp;6</a> give that for <span class="math inline">\(t_1 &lt; t_2\)</span>, the optimally controlled diffusion <span class="math inline">\(X^{u^\star}\)</span> satisfies:</p>
 <p><span class="math display">\[
+\begin{align*}
 V(t_2, X^{u^\star}_{t_2})
 -
-V(t_1, X^{u^\star}_{t_1}) =
-\int_{t_1}^{t_2} \tfrac12 \, \|u^\star(s,X^{u^\star}_s)\|^2 - f(X^{u^\star}_s) \, ds
-+ \int_{t_1}^{t_2} u^\star(s,X^{u^\star}_s)^\top \, dW_s.
+V(t_1, X^{u^\star}_{t_1}) &amp;=
+\int_{t_1}^{t_2} (\tfrac12 \, \|u^\star\|^2 - f)(s,X^{u^\star}_s) \, ds\\
+&amp;\quad + \int_{t_1}^{t_2} u^\star(s,X^{u^\star}_s)^\top \, dW_s.
+\end{align*}
 \]</span></p>
-<p>Naturally, writing this expression in between time <span class="math inline">\(t_1=0\)</span> and <span class="math inline">\(t_2=T\)</span> gives the expression <a href="#eq-logZ-pathwise">Equation&nbsp;4</a> for the log-normalizing constant <span class="math inline">\(\log \mathcal{Z}\)</span>.</p>
+<p>Since <span class="math inline">\(V(T,x_T) = g(x_T)\)</span> and <span class="math inline">\(V(0,x_0) = \log \mathcal{Z}+ \log \frac{q_0(x_0)}{p_0(x_0)}\)</span>, writing this expression in between time <span class="math inline">\(t_1=0\)</span> and <span class="math inline">\(t_2=T\)</span> gives the formula <a href="#eq-logZ-pathwise" class="quarto-xref">Equation&nbsp;4</a> for the log-normalizing constant <span class="math inline">\(\log \mathcal{Z}\)</span>.</p>
 
 
 </section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
       }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
+      return false;
     }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
           }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
       });
     }
-  }
-});
-</script>
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
+
 
 
 
