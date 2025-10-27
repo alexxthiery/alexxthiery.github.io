@@ -214,6 +214,7 @@ window.Quarto = {
   <ul>
   <li><a href="#masked-discrete-diffusion" id="toc-masked-discrete-diffusion" class="nav-link active" data-scroll-target="#masked-discrete-diffusion">Masked Discrete Diffusion</a></li>
   <li><a href="#extension-to-sequences" id="toc-extension-to-sequences" class="nav-link" data-scroll-target="#extension-to-sequences">Extension to Sequences</a></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">Training</a></li>
   </ul>
 </nav>
     </div>
@@ -246,95 +247,110 @@ We are interested in modeling a Markov chain that progressively masks the initia
 Now, to model text sequences of length $L$ for example, we consider $L$ independent copies of this Markov chain, i.e., $\overline{X}_t = (X_t^1, \ldots, X_t^L)$ where each $X_t^i$ is an independent Markov chain with infinitesimal rate matrix $Q_t$. This Markov process ends up at time $T$ at a fully masked sequence $\overline{X}_T = (M, \ldots, M)$ with probability one. If one can accurately model the time-reversal of this process, one can use this time-reversal to progressively unmask a fully masked sequence into a realistic sequence. That is the basic idea behind the (discrete) diffusion models. In our case, since jump times are almost surely distinct, the rate matrix of the joint process $\overline{X}_t$ is only non-zero when a single coordinate jumps. This means that, if $x,y \in \{M,1,\ldots,V\}^L$ differ by a single coordinate, say the $i$-th coordinate, then the infinitesimal rate matrix $\overline{Q}_t$ of the joint process satisfies:
 
 $$
-\overline{Q}_t(x,y) = Q_t(x_i,y_i).
+\overline{Q}_t(x,y) = Q_t(x^i,y_i).
 $$
 
 Similarly, the time-reversal of this joint process has infinitesimal rate matrix $\overleftarrow{\overline{Q}}_t$ satisfying:
 
 $$
-\overline{Q}^{\star}_t(x,y) = \frac{\overline{p}_t(y)}{\overline{p}_t(x)} \, Q_t(y_i,x_i),
+\overline{Q}^{\star}_t(x,y) = \frac{\overline{p}_t(y)}{\overline{p}_t(x)} \, Q_t(y_i,x^i),
 $$
 
-where $\overline{p}_t$ is the marginal distribution of $\overline{X}_t$. Now, $x$ and $y$ differ by a single coordinate $i$ so that, necessarily, $x_i = M$ and $y_i \in \{1, \ldots, V\}$. Let us denote by $S$ the set of indices $j$ such that $x_j \neq M$ (i.e., the set of unmasked coordinates in $x$). To observe that $x$ at time $t$, this means that the jump time of the $(L - |S|)$ masked coordinates must be smaller than $t$, while the jump time of the $|S|$ unmasked coordinates must be larger than $t$:
+where $\overline{p}_t$ is the marginal distribution of $\overline{X}_t$. Now, $x$ and $y$ differ by a single coordinate $i$ so that, necessarily, $x^i = M$ and $y_i \in \{1, \ldots, V\}$. Let us denote by $S$ the set of indices $j$ such that $x^j \neq M$ (i.e., the set of unmasked coordinates in $x$). To observe that $x$ at time $t$, this means that the jump time of the $(L - |S|)$ masked coordinates must be smaller than $t$, while the jump time of the $|S|$ unmasked coordinates must be larger than $t$:
 
 $$
-\overline{p}_t(x) = \P(\tau < t)^{L-|S|} \, \P(\tau \geq t)^{|S|} \, \blue{ \overline{p}_0(x_{S}) }.
+\overline{p}_t(x) = \P(\tau < t)^{L-|S|} \, \P(\tau \geq t)^{|S|} \, \blue{ \overline{p}_0(x^{S}) }.
 $$
 
 Similarly, to observe $y$ at time $t$, the jump time of the $(L - |S| - 1)$ masked coordinates must be smaller than $t$, the jump time of the $|S|+1$ unmasked coordinates must be larger than $t$:
 
 $$
-\overline{p}_t(y) = \P(\tau < t)^{L-|S|-1} \, \P(\tau \geq t)^{|S|+1} \, \blue{ \overline{p}_0(x_{S}) \, \overline{p}_0(x_i \mid x_{S}) }.
+\overline{p}_t(y) = \P(\tau < t)^{L-|S|-1} \, \P(\tau \geq t)^{|S|+1} \, \blue{ \overline{p}_0(x^{S}) \, \overline{p}_0(x^i \mid x^{S}) }.
 $$
 
 This means that the time-reversal rate matrix satisfies:
 
 $$
-\overline{Q}^{\star}_t(x,y) = R(t) \, \blue{\overline{p}_0(x_i \mid x_{S}) } \, Q_t(M, x_i),
+\overline{Q}^{\star}_t(x,y) = R(t) \, \blue{\overline{p}_0(x^i \mid x^{S}) } \, Q_t(M, x^i),
 $$
 
-with time-dependent scalar $R(t) = \frac{\P(\tau \geq t)}{\P(\tau < t)}$. This means that, in practice, in order to model the time-reversal of this masked discrete diffusion process, one only needs to model the conditional distribution $\blue{\overline{p}_0(x_i \mid x_{S}) }$ of the data distribution $\overline{p}_0$. Standard BERT-like, masked language models, and transformers are perfectly suited to model such conditional distributions. This also shows that these discrete diffusion processes are in fact almost identical to masked language models, so one should not be surprised that they achieve similar performance on text generation tasks.
+with time-dependent scalar $R(t) = \frac{\P(\tau \geq t)}{\P(\tau < t)}$. This means that, in practice, in order to model the time-reversal of this masked discrete diffusion process, one only needs to model the conditional distribution $\blue{\overline{p}_0(x^i \mid x^{S}) }$ of the data distribution $\overline{p}_0$. Standard BERT-like, masked language models, and transformers are perfectly suited to model such conditional distributions. This also shows that these discrete diffusion processes are in fact almost identical to masked language models, so one should not be surprised that they achieve similar performance on text generation tasks.
 
 --- -->
 <section id="masked-discrete-diffusion" class="level3">
 <h3 class="anchored" data-anchor-id="masked-discrete-diffusion">Masked Discrete Diffusion</h3>
 <p>We consider a finite state space <span class="math display">\[
 \mathcal{X} = \{M, 1,2, \ldots, V\},
-\]</span> where <span class="math inline">\(M\)</span> is a special <strong>masked</strong> state and <span class="math inline">\(1, \ldots, V\)</span> correspond to token values in a vocabulary of size <span class="math inline">\(V\)</span>. On the time interval <span class="math inline">\([0,T]\)</span>, we define a continuous-time Markov chain with initial distribution <span class="math inline">\(p_0\)</span> and time-dependent infinitesimal rate matrix <span class="math inline">\(Q_t \in \mathbb{R}^{(V+1)\times(V+1)}\)</span>, such that <span class="math display">\[
-\mathbb{P}(X_{t+h} = j \mid X_t = i) = Q_t(i,j) \, h + o(h).
+\]</span> where <span class="math inline">\(M\)</span> is a special <strong>masked</strong> state and <span class="math inline">\(1, \ldots, V\)</span> correspond to token values in a vocabulary of size <span class="math inline">\(V\)</span>. On the time interval <span class="math inline">\([0,T]\)</span>, we define a continuous-time Markov chain with initial distribution <span class="math inline">\(p_0\)</span> and time-dependent infinitesimal rate matrix <span class="math inline">\(Q_t \in \mathbb{R}^{(V+1)\times(V+1)}\)</span> so that for any <span class="math inline">\(x \ne y\)</span>, <span class="math display">\[
+\mathbb{P}(X_{t+h} = y \mid X_t = x) = Q_t(x,y) \, h + o(h).
 \]</span></p>
+<p>If the <strong>total jump rate</strong> out of state <span class="math inline">\(x\)</span> is <span class="math inline">\(J_t(x) = \sum_{y \ne x} Q_t(x,y)\)</span> , then</p>
+<p><span class="math display">\[\mathbb{P}(X_{t+h} = x \mid X_t = x) = 1 - J_t(x) \, h + o(h).\]</span></p>
 <p>Bayes’ rule implies that the time-reversal of this Markov chain is itself Markov, with infinitesimal rate matrix <span class="math inline">\(Q_t^{\star}\)</span> satisfying <span class="math display">\[
-Q_t^{\star}(i,j) = \frac{p_t(j)}{p_t(i)} \, Q_t(j,i),
-\]</span> where <span class="math inline">\(p_t\)</span> is the marginal distribution of <span class="math inline">\(X_t\)</span>. We have: <span class="math display">\[
-\mathbb{P}(X_{t-h} = j \mid X_t = i) = Q_t^{\star}(i,j) \, h + o(h).
+Q_t^{\star}(x,y) = \frac{p_t(y)}{p_t(x)} \, Q_t(y,x),
+\]</span> where <span class="math inline">\(p_t\)</span> is the marginal distribution of <span class="math inline">\(X_t\)</span> at time <span class="math inline">\(t\)</span>. We have: <span class="math display">\[
+\mathbb{P}(X_{t-h} = y \mid X_t = x) = Q_t^{\star}(x,y) \, h + o(h).
 \]</span></p>
-<p>We are interested in modeling a Markov chain that progressively masks the initial value into the masked state <span class="math inline">\(M\)</span> as time <span class="math inline">\(t\)</span> goes from <span class="math inline">\(0\)</span> to <span class="math inline">\(T\)</span>. Transitions are only allowed from any token <span class="math inline">\(i \in \{1,\dots,V\}\)</span> to the masked state <span class="math inline">\(M\)</span>, and once in <span class="math inline">\(M\)</span> the process remains there. Thus, outside the diagonal, the only nonzero entries of <span class="math inline">\(Q_t\)</span> are <span class="math inline">\(Q_t(i,M)\)</span>. As it will be useful later, we denote by <span class="math inline">\(\tau\)</span> the jump time to <span class="math inline">\(M\)</span> and we assume <span class="math inline">\(\tau &lt; T\)</span> almost surely, so that <span class="math inline">\(X_T = M\)</span> with probability one.</p>
+<p>We are interested in modeling a Markov chain that progressively masks the initial value into the masked state <span class="math inline">\(M\)</span> as time <span class="math inline">\(t\)</span> goes from <span class="math inline">\(0\)</span> to <span class="math inline">\(T\)</span>. Transitions are only allowed from any token <span class="math inline">\(i \in \{1,\dots,V\}\)</span> to the masked state <span class="math inline">\(M\)</span>, and once in <span class="math inline">\(M\)</span> the process remains there. Thus, outside the diagonal, the only nonzero entries of <span class="math inline">\(Q_t\)</span> are <span class="math inline">\(Q_t(x,M)\)</span>. As it will be useful later, we denote by <span class="math inline">\(\tau\)</span> the jump time to <span class="math inline">\(M\)</span> and we assume <span class="math inline">\(\tau &lt; T\)</span> almost surely, so that <span class="math inline">\(X_T = M\)</span> with probability one, and that <span class="math inline">\(\tau\)</span> has a continuous distribution. In words: the process starts at some token value and at a random time <span class="math inline">\(\tau\)</span> jumps to the masked state <span class="math inline">\(M\)</span>, where it remains until time <span class="math inline">\(T\)</span>.</p>
 </section>
 <section id="extension-to-sequences" class="level3">
 <h3 class="anchored" data-anchor-id="extension-to-sequences">Extension to Sequences</h3>
-<p>We are interested in modeling sequences of length <span class="math inline">\(L\)</span> (or binary images, or genomic sequences, etc…), each coordinate taking value in <span class="math inline">\(\{1,2,\ldots,V\}\)</span>. We denote by <span class="math inline">\(\overline{p}_0\)</span> the data distribution over such sequences. For this purpose, we consider <span class="math inline">\(L\)</span> independent copies of the above Markov chain, one per coordinate: <span class="math display">\[
-\overline{X}_t = (X_t^1, \ldots, X_t^L),
-\]</span> each with rate matrix <span class="math inline">\(Q_t\)</span>. At time <span class="math inline">\(T\)</span>, the process reaches the fully masked sequence <span class="math inline">\(\overline{X}_T = (M, \ldots, M)\)</span> with probability one. Since jump times <span class="math inline">\(\tau_i\)</span> of each coordinate are almost surely distinct, the infinitesimal rate matrix <span class="math inline">\(\overline{Q}_t\)</span> of the joint process is nonzero only when a single coordinate changes. If <span class="math inline">\(x,\widehat{x} \in \mathcal{X}^L\)</span> differ by a single coordinate <span class="math inline">\(i\)</span>, we have <span class="math display">\[
-\overline{Q}_t(x,\widehat{x}) = Q_t(x_i, \widehat{x}_i).
+<p>We are interested in modeling sequences comprised of <span class="math inline">\(L\)</span> discrete tokens, eg: binary images, genomic sequences, chemical compounds, protein sequences, etc… Each token takes value in <span class="math inline">\(\{1,2,\ldots,V\}\)</span>. We denote by <span class="math inline">\(\overline{p}_0\)</span> the data distribution over such sequences. For this purpose, we consider <span class="math inline">\(L\)</span> independent copies of the above Markov chain, one per coordinate: <span class="math display">\[
+X_t = (X_t^1, \ldots, X_t^L),
+\]</span> each with rate matrix <span class="math inline">\(Q_t\)</span> as defined previously. At time <span class="math inline">\(T\)</span>, the process reaches the fully masked sequence <span class="math inline">\(\overline{X}_T = (M, \ldots, M)\)</span> with probability one. Denote by <span class="math inline">\(\tau_i\)</span> the jump time of coordinate <span class="math inline">\(i\)</span>. Since the jump times <span class="math inline">\(\tau_i\)</span> are almost surely distinct, the infinitesimal rate matrix <span class="math inline">\(\overline{Q}_t\)</span> of the joint process is nonzero only when a single coordinate changes. If <span class="math inline">\(x,\widehat{x} \in \mathcal{X}^L\)</span> differ by a single coordinate <span class="math inline">\(i\)</span>, we have <span class="math display">\[
+\overline{Q}_t(x,\widehat{x}) = Q_t(x^i, \widehat{x}^i).
 \]</span></p>
 <p>As before, the time-reversal has infinitesimal rate matrix <span class="math inline">\(\overline{Q}_t^{\star}\)</span> satisfying <span class="math display">\[
-\overline{Q}_t^{\star}(x,\widehat{x}) = \frac{\overline{p}_t(\widehat{x})}{\overline{p}_t(x)} \, Q_t(\widehat{x}_i, x_i),
+\overline{Q}_t^{\star}(\widehat{x}, x) = \frac{\overline{p}_t(x)}{\overline{p}_t(\widehat{x})} \, Q_t(x^i, \widehat{x}^i),
 \]</span></p>
-<p>where <span class="math inline">\(\overline{p}_t\)</span> is the marginal distribution of <span class="math inline">\(\overline{X}_t\)</span>. Since <span class="math inline">\(x\)</span> and <span class="math inline">\(\widehat{x}\)</span> differ at coordinate <span class="math inline">\(i\)</span>, for <span class="math inline">\(\overline{Q}_t^{\star}(x,\widehat{x})\)</span> to be non-zero, necessarily <span class="math inline">\(x_i = M\)</span> and <span class="math inline">\(\widehat{x}_i \in \{1,\ldots,V\}\)</span>. Let <span class="math inline">\(S = \{j : x_j \neq M\}\)</span> be the set of unmasked coordinates in <span class="math inline">\(x\)</span>. To observe configuration <span class="math inline">\(x\)</span> at time <span class="math inline">\(t\)</span>, the <span class="math inline">\((L - |S|)\)</span> masked coordinates must have <span class="math inline">\(\tau &lt; t\)</span> and the <span class="math inline">\(|S|\)</span> unmasked ones <span class="math inline">\(\tau \ge t\)</span>: <span class="math display">\[
-\overline{p}_t(x) = \mathbb{P}(\tau &lt; t)^{L-|S|} \, \mathbb{P}(\tau \ge t)^{|S|} \, \overline{p}_0(x_S).
+<p>where <span class="math inline">\(\overline{p}_t\)</span> is the marginal distribution of <span class="math inline">\(\overline{X}_t\)</span>. Since <span class="math inline">\(x\)</span> and <span class="math inline">\(\widehat{x}\)</span> differ at coordinate <span class="math inline">\(i\)</span> only, for <span class="math inline">\(\overline{Q}_t^{\star}(\widehat{x}, x)\)</span> to be non-zero, necessarily <span class="math inline">\(\widehat{x}^i = M\)</span> and <span class="math inline">\(x^i \in \{1,\ldots,V\}\)</span>. Let <span class="math inline">\(S = \{j : x^j \neq M\}\)</span> be the set of unmasked coordinates in <span class="math inline">\(\widehat{x}\)</span>. To observe configuration <span class="math inline">\(\widehat{x}\)</span> at time <span class="math inline">\(t\)</span>, the <span class="math inline">\((L - |S|)\)</span> masked coordinates must have <span class="math inline">\(\tau &lt; t\)</span> and the <span class="math inline">\(|S|\)</span> unmasked ones <span class="math inline">\(\tau \ge t\)</span>: <span class="math display">\[
+\overline{p}_t(\widehat{x}) = \mathbb{P}(\tau &lt; t)^{L-|S|} \, \mathbb{P}(\tau \ge t)^{|S|} \, \overline{p}_0(\widehat{x}^{S}).
 \]</span></p>
-<p>Similarly, <span class="math display">\[
-\overline{p}_t(\widehat{x}) = \mathbb{P}(\tau &lt; t)^{L-|S|-1} \, \mathbb{P}(\tau \ge t)^{|S|+1} \,
-\overline{p}_0(x_S)\, \overline{p}_0(\widehat{x}_i \mid x_S).
+<p>Similarly, and since <span class="math inline">\(x\)</span> differs from <span class="math inline">\(\widehat{x}\)</span> only at coordinate <span class="math inline">\(i\)</span>: <span class="math display">\[
+\begin{align*}
+\overline{p}_t(x)
+&amp;= \mathbb{P}(\tau &lt; t)^{L-|S|-1} \, \mathbb{P}(\tau \ge t)^{|S|+1} \,
+\overline{p}_0(x^{S \cup \{i\}})\\
+&amp;= \mathbb{P}(\tau &lt; t)^{L-|S|-1} \, \mathbb{P}(\tau \ge t)^{|S|+1} \,
+\overline{p}_0(\widehat{x}^{S})\, \overline{p}_0(x^i \mid \widehat{x}^{S}).
+\end{align*}
 \]</span></p>
-<p>This shows that the time-reversal rate matrix becomes <span class="math display">\[
-\overline{Q}_t^{\star}(x,\widehat{x}) = R(t)\, \overline{p}_0(\widehat{x}_i \mid x_S)\, Q_t(\widehat{x}_i, M),
+<p>This shows that the time-reversal rate matrix becomes <span id="eq-reverse-rate-matrix"><span class="math display">\[
+\overline{Q}_t^{\star}(\widehat{x}, x) = R(t) \, \overline{p}_0(x^i \mid \widehat{x}^{S})\, Q_t(x^i, M),
+\tag{1}\]</span></span></p>
+<p>with time dependent scalar <span class="math inline">\(R(t) = \frac{\mathbb{P}(\tau \ge t)}{\mathbb{P}(\tau &lt; t)}\)</span>. To simulate the reverse process that progressively unmasks a fully masked sequence, one only needs to model the conditional distribution <span class="math inline">\(\overline{p}_0(\widehat{x}^i \mid x^{S})\)</span> of the data distribution <span class="math inline">\(\overline{p}_0\)</span>. This is precisely the prediction task of masked language models such as BERT, which estimate token probabilities conditioned on visible context. In conclusion, discrete diffusion models with one-way masking are mathematically almost identical to masked language models. Hence their similar behavior and performance on text generation tasks are not coincidental. This line of research was developed in a very interesting stream of papers, including <span class="citation" data-cites="ou2024your">(<a href="#ref-ou2024your" role="doc-biblioref">Ou et al. 2024</a>)</span>, <span class="citation" data-cites="sahoo2024simple">(<a href="#ref-sahoo2024simple" role="doc-biblioref">Sahoo et al. 2024</a>)</span>, <span class="citation" data-cites="shi2024simplified">(<a href="#ref-shi2024simplified" role="doc-biblioref">Shi et al. 2024</a>)</span>. One of the potential drawbacks of such masked discrete diffusion models is that the support of the noising distribution is strictly smaller, and indeed often much smaller, than the whole state space. This means that when the denoising model is not perfect and wanders outside the support of the noising distribution, one quickly ends up in regions never seen during training. This can leads to poor sample quality. Other discrete diffusion models such as the one reaching the uniform distribution over all tokens at time <span class="math inline">\(T\)</span> do not suffer from this issue, although they do suffer from other important computational and modeling challenges. Exciting research directions remain to be explored in this area!</p>
+</section>
+<section id="training" class="level3">
+<h3 class="anchored" data-anchor-id="training">Training</h3>
+<p>To train the denoising model, <a href="#eq-reverse-rate-matrix" class="quarto-xref">Equation&nbsp;1</a> shows that it is natural to parametrize the conditional distribution</p>
+<p><span class="math display">\[f_\theta(x^i \mid \widehat{x}^{S}) \approx \overline{p}_0(x^i \mid \widehat{x}^{S})\]</span></p>
+<p>for all sets <span class="math inline">\(S \subset \{1,\ldots,L\}\)</span> with <span class="math inline">\(i \notin S\)</span>. Once done, one can define the rate matrix of the time-reversal process as:</p>
+<p><span class="math display">\[
+\overline{Q}_{t,\theta}^{\star}(\widehat{x}, x) = R(t) \, f_\theta(x^i \mid \widehat{x}^{S}) \, Q_t(x^i, M).
 \]</span></p>
-<p>with time dependent scalar <span class="math inline">\(R(t) = \frac{\mathbb{P}(\tau \ge t)}{\mathbb{P}(\tau &lt; t)}\)</span>. To simulate the reverse process that progressively unmasks a fully masked sequence, one only needs to model the conditional distribution <span class="math inline">\(\overline{p}_0(\widehat{x}_i \mid x_S)\)</span> of the data distribution <span class="math inline">\(\overline{p}_0\)</span>. This is precisely the prediction task of masked language models such as BERT, which estimate token probabilities conditioned on visible context. In conclusion, discrete diffusion models with one-way masking are mathematically almost identical to masked language models. Hence their similar behavior and performance on text generation tasks are not coincidental. This line of research was developed in a very interesting stream of papers, including <span class="citation" data-cites="ou2024your">(<a href="#ref-ou2024your" role="doc-biblioref">Ou et al. 2024</a>)</span>, <span class="citation" data-cites="sahoo2024simple">(<a href="#ref-sahoo2024simple" role="doc-biblioref">Sahoo et al. 2024</a>)</span>, <span class="citation" data-cites="shi2024simplified">(<a href="#ref-shi2024simplified" role="doc-biblioref">Shi et al. 2024</a>)</span>.</p>
-<!-- @article{ou2024your,
-  title={Your absorbing discrete diffusion secretly models the conditional distributions of clean data},
-  author={Ou, Jingyang and Nie, Shen and Xue, Kaiwen and Zhu, Fengqi and Sun, Jiacheng and Li, Zhenguo and Li, Chongxuan},
-  journal={arXiv preprint arXiv:2406.03736},
-  year={2024}
-}
-
-@article{sahoo2024simple,
-  title={Simple and effective masked diffusion language models},
-  author={Sahoo, Subham and Arriola, Marianne and Schiff, Yair and Gokaslan, Aaron and Marroquin, Edgar and Chiu, Justin and Rush, Alexander and Kuleshov, Volodymyr},
-  journal={Advances in Neural Information Processing Systems},
-  volume={37},
-  pages={130136--130184},
-  year={2024}
-}
-
-@article{shi2024simplified,
-  title={Simplified and generalized masked diffusion for discrete data},
-  author={Shi, Jiaxin and Han, Kehang and Wang, Zhe and Doucet, Arnaud and Titsias, Michalis},
-  journal={Advances in neural information processing systems},
-  volume={37},
-  pages={103131--103167},
-  year={2024}
-} -->
+<p>If one denotes by <span class="math inline">\(\mathbb{P}\)</span> the law of the forward noising process started from <span class="math inline">\(\overline{p}_0\)</span>, and by <span class="math inline">\(\mathbb{P}_{\theta}\)</span> the law of the time-reversal process started from the fully masked sequence <span class="math inline">\((M,M, \ldots, M)\)</span> at time <span class="math inline">\(T\)</span> and with learned denoising model <span class="math inline">\(f_\theta\)</span>, one can train the model by minimizing</p>
+<p><span class="math display">\[
+D_{\text{KL}} {\left(  \mathbb{P}\; || \; \mathbb{P}_{\theta}  \right)}  = \mathbb{E}_{\mathbb{P}}  {\left(  \log \frac{\mathbb{P}}{\mathbb{P}_{\theta}}  \right)} .
+\]</span></p>
+<p>Consider a trajectory <span class="math inline">\(x_{[0,T]}\)</span> of the forward noising process. The jump at time <span class="math inline">\(\tau_i\)</span> of the <span class="math inline">\(i\)</span>-th coordinate is denoted by <span class="math inline">\(\Delta_i: = (x_{\tau_i^-}^i, x_{\tau_i^+}^i) = (x_0^i, M)\)</span>. For simplifying the notations, we denote the reverse jump by <span class="math inline">\(\Delta_i^{\star}\)</span>. The log-likelihood ratio between the two processes is easily shown to be:</p>
+<p><span class="math display">\[
+\log \frac{\mathbb{P}}{\mathbb{P}_{\theta}}(x_{[0,T]}) = \log \overline{p}_0(x_0) + \sum_i \log \frac{\overline{Q}_{\tau_i}(\Delta_i)}{\overline{Q}^{\star}_{\tau_i, \theta}(\Delta_i^{\star})} - \int_0^T  {\left\{  \overline{J}_t(x_t) - \overline{J}^{\star}_{t,\theta}(x_t)  \right\}}  \, dt,
+\]</span></p>
+<p>where <span class="math inline">\(\overline{J}_t\)</span> and <span class="math inline">\(\overline{J}^{\star}_{t,\theta}\)</span> are the total jump rates of the forward and reverse processes respectively. Since <span class="math inline">\(\overline{J}^{\star}_{t,\theta}(x_t)\)</span> in fact does not depend on <span class="math inline">\(\theta\)</span>, minimizing the KL divergence is equivalent to minimizing:</p>
+<p><span class="math display">\[
+-\mathbb{E}_{\mathbb{P}}  {\left(  \sum_{i=1}^L \log f_\theta(X_0^i \mid X_{\tau_i}^{S_{{\tau_i}}})  \right)}
+\]</span></p>
+<p>where <span class="math inline">\(S_t\)</span> is the set of unmasked coordinates at time <span class="math inline">\(t\)</span>. It is more convenient to rewrite this quantity as an integral over time so that one can sample a time <span class="math inline">\(t\)</span> uniformly in <span class="math inline">\([0,T]\)</span> during training. With the Dirac delta function <span class="math inline">\(\delta[\tau_i = t]\)</span>, we can rewrite this expectation as:</p>
+<p><span class="math display">\[
+\begin{align*}
+-\mathbb{E}_{\mathbb{P}}  {\left(  \sum_{i=1}^L \log f_\theta(X_0^i \mid X_{\tau_i}^{S_{i}})  \right)}
+&amp;=
+-\mathbb{E}_{\mathbb{P}} \int_{t=0}^{T} \sum_{i=1}^L \delta[\tau_i = t] \, \log f_\theta(X_0^i \mid X_{t}^{S_{t}}) \, dt\\
+&amp;=
+-\int_{t=0}^{T} \frac{\dot{\beta_t}}{\beta_t} \sum_{i: \, x_t^i=M} \log f_\theta(X_0^i \mid X_{t}^{S_{t}}) \, dt
+\end{align*}
+\]</span></p>
+<p>where <span class="math inline">\(\beta_t = \mathbb{P}(\tau \le t)\)</span> so that <span class="math inline">\(\mathbb{P}(\tau \in dt | \tau \le t) = \frac{\dot{\beta_t}}{\beta_t} \, dt\)</span>. For training, it suffices to sample <span class="math inline">\(t\)</span> uniformly in <span class="math inline">\([0,T]\)</span>, then choose <span class="math inline">\(X_0 \sim \overline{p}_0\)</span>, then sample the noised configuration <span class="math inline">\(X_t\)</span> according to the forward process, and finally obtain an unbiased estimate of the loss.</p>
 
 
 
