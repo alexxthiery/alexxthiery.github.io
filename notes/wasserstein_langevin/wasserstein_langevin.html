@@ -300,7 +300,7 @@ $$
 This can be approached identically to what as been done in the case of minimizing $\kl(p, \pi)$. -->
 <section id="a-more-general-functional-mathcalfp" class="level2">
 <h2 class="anchored" data-anchor-id="a-more-general-functional-mathcalfp">A More General Functional <span class="math inline">\(\mathcal{F}(p)\)</span></h2>
-<p>In the previous section, we focused on the specific objective <span class="math inline">\(\mathcal{F}(p) = D_{\text{KL}}(p,\pi)\)</span> and we saw how a small displacement of the particles along a vector field produces a first–order change in <span class="math inline">\(\mathcal{F}(p)\)</span>. The same heuristic applies to a wide class of functionals <span class="math inline">\(\mathcal{F}\)</span> defined on probability distributions. Assume that <span class="math inline">\(\mathcal{F}(p)\)</span> admits a <strong>functional derivative</strong>, written <span class="math inline">\(\frac{\delta \mathcal{F}}{\delta p}(x)\)</span>, defined by the first–order expansion</p>
+<p>In the previous section, we focused on the specific objective <span class="math inline">\(\mathcal{F}(p) = D_{\text{KL}}(p,\pi)\)</span> and derived the associated Wasserstein gradient flow. The key step was to compute how the KL functional reacted to perturbations of the density <span class="math inline">\(p\)</span> when mass was rearranged according to a vector field <span class="math inline">\(\mu:\mathbb{R}^D \to \mathbb{R}^D\)</span>. Essentially the same reasoning applies to a wide class of functionals <span class="math inline">\(\mathcal{F}\)</span> defined on probability distributions. Assume that <span class="math inline">\(\mathcal{F}(p)\)</span> admits a <strong>functional derivative</strong>, written <span class="math inline">\(\frac{\delta \mathcal{F}}{\delta p}(x)\)</span>; this means that for any perturbation of the density <span class="math inline">\(p\)</span> of the form <span class="math inline">\(p + \varepsilon q\)</span> where <span class="math inline">\(q\)</span> is a signed-measure of total mass zero and <span class="math inline">\(\varepsilon\ll 1\)</span>, we have the expansion:</p>
 <p><span id="eq-derivative"><span class="math display">\[
 \mathcal{F}(p + \varepsilon q)
 =
@@ -309,9 +309,9 @@ This can be approached identically to what as been done in the case of minimizin
 \varepsilon
 \int  \textcolor{blue}{\frac{\delta \mathcal{F}}{\delta p}(x) }\, q(dx)
 \;+\;
-o(\varepsilon),
+o(\varepsilon).
 \tag{5}\]</span></span></p>
-<p>for any signed-measure perturbation <span class="math inline">\(q\)</span> of total mass zero and <span class="math inline">\(\varepsilon\ll 1\)</span>. Here, the term <span class="math inline">\( \textcolor{blue}{\delta \mathcal{F}/ \delta p}\)</span> is just a standard function from <span class="math inline">\(\mathbb{R}^D\)</span> to <span class="math inline">\(\mathbb{R}\)</span> and several examples are given below. If we perturb the current distribution <span class="math inline">\(p_0\)</span> by transporting it along a vector field <span class="math inline">\(\mu:\mathbb{R}^D\to\mathbb{R}^D\)</span> during a time interval of length <span class="math inline">\(\delta_t \ll 1\)</span>, the continuity equation gives the perturbation <span class="math display">\[
+<p>Here, the term <span class="math inline">\( \textcolor{blue}{\delta \mathcal{F}/ \delta p}\)</span> is just a standard function from <span class="math inline">\(\mathbb{R}^D\)</span> to <span class="math inline">\(\mathbb{R}\)</span> and several examples are given below. If we perturb the current distribution <span class="math inline">\(p_0\)</span> by transporting it along a vector field <span class="math inline">\(\mu:\mathbb{R}^D\to\mathbb{R}^D\)</span> during a time interval of length <span class="math inline">\(\delta_t \ll 1\)</span>, the continuity equation gives: <span class="math display">\[
 p_{\delta_t}(x)
 =
 p_0(x)
@@ -327,14 +327,15 @@ O(\delta_t^2).
 &amp;= \delta_t \int p_0(x)\, \mu(x)\cdot \nabla\!\left[ \frac{\delta \mathcal{F}}{\delta p}(x) \right] dx.
 \end{align*}
 \]</span></p>
-<p>We have assumed sufficient regularity to perform an integration by parts and neglect boundary terms. This identity describes how the functional reacts to rearranging mass according to <span class="math inline">\(\mu\)</span>. It is the direct analogue of the KL computation earlier in the note, but now valid for any functional <span class="math inline">\(\mathcal{F}\)</span> admitting a functional derivative. We can then proceed as before to find the optimal drift <span class="math inline">\(\mu\)</span> under a Wasserstein penalty. We would like to minimize the proximal objective: <span class="math display">\[
+<p>We have assumed sufficient regularity to perform an integration by parts and neglect boundary terms. This identity describes how the functional reacts when mass is rearranged according to the vector field <span class="math inline">\(\mu\)</span>. It is the direct analogue of the KL computation earlier in the note, but now valid for any functional <span class="math inline">\(\mathcal{F}\)</span> admitting a functional derivative. We can then proceed as before to find the optimal drift <span class="math inline">\(\mu\)</span> under a Wasserstein penalty. We would like to minimize the proximal objective: <span class="math display">\[
 \mathcal{J}(\mu)
 =
 \mathcal{F}(p_{\delta_t})
 \;+\;
 \frac{1}{2\varepsilon}\,
-D_{\text{Wass}}(p_0,p_{\delta_t})^2.
-\]</span> Since <span class="math inline">\(D_{\text{Wass}}(p_0, p_{\delta_t})^2 \approx \delta_t^2 \int p_0(x)\, \|\mu(x)\|^2\, dx\)</span>, this is a simple quadratic functional of the vector field <span class="math inline">\(\mu\)</span>. Minimizing pointwise in <span class="math inline">\(x\)</span> and adopting the usual scaling <span class="math inline">\(\varepsilon= \delta_t\)</span> gives the optimal velocity field, i.e.&nbsp;the negative Wasserstein gradient of <span class="math inline">\(\mathcal{F}\)</span> reads: <span class="math display">\[
+D_{\text{Wass}}(p_0,p_{\delta_t})^2
+\]</span></p>
+<p>where <span class="math inline">\(\varepsilon\ll 1\)</span> is a scaling parameter that can be thought of as a step-size. Since <span class="math inline">\(D_{\text{Wass}}(p_0, p_{\delta_t})^2 \aprox \delta_t^2 \int p_0(x)\, \|\mu(x)\|^2\, dx\)</span> to leading order, the proximal objective can be approximated as a simple quadratic functional of the vector field <span class="math inline">\(\mu\)</span>. Minimizing pointwise in <span class="math inline">\(x\)</span> and adopting the usual scaling <span class="math inline">\(\varepsilon= \delta_t\)</span> gives the optimal velocity field, i.e.&nbsp;the negative Wasserstein gradient of <span class="math inline">\(\mathcal{F}\)</span> reads: <span class="math display">\[
 \textcolor{blue}{\mu(x)
 =
 -
@@ -356,8 +357,8 @@ D_{\text{Wass}}(p_0,p_{\delta_t})^2.
 <p>This partial differential equation describes how the density (or empirical measure) evolves when we follow the direction of steepest descent of <span class="math inline">\(\mathcal{F}\)</span> with respect to the Wasserstein metric. A few common choices of <span class="math inline">\(\mathcal{F}\)</span> illustrate the general formula:</p>
 <section id="entropy" class="level3">
 <h3 class="anchored" data-anchor-id="entropy">Entropy:</h3>
-<p>The functional <span class="math inline">\(\mathcal{F}(p) = -\int p(x)\log p(x)\,dx\)</span> has derivative <span class="math inline">\(\frac{\delta \mathcal{F}}{\delta p} = -(\log p + 1)\)</span>. This means that the Wasserstein gradient flow of to <strong>maximize</strong> entropy is given by the heat equation: <span class="math display">\[
-\partial_t p_t(x) = \Delta p_t(x).
+<p>The functional <span class="math inline">\(\mathcal{F}_{\textrm{ent}}(p) = -\int p(x)\log p(x)\,dx\)</span> has derivative <span class="math inline">\(\frac{\delta \mathcal{F}_{\textrm{ent}}}{\delta p} = -(\log p + 1)\)</span>. This means that the Wasserstein gradient flow to <strong>maximize</strong> the entropy is given by the heat equation: <span class="math display">\[
+\partial_t p_t(x) = \nabla \cdot  {\left(  p_t(x) \, \nabla \log p_t(x)  \right)}  = \Delta p_t(x).
 \]</span> This describes the evolution of the density of a standard Brownian motion, i.e.&nbsp;particles moving according to the SDE:</p>
 <p><span class="math display">\[dX_t = \sqrt{2}\,dW_t.\]</span></p>
 </section>
@@ -372,7 +373,9 @@ D_{\text{Wass}}(p_0,p_{\delta_t})^2.
 \Big).
 \]</span> This describes the evolution of the density of particles doing steepest descent in the potential <span class="math inline">\(V\)</span>, i.e.&nbsp;particles moving according to the ODE:</p>
 <p><span class="math display">\[dX_t = -\nabla V(X_t)\,dt\]</span></p>
-<p>as is very intuitive. When combined with the entropy functional, this recovers the full overdamped Langevin dynamics, i.e.&nbsp;particles moving according to the SDE:</p>
+<p>as is very intuitive. When combined with the entropy functional, i.e.&nbsp;when minimizing the functional</p>
+<p><span class="math display">\[\mathcal{F}(p) = \int V(x)\,p(x)\, dx - \mathcal{F}_{\textrm{ent}}(p),\]</span></p>
+<p>this recovers the full overdamped Langevin dynamics, i.e.&nbsp;particles moving according to the SDE:</p>
 <p><span class="math display">\[dX_t = -\nabla V(X_t)\,dt + \sqrt{2}\,dW_t\]</span></p>
 <p>as described earlier.</p>
 </section>
