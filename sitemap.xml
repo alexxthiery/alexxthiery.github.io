@@ -298,11 +298,11 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</loc>
-    <lastmod>2025-11-20T15:15:07.882Z</lastmod>
+    <lastmod>2025-11-20T15:15:05.000Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2025-10-21T17:07:37.283Z</lastmod>
+    <lastmod>2025-11-21T17:49:20.306Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
@@ -459,5 +459,9 @@
   <url>
     <loc>https://alexxthiery.github.io/notes/DiscreteDiff/DiscreteDiff.html</loc>
     <lastmod>2025-10-27T17:08:30.071Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/scoring_rules/scoring.html</loc>
+    <lastmod>2025-11-21T17:49:46.519Z</lastmod>
   </url>
 </urlset>
