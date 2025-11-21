@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Notes – Alexandre Thiéry</title>
+<title>Scoring Rules for Probabilistic Forecasts – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,22 +20,42 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -61,15 +81,46 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Notes – Alexandre Thiéry">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Scoring Rules for Probabilistic Forecasts – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/scoring_rules/Savage.jpg">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Notes – Alexandre Thiéry">
+<meta name="twitter:title" content="Scoring Rules for Probabilistic Forecasts – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/scoring_rules/Savage.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -79,7 +130,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -89,29 +140,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html"> 
+    <a class="nav-link" href="../../people/index_people.html"> 
 <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html"> 
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
 <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html"> 
+    <a class="nav-link" href="../../teaching/teaching.html"> 
 <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" aria-current="page"> 
+    <a class="nav-link" href="../../notes/index_notes.html"> 
 <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html"> 
+    <a class="nav-link" href="../../about/about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -126,9 +177,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
+      <h1 class="title">Scoring Rules for Probabilistic Forecasts</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">diffusion</div>
               </div>
                   </div>
   </div>
@@ -140,10 +191,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">22 11 2025</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">22 11 2025</p>
+      </div>
+    </div>
       
     </div>
     
@@ -151,18 +208,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theorygeometry" id="toc-information-theorygeometry" class="nav-link" data-scroll-target="#information-theorygeometry">Information Theory/Geometry</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
-  <li><a href="#other" id="toc-other" class="nav-link" data-scroll-target="#other">Other</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -171,74 +218,64 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">dates</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-<li><a href="../notes/VIASM_2024/VIASM_2024.html">VIASM mini-course on diffusions and flows</a></li>
-</ul>
-</section>
-<section id="information-theorygeometry" class="level3">
-<h3 class="anchored" data-anchor-id="information-theorygeometry">Information Theory/Geometry</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-<li><a href="../notes/fisher-rao/distance.html">Fisher-Rao Geometry</a></li>
-</ul>
-</section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
-<ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation &amp; the EnKF</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html">Ensemble Kalman Smoothers</a></li>
-<li><a href="../notes/MCMC_deterministic_proposals/MCMC_deterministic.html">MCMC with deterministic proposals</a></li>
-<li><a href="../notes/MCMC_on_manifold/mcmc_manifold.html">RWM &amp; HMC on Manifolds</a></li>
-<li><a href="../notes/SAW/SAW.html">Self-Avoiding-Walks</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-<li><a href="../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson Equation &amp; Asymptotic Variance</a></li>
-<li><a href="../notes/averaging_homogenization/averaging_homogenization.html">Averaging and Homogenization</a></li>
-<li><a href="../notes/doob_transforms/doob.html">Joe Doob &amp; Change of measures on path space</a></li>
-<li><a href="../notes/girsanov/girsanov.html">Girsanov and importance sampling</a></li>
-<li><a href="../notes/HJB/HJB.html">Doob, Girsanov and Bellman</a></li>
-<li><a href="../notes/conformal_inference/conformal.html">Basic Conformal Inference</a></li>
-<li><a href="../notes/jarzynski/jarzynski.html">Jarzynski and Crooks</a></li>
-<li><a href="../notes/sparse_GP/sparse_gp.html">Sparse Gaussian Processes</a></li>
-<li><a href="../notes/shrodinger_bridge/shrodinger.html">Shrodinger Bridges</a></li>
-<li><a href="../notes/DiscreteDiff/DiscreteDiff.html">Masked Discrete Diffusion</a></li>
-<li><a href="../notes/scoring_rules/scoring.html">Scoring Rules for Probabilistic Forecasts</a></li>
-</ul>
-</section>
-<section id="other" class="level3">
-<h3 class="anchored" data-anchor-id="other">Other</h3>
-<ul>
-<li><a href="../notes/adjoint_method/adjoint.html">Adjoint Method for Sensitivities</a></li>
-<li><a href="../notes/infinite_products/inft_prod.html">Infinite Products</a></li>
-</ul>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Savage.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/Leonard_Jimmie_Savage">Leonard Jimmie Savage</a> (1917 – 1971)</figcaption>
+</figure>
+</div>
+</div>
+<p>When working with probabilistic models, predictions are expressed as full distributions rather than point estimates. To keep things simple, we focus on the case where the outcome <span class="math inline">\(Y\)</span> to be predicted consists of a finite number of <span class="math inline">\(n\)</span> possible outcomes labeled <span class="math inline">\([1:n] = \{1,2,\ldots,n\}\)</span>. A probabilistic forecast then takes the form of a vector <span class="math inline">\(\pi=(\pi_1,\pi_2,\ldots,\pi_n)\)</span> in the probability simplex <span class="math inline">\(\Delta^{n-1}\)</span>. Each coordinate <span class="math inline">\(\pi_i\)</span> represents the predicted probability of outcome <span class="math inline">\(i\)</span> occurring. How should we evaluate the quality of such probabilistic forecasts?</p>
+<p>A scoring rule assigns a numerical reward <span class="math inline">\(s(\pi,Y)\)</span> to the probabilistic forecast <span class="math inline">\(\pi\)</span> when outcome <span class="math inline">\(Y\)</span> occurs. If the true distribution of the outcome <span class="math inline">\(Y\)</span> is <span class="math inline">\(p\)</span>, the expected reward for reporting <span class="math inline">\(\pi\)</span> is <span id="eq-S"><span class="math display">\[
+S(\pi,p) \equiv \sum_{i=1}^n p_i \, s(\pi,i).
+\tag{1}\]</span></span></p>
+<p>Although the function <span class="math inline">\(s: \Delta^{n-1} \times [1:n] \to \mathbb{R}\)</span> is generally non-linear, the function <span class="math inline">\(S\)</span> can be extended to a function from <span class="math inline">\(\Delta^{n-1} \times \mathbb{R}^n\)</span> to <span class="math inline">\(\mathbb{R}\)</span>, linear in its second argument, through <a href="#eq-S" class="quarto-xref">Equation&nbsp;1</a> by interpreting <span class="math inline">\(p\)</span> as a vector in <span class="math inline">\(\mathbb{R}^n\)</span>. The remark that it is linear in its second argument will reveal to be very useful later. Furthermore, if one denotes by <span class="math inline">\(\delta_i = (0,\ldots,0,1,0,\ldots,0) \in \Delta^{n-1}\)</span> the Dirac measure at <span class="math inline">\(i\)</span>, then the scoring rule can be recovered from the expected reward via</p>
+<p><span class="math display">\[s(\pi,i) = S(\pi,\delta_i).\]</span></p>
+<p>The central requirement for the design of scoring rules is that a forecaster has no incentive to misreport their beliefs. This means that if the forecaster’s belief about the distribution of <span class="math inline">\(Y\)</span> is given by the probability distribution <span class="math inline">\(\pi \in\Delta^{n-1}\)</span>, then reporting <span class="math inline">\(\pi\)</span> should maximize their expected reward. There are a number of situations in which such a design is desirable. For example, in market settings where agents are asked to provide probabilistic forecasts, proper scoring rules incentivize truthful reporting of beliefs. A scoring rule is called proper if the mapping <span class="math inline">\(\pi \mapsto S(\pi, p)\)</span> attains its maximum at <span class="math inline">\(\pi=p\)</span>. Formally, this means that for all two distributions <span class="math inline">\(p,\pi \in \Delta^{n-1}\)</span>:</p>
+<p><span class="math display">\[
+S(p,p) \ge S(\pi, p).
+\]</span></p>
+<p>This condition ensures that the best strategy, in expectation, is to report one’s genuine probabilities. If the inequality is strict whenever <span class="math inline">\(\pi \ne p\)</span>, the scoring rule is called strictly proper. Proper scoring rules have a long history in statistics and decision theory. The natural question arises: what do proper scoring rules look like, and how can we construct them? What functional forms can we use for <span class="math inline">\(s(\pi,i)\)</span> that ensure properness?</p>
+<p>For each distribution <span class="math inline">\(p\)</span>, define its self-expected score <span class="math display">\[
+H(p)=S(p,p)=\sum_{i=1}^n p_i \, s(p,i).
+\]</span></p>
+<p>It is the average reward a forecaster receives when its reported distribution matches the true distribution. Crucially, the affine function <span class="math inline">\(p \mapsto S(\pi,p)\)</span> describes a supporting hyperplane to the function <span class="math inline">\(H\)</span> at the point <span class="math inline">\(\pi\)</span>: it is linear in <span class="math inline">\(p\)</span>, matches <span class="math inline">\(H\)</span> at <span class="math inline">\(p=\pi\)</span>, while never exceeding it elsewhere. If one knew that <span class="math inline">\(H\)</span> were convex and differentiable, by uniqueness of supporting hyperplanes to convex and differentiable functions, one could immediately write down a representation for <span class="math inline">\(S(\pi,p)\)</span> in terms of <span class="math inline">\(H\)</span>. But <span class="math inline">\(H\)</span> is indeed convex since it is the pointwise maximum of the family of affine functions <span class="math inline">\(p \mapsto S(\pi,p)\)</span> indexed by <span class="math inline">\(\pi\)</span>. Assuming differentiability to keep a few technicalities at bay, this shows that:</p>
+<p><span class="math display">\[
+\begin{align*}
+s(\pi,i)
+&amp;= S(\pi,\delta_i)
+= S(\pi, \pi) + \left&lt;  \nabla H(\pi), \delta_i - \pi  \right&gt;\\
+&amp;= H(\pi) + \left&lt;  \nabla H(\pi), \delta_i - \pi  \right&gt;.
+\end{align*}
+\]</span></p>
+<p>Without assuming differentiability, one can use subgradients instead of gradients to obtain a similar representation. This shows that proper scoring rules <span class="math inline">\(s(\pi,i)\)</span> are in one-to-one correspondence with convex functions <span class="math inline">\(H(\pi)\)</span> on the probability simplex <span class="math inline">\(\pi \in \Delta^{n-1}\)</span>. Similarly, strictly proper scoring rules correspond to strictly convex functions. Extension to continuous sample spaces is possible through the use of functional derivatives instead of gradients or subgradients; see <span class="citation" data-cites="gneiting2007strictly">(<a href="#ref-gneiting2007strictly" role="doc-biblioref">Gneiting and Raftery 2007</a>)</span> for details.</p>
+<p>Let us look at some examples of proper scoring rules defined through this correspondence:</p>
+<ol type="1">
+<li><p><strong>Logarithmic Score</strong>: The logarithmic scoring rule is defined as <span class="math inline">\(s(\pi,i) = \log(\pi_i)\)</span>. The corresponding self-expected score is the negative Shannon entropy: <span class="math display">\[
+H(p) = \sum_{i=1}^n p_i \log(p_i).
+\]</span> It is interesting to note that the logarithmic scoring rule is essentially the only local proper scoring rule, i.e.&nbsp;one of the type <span class="math inline">\(s(\pi,i) = F(\pi_i, i)\)</span> for some function <span class="math inline">\(F\)</span>. In other words, the score assigned to outcome <span class="math inline">\(i\)</span> depends only on the predicted probability <span class="math inline">\(\pi_i\)</span> of that outcome, and not on the other predicted probabilities <span class="math inline">\(\pi_j\)</span> for <span class="math inline">\(j \ne i\)</span>. Indeed, assuming <span class="math inline">\(F\)</span> smooth for simplicity, the condition of properness easily implies that <span class="math inline">\(\partial_{\pi_i} F(\pi_i, i) = A\)</span> for some constant <span class="math inline">\(\alpha\)</span> independent of <span class="math inline">\(i\)</span>. Integrating this relation gives that <span class="math inline">\(F(\pi_i, i) = \alpha \log(\pi_i) + \beta_i\)</span>, where necessarily <span class="math inline">\(\alpha&gt;0\)</span> for properness, and where <span class="math inline">\(B_i\)</span> are arbitrary constants.</p></li>
+<li><p><strong>Brier Score</strong>: The Brier scoring rule is given by <span class="math inline">\(s(\pi,i) = \pi_i - \tfrac12 \sum_{j=1}^n \pi_j^2\)</span>. The associated self-expected score is <span class="math display">\[
+H(p) = \frac12 \, \sum_{i=1}^n p_i^2.
+\]</span></p></li>
+<li><p><strong>Spherical Score</strong>: The spherical scoring rule is defined as <span class="math inline">\(s(\pi,i) = \frac{\pi_i}{\|\pi\|_2}\)</span>. The corresponding self-expected score is <span class="math display">\[
+H(p) = \|p\|_2.
+\]</span></p></li>
+<li><p><strong>Energy Score</strong>: consider a distance function <span class="math inline">\(d: [1:n] \times [1:n] \to \mathbb{R}_+\)</span>. The energy scoring rule is defined through expected distances: <span class="math display">\[
+s(\pi,i) = - \mathbb{E}[d(X,i)]
+\]</span> where <span class="math inline">\(X \sim \pi\)</span>. The associated self-expected score is <span class="math display">\[
+H(p) = -\mathbb{E}[d(X,X')] = -\sum_{i,j=1}^n p_i p_j \, d(i,j).
+\]</span> where <span class="math inline">\(X,X' \sim p\)</span> are independent. This function is convex in <span class="math inline">\(p\)</span> if the distance matrix <span class="math inline">\(M_{i,j}=d(i,j)\)</span> is negative semi-definite on the subspace of zero-sum vectors, i.e., if for all vectors <span class="math inline">\(z \in \mathbb{R}^n\)</span> with <span class="math inline">\(\sum_{i=1}^n z_i = 0\)</span>, one has <span class="math inline">\(\sum_{i,j=1}^n z_i z_j \, d(i,j) \le 0\)</span>. Luckily, there are many such distances. For example, if the distance <span class="math inline">\(d\)</span> is of the form <span class="math display">\[d(i,j) = \|\varphi_i - \varphi_j\|_2^2\]</span> for some (feature) vectors <span class="math inline">\(\varphi_1,\ldots,\varphi_n \in \mathbb{R}^m\)</span>, then the corresponding distance matrix is negative semi-definite on the subspace of zero-sum vectors. In fact, with a bit of algebra, one can check that for any <span class="math inline">\(0&lt; \beta \le 2\)</span>, the distance defined as <span class="math display">\[d(i,j) = \|\varphi_i - \varphi_j\|_2^\beta\]</span> also leads to a negative semi-definite distance matrix on the subspace of zero-sum vectors. This includes, in particular, the case <span class="math inline">\(\beta=1\)</span> which corresponds to the standard Euclidean distance.</p></li>
+</ol>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-gneiting2007strictly" class="csl-entry" role="listitem">
+Gneiting, Tilmann, and Adrian E Raftery. 2007. <span>“Strictly Proper Scoring Rules, Prediction, and Estimation.”</span> <em>Journal of the American Statistical Association</em> 102 (477). Taylor &amp; Francis: 359–78.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
