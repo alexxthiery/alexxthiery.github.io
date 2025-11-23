@@ -302,7 +302,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2025-11-21T17:49:20.306Z</lastmod>
+    <lastmod>2025-11-23T18:34:12.842Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
@@ -454,7 +454,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/shrodinger_bridge/shrodinger.html</loc>
-    <lastmod>2025-10-21T02:14:31.844Z</lastmod>
+    <lastmod>2025-11-23T15:17:21.894Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/DiscreteDiff/DiscreteDiff.html</loc>
@@ -463,5 +463,9 @@
   <url>
     <loc>https://alexxthiery.github.io/notes/scoring_rules/scoring.html</loc>
     <lastmod>2025-11-22T03:47:38.725Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</loc>
+    <lastmod>2025-11-23T18:32:08.971Z</lastmod>
   </url>
 </urlset>
