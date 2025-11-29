@@ -193,12 +193,15 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#zonal-spherical-harmonics" id="toc-zonal-spherical-harmonics" class="nav-link active" data-scroll-target="#zonal-spherical-harmonics">Zonal spherical harmonics</a></li>
-  <li><a href="#reminder-on-differential-operators" id="toc-reminder-on-differential-operators" class="nav-link" data-scroll-target="#reminder-on-differential-operators">Reminder on differential operators</a>
+  <li><a href="#gegenbauer-polynomials-and-positive-semidefinite-gram-matrices" id="toc-gegenbauer-polynomials-and-positive-semidefinite-gram-matrices" class="nav-link active" data-scroll-target="#gegenbauer-polynomials-and-positive-semidefinite-gram-matrices">Gegenbauer polynomials and positive semidefinite Gram matrices</a>
   <ul class="collapse">
-  <li><a href="#spherical-coordinates-and-the-laplacian" id="toc-spherical-coordinates-and-the-laplacian" class="nav-link" data-scroll-target="#spherical-coordinates-and-the-laplacian">Spherical coordinates and the Laplacian</a></li>
-  <li><a href="#zonal-functions" id="toc-zonal-functions" class="nav-link" data-scroll-target="#zonal-functions">Zonal functions</a></li>
-  <li><a href="#gegenbauer-polynomials." id="toc-gegenbauer-polynomials." class="nav-link" data-scroll-target="#gegenbauer-polynomials.">Gegenbauer polynomials.</a></li>
+  <li><a href="#gram-matrices-and-positive-semidefinite-kernels" id="toc-gram-matrices-and-positive-semidefinite-kernels" class="nav-link" data-scroll-target="#gram-matrices-and-positive-semidefinite-kernels">Gram matrices and positive semidefinite kernels</a></li>
+  <li><a href="#zonal-spherical-harmonics-and-gegenbauer-recap" id="toc-zonal-spherical-harmonics-and-gegenbauer-recap" class="nav-link" data-scroll-target="#zonal-spherical-harmonics-and-gegenbauer-recap">Zonal spherical harmonics and Gegenbauer recap</a></li>
+  <li><a href="#spherical-harmonics-via-harmonic-polynomials" id="toc-spherical-harmonics-via-harmonic-polynomials" class="nav-link" data-scroll-target="#spherical-harmonics-via-harmonic-polynomials">Spherical harmonics via harmonic polynomials</a></li>
+  <li><a href="#the-harmonic-kernel-k_ell" id="toc-the-harmonic-kernel-k_ell" class="nav-link" data-scroll-target="#the-harmonic-kernel-k_ell">The harmonic kernel <span class="math inline">\(K_\ell\)</span></a></li>
+  <li><a href="#from-rotational-invariance-to-a-zonal-form" id="toc-from-rotational-invariance-to-a-zonal-form" class="nav-link" data-scroll-target="#from-rotational-invariance-to-a-zonal-form">From rotational invariance to a zonal form</a></li>
+  <li><a href="#from-the-addition-theorem-to-positive-semidefiniteness" id="toc-from-the-addition-theorem-to-positive-semidefiniteness" class="nav-link" data-scroll-target="#from-the-addition-theorem-to-positive-semidefiniteness">From the addition theorem to positive semidefiniteness</a></li>
+  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -218,152 +221,203 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<section id="zonal-spherical-harmonics" class="level3">
-<h3 class="anchored" data-anchor-id="zonal-spherical-harmonics">Zonal spherical harmonics</h3>
-<p>Understanding the eigenfunctions of the spherical Laplacian is a central task. These eigenfunctions form the building blocks of harmonic analysis on spheres.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./Spherical_Harmonics.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption>Spherical Harmonics</figcaption>
-</figure>
-</div>
-</div>
-<p>A particularly important situation arises when the function of interest depends only on the angular separation from a fixed axis.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./zonal.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
-<figcaption>Zonal Spherical Harmonics</figcaption>
-</figure>
-</div>
-</div>
-<p>Such zonal functions retain full rotational symmetry around that axis and reduce the spherical Laplacian to a one-dimensional operator. Its eigenfunctions turn out to be polynomials on the interval <span class="math inline">\([-1,1]\)</span> with a very specific weight. These polynomials are the <a href="https://en.wikipedia.org/wiki/Gegenbauer_polynomials">Gegenbauer polynomials</a>, which generalize several classical families of orthogonal polynomials, including the Legendre and Chebyshev polynomials.</p>
-</section>
-<section id="reminder-on-differential-operators" class="level2">
-<h2 class="anchored" data-anchor-id="reminder-on-differential-operators">Reminder on differential operators</h2>
-<p>Many problems require the ability to compute gradients, divergences, and Laplacians in arbitrary coordinate systems. Before specializing to spherical coordinates in higher dimensions, it is useful to recall the geometric meaning of these operators and the minimal formalism needed to manipulate them. Suppose that a point in space is described by a collection of coordinates <span class="math display">\[
-q = (q^1, \dots, q^n).
-\]</span> If we make a small change <span class="math inline">\((dq^1,\dots,dq^n)\)</span>, the physical displacement has a length denoted by <span class="math inline">\(ds\)</span>. In an orthogonal coordinate system, each coordinate direction comes with a scale factor <span class="math inline">\(h_i(q)\)</span> such that a change <span class="math inline">\(dq^i\)</span> corresponds to a “physical” displacement of length <span class="math inline">\(h_i(q), dq^i\)</span> along the unit vector <span class="math inline">\(e_i\)</span>. These functions <span class="math inline">\(h_i\)</span> encode how the coordinate system stretches or compresses distances along each axis. Once the scale factors are known, the rest of the differential operators follow directly.</p>
-<p><strong>The gradient:</strong> For a scalar function <span class="math inline">\(f(q)\)</span>, the change produced by varying only <span class="math inline">\(q^i\)</span> is approximately <span class="math inline">\(\partial_{d q^i} f \cdot dq^i\)</span>. The physical distance traveled in this move is <span class="math inline">\(h_i \, dq^i\)</span>. The rate of increase of <span class="math inline">\(f\)</span> per unit distance in the direction <span class="math inline">\(e_i\)</span> is therefore <span class="math inline">\(\frac{1}{h_i} \frac{\partial f}{\partial q^i}\)</span>. This is the <span class="math inline">\(i\)</span>th component of the gradient. Summing over all directions gives <span class="math display">\[
-\nabla f = \sum_{i=1}^n \left( \frac{1}{h_i}\frac{\partial f}{\partial q^i} \right) e_i.
+<section id="gegenbauer-polynomials-and-positive-semidefinite-gram-matrices" class="level2">
+<h2 class="anchored" data-anchor-id="gegenbauer-polynomials-and-positive-semidefinite-gram-matrices">Gegenbauer polynomials and positive semidefinite Gram matrices</h2>
+<p>In the previous post, we met Gegenbauer polynomials as the zonal spherical harmonics on the unit sphere <span class="math inline">\(S^{d-1}\)</span>. In this note, I will use that viewpoint to prove a simple but useful fact:</p>
+<blockquote class="blockquote">
+<p>If <span class="math inline">\(x_1,\dots,x_n \in S^{d-1}\)</span> are unit vectors in <span class="math inline">\(\mathbb{R}^d\)</span> and <span class="math display">\[
+  G_{ij} = x_i \cdot x_j
+\]</span> is their Gram matrix, then applying a Gegenbauer polynomial <span class="math inline">\(C_\ell^{(\alpha)}\)</span> entrywise to <span class="math inline">\(G\)</span> produces another positive semidefinite matrix.</p>
+</blockquote>
+<p>Equivalently, the kernel <span class="math display">\[
+K_\ell(x,y) = C_\ell^{(\alpha)}(x \cdot y),
+\qquad x,y \in S^{d-1},
+\]</span> is positive semidefinite on the sphere. Here <span class="math inline">\(\alpha = d/2 - 1\)</span> and <span class="math inline">\(\ell \ge 0\)</span> is an integer.</p>
+<p>This is the basic example of a rotation invariant kernel on the sphere. It is also a very concrete instance of the general principle</p>
+<blockquote class="blockquote">
+<p>“irreducible spherical harmonics give positive definite kernels.”</p>
+</blockquote>
+<p>I will keep the proof elementary and stay as close as possible to the differential operator viewpoint developed before.</p>
+<section id="gram-matrices-and-positive-semidefinite-kernels" class="level3">
+<h3 class="anchored" data-anchor-id="gram-matrices-and-positive-semidefinite-kernels">Gram matrices and positive semidefinite kernels</h3>
+<p>A <strong>Gram matrix</strong> is built from vectors <span class="math inline">\(v_1,\dots,v_n\)</span> in an inner product space: <span class="math display">\[
+G_{ij} = \langle v_i, v_j\rangle.
+\]</span> By construction, <span class="math inline">\(G\)</span> is always positive semidefinite. Indeed, for any <span class="math inline">\(u \in \mathbb{R}^n\)</span>: <span class="math display">\[
+u^\top G u
+= \sum_{i,j} u_i u_j \langle v_i, v_j\rangle
+= \Big\langle \sum_i u_i v_i, \sum_j u_j v_j \Big\rangle
+= \Big\|\sum_i u_i v_i\Big\|^2
+\ge 0.
 \]</span></p>
-<p><strong>The divergence</strong> describes the net outflow of a vector field from an infinitesimal volume around a point. Consider a vector field <span class="math inline">\(v = \sum_i v^i e_i\)</span>. Place a tiny coordinate-aligned box at a point. Its physical edge lengths are <span class="math inline">\(h_i \, dq^i\)</span>, so its infinitesimal volume is: <span class="math display">\[
-dV = \left( \prod_{i=1}^n h_i(q) \right) dq^1 \cdots dq^n.
-\]</span> The flux of <span class="math inline">\(v\)</span> through the pair of faces orthogonal to <span class="math inline">\(e_i\)</span> is <span class="math inline">\(v^i\)</span> multiplied by the physical area of those faces: <span class="math inline">\(\prod_{j\ne i} h_j\)</span>. The divergence is the total outward flux divided by the infinitesimal volume: <span class="math display">\[
-\mathop{\mathrm{div}}v
-=
-\frac{1}{\prod_j h_j}
-\sum_{i=1}^n
-\frac{\partial}{\partial q^i}
-\left(
-v^i \, \frac{\prod_j h_j}{h_i}
-\right).
-\]</span></p>
-<p>This expression is simply “flux in direction <span class="math inline">\(i\)</span>” minus “flux in direction <span class="math inline">\(i\)</span>” across the opposite face, normalized by the physical volume.</p>
-<p><strong>The Laplacian</strong> is the divergence of the gradient. It describes how a scalar function curves around a point since it measures the net outflow of the gradient field. It also encodes how <span class="math inline">\(f\)</span> compares to its local averages over small spheres. In orthogonal coordinates, inserting the expression for the gradient into the divergence formula yields: <span id="eq-master-laplacian"><span class="math display">\[
-\Delta f
-=
-\frac{1}{\prod_j h_j}
-\sum_{i=1}^n
-\frac{\partial}{\partial q^i}
-\left(
-\frac{\prod_j h_j}{h_i^2}
-\frac{\partial f}{\partial q^i}
-\right).
-\tag{1}\]</span></span></p>
-<p>This is the expression we will apply to spherical coordinates in the next section.</p>
-<section id="spherical-coordinates-and-the-laplacian" class="level3">
-<h3 class="anchored" data-anchor-id="spherical-coordinates-and-the-laplacian">Spherical coordinates and the Laplacian</h3>
-<p>To analyze rotationally symmetric functions, we now specialize the general formulas from the previous section to spherical coordinates in <span class="math inline">\(\mathbb{R}^d\)</span>. A point <span class="math inline">\(x \in \mathbb{R}^d\)</span> is described by a radius <span class="math inline">\(r \ge 0\)</span> together with <span class="math inline">\((d-1)\)</span> angular coordinates <span class="math display">\[
-(r,\theta_1,\dots,\theta_{d-1}).
-\]</span> The radius <span class="math inline">\(r = \|x\|\)</span> determines the sphere on which the point lies, and the angles <span class="math inline">\(\theta_1,\dots,\theta_{d-1}\)</span> specify a direction on the unit sphere <span class="math inline">\(S^{d-1}\)</span>. Geometrically, the construction is recursive: fixing <span class="math inline">\(\theta_1\)</span> leaves an <span class="math inline">\(S^{d-2}\)</span>; choosing <span class="math inline">\(\theta_2\)</span> then fixes a point on that <span class="math inline">\(S^{d-2}\)</span>, and so on until the last coordinate <span class="math inline">\(\theta_{d-1}\)</span>, which parameterizes a circle. In these coordinates, motion in the radial direction has physical length <span class="math inline">\(dr\)</span> so that <span class="math inline">\(h_r = 1\)</span>. Motion in the direction of <span class="math inline">\(\theta_1\)</span> traces a circle of radius <span class="math inline">\(r\)</span> so that <span class="math inline">\(h_{\theta_1} = r\)</span>. Holding <span class="math inline">\(r\)</span> and <span class="math inline">\(\theta_1\)</span> fixed while varying <span class="math inline">\(\theta_2\)</span> traces a circle of radius <span class="math inline">\(r \sin \theta_1\)</span>, hence <span class="math inline">\(h_{\theta_2} = r \sin \theta_1\)</span>. Continuing in this way, the general pattern is <span class="math display">\[
-h_{\theta_k}
-= r \sin \theta_1 \cdots \sin \theta_{k-1},
-\qquad k = 1,\dots,d-1.
-\]</span> These scale factors reflect the fact that angular displacements correspond to motion along circles whose radii depend on the previously chosen angles. The physical volume of an infinitesimal coordinate box is the product of all scale factors, giving <span class="math display">\[
-dV
-= r^{d-1}\,
-(\sin\theta_1)^{d-2}
-(\sin\theta_2)^{d-3}
-\cdots
-(\sin\theta_{d-2})\,
-dr\, d\theta_1 \cdots d\theta_{d-1}.
-\]</span> The factor <span class="math inline">\(r^{d-1}\)</span> is the familiar scaling of the surface area of a sphere. The remaining sine powers encode the intrinsic geometry of <span class="math inline">\(S^{d-1}\)</span>.</p>
-<p><strong>Spherical Laplacian:</strong> Inserting these scale factors into the general expression <a href="#eq-master-laplacian" class="quarto-xref">Equation&nbsp;1</a> gives the Laplacian in spherical coordinates: <span class="math display">\[
-\Delta f
-=
-\big[ \partial_r^2 f + \frac{d-1}{r}\partial_r f \big]
-+ \frac{1}{r^2}\,\Delta_{S^{d-1}} f.
-\]</span> The operator <span class="math inline">\(\Delta_{S^{d-1}}\)</span> is the Laplacian intrinsic to the unit sphere <span class="math inline">\(S^{d-1}\)</span>, whose expression is not particularly enlightening or useful for our purposes here. For example, the first term reads: <span class="math display">\[
-\Delta_{S^{d-1}} f
-=
-\frac{1}{(\sin\theta_1)^{d-2}}\,\partial_{\theta_1}
-\left(
-(\sin\theta_1)^{d-2} \,\partial_{\theta_1} f
-\right)
-+ \cdots
-\]</span> What matters is that it acts only on the angular variables <span class="math inline">\(\theta_1,\dots,\theta_{d-1}\)</span>, treating <span class="math inline">\(r\)</span> as a constant. The factor <span class="math inline">\((d-1)/r\)</span> arises because the surface area of spheres grows like <span class="math inline">\(r^{d-1}\)</span>, while the factor <span class="math inline">\(1/r^2\)</span> preceding <span class="math inline">\(\Delta_{S^{d-1}}\)</span> reflects the fact that angular motion takes place along circles of radius <span class="math inline">\(r\)</span>. Furthermore, this scaling is clear by dimensional analysis: the Laplacian has units of inverse length squared, and <span class="math inline">\(\Delta_{S^{d-1}}\)</span> is dimensionless since it acts on the unit sphere. In the next section, we restrict <span class="math inline">\(\Delta_{S^{d-1}}\)</span> to zonal functions, which depend only on the polar angle <span class="math inline">\(\theta_1\)</span>.</p>
+<p>Now let <span class="math inline">\(X\)</span> be a set and <span class="math inline">\(K\colon X \times X \to \mathbb{R}\)</span> a function, usually called a kernel. For a finite family of points <span class="math inline">\(x_1,\dots,x_n \in X\)</span>, we can form the matrix <span class="math display">\[
+K(x_i,x_j)_{1 \le i,j \le n}.
+\]</span> The kernel <span class="math inline">\(K\)</span> is said to be <strong>positive semidefinite</strong> if all such matrices are positive semidefinite.</p>
+<p>A simple way to produce psd kernels is to choose a feature map <span class="math inline">\(\Phi\colon X \to H\)</span> into some Hilbert space and set <span class="math display">\[
+K(x,y) = \langle \Phi(x), \Phi(y)\rangle_H.
+\]</span> Then <span class="math inline">\(K(x_i,x_j)\)</span> is exactly the Gram matrix of the vectors <span class="math inline">\(\Phi(x_i)\)</span>.</p>
+<p>The claim of this post is that the Gegenbauer kernel <span class="math inline">\(K_\ell(x,y) = C_\ell^{(\alpha)}(x \cdot y)\)</span> has such a Gram representation, with the feature map given by degree <span class="math inline">\(\ell\)</span> spherical harmonics.</p>
 </section>
-<section id="zonal-functions" class="level3">
-<h3 class="anchored" data-anchor-id="zonal-functions">Zonal functions</h3>
-<p>We now study the angular part of the Laplacian on the sphere. A particularly important class of functions are the zonal functions, which depend only on the angle with a fixed direction. Fix a unit vector <span class="math inline">\(e \in S^{d-1}\)</span>; typically, one takes <span class="math inline">\(e\)</span> to be the “north pole” <span class="math inline">\(e = (1,0,\ldots,0)\)</span> and we will do so here. A function <span class="math inline">\(f: S^{d-1} \to \mathbb{R}\)</span> is called zonal (with respect to <span class="math inline">\(e\)</span>) if it only depends on the inner product <span class="math inline">\(x \cdot e = \cos \theta_1\)</span>; this means that there is a function <span class="math inline">\(F: [0,\pi] \to \mathbb{R}\)</span> and <span class="math inline">\(G: [-1,1] \to \mathbb{R}\)</span> such that <span class="math display">\[
-f(x) = F(\theta_1) = G(z)
-\]</span> where we set <span class="math inline">\(z = \cos \theta_1 = x \cdot e\)</span>. To keep notation simple, we will often conflate <span class="math inline">\(f\)</span>, <span class="math inline">\(F\)</span>, and <span class="math inline">\(G\)</span> and write <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(f(\theta_1)\)</span>, or <span class="math inline">\(f(z)\)</span> depending on context. The zonal functions describe rotational symmetry around the axis spanned by <span class="math inline">\(e\)</span> and arise naturally in problems where only the angular separation between two points matters. If <span class="math inline">\(f\)</span> depends only on the polar angle <span class="math inline">\(\theta_1\)</span>, all derivatives with respect to <span class="math inline">\(\theta_2,\dots,\theta_{d-1}\)</span> vanish. The spherical Laplacian therefore reduces to the one-dimensional operator <span class="math display">\[
-\Delta_{S^{d-1}} f(x)
-=
-\frac{1}{\sin^{d-2}\theta_1}\,
-\partial_{\theta_1}\!
-\left(
-\sin^{d-2}\theta_1 \,
-\partial_{\theta_1} f(\theta_1)
-\right).
-\]</span> Using <span class="math inline">\(\sin\theta_1 = \sqrt{1-z^2}\)</span> and the chain rule, simple but tedious algebraic manipulations lead to the expression: <span class="math display">\[
-\Delta_{S^{d-1}} f(x)
-=
-(1-z^2) f''(z) - (d-1) z f'(z).
-\]</span> A convenient notation for the zonal part of the spherical Laplacian is <span class="math display">\[
+<section id="zonal-spherical-harmonics-and-gegenbauer-recap" class="level3">
+<h3 class="anchored" data-anchor-id="zonal-spherical-harmonics-and-gegenbauer-recap">Zonal spherical harmonics and Gegenbauer recap</h3>
+<p>Recall from the previous post:</p>
+<ul>
+<li><p>A function <span class="math inline">\(f\colon S^{d-1} \to \mathbb{R}\)</span> is <strong>zonal</strong> (with respect to a unit vector <span class="math inline">\(e\)</span>) if <span class="math display">\[
+f(x) = F(\theta_1) = G(z),
+\]</span> where <span class="math inline">\(\theta_1\)</span> is the polar angle with respect to <span class="math inline">\(e\)</span> and <span class="math inline">\(z = x \cdot e = \cos \theta_1\)</span>. In other words, <span class="math inline">\(f\)</span> depends only on the inner product <span class="math inline">\(x \cdot e\)</span>.</p></li>
+<li><p>The spherical Laplacian <span class="math inline">\(\Delta_{S^{d-1}}\)</span> restricts on zonal functions to the one dimensional operator <span class="math display">\[
 \mathcal{L}_d f(z)
 =
-(1-z^2)\, f''(z) - (d-1)\, z\, f'(z)
-\]</span> for <span class="math inline">\(z \in [-1,1]\)</span>. This operator is simply the restriction of the spherical Laplacian <span class="math inline">\(\Delta_{S^{d-1}}\)</span> to zonal functions. If <span class="math inline">\(d\sigma\)</span> denotes the surface measure on <span class="math inline">\(S^{d-1}\)</span>, then for any two zonal functions <span class="math inline">\(f,g: S^{d-1} \to \mathbb{R}\)</span>, one has the weighted self-adjointness property: <span class="math display">\[\int_{S^{d-1}} f(x) \, g(x) \, d\sigma(x)
-=
-\int_{-1}^1 f(z) \, g(z) \, w_d(z)\, dz,
-\]</span> where, computing the marginal over all but the first angle, gives the weight: <span class="math display">\[
-w_d(z) = (1-z^2)^{\frac{d-3}{2}}.
-\]</span> Furthermore, since the spherical Laplacian is self-adjoint on <span class="math inline">\(S^{d-1}\)</span> with respect to the standard inner product, so is <span class="math inline">\(\mathcal{L}_d\)</span> with respect to this weighted inner product: <span class="math display">\[\int_{-1}^1 (\mathcal{L}_d f)(z)\, g(z)\, w_d(z)\, dz
-=
-\int_{-1}^1 f(z)\, (\mathcal{L}_d g)(z)\, w_d(z)\, dz.
-\]</span> Now, suppose we look for eigenfunctions of the spherical Laplacian on <span class="math inline">\(S^{d-1}\)</span>, i.e.&nbsp;functions <span class="math inline">\(f\)</span> satisfying <span class="math inline">\(-\Delta_{S^{d-1}} f = \lambda f\)</span>, that are zonal: <a href="https://en.wikipedia.org/wiki/Zonal_spherical_harmonics">zonal spherical harmonics</a>.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./zonal_spherical.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
-<figcaption><a href="https://en.wikipedia.org/wiki/Zonal_spherical_harmonics">Zonal spherical harmonics</a></figcaption>
-</figure>
-</div>
-</div>
-<p>This eigenvalue equation becomes <span class="math inline">\(-\mathcal{L}_d f = \lambda f\)</span>, which reads: <span id="eq-gegenbauer-ode"><span class="math display">\[
+(1-z^2) f''(z) - (d-1) z f'(z),
+\qquad z \in [-1,1].
+\]</span></p></li>
+<li><p>Eigenfunctions of <span class="math inline">\(-\Delta_{S^{d-1}}\)</span> that are zonal therefore satisfy the ordinary differential equation <span class="math display">\[
 (1-z^2) f''(z) - (d-1) z f'(z) + \lambda f(z) = 0.
-\tag{2}\]</span></span> Since the eigenvalues of the spherical Laplacian on <span class="math inline">\(S^{d-1}\)</span> are given by: <span class="math display">\[\lambda = n(n+d-2)\]</span> for integers <span class="math inline">\(n \ge 0\)</span>, we set <span class="math inline">\(\lambda = n(n+d-2)\)</span> in the following.</p>
+\]</span></p></li>
+</ul>
+<p>If we write <span class="math inline">\(\alpha = d/2 - 1\)</span>, the eigenvalues of the spherical Laplacian are <span class="math inline">\(\lambda = \ell(\ell+d-2) = \ell(\ell+2\alpha)\)</span> for integers <span class="math inline">\(\ell \ge 0\)</span>. The corresponding ODE <span class="math display">\[
+(1-z^2) y''(z) - (2\alpha+1) z y'(z) + \ell(\ell+2\alpha)\, y(z) = 0
+\]</span> is the Gegenbauer equation. It admits polynomial solutions of degree <span class="math inline">\(\ell\)</span>, denoted <span class="math inline">\(C_\ell^{(\alpha)}(z)\)</span>.</p>
+<p>By construction, for any unit vector <span class="math inline">\(e \in S^{d-1}\)</span>, <span class="math display">\[
+Y_\ell(x) := C_\ell^{(\alpha)}(x \cdot e)
+\]</span> is a zonal spherical harmonic of degree <span class="math inline">\(\ell\)</span>. Conversely, any zonal spherical harmonic of degree <span class="math inline">\(\ell\)</span> is a nonzero scalar multiple of <span class="math inline">\(C_\ell^{(\alpha)}(x \cdot e)\)</span>.</p>
+<p>This is the only property of Gegenbauer polynomials we will use.</p>
 </section>
-<section id="gegenbauer-polynomials." class="level3">
-<h3 class="anchored" data-anchor-id="gegenbauer-polynomials.">Gegenbauer polynomials.</h3>
-<p><a href="#eq-gegenbauer-ode" class="quarto-xref">Equation&nbsp;2</a> is a second-order ordinary differential equation on the interval <span class="math inline">\([-1,1]\)</span> and it is customary to parametrize it by <span class="math inline">\(\alpha &gt; -\tfrac12\)</span> by setting <span class="math inline">\(\alpha = d/2-1\)</span>. Since the eigenvalues of the spherical Laplacian in dimension <span class="math inline">\(d\)</span> are <span class="math inline">\(\lambda = n(n+d-2)\)</span>, the equation becomes: <span id="eq-gegenbauer-ode-alpha"><span class="math display">\[(1-z^2) y''(z) - (2\alpha + 1) z y'(z) + n(n+2\alpha)\, y(z) = 0.
-\tag{3}\]</span></span> One can then show that this equation admits polynomial solutions of degree <span class="math inline">\(n\)</span>, called the <a href="https://en.wikipedia.org/wiki/Gegenbauer_polynomials">Gegenbauer polynomials</a> and usually denoted by <span class="math inline">\(C_n^{(\alpha)}(z)\)</span>. Furthermore, if we insist that the solutions be regular on the entire interval <span class="math inline">\([-1,1]\)</span> and can be lifted to smooth functions on the sphere, then these polynomial solutions are the only ones! For a given dimension <span class="math inline">\(d=2\alpha+2\)</span> and eigenvalue <span class="math inline">\(\lambda = n(n+d-2)\)</span> of the spherical Laplacian, up to rotational symmetry and normalization, there is a unique eigenfunction and it is described by the Gegenbauer polynomial <span class="math inline">\(C_n^{(\alpha)}(z)\)</span>. They can be recursively defined as <span class="math inline">\(C_0^{(\alpha)}(z) = 1\)</span> and <span class="math inline">\(C_1^{(\alpha)}(z) = 2\alpha z\)</span>, together with the recurrence relation: <span class="math display">\[
-n(n+1) \, C_{n+1}^{(\alpha)}(z)
-= 2 (n+\alpha) z \, C_n^{(\alpha)}(z)
-- (n+2\alpha -1) \, C_{n-1}^{(\alpha)}(z).
+<section id="spherical-harmonics-via-harmonic-polynomials" class="level3">
+<h3 class="anchored" data-anchor-id="spherical-harmonics-via-harmonic-polynomials">Spherical harmonics via harmonic polynomials</h3>
+<p>A convenient way to define spherical harmonics of degree <span class="math inline">\(\ell\)</span> is via ordinary polynomials on <span class="math inline">\(\mathbb{R}^d\)</span>. Let <span class="math inline">\(\mathcal{P}_\ell\)</span> be the vector space of homogeneous polynomials of degree <span class="math inline">\(\ell\)</span>; it is finite dimensional because only finitely many monomials <span class="math inline">\(x^\alpha\)</span> satisfy <span class="math inline">\(|\alpha|=\ell\)</span>. The Euclidean Laplacian is <span class="math inline">\(\Delta=\sum_{i=1}^d \partial_{x_i}^2\)</span>, and a polynomial <span class="math inline">\(P\in \mathcal{P}_\ell\)</span> is <strong>harmonic</strong> if <span class="math inline">\(\Delta P=0\)</span>. Harmonic homogeneous polynomials form a finite dimensional subspace <span class="math inline">\(H_\ell^{\mathrm{poly}}\subset \mathcal{P}_\ell\)</span>. Restricting such a polynomial to the unit sphere, <span class="math display">\[
+Y(x)=P(x),\qquad \|x\|=1,
+\]</span> produces a function satisfying the spherical Laplace eigenvalue equation <span class="math inline">\(-\Delta_{S^{d-1}} Y = \ell(\ell+d-2)Y\)</span>. These restrictions are the <strong>spherical harmonics of degree <span class="math inline">\(\ell\)</span></strong>. A key fact is that this construction captures all eigenfunctions of the spherical Laplacian: every solution of <span class="math inline">\(-\Delta_{S^{d-1}} Y = \ell(\ell+d-2)Y\)</span> arises uniquely as the restriction of some <span class="math inline">\(P\in H_\ell^{\mathrm{poly}}\)</span>. No additional angular eigenfunctions exist beyond those obtained from homogeneous harmonic polynomials, and each eigenspace of <span class="math inline">\(-\Delta_{S^{d-1}}\)</span> corresponds exactly to one degree <span class="math inline">\(\ell\)</span>.</p>
+</section>
+<section id="the-harmonic-kernel-k_ell" class="level3">
+<h3 class="anchored" data-anchor-id="the-harmonic-kernel-k_ell">The harmonic kernel <span class="math inline">\(K_\ell\)</span></h3>
+<p>Fix a degree <span class="math inline">\(\ell \ge 0\)</span> and let <span class="math inline">\(H_\ell\)</span> be the space of spherical harmonics of degree <span class="math inline">\(\ell\)</span> on <span class="math inline">\(S^{d-1}\)</span>. This is a finite dimensional subspace of <span class="math inline">\(L^2(S^{d-1})\)</span>.</p>
+<p>Choose an orthonormal basis <span class="math display">\[
+\{Y_{\ell,1},\dots,Y_{\ell,d_\ell}\} \subset H_\ell,
+\]</span> where the inner product is <span class="math display">\[
+\langle f,g\rangle = \int_{S^{d-1}} f(x) g(x)\, d\sigma(x),
+\]</span> and <span class="math inline">\(d\sigma\)</span> is the rotation invariant probability measure on the sphere.</p>
+<p>Define the kernel <span class="math display">\[
+K_\ell(x,y)
+=
+\sum_{m=1}^{d_\ell} Y_{\ell,m}(x)\,Y_{\ell,m}(y),
+\qquad x,y \in S^{d-1}.
 \]</span></p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./poly.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption>Gegenbauer Polynomials: <span class="math inline">\(\alpha=3\)</span></figcaption>
-</figure>
-</div>
-</div>
-<p>By construction, for any vector <span class="math inline">\(e \in S^{d-1}\)</span>, the function defined on the sphere by <span class="math display">\[Y_n(x) = C_n^{(d/2-1)}(x \cdot e)\]</span> is a zonal spherical harmonic of degree <span class="math inline">\(n\)</span> in dimension <span class="math inline">\(d\)</span> with corresponding eigenvalue <span class="math inline">\(\lambda = n(n+d-2)\)</span>. <a href="https://en.wikipedia.org/wiki/Legendre_polynomials">Legendre polynomials</a> are a special case of Gegenbauer polynomials obtained by setting <span class="math inline">\(\alpha = \tfrac12\)</span>, i.e.&nbsp;<span class="math inline">\(d=3\)</span>. In that case, the Legendre polynomial are orthogonal with respect to the uniform weight on <span class="math inline">\([-1,1]\)</span> since <span class="math inline">\(w_3(z) = 1\)</span>. Similarly, setting <span class="math inline">\(\alpha = 0\)</span> (i.e.&nbsp;<span class="math inline">\(d=2\)</span>) gives the <a href="https://en.wikipedia.org/wiki/Chebyshev_polynomials">Chebyshev polynomials</a> of the first kind, which are orthogonal with respect to the weight <span class="math inline">\(w_2(z) = (1-z^2)^{-1/2}\)</span>. This also illuminates why the Chebyshev polynomials are defined on the interval <span class="math inline">\([-1,1]\)</span> with that specific weight and satisfy <span class="math inline">\(T_n(\cos \theta) = \cos(n \theta)\)</span>: they are simply the zonal spherical harmonics in dimension <span class="math inline">\(d=2\)</span>.</p>
+<p>Several basic facts are immediate.</p>
+<ol type="1">
+<li><p><strong>Basis independence.</strong> If we replace <span class="math inline">\(\{Y_{\ell,m}\}\)</span> by another orthonormal basis <span class="math inline">\(\{Z_{\ell,m}\}\)</span> of <span class="math inline">\(H_\ell\)</span>, the kernel <span class="math inline">\(K_\ell\)</span> does not change.</p>
+<p>Indeed, any two orthonormal bases are related by an orthogonal matrix <span class="math inline">\(A = (a_{mn})\)</span>: <span class="math display">\[
+Z_{\ell,m} = \sum_{n} a_{mn} Y_{\ell,n}.
+\]</span> Then <span class="math display">\[
+\begin{aligned}
+\sum_m Z_{\ell,m}(x) Z_{\ell,m}(y)
+&amp;= \sum_m \sum_{n,p} a_{mn} a_{mp} Y_{\ell,n}(x) Y_{\ell,p}(y) \\
+&amp;= \sum_{n,p} \Big(\sum_m a_{mn} a_{mp}\Big) Y_{\ell,n}(x) Y_{\ell,p}(y) \\
+&amp;= \sum_n Y_{\ell,n}(x) Y_{\ell,n}(y),
+\end{aligned}
+\]</span> since <span class="math inline">\(A\)</span> is orthogonal.</p></li>
+<li><p><strong>Harmonicity in each argument.</strong> For fixed <span class="math inline">\(y\)</span>, the function <span class="math inline">\(x \mapsto K_\ell(x,y)\)</span> is a linear combination of the <span class="math inline">\(Y_{\ell,m}(x)\)</span>, so it lies in <span class="math inline">\(H_\ell\)</span>. It is therefore a spherical harmonic of degree <span class="math inline">\(\ell\)</span>. The same holds in the second argument.</p></li>
+<li><p><strong>Rotation invariance.</strong> Let <span class="math inline">\(R \in SO(d)\)</span>. Rotations act on functions by <span class="math display">\[
+(T_R f)(x) := f(R^{-1}x).
+\]</span> This action preserves harmonicity and degree, and it is an isometry of <span class="math inline">\(L^2(S^{d-1})\)</span>. Therefore <span class="math inline">\(T_R\)</span> maps <span class="math inline">\(H_\ell\)</span> to itself and acts on <span class="math inline">\(H_\ell\)</span> by an orthogonal matrix <span class="math inline">\(A(R) = (a_{mn}(R))\)</span>: <span class="math display">\[
+Y_{\ell,m}(R^{-1}x) = \sum_n a_{mn}(R) Y_{\ell,n}(x).
+\]</span> Using this, <span class="math display">\[
+\begin{aligned}
+K_\ell(Rx,Ry)
+&amp;= \sum_m Y_{\ell,m}(Rx)\,Y_{\ell,m}(Ry) \\
+&amp;= \sum_m \Big(\sum_n a_{mn}(R^{-1}) Y_{\ell,n}(x)\Big)
+          \Big(\sum_p a_{mp}(R^{-1}) Y_{\ell,p}(y)\Big) \\
+&amp;= \sum_{n,p} \Big(\sum_m a_{mn}(R^{-1}) a_{mp}(R^{-1})\Big)
+     Y_{\ell,n}(x) Y_{\ell,p}(y) \\
+&amp;= \sum_n Y_{\ell,n}(x) Y_{\ell,n}(y) \\
+&amp;= K_\ell(x,y),
+\end{aligned}
+\]</span> since <span class="math inline">\(A(R^{-1})\)</span> is orthogonal.</p></li>
+</ol>
+<p>Summarizing: <span class="math inline">\(K_\ell\)</span> is independent of the choice of basis, it is harmonic of degree <span class="math inline">\(\ell\)</span> in each argument, and it is invariant under simultaneous rotation of both arguments.</p>
+</section>
+<section id="from-rotational-invariance-to-a-zonal-form" class="level3">
+<h3 class="anchored" data-anchor-id="from-rotational-invariance-to-a-zonal-form">From rotational invariance to a zonal form</h3>
+<p>Fix <span class="math inline">\(y \in S^{d-1}\)</span> and consider the function <span class="math display">\[
+F_y(x) := K_\ell(x,y).
+\]</span></p>
+<p>By definition, <span class="math inline">\(F_y \in H_\ell\)</span>, so it is a spherical harmonic of degree <span class="math inline">\(\ell\)</span>. Rotation invariance implies that it is zonal around <span class="math inline">\(y\)</span>.</p>
+<p>To see this, take two points <span class="math inline">\(x_1,x_2 \in S^{d-1}\)</span> with <span class="math display">\[
+x_1 \cdot y = x_2 \cdot y.
+\]</span> There exists a rotation <span class="math inline">\(R \in SO(d)\)</span> such that <span class="math inline">\(Ry = y\)</span> and <span class="math inline">\(Rx_1 = x_2\)</span>. Using invariance of <span class="math inline">\(K_\ell\)</span>, <span class="math display">\[
+F_y(x_2)
+= K_\ell(x_2,y)
+= K_\ell(Rx_1,Ry)
+= K_\ell(x_1,y)
+= F_y(x_1).
+\]</span> So <span class="math inline">\(F_y(x)\)</span> depends only on the inner product <span class="math inline">\(x \cdot y\)</span>.</p>
+<p>Therefore there exists a scalar function <span class="math inline">\(\Phi_\ell\colon [-1,1] \to \mathbb{R}\)</span> such that <span class="math display">\[
+K_\ell(x,y) = \Phi_\ell(x \cdot y).
+\]</span></p>
+<p>At the same time, for fixed <span class="math inline">\(y\)</span>, the function <span class="math inline">\(x \mapsto K_\ell(x,y)\)</span> lies in <span class="math inline">\(H_\ell\)</span>, so it is a spherical harmonic of degree <span class="math inline">\(\ell\)</span>. Combined with the observation above, this means:</p>
+<blockquote class="blockquote">
+<p>For each fixed <span class="math inline">\(y\)</span>, the function <span class="math inline">\(x \mapsto K_\ell(x,y)\)</span> is a <strong>zonal spherical harmonic of degree <span class="math inline">\(\ell\)</span></strong>.</p>
+</blockquote>
+<p>The space of such functions is one dimensional and spanned by the Gegenbauer zonal harmonic <span class="math inline">\(C_\ell^{(\alpha)}(x \cdot y)\)</span>. Hence there exists a nonzero constant <span class="math inline">\(c_{\ell,d}\)</span> such that <span class="math display">\[
+K_\ell(x,y) = c_{\ell,d}\, C_\ell^{(\alpha)}(x \cdot y),
+\qquad x,y \in S^{d-1}.
+\]</span></p>
+<p>This is the addition theorem in exactly the form that is needed here. There is no need to compute <span class="math inline">\(c_{\ell,d}\)</span>.</p>
+</section>
+<section id="from-the-addition-theorem-to-positive-semidefiniteness" class="level3">
+<h3 class="anchored" data-anchor-id="from-the-addition-theorem-to-positive-semidefiniteness">From the addition theorem to positive semidefiniteness</h3>
+<p>Now take arbitrary points <span class="math inline">\(x_1,\dots,x_n \in S^{d-1}\)</span> and form their Gram matrix <span class="math display">\[
+G_{ij} = x_i \cdot x_j.
+\]</span> By definition, this matrix is positive semidefinite.</p>
+<p>Next, build the <span class="math inline">\(n \times d_\ell\)</span> matrix <span class="math inline">\(V\)</span> of spherical harmonics of degree <span class="math inline">\(\ell\)</span> evaluated at the points: <span class="math display">\[
+V_{i,m} := Y_{\ell,m}(x_i),
+\qquad 1 \le i \le n,\ 1 \le m \le d_\ell.
+\]</span></p>
+<p>Using the definition of <span class="math inline">\(K_\ell\)</span>, <span class="math display">\[
+(V V^\top)_{ij}
+= \sum_{m=1}^{d_\ell} Y_{\ell,m}(x_i)\,Y_{\ell,m}(x_j)
+= K_\ell(x_i,x_j).
+\]</span></p>
+<p>The addition theorem gives <span class="math display">\[
+K_\ell(x_i,x_j)
+= c_{\ell,d}\, C_\ell^{(\alpha)}(x_i \cdot x_j)
+= c_{\ell,d}\, C_\ell^{(\alpha)}(G_{ij}).
+\]</span></p>
+<p>Therefore <span class="math display">\[
+(V V^\top)_{ij}
+= c_{\ell,d}\, C_\ell^{(\alpha)}(G_{ij}),
+\]</span> or in matrix notation <span class="math display">\[
+C_\ell^{(\alpha)}[G] = \frac{1}{c_{\ell,d}}\, V V^\top.
+\]</span></p>
+<p>Here <span class="math inline">\(C_\ell^{(\alpha)}[G]\)</span> denotes the matrix obtained by applying the polynomial <span class="math inline">\(C_\ell^{(\alpha)}\)</span> <strong>entrywise</strong> to <span class="math inline">\(G\)</span>. The right hand side is a Gram matrix, hence positive semidefinite.</p>
+<p>Since scaling by a positive constant preserves positive semidefiniteness, we conclude:</p>
+<blockquote class="blockquote">
+<p>For any points <span class="math inline">\(x_1,\dots,x_n \in S^{d-1}\)</span>, the matrix with entries <span class="math display">\[
+C_\ell^{(\alpha)}(x_i \cdot x_j)
+\]</span> is positive semidefinite.</p>
+</blockquote>
+<p>Equivalently, the kernel <span class="math display">\[
+K_\ell(x,y) = C_\ell^{(\alpha)}(x \cdot y)
+\]</span> is positive semidefinite on the sphere.</p>
+<p>Note that this statement is naturally formulated for <strong>correlation matrices</strong>, that is, Gram matrices of unit vectors. The domain of <span class="math inline">\(C_\ell^{(\alpha)}\)</span> is the interval <span class="math inline">\([-1,1]\)</span>, which is exactly the range of inner products of unit vectors.</p>
+</section>
+<section id="interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
+<p>The proof makes the feature map completely explicit. The kernel <span class="math display">\[
+K_\ell(x,y) = C_\ell^{(\alpha)}(x \cdot y)
+\]</span> is, up to a scalar factor, the Gram kernel of the map <span class="math display">\[
+\Phi_\ell\colon S^{d-1} \to \mathbb{R}^{d_\ell},
+\qquad
+\Phi_\ell(x) = \big(Y_{\ell,1}(x),\dots,Y_{\ell,d_\ell}(x)\big).
+\]</span> Indeed, <span class="math display">\[
+\langle \Phi_\ell(x), \Phi_\ell(y)\rangle
+= \sum_m Y_{\ell,m}(x) Y_{\ell,m}(y)
+= K_\ell(x,y)
+= c_{\ell,d}\, C_\ell^{(\alpha)}(x \cdot y).
+\]</span></p>
+<p>From this point of view, applying the Gegenbauer polynomial to a Gram matrix is nothing more than computing the Gram matrix of the transformed points <span class="math inline">\(\Phi_\ell(x_i)\)</span> in harmonic feature space.</p>
+<p>More general positive semidefinite, rotation invariant kernels on the sphere arise as nonnegative combinations <span class="math display">\[
+f(t) = \sum_{\ell=0}^\infty a_\ell C_\ell^{(\alpha)}(t), \qquad a_\ell \ge 0,
+\]</span> but the single building blocks <span class="math inline">\(C_\ell^{(\alpha)}\)</span> already capture the essential mechanism: spherical harmonics plus the addition theorem produce Gram matrices, and Gram matrices are automatically positive semidefinite.</p>
 
 
 </section>
