@@ -8,3 +8,12 @@ p {
         font-size: 12px;
     }
 }
+
+/* Force these on one line in the listing */
+.list .listing-meta,
+.list .listing-meta > *,
+.list .listing-arxiv,
+.list .listing-link,
+.list li em {
+  display: inline !important;
+}
