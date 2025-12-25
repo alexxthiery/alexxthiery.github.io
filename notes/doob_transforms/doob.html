@@ -179,7 +179,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">19 10 2025</p>
+        <p class="date-modified">25 12 2025</p>
       </div>
     </div>
       
@@ -252,7 +252,11 @@ h(t, x) \; = \; \mathbb{E} {\left[  \exp[g(x_T)] \mid x_t = x \right]}  \; = \; 
 \]</span></p>
 <p>Plugging <a href="#eq-kolmogorov" class="quarto-xref">Equation&nbsp;3</a> within <a href="#eq-def" class="quarto-xref">Equation&nbsp;2</a> directly gives that</p>
 <p><span class="math display">\[
-\mathcal{L}^{\star} \varphi\; = \; \mathcal{L}\varphi+ \frac{\mathcal{L}[\varphi\, h]}{h} + \varphi\frac{\partial_t h}{h}.
+\mathcal{L}^{\star} \varphi
+\; = \;
+\frac{(\partial_t + \mathcal{L})[h \, \varphi]}{h}
+\; = \;
+\frac{\mathcal{L}[\varphi\, h]}{h} + \varphi\frac{\partial_t h}{h}.
 \]</span></p>
 <details>
 <summary>
@@ -281,7 +285,11 @@ Some details:
 \tag{5}\]</span></span></p>
 <p>This function satisfies the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac formula</a> <span class="math inline">\((\partial_t + \mathcal{L}+ f) \, h = 0\)</span> and one obtains entirely similarly that the probability distribution <span class="math inline">\(\mathbb{Q}\)</span> describes a Markov process with infinitesimal generator</p>
 <p><span id="eq-doob-transforms"><span class="math display">\[
-\textcolor{green}{\mathcal{L}^{\star} \varphi\; = \; \mathcal{L}\varphi+ \frac{\mathcal{L}[h \, \varphi]}{h} +  {\left(  \frac{\partial_t h} {h} + f \right)}  \, \varphi.}
+\textcolor{green}{\mathcal{L}^{\star} \varphi
+\; = \;
+\frac{(\partial_t + \mathcal{L}+ f)[h \, \varphi]}{h}
+\; = \;
+\frac{\mathcal{L}[h \, \varphi]}{h} +  {\left(  \frac{\partial_t h} {h} + f \right)}  \, \varphi.}
 \tag{6}\]</span></span></p>
 <details>
 <summary>
