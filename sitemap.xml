@@ -298,7 +298,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</loc>
-    <lastmod>2025-11-20T15:15:05.000Z</lastmod>
+    <lastmod>2025-12-08T02:33:19.768Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
@@ -310,7 +310,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/doob_transforms/doob.html</loc>
-    <lastmod>2025-10-19T08:01:59.104Z</lastmod>
+    <lastmod>2025-12-25T15:05:32.443Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/distance_proba/distance.html</loc>
@@ -475,5 +475,9 @@
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_theory/2025_ETGPSSM.html</loc>
     <lastmod>2025-12-06T04:22:43.898Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/diffusion_overfit/diffusion_overfit.html</loc>
+    <lastmod>2025-12-08T03:21:03.665Z</lastmod>
   </url>
 </urlset>

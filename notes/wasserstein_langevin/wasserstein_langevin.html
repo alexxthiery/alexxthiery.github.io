@@ -284,20 +284,6 @@ dX_t \; = \; \nabla \log \overline{\pi}(X_t) \, dt \; + \; \sqrt{2} \, dW_t.
 \]</span></p>
 <p>This can be shown by writing down the associated Fokker-Planck equation. This heuristic discussion shows that minimizing <span class="math inline">\(D_{\text{KL}}(p, \pi)\)</span> by introducing a gradient flow in the space of probability distributions with the Wasserstein metric essentially produces a standard overdamped Langevin diffusion. Indeed, transforming this heuristic discussion into a formal statement is not trivial: the constructive proof in <span class="citation" data-cites="jordan1998variational">(<a href="#ref-jordan1998variational" role="doc-biblioref">Jordan, Kinderlehrer, and Otto 1998</a>)</span> is now usually referred to as the JKO scheme.</p>
 <p>The above derivation shows that the Wasserstein distance plays particularly well with minimizing functionals of the space of probability distributions. Naturally, one may wonder what happens when considering other functionals <span class="math inline">\(\mathcal{F}(p)\)</span>.</p>
-<!-- The same heuristic discussion shows that minimizing a functional of the type
-
-$$
-\cF(p) \; = \; \int \Phi[p(x)] \, \nu(dx)
-$$
-
-for some cost function $\Phi: (0, \infty) \to \bbR$ and distribution $\nu(dx)$ leads to choosing a drift function $\mu:\bbR \to \bbR$ minimizing
-
-$$
-\int -\nabla \cdot \Big\{ \red{[\delta_t \, \mu]}(x) \, p(x) \Big\} \Phi'[p(x)] \, \nu(dx)
-\, + \, \frac{1}{2 \epsilon} \, \int p_0(x) \, \| \red{[\delta_t \, \mu]}(x) \|^2 \, dx.
-$$
-
-This can be approached identically to what as been done in the case of minimizing $\kl(p, \pi)$. -->
 <section id="a-more-general-functional-mathcalfp" class="level2">
 <h2 class="anchored" data-anchor-id="a-more-general-functional-mathcalfp">A More General Functional <span class="math inline">\(\mathcal{F}(p)\)</span></h2>
 <p>In the previous section, we focused on the specific objective <span class="math inline">\(\mathcal{F}(p) = D_{\text{KL}}(p,\pi)\)</span> and derived the associated Wasserstein gradient flow. The key step was to compute how the KL functional reacted to perturbations of the density <span class="math inline">\(p\)</span> when mass was rearranged according to a vector field <span class="math inline">\(\mu:\mathbb{R}^D \to \mathbb{R}^D\)</span>. Essentially the same reasoning applies to a wide class of functionals <span class="math inline">\(\mathcal{F}\)</span> defined on probability distributions. Assume that <span class="math inline">\(\mathcal{F}(p)\)</span> admits a <strong>functional derivative</strong>, written <span class="math inline">\(\frac{\delta \mathcal{F}}{\delta p}(x)\)</span>; this means that for any perturbation of the density <span class="math inline">\(p\)</span> of the form <span class="math inline">\(p + \varepsilon q\)</span> where <span class="math inline">\(q\)</span> is a signed-measure of total mass zero and <span class="math inline">\(\varepsilon\ll 1\)</span>, we have the expansion:</p>
