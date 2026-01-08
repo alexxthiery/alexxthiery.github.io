@@ -62,7 +62,9 @@
   {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
+      "/notes/diffusion_overfit/diffusion_overfit.html",
       "/notes/gegenbauer/gegenbauer.html",
+      "/notes/gegenbauer/gegenbauer_gram.html",
       "/notes/scoring_rules/scoring.html",
       "/notes/DiscreteDiff/DiscreteDiff.html",
       "/notes/shrodinger_bridge/shrodinger.html",
