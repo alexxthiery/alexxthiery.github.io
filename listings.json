@@ -1,12 +1,5 @@
 [
   {
-    "listing": "/posts/index_blog.html",
-    "items": [
-      "/posts/reverse_and_tweedie/reverse_and_tweedie.html",
-      "/posts/hello_world/index.html"
-    ]
-  },
-  {
     "listing": "/publications/index_pubs.html",
     "items": [
       "/publications/pub_list_theory/2025_ETGPSSM.html",
@@ -60,11 +53,16 @@
     ]
   },
   {
+    "listing": "/posts/index_blog.html",
+    "items": [
+      "/posts/reverse_and_tweedie/reverse_and_tweedie.html",
+      "/posts/hello_world/index.html"
+    ]
+  },
+  {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
-      "/notes/diffusion_overfit/diffusion_overfit.html",
       "/notes/gegenbauer/gegenbauer.html",
-      "/notes/gegenbauer/gegenbauer_gram.html",
       "/notes/scoring_rules/scoring.html",
       "/notes/DiscreteDiff/DiscreteDiff.html",
       "/notes/shrodinger_bridge/shrodinger.html",
