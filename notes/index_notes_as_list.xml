@@ -10,7 +10,269 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Sun, 23 Nov 2025 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 04 Dec 2025 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>TODO TODO</title>
+  <link>https://alexxthiery.github.io/notes/diffusion_overfit/diffusion_overfit.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<!-- ::: {style="text-align:center;"}
+![Overdamped Langevin Diffusion as a gradient flow on the space of probability distributions endowed with the $2$-Wasserstein metric](./langevin.gif){fig-align="center" width=95%}
+::: -->
+<section id="why-diffusion-models-generalize-before-they-memorize" class="level1">
+<h1>Why Diffusion Models Generalize Before They Memorize</h1>
+<p><em>A Spectral Story via Random Features and Random Matrix Theory</em></p>
+<p>Diffusion models trained by score matching behave in a way that is empirically very robust but theoretically nontrivial: they reach good generation early, and only much later start to memorize individual training samples. The goal of this note is to explain this phenomenon <strong>purely from training dynamics</strong>, within a random-features model where all relevant quantities can be analyzed analytically.</p>
+<p>We will see that the key mechanism is <strong>spectral</strong>: the training operator has two distinct eigenvalue scales, corresponding to “population” and “sample-specific” directions. Gradient descent learns the population modes quickly, and the sample-specific modes only on a time scale that grows with the dataset size <img src="https://latex.codecogs.com/png.latex?n">. Memorization is therefore dynamically delayed.</p>
+<hr>
+<section id="score-matching-at-fixed-diffusion-time" class="level2">
+<h2 class="anchored" data-anchor-id="score-matching-at-fixed-diffusion-time">1. Score matching at fixed diffusion time</h2>
+<p>We begin by specifying the data and the score-matching objective.</p>
+<section id="data-and-diffusion" class="level3">
+<h3 class="anchored" data-anchor-id="data-and-diffusion">1.1 Data and diffusion</h3>
+<p>Let <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> be a data vector drawn from a distribution <img src="https://latex.codecogs.com/png.latex?%0Ax%20%5Csim%20P_x%0A%5Cquad%5Ctext%7Bwith%7D%5Cquad%0A%5Cmathbb%7BE%7D%5Bx%5D%20=%200,%0A%5Cqquad%0A%5Cmathbb%7BE%7D%5Bx%20x%5E%5Ctop%5D%20=%20%5CSigma.%0A"></p>
+<p>The forward diffusion process is defined by <span id="eq-forward-diffusion"><img src="https://latex.codecogs.com/png.latex?%0Ax(t,%5Cxi)%0A=%0Ae%5E%7B-t%7D%20x%0A+%0A%5Csqrt%7B%5CDelta_t%7D%5C,%5Cxi,%0A%5Cqquad%0A%5CDelta_t%20=%201-e%5E%7B-2t%7D,%0A%5Cqquad%0A%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,I_d).%0A%5Ctag%7B1%7D"></span></p>
+<p>The marginal distribution of <img src="https://latex.codecogs.com/png.latex?x(t,%5Cxi)"> is a smoothed version of <img src="https://latex.codecogs.com/png.latex?P_x">; its density is denoted <img src="https://latex.codecogs.com/png.latex?P_t">. The (Stein) score at time <img src="https://latex.codecogs.com/png.latex?t"> is <img src="https://latex.codecogs.com/png.latex?%0As%5E%5Cstar_t(x)%20=%20%5Cnabla_x%20%5Clog%20P_t(x).%0A"></p>
+<p>A parametric model <img src="https://latex.codecogs.com/png.latex?s_%5Ctheta(x,t)"> is trained to approximate <img src="https://latex.codecogs.com/png.latex?s%5E%5Cstar_t(x)"> via denoising score matching. At fixed <img src="https://latex.codecogs.com/png.latex?t">, the population objective is <span id="eq-population-loss"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D_t(%5Ctheta)%0A=%0A%5Cfrac%7B1%7D%7Bd%7D%0A%5Cmathbb%7BE%7D_%7Bx%5Csim%20P_x%7D%0A%5Cmathbb%7BE%7D_%7B%5Cxi%5Csim%5Cmathcal%7BN%7D(0,I_d)%7D%0A%5CBig%5C%7C%0A%5Csqrt%7B%5CDelta_t%7D%5C,%20s_%5Ctheta(x(t,%5Cxi),t)%20+%20%5Cxi%0A%5CBig%5C%7C%5E2.%0A%5Ctag%7B2%7D"></span></p>
+<p>Given a training set <img src="https://latex.codecogs.com/png.latex?%5C%7Bx_%5Cnu%5C%7D_%7B%5Cnu=1%7D%5En">, the empirical loss is <span id="eq-empirical-loss"><img src="https://latex.codecogs.com/png.latex?%0AL_%7B%5Cmathrm%7Btrain%7D%7D(%5Ctheta)%0A=%0A%5Cfrac%7B1%7D%7Bdn%7D%0A%5Csum_%7B%5Cnu=1%7D%5En%0A%5Cmathbb%7BE%7D_%5Cxi%0A%5CBig%5C%7C%0A%5Csqrt%7B%5CDelta_t%7D%5C,%20s_%5Ctheta(x_%5Cnu(t,%5Cxi),t)%20+%20%5Cxi%0A%5CBig%5C%7C%5E2.%0A%5Ctag%7B3%7D"></span></p>
+<p>We are interested in the <strong>training dynamics</strong> of <img src="https://latex.codecogs.com/png.latex?L_%7B%5Cmathrm%7Btrain%7D%7D(%5Ctheta)"> for a particular model class.</p>
+<hr>
+</section>
+</section>
+<section id="random-features-score-model" class="level2">
+<h2 class="anchored" data-anchor-id="random-features-score-model">2. Random-features score model</h2>
+<p>Directly analyzing a deep U-Net is out of reach. We therefore simplify the architecture while preserving three key ingredients:</p>
+<ol type="1">
+<li>Score matching at a fixed diffusion time.</li>
+<li>Overparameterization.</li>
+<li>Nonlinearity in the data.</li>
+</ol>
+<p>This leads to the <strong>random-features score model</strong>.</p>
+<section id="pre-activations-and-features" class="level3">
+<h3 class="anchored" data-anchor-id="pre-activations-and-features">2.1 Pre-activations and features</h3>
+<p>Let <img src="https://latex.codecogs.com/png.latex?%0AW%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bp%5Ctimes%20d%7D%0A"> have i.i.d. entries <img src="https://latex.codecogs.com/png.latex?W_%7Bij%7D%20%5Csim%20%5Cmathcal%7BN%7D(0,1)">. For an input <img src="https://latex.codecogs.com/png.latex?x%5Cin%5Cmathbb%7BR%7D%5Ed"> we define:</p>
+<ul>
+<li>The pre-activation vector <span id="eq-preactivation"><img src="https://latex.codecogs.com/png.latex?%0Ah(x)%20=%20%5Cfrac%7BW%20x%7D%7B%5Csqrt%7Bd%7D%7D%20%5Cin%20%5Cmathbb%7BR%7D%5Ep,%0A%5Ctag%7B4%7D"></span></li>
+<li>The feature vector <span id="eq-feature-map"><img src="https://latex.codecogs.com/png.latex?%0A%5Cvarphi(x)%20=%20%5Csigma%5Cbig(h(x)%5Cbig)%20%5Cin%20%5Cmathbb%7BR%7D%5Ep,%0A%5Ctag%7B5%7D"></span> where <img src="https://latex.codecogs.com/png.latex?%5Csigma:%5Cmathbb%7BR%7D%5Cto%5Cmathbb%7BR%7D"> is a fixed nonlinearity applied coordinate-wise.</li>
+</ul>
+<p>For a noisy training sample <img src="https://latex.codecogs.com/png.latex?x_%5Cnu(t,%5Cxi)">, we will write <span id="eq-feature-noisy"><img src="https://latex.codecogs.com/png.latex?%0A%5Cvarphi_%5Cnu(%5Cxi)%0A=%0A%5Cvarphi%5Cbig(x_%5Cnu(t,%5Cxi)%5Cbig)%0A=%0A%5Csigma%5C!%5Cleft(%5Cfrac%7BW%20x_%5Cnu(t,%5Cxi)%7D%7B%5Csqrt%7Bd%7D%7D%5Cright).%0A%5Ctag%7B6%7D"></span></p>
+</section>
+<section id="random-features-score-network" class="level3">
+<h3 class="anchored" data-anchor-id="random-features-score-network">2.2 Random-features score network</h3>
+<p>The score model is linear in the feature space: <span id="eq-score-model"><img src="https://latex.codecogs.com/png.latex?%0As_A(x)%0A=%0A%5Cfrac%7BA%7D%7B%5Csqrt%7Bp%7D%7D%20%5C,%5Cvarphi(x),%0A%5Cqquad%0AA%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bd%5Ctimes%20p%7D.%0A%5Ctag%7B7%7D"></span></p>
+<p>Here:</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?W"> is random and fixed (first layer),</li>
+<li><img src="https://latex.codecogs.com/png.latex?A"> is trainable (second layer),</li>
+<li>The overall model remains nonlinear in <img src="https://latex.codecogs.com/png.latex?x"> through <img src="https://latex.codecogs.com/png.latex?%5Csigma">.</li>
+</ul>
+<p>Plugging Equation&nbsp;7 into the empirical loss Equation&nbsp;3 at fixed time <img src="https://latex.codecogs.com/png.latex?t"> yields <span id="eq-loss-A"><img src="https://latex.codecogs.com/png.latex?%0AL_%7B%5Cmathrm%7Btrain%7D%7D(A)%0A=%0A%5Cfrac%7B1%7D%7Bdn%7D%0A%5Csum_%7B%5Cnu=1%7D%5En%0A%5Cmathbb%7BE%7D_%5Cxi%0A%5CBig%5C%7C%0A%5Csqrt%7B%5CDelta_t%7D%5C,%20%5Cfrac%7BA%7D%7B%5Csqrt%7Bp%7D%7D%20%5C,%5Cvarphi_%5Cnu(%5Cxi)%0A+%20%5Cxi%0A%5CBig%5C%7C%5E2.%0A%5Ctag%7B8%7D"></span></p>
+<p>At this point, the loss is <strong>quadratic in <img src="https://latex.codecogs.com/png.latex?A"></strong>, which is the main structural simplification: gradient descent dynamics will be linear in <img src="https://latex.codecogs.com/png.latex?A">.</p>
+<hr>
+</section>
+</section>
+<section id="from-the-loss-to-a-linear-ode-in-a" class="level2">
+<h2 class="anchored" data-anchor-id="from-the-loss-to-a-linear-ode-in-a">3. From the loss to a linear ODE in <img src="https://latex.codecogs.com/png.latex?A"></h2>
+<p>We briefly compute the gradient of Equation&nbsp;8 with respect to <img src="https://latex.codecogs.com/png.latex?A">.</p>
+<p>Write, for each <img src="https://latex.codecogs.com/png.latex?(%5Cnu,%5Cxi)">, <img src="https://latex.codecogs.com/png.latex?%0A%5Cell_%7B%5Cnu,%5Cxi%7D(A)%0A=%0A%5Cfrac%7B1%7D%7Bd%7D%0A%5CBig%5C%7C%0A%5Csqrt%7B%5CDelta_t%7D%5C,%20%5Cfrac%7BA%7D%7B%5Csqrt%7Bp%7D%7D%20%5C,%5Cvarphi_%5Cnu(%5Cxi)%0A+%20%5Cxi%0A%5CBig%5C%7C%5E2.%0A"></p>
+<p>Expanding the square, <img src="https://latex.codecogs.com/png.latex?%0A%5Cell_%7B%5Cnu,%5Cxi%7D(A)%0A=%0A%5Cfrac%7B%5CDelta_t%7D%7Bdp%7D%5C,%20%5Cvarphi_%5Cnu(%5Cxi)%5E%5Ctop%20A%5E%5Ctop%20A%20%5C,%5Cvarphi_%5Cnu(%5Cxi)%0A+%0A%5Cfrac%7B2%5Csqrt%7B%5CDelta_t%7D%7D%7Bd%5Csqrt%7Bp%7D%7D%5C,%20%5Cxi%5E%5Ctop%20A%20%5C,%5Cvarphi_%5Cnu(%5Cxi)%0A+%0A%5Cfrac%7B1%7D%7Bd%7D%5C%7C%5Cxi%5C%7C%5E2.%0A"></p>
+<p>The gradient with respect to <img src="https://latex.codecogs.com/png.latex?A"> is <img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla_A%20%5Cell_%7B%5Cnu,%5Cxi%7D(A)%0A=%0A%5Cfrac%7B2%5CDelta_t%7D%7Bdp%7D%5C,%20A%20%5C,%5Cvarphi_%5Cnu(%5Cxi)%5Cvarphi_%5Cnu(%5Cxi)%5E%5Ctop%0A+%0A%5Cfrac%7B2%5Csqrt%7B%5CDelta_t%7D%7D%7Bd%5Csqrt%7Bp%7D%7D%5C,%20%5Cxi%20%5C,%5Cvarphi_%5Cnu(%5Cxi)%5E%5Ctop.%0A"></p>
+<p>Averaging over <img src="https://latex.codecogs.com/png.latex?%5Cnu"> and <img src="https://latex.codecogs.com/png.latex?%5Cxi"> yields <span id="eq-gradient-A"><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla_A%20L_%7B%5Cmathrm%7Btrain%7D%7D(A)%0A=%0A%5Cfrac%7B2%5CDelta_t%7D%7Bd%7D%5C,%20A%20U%0A+%0A%5Cfrac%7B2%7D%7B%5Csqrt%7B%5CDelta_t%20p%7D%7D%5C,%20V%5E%5Ctop,%0A%5Ctag%7B9%7D"></span> where we have defined</p>
+<ul>
+<li>the <strong>Gram matrix</strong> <span id="eq-U-def"><img src="https://latex.codecogs.com/png.latex?%0AU%0A=%0A%5Cfrac%7B1%7D%7Bn%7D%0A%5Csum_%7B%5Cnu=1%7D%5En%0A%5Cmathbb%7BE%7D_%5Cxi%0A%5Cbig%5B%0A%20%20%20%20%5Cvarphi_%5Cnu(%5Cxi)%5Cvarphi_%5Cnu(%5Cxi)%5E%5Ctop%0A%5Cbig%5D%0A%5Cin%20%5Cmathbb%7BR%7D%5E%7Bp%5Ctimes%20p%7D,%0A%5Ctag%7B10%7D"></span></li>
+<li>and the “noise-feature” coupling <span id="eq-V-def"><img src="https://latex.codecogs.com/png.latex?%0AV%0A=%0A%5Cfrac%7B1%7D%7Bn%7D%0A%5Csum_%7B%5Cnu=1%7D%5En%0A%5Cmathbb%7BE%7D_%5Cxi%0A%5Cbig%5B%0A%20%20%20%20%5Cvarphi_%5Cnu(%5Cxi)%5Cxi%5E%5Ctop%0A%5Cbig%5D%0A%5Cin%20%5Cmathbb%7BR%7D%5E%7Bp%5Ctimes%20d%7D.%0A%5Ctag%7B11%7D"></span></li>
+</ul>
+<p>The stochastic gradient descent update is then <img src="https://latex.codecogs.com/png.latex?%0AA%5E%7B(k+1)%7D%0A=%0AA%5E%7B(k)%7D%0A-%0A%5Ceta%20%5C,%5Cnabla_A%20L_%7B%5Cmathrm%7Btrain%7D%7D(A%5E%7B(k)%7D).%0A"></p>
+<p>In the small learning-rate regime, taking a continuum limit with rescaled time <img src="https://latex.codecogs.com/png.latex?%0A%5Ctau%20=%20%5Cfrac%7Bk%5Ceta%7D%7Bd%5E2%7D,%0A"> gives the ODE <span id="eq-A-ODE"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%7D%7Bd%5Ctau%7D%20A(%5Ctau)%0A=%0A-%20%5Cfrac%7B2%5CDelta_t%7D%7Bd%7D%5C,A(%5Ctau)%5C,U%0A-%0A%5Cfrac%7B2%7D%7B%5Csqrt%7B%5CDelta_t%20p%7D%7D%5C,V%5E%5Ctop.%0A%5Ctag%7B12%7D"></span></p>
+<p>This is a linear ODE in <img src="https://latex.codecogs.com/png.latex?A">, driven by the random matrix <img src="https://latex.codecogs.com/png.latex?U">.</p>
+<hr>
+</section>
+<section id="training-dynamics-in-the-eigenbasis-of-u" class="level2">
+<h2 class="anchored" data-anchor-id="training-dynamics-in-the-eigenbasis-of-u">4. Training dynamics in the eigenbasis of <img src="https://latex.codecogs.com/png.latex?U"></h2>
+<p>To understand the time scales of learning, we diagonalize the Gram matrix: <img src="https://latex.codecogs.com/png.latex?%0AU%20=%20Q%20%5CLambda%20Q%5E%5Ctop,%0A"> where <img src="https://latex.codecogs.com/png.latex?%0A%5CLambda%20=%20%5Coperatorname%7Bdiag%7D(%5Clambda_1,%5Cdots,%5Clambda_p).%0A"></p>
+<p>Let <img src="https://latex.codecogs.com/png.latex?%0AB(%5Ctau)%20=%20A(%5Ctau)%20Q%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bd%5Ctimes%20p%7D,%0A%5Cqquad%0A%5Ctilde%20V%5E%5Ctop%20=%20V%5E%5Ctop%20Q.%0A"></p>
+<p>Then Equation&nbsp;12 becomes <span id="eq-B-ODE"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%7D%7Bd%5Ctau%7D%20B(%5Ctau)%0A=%0A-%20%5Cfrac%7B2%5CDelta_t%7D%7Bd%7D%5C,B(%5Ctau)%5C,%5CLambda%0A-%0A%5Cfrac%7B2%7D%7B%5Csqrt%7B%5CDelta_t%20p%7D%7D%5C,%20%5Ctilde%20V%5E%5Ctop.%0A%5Ctag%7B13%7D"></span></p>
+<p>For each column <img src="https://latex.codecogs.com/png.latex?b_i(%5Ctau)%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> of <img src="https://latex.codecogs.com/png.latex?B(%5Ctau)">, we have a scalar-matrix ODE: <img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%7D%7Bd%5Ctau%7D%20b_i(%5Ctau)%0A=%0A-%20%5Cfrac%7B2%5CDelta_t%7D%7Bd%7D%5C,%5Clambda_i%5C,%20b_i(%5Ctau)%0A-%0A%5Cfrac%7B2%7D%7B%5Csqrt%7B%5CDelta_t%20p%7D%7D%5C,%20%5Ctilde%20v_i,%0A"> where <img src="https://latex.codecogs.com/png.latex?%5Ctilde%20v_i"> is the <img src="https://latex.codecogs.com/png.latex?i">-th column of <img src="https://latex.codecogs.com/png.latex?%5Ctilde%20V%5E%5Ctop">. This is solved explicitly as <img src="https://latex.codecogs.com/png.latex?%0Ab_i(%5Ctau)%0A=%0Ae%5E%7B-(2%5CDelta_t%5Clambda_i/d)%5C,%5Ctau%7D%5C,%20b_i(0)%0A-%0A%5Cfrac%7B2%7D%7B%5Csqrt%7B%5CDelta_t%20p%7D%7D%20%5Cint_0%5E%5Ctau%0Ae%5E%7B-(2%5CDelta_t%5Clambda_i/d)%5C,(%5Ctau-s)%7D%0A%5Ctilde%20v_i%5C,%20ds.%0A"></p>
+<p>Ignoring the forcing term for the moment (or thinking about relaxation to equilibrium), the homogeneous solution decays as <img src="https://latex.codecogs.com/png.latex?%0A%5C%7Cb_i(%5Ctau)%5C%7C%0A%5Capprox%0A%5C%7Cb_i(0)%5C%7C%20%5Cexp%5C!%5CBig(-%5Cfrac%7B2%5CDelta_t%5Clambda_i%7D%7Bd%7D%5C,%5Ctau%5CBig).%0A"></p>
+<p>This suggests defining the <strong>relaxation time</strong> associated with eigenvalue <img src="https://latex.codecogs.com/png.latex?%5Clambda">: <span id="eq-relax-time"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctau(%5Clambda)%0A=%0A%5Cfrac%7Bd%7D%7B2%5CDelta_t%5Clambda%7D%0A=%0A%5Cfrac%7B%5Cpsi_p%7D%7B%5CDelta_t%20%5Clambda%7D.%0A%5Ctag%7B14%7D"></span></p>
+<p>Modes with larger <img src="https://latex.codecogs.com/png.latex?%5Clambda"> are learned faster; modes with small <img src="https://latex.codecogs.com/png.latex?%5Clambda"> take longer to relax. Therefore:</p>
+<blockquote class="blockquote">
+<p>The time scale at which different directions in parameter space (and thus in function space) are learned is determined by the eigenvalues of the Gram matrix <img src="https://latex.codecogs.com/png.latex?U">.</p>
+</blockquote>
+<p>Our task reduces to understanding the <strong>spectrum</strong> of <img src="https://latex.codecogs.com/png.latex?U"> in the high-dimensional limit.</p>
+<hr>
+</section>
+<section id="the-spectral-problem-what-do-we-actually-need" class="level2">
+<h2 class="anchored" data-anchor-id="the-spectral-problem-what-do-we-actually-need">5. The spectral problem: what do we actually need?</h2>
+<p>Let <img src="https://latex.codecogs.com/png.latex?%0A%5Clambda_1,%5Cdots,%5Clambda_p%0A"> be the eigenvalues of <img src="https://latex.codecogs.com/png.latex?U">. The empirical spectral density is <img src="https://latex.codecogs.com/png.latex?%0A%5Crho_U%5E%7B(p)%7D(%5Clambda)%0A=%0A%5Cfrac%7B1%7D%7Bp%7D%20%5Csum_%7Bi=1%7D%5Ep%20%5Cdelta(%5Clambda%20-%20%5Clambda_i).%0A"></p>
+<p>We are interested in its limit <img src="https://latex.codecogs.com/png.latex?%5Crho_U(%5Clambda)"> as <img src="https://latex.codecogs.com/png.latex?d,p,n%5Cto%5Cinfty"> with <img src="https://latex.codecogs.com/png.latex?%5Cpsi_p,%5Cpsi_n"> fixed.</p>
+<p>More specifically, we need:</p>
+<ol type="1">
+<li>The <strong>location and scale</strong> of the bulk (or bulks) of <img src="https://latex.codecogs.com/png.latex?%5Crho_U(%5Clambda)">.</li>
+<li>The <strong>behavior of the smallest nonzero eigenvalues</strong> <img src="https://latex.codecogs.com/png.latex?%5Clambda_%7B%5Cmin%7D">, since Equation&nbsp;14 shows that <img src="https://latex.codecogs.com/png.latex?%0A%5Ctau_%7B%5Cmathrm%7Bslow%7D%7D%20%5Csim%20%5Cfrac%7B%5Cpsi_p%7D%7B%5CDelta_t%20%5Clambda_%7B%5Cmin%7D%7D.%0A"></li>
+</ol>
+<p>The central question thus becomes:</p>
+<blockquote class="blockquote">
+<p><strong>What is the limiting spectral distribution of <img src="https://latex.codecogs.com/png.latex?U">, and how do its bulk edges scale with <img src="https://latex.codecogs.com/png.latex?%5Cpsi_p%20=%20p/d"> and <img src="https://latex.codecogs.com/png.latex?%5Cpsi_n%20=%20n/d">?</strong></p>
+</blockquote>
+<hr>
+</section>
+<section id="the-resolvent-stieltjes-transform-of-u" class="level2">
+<h2 class="anchored" data-anchor-id="the-resolvent-stieltjes-transform-of-u">6. The resolvent (Stieltjes transform) of <img src="https://latex.codecogs.com/png.latex?U"></h2>
+<p>Random matrix theory typically approaches such questions via the <strong>resolvent</strong> or <strong>Stieltjes transform</strong>: <span id="eq-resolvent-def"><img src="https://latex.codecogs.com/png.latex?%0Aq(z)%0A=%0A%5Cfrac%7B1%7D%7Bp%7D%5Coperatorname%7BTr%7D(U%20-%20zI)%5E%7B-1%7D%0A=%0A%5Cfrac%7B1%7D%7Bp%7D%5Csum_%7Bi=1%7D%5Ep%20%5Cfrac%7B1%7D%7B%5Clambda_i%20-%20z%7D,%0A%5Cqquad%0Az%20%5Cin%20%5Cmathbb%7BC%7D%5Csetminus%20%5Cmathbb%7BR%7D.%0A%5Ctag%7B15%7D"></span></p>
+<p>The spectral density is recovered from <img src="https://latex.codecogs.com/png.latex?q(z)"> via <span id="eq-density-resolvent"><img src="https://latex.codecogs.com/png.latex?%0A%5Crho_U(%5Clambda)%0A=%0A%5Cfrac%7B1%7D%7B%5Cpi%7D%0A%5Clim_%7B%5Cvarepsilon%5Cto%200%5E+%7D%0A%5Coperatorname%7BIm%7D%5C,%20q(%5Clambda%20+%20i%5Cvarepsilon).%0A%5Ctag%7B16%7D"></span></p>
+<p>In classical settings, for instance when <img src="https://latex.codecogs.com/png.latex?%0AU%20=%20%5Cfrac%7B1%7D%7Bn%7D%20X%20X%5E%5Ctop%0A"> with i.i.d. entries, the resolvent <img src="https://latex.codecogs.com/png.latex?q(z)"> satisfies an explicit deterministic equation (the Marchenko–Pastur equation), from which one obtains the limiting spectral density. More generally, with a population covariance <img src="https://latex.codecogs.com/png.latex?%5CSigma">, one obtains the Silverstein–Pastur equations.</p>
+<p>In our case, however, <img src="https://latex.codecogs.com/png.latex?U"> is <strong>not</strong> a linear sample covariance: its entries involve the nonlinear map <img src="https://latex.codecogs.com/png.latex?%5Csigma">, the random weights <img src="https://latex.codecogs.com/png.latex?W">, and the diffusion noise. No classical closed-form resolvent equation is available.</p>
+<p>We will now outline how to obtain such an equation using two key tools:</p>
+<ol type="1">
+<li><strong>Gaussian equivalence</strong> for the pre-activations.</li>
+<li><strong>Replica methods</strong> applied to a Gaussian integral representation of the resolvent.</li>
+</ol>
+<hr>
+</section>
+<section id="gaussian-equivalence-and-hermite-expansion" class="level2">
+<h2 class="anchored" data-anchor-id="gaussian-equivalence-and-hermite-expansion">7. Gaussian equivalence and Hermite expansion</h2>
+<p>We first simplify the distribution of the pre-activations <img src="https://latex.codecogs.com/png.latex?h(x)%20=%20W%20x%20/%20%5Csqrt%7Bd%7D">.</p>
+<section id="gaussian-pre-activations" class="level3">
+<h3 class="anchored" data-anchor-id="gaussian-pre-activations">7.1 Gaussian pre-activations</h3>
+<p>For fixed <img src="https://latex.codecogs.com/png.latex?x">, each coordinate <img src="https://latex.codecogs.com/png.latex?h_i(x)%20=%20W_i%20x%20/%20%5Csqrt%7Bd%7D"> is Gaussian with <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BE%7D%5Bh_i(x)%5D%20=%200,%0A%5Cqquad%0A%5Cmathbb%7BE%7D%5Bh_i(x)%5E2%5D%20=%20%5Cfrac%7B1%7D%7Bd%7D%5C%7Cx%5C%7C%5E2.%0A"></p>
+<p>For two inputs <img src="https://latex.codecogs.com/png.latex?x,x'">, the pair <img src="https://latex.codecogs.com/png.latex?(h_i(x),%20h_i(x'))"> is Gaussian with covariance <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BE%7D%5Bh_i(x)%20h_i(x')%5D%0A=%0A%5Cfrac%7B1%7D%7Bd%7D%20x%5E%5Ctop%20x'.%0A"></p>
+<p>For our noisy data <img src="https://latex.codecogs.com/png.latex?x_%5Cnu(t,%5Cxi)">, this gives a Gaussian field <img src="https://latex.codecogs.com/png.latex?H"> of pre-activations: <img src="https://latex.codecogs.com/png.latex?%0AH_%7B%5Cnu%20i%7D(%5Cxi)%20=%20h_i(x_%5Cnu(t,%5Cxi))%0A"> with a covariance that can be expressed in terms of <img src="https://latex.codecogs.com/png.latex?%5CSigma"> and <img src="https://latex.codecogs.com/png.latex?t">.</p>
+<p><strong>Gaussian equivalence</strong> (in this context) means that for many observables of interest (including spectral densities and generalization errors), we may replace the exact distribution of the feature matrix by a Gaussian process with the same covariance structure. Intuitively, the pre-activations are sums of many independent contributions, and high-dimensional central limit/type universality effects apply.</p>
+</section>
+<section id="hermite-expansion-of-the-nonlinearity" class="level3">
+<h3 class="anchored" data-anchor-id="hermite-expansion-of-the-nonlinearity">7.2 Hermite expansion of the nonlinearity</h3>
+<p>Once the inputs to <img src="https://latex.codecogs.com/png.latex?%5Csigma"> are Gaussian, the nonlinearity can be analyzed via its Hermite expansion: <span id="eq-hermite-expansion"><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma(z)%20=%20%5Csum_%7Bk=0%7D%5E%5Cinfty%20%5Cfrac%7B%5Calpha_k%7D%7Bk!%7D%20%5Cmathrm%7BHe%7D_k(z),%0A%5Ctag%7B17%7D"></span> where <img src="https://latex.codecogs.com/png.latex?%5C%7B%5Cmathrm%7BHe%7D_k%5C%7D"> are the (probabilists’) Hermite polynomials orthogonal with respect to <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BN%7D(0,1)">.</p>
+<p>For a pair <img src="https://latex.codecogs.com/png.latex?(Z_1,Z_2)"> of jointly Gaussian variables with correlation <img src="https://latex.codecogs.com/png.latex?%5Crho">, <span id="eq-hermite-covariance"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BE%7D%5B%5Csigma(Z_1)%5Csigma(Z_2)%5D%0A=%0A%5Csum_%7Bk=0%7D%5E%5Cinfty%20%5Calpha_k%5E2%20%5Crho%5Ek.%0A%5Ctag%7B18%7D"></span></p>
+<p>In our setting, <img src="https://latex.codecogs.com/png.latex?%5Crho"> will be a function of inner products like <img src="https://latex.codecogs.com/png.latex?x_%5Cnu%5E%5Ctop%20x_%7B%5Cnu'%7D/d"> and of the diffusion time <img src="https://latex.codecogs.com/png.latex?t">.</p>
+<p>The key point is that the entries of <img src="https://latex.codecogs.com/png.latex?U"> in Equation&nbsp;10 can be expressed in terms of a <strong>finite number of Gaussian expectations</strong> such as Equation&nbsp;18. These are summarized in four scalar parameters <img src="https://latex.codecogs.com/png.latex?%0Aa_t,%5C;%20b_t,%5C;%20v_t,%5C;%20s_t,%0A"> which are explicit integrals involving <img src="https://latex.codecogs.com/png.latex?%5Csigma">, the noise level <img src="https://latex.codecogs.com/png.latex?t">, and the data covariance <img src="https://latex.codecogs.com/png.latex?%5CSigma">.</p>
+<p>As a result, the Gram matrix can be decomposed schematically as <span id="eq-U-structure"><img src="https://latex.codecogs.com/png.latex?%0AU%0A%5Capprox%0As_t%5E2%20I_p%0A+%0A%5Cunderbrace%7B%5Cfrac%7Bv_t%5E2%7D%7Bn%7D%5Csum_%7B%5Cnu=1%7D%5En%20g_%5Cnu%20g_%5Cnu%5E%5Ctop%7D_%7B%5Ctext%7Bsample-specific%20part%7D%7D%0A+%0A%5Cunderbrace%7B%5Ctilde%20U%7D_%7B%5Ctext%7Bpopulation%20part%7D%7D,%0A%5Ctag%7B19%7D"></span> where:</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?g_%5Cnu%20%5Cin%20%5Cmathbb%7BR%7D%5Ep"> are Gaussian vectors (the high-dimensional limit of the features),</li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Ctilde%20U"> is a deterministic “population covariance” term depending on <img src="https://latex.codecogs.com/png.latex?%5CSigma"> and <img src="https://latex.codecogs.com/png.latex?(a_t,b_t,v_t,s_t)">.</li>
+</ul>
+<p>Equation Equation&nbsp;19 is schematic but captures the structure: <img src="https://latex.codecogs.com/png.latex?U"> is a sum of a diagonal term, a sample-specific random covariance, and a population-level covariance. All randomness is now <strong>Gaussian</strong>, and the nonlinearity is encoded in a small number of scalars.</p>
+<hr>
+</section>
+</section>
+<section id="why-we-need-a-log-determinant-representation" class="level2">
+<h2 class="anchored" data-anchor-id="why-we-need-a-log-determinant-representation">8. Why we need a log-determinant representation</h2>
+<p>We want to compute the <strong>quenched resolvent</strong> <img src="https://latex.codecogs.com/png.latex?%0A%5Cbar%20q(z)%0A=%0A%5Cmathbb%7BE%7D_%7BW,X%7D%20q(z)%0A=%0A%5Cfrac%7B1%7D%7Bp%7D%5C,%5Cmathbb%7BE%7D_%7BW,X%7D%0A%5Coperatorname%7BTr%7D(U%20-%20zI)%5E%7B-1%7D.%0A"></p>
+<p>Directly averaging <img src="https://latex.codecogs.com/png.latex?(U-zI)%5E%7B-1%7D"> over the randomness of <img src="https://latex.codecogs.com/png.latex?U"> is intractable:</p>
+<ul>
+<li>The inverse is a highly nonlinear function of all matrix entries.</li>
+<li><img src="https://latex.codecogs.com/png.latex?U"> has complicated correlations due to its nonlinear construction.</li>
+<li>Classical results (e.g.&nbsp;for <img src="https://latex.codecogs.com/png.latex?XX%5E%5Ctop">-type matrices) do not apply.</li>
+</ul>
+<p>A standard tool in random matrix theory and statistical physics is to transform the <strong>inverse</strong> problem into a <strong>log-determinant</strong> problem, which can then be represented as a Gaussian integral.</p>
+<section id="from-the-resolvent-to-logdet" class="level3">
+<h3 class="anchored" data-anchor-id="from-the-resolvent-to-logdet">8.1 From the resolvent to <img src="https://latex.codecogs.com/png.latex?%5Clog%5Cdet"></h3>
+<p>For any invertible matrix <img src="https://latex.codecogs.com/png.latex?M">, we have <img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B%5Cpartial%7D%7B%5Cpartial%20z%7D%20%5Clog%20%5Cdet(M%20-%20zI)%0A=%0A-%20%5Coperatorname%7BTr%7D(M%20-%20zI)%5E%7B-1%7D.%0A"></p>
+<p>Applying this with <img src="https://latex.codecogs.com/png.latex?M%20=%20U">, we obtain <span id="eq-q-logdet"><img src="https://latex.codecogs.com/png.latex?%0Aq(z)%0A=%0A%5Cfrac%7B1%7D%7Bp%7D%20%5Coperatorname%7BTr%7D(U%20-%20zI)%5E%7B-1%7D%0A=%0A-%20%5Cfrac%7B1%7D%7Bp%7D%20%5Cfrac%7B%5Cpartial%7D%7B%5Cpartial%20z%7D%20%5Clog%20%5Cdet(U%20-%20zI).%0A%5Ctag%7B20%7D"></span></p>
+<p>Therefore, understanding <img src="https://latex.codecogs.com/png.latex?%5Cbar%20q(z)"> is equivalent to understanding the average of <img src="https://latex.codecogs.com/png.latex?%5Clog%5Cdet(U%20-%20zI)">.</p>
+</section>
+<section id="from-logdet-to-a-gaussian-partition-function" class="level3">
+<h3 class="anchored" data-anchor-id="from-logdet-to-a-gaussian-partition-function">8.2 From <img src="https://latex.codecogs.com/png.latex?%5Clog%5Cdet"> to a Gaussian partition function</h3>
+<p>A second standard identity is the Gaussian integral <img src="https://latex.codecogs.com/png.latex?%0A%5Cint_%7B%5Cmathbb%7BR%7D%5Ep%7D%0A%5Cexp%5C!%5Cleft(%20-%5Ctfrac12%20x%5E%5Ctop%20M%20x%20%5Cright)%20dx%0A%5Cpropto%0A(%5Cdet%20M)%5E%7B-1/2%7D,%0A%5Cquad%0AM%20%5Csucc%200.%0A"></p>
+<p>Define the <strong>partition function</strong> <span id="eq-Z-def"><img src="https://latex.codecogs.com/png.latex?%0AZ(z;U)%0A=%0A%5Cint_%7B%5Cmathbb%7BR%7D%5Ep%7D%0A%5Cexp%5C!%5Cleft(%0A-%20%5Ctfrac12%20%5Cvarphi%5E%5Ctop%20(U%20-%20zI)%5Cvarphi%0A%5Cright)%20d%5Cvarphi.%0A%5Ctag%7B21%7D"></span></p>
+<p>Then <img src="https://latex.codecogs.com/png.latex?%0A%5Clog%20Z(z;U)%0A=%0A-%5Ctfrac12%20%5Clog%20%5Cdet(U%20-%20zI)%20+%20%5Ctext%7Bconst%7D,%0A"> and using Equation&nbsp;20: <span id="eq-q-logZ"><img src="https://latex.codecogs.com/png.latex?%0Aq(z)%0A=%0A%5Cfrac%7B1%7D%7Bp%7D%20%5Cfrac%7B%5Cpartial%7D%7B%5Cpartial%20z%7D%20%5Clog%20Z(z;U).%0A%5Ctag%7B22%7D"></span></p>
+<p>We have therefore transformed the resolvent into the derivative of the log of a <strong>Gaussian integral</strong>.</p>
+<hr>
+</section>
+</section>
+<section id="quenched-vs-annealed-averages-and-the-replica-idea" class="level2">
+<h2 class="anchored" data-anchor-id="quenched-vs-annealed-averages-and-the-replica-idea">9. Quenched vs annealed averages and the replica idea</h2>
+<p>We are interested in the <strong>typical</strong> behavior of the spectrum, corresponding to the <strong>quenched</strong> average of <img src="https://latex.codecogs.com/png.latex?%5Clog%20Z">: <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BE%7D%5Clog%20Z(z;U).%0A"></p>
+<p>This differs from the <strong>annealed</strong> quantity <img src="https://latex.codecogs.com/png.latex?%5Clog%20%5Cmathbb%7BE%7DZ(z;U)">. In large systems, <img src="https://latex.codecogs.com/png.latex?%5Clog%20Z"> behaves like a sum of many weakly dependent contributions and concentrates around its mean (self-averaging). Therefore, the typical spectral density corresponds to <img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B1%7D%7Bp%7D%20%5Cmathbb%7BE%7D%5Clog%20Z(z;U),%0A"> not to <img src="https://latex.codecogs.com/png.latex?-%5Cfrac%7B1%7D%7Bp%7D%5Clog%20%5Cmathbb%7BE%7DZ">.</p>
+<p>The <strong>replica trick</strong> provides a formal way to compute <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5Clog%20Z">: <span id="eq-replica-identity"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BE%7D%5Clog%20Z%0A=%0A%5Clim_%7Bs%5Cto0%7D%0A%5Cfrac%7B1%7D%7Bs%7D%0A%5Clog%20%5Cmathbb%7BE%7DZ%5Es.%0A%5Ctag%7B23%7D"></span></p>
+<p>For integer <img src="https://latex.codecogs.com/png.latex?s">, <span id="eq-Zs-integral"><img src="https://latex.codecogs.com/png.latex?%0AZ%5Es%0A=%0A%5Cint%20%5Cprod_%7Ba=1%7D%5Es%20d%5Cvarphi%5Ea%0A%5Cexp%5C!%5Cleft(%0A-%20%5Cfrac12%20%5Csum_%7Ba=1%7D%5Es%20%5Cvarphi%5E%7Ba%5Ctop%7D(U%20-%20zI)%5Cvarphi%5Ea%0A%5Cright).%0A%5Ctag%7B24%7D"></span></p>
+<p>The integrand now depends on <img src="https://latex.codecogs.com/png.latex?U"> only through quadratic forms in the replicated fields <img src="https://latex.codecogs.com/png.latex?%5Cvarphi%5Ea">.</p>
+<hr>
+</section>
+<section id="disorder-average-and-overlap-order-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="disorder-average-and-overlap-order-parameters">10. Disorder average and overlap order parameters</h2>
+<p>We now average <img src="https://latex.codecogs.com/png.latex?Z%5Es"> over the randomness of <img src="https://latex.codecogs.com/png.latex?U">, which itself comes from the randomness of <img src="https://latex.codecogs.com/png.latex?W"> and the data <img src="https://latex.codecogs.com/png.latex?%5C%7Bx_%5Cnu%5C%7D">. Using the Gaussian structure Equation&nbsp;19 and the fact that everything is quadratic in <img src="https://latex.codecogs.com/png.latex?%5Cvarphi%5Ea">, the disorder average can be performed explicitly.</p>
+<p>A standard step is to introduce <strong>overlap matrices</strong>: <img src="https://latex.codecogs.com/png.latex?%0AQ_%7Bab%7D%0A=%0A%5Cfrac%7B1%7D%7Bp%7D%20%5Cvarphi%5E%7Ba%5Ctop%7D%5Cvarphi%5Eb,%0A%5Cqquad%0Aa,b=1,%5Cdots,s,%0A"> and related order parameters coupling to the population covariance <img src="https://latex.codecogs.com/png.latex?%5CSigma">. After integrating out the Gaussian fields and applying Gaussian equivalence, one arrives at an effective representation <span id="eq-effective-action"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BE%7DZ%5Es%0A=%0A%5Cint%20dQ%20%5C,%20dR%20%5C,%20dS%20%5C;%0A%5Cexp%5Cbig(%0Ap%5C,%5Cmathcal%7BS%7D(Q,R,S;%20z)%0A%5Cbig),%0A%5Ctag%7B25%7D"></span> where:</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?Q,R,S"> are finite-dimensional order parameters summarizing the overlaps,</li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BS%7D"> is an explicit “effective action” depending on <img src="https://latex.codecogs.com/png.latex?%5Cpsi_p,%5Cpsi_n,%5Crho_%5CSigma,a_t,b_t,v_t,s_t">.</li>
+</ul>
+<p>In the limit <img src="https://latex.codecogs.com/png.latex?p%5Cto%5Cinfty">, the integral Equation&nbsp;25 is dominated by <strong>saddle points</strong> of <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BS%7D">, that is by solutions of <img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B%5Cpartial%20%5Cmathcal%7BS%7D%7D%7B%5Cpartial%20Q%7D%20=%200,%0A%5Cquad%0A%5Cfrac%7B%5Cpartial%20%5Cmathcal%7BS%7D%7D%7B%5Cpartial%20R%7D%20=%200,%0A%5Cquad%0A%5Cfrac%7B%5Cpartial%20%5Cmathcal%7BS%7D%7D%7B%5Cpartial%20S%7D%20=%200.%0A"></p>
+<p>Assuming replica symmetry (no reason for symmetry breaking in this setting), the saddle point can be parametrized by <strong>three scalar functions</strong> of <img src="https://latex.codecogs.com/png.latex?z">:</p>
+<ul>
+<li>the resolvent <img src="https://latex.codecogs.com/png.latex?q(z)">,</li>
+<li>a projected resolvent <img src="https://latex.codecogs.com/png.latex?r(z)"> aligned with <img src="https://latex.codecogs.com/png.latex?%5CSigma">,</li>
+<li>an auxiliary scalar <img src="https://latex.codecogs.com/png.latex?s(z)">.</li>
+</ul>
+<p>These satisfy a closed system of <strong>self-consistent equations</strong> of the form <span id="eq-fixed-point"><img src="https://latex.codecogs.com/png.latex?%0Aq(z)%20=%20F_q(q,r,s;z),%0A%5Cquad%0Ar(z)%20=%20F_r(q,r,s;z),%0A%5Cquad%0As(z)%20=%20F_s(q,r,s;z).%0A%5Ctag%7B26%7D"></span></p>
+<p>One can think of Equation&nbsp;26 as a generalized Silverstein–Pastur equation for this nonlinear random-feature ensemble.</p>
+<p>The paper’s main theorem can be read as giving an explicit expression for <img src="https://latex.codecogs.com/png.latex?F_q,F_r,F_s"> in terms of <img src="https://latex.codecogs.com/png.latex?%5Crho_%5CSigma"> and the scalars <img src="https://latex.codecogs.com/png.latex?a_t,b_t,v_t,s_t">. The resolvent <img src="https://latex.codecogs.com/png.latex?q(z)"> is then defined implicitly as the solution of Equation&nbsp;26.</p>
+<hr>
+</section>
+<section id="asymptotic-spectrum-and-separation-of-scales" class="level2">
+<h2 class="anchored" data-anchor-id="asymptotic-spectrum-and-separation-of-scales">11. Asymptotic spectrum and separation of scales</h2>
+<p>The self-consistent equations Equation&nbsp;26 are complicated in general but become tractable in the regime <img src="https://latex.codecogs.com/png.latex?%0A%5Cpsi_p%20=%20%5Cfrac%7Bp%7D%7Bd%7D%20%5Cgg%201,%0A%5Cqquad%0A%5Cpsi_n%20=%20%5Cfrac%7Bn%7D%7Bd%7D%20%5Cgg%201.%0A"></p>
+<p>By expanding the equations in this limit, one finds:</p>
+<ol type="1">
+<li><p>A <strong>population bulk</strong> <img src="https://latex.codecogs.com/png.latex?%5Crho_2(%5Clambda)"> at scale <img src="https://latex.codecogs.com/png.latex?%0A%5Clambda%20=%20O(%5Cpsi_p),%0A"> essentially matching the spectrum of the population covariance <img src="https://latex.codecogs.com/png.latex?%5Ctilde%20U%20=%20%5Cmathbb%7BE%7D%5BU%5D">.</p></li>
+<li><p>A <strong>sample-specific bulk</strong> <img src="https://latex.codecogs.com/png.latex?%5Crho_1(%5Clambda)"> at the smaller scale <img src="https://latex.codecogs.com/png.latex?%0A%5Clambda%20=%20O(%5Cpsi_p/%5Cpsi_n).%0A"></p></li>
+<li><p>A residual delta mass at <img src="https://latex.codecogs.com/png.latex?%5Clambda%20=%20s_t%5E2">, which does not affect training/test losses.</p></li>
+</ol>
+<p>More concretely, the support of <img src="https://latex.codecogs.com/png.latex?%5Crho_1(%5Clambda)"> behaves (schematically) like <img src="https://latex.codecogs.com/png.latex?%0A%5Ctext%7Bsupp%7D(%5Crho_1)%0A%5Capprox%0A%5CBig%5B%0As_t%5E2%20+%20c_1%20v_t%5E2%20(1%20-%20%5Csqrt%7B%5Cpsi_p/%5Cpsi_n%7D)%5E2,%5C;%0As_t%5E2%20+%20c_1%20v_t%5E2%20(1%20+%20%5Csqrt%7B%5Cpsi_p/%5Cpsi_n%7D)%5E2%0A%5CBig%5D,%0A"> for some constant <img src="https://latex.codecogs.com/png.latex?c_1"> depending on the details of the model. The important point is the <strong>scaling</strong>: <img src="https://latex.codecogs.com/png.latex?%0A%5Clambda_%7B%5Cmin%7D%5E%7B(1)%7D%0A%5Csim%20O%5C!%5Cleft(%5Cfrac%7B%5Cpsi_p%7D%7B%5Cpsi_n%7D%5Cright),%0A%5Cqquad%0A%5Clambda_%7B%5Cmax%7D%5E%7B(2)%7D%0A%5Csim%20O(%5Cpsi_p).%0A"></p>
+<p>Thus, in the large-(_p,_n$ limit, the spectrum splits into two well-separated bulks.</p>
+<hr>
+</section>
+<section id="from-spectral-edges-to-training-time-scales" class="level2">
+<h2 class="anchored" data-anchor-id="from-spectral-edges-to-training-time-scales">12. From spectral edges to training time scales</h2>
+<p>Recall from Equation&nbsp;14 that the relaxation time associated with an eigenvalue <img src="https://latex.codecogs.com/png.latex?%5Clambda"> is <img src="https://latex.codecogs.com/png.latex?%0A%5Ctau(%5Clambda)%0A=%0A%5Cfrac%7B%5Cpsi_p%7D%7B%5CDelta_t%20%5Clambda%7D.%0A"></p>
+<p>Using the scaling of the two bulks:</p>
+<ul>
+<li><p>For population modes ((_2$, <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%5Csim%20O(%5Cpsi_p)">): <img src="https://latex.codecogs.com/png.latex?%0A%5Ctau_%7B%5Cmathrm%7Bgen%7D%7D%0A%5Csim%0A%5Cfrac%7B%5Cpsi_p%7D%7B%5CDelta_t%5C,O(%5Cpsi_p)%7D%0A=%20O(1).%0A"></p></li>
+<li><p>For sample-specific modes ((_1$, <img src="https://latex.codecogs.com/png.latex?%5Clambda_%7B%5Cmin%7D%20%5Csim%20O(%5Cpsi_p/%5Cpsi_n)">): <img src="https://latex.codecogs.com/png.latex?%0A%5Ctau_%7B%5Cmathrm%7Bmem%7D%7D%0A%5Csim%0A%5Cfrac%7B%5Cpsi_p%7D%7B%5CDelta_t%20%5Clambda_%7B%5Cmin%7D%7D%0A%5Csim%0A%5Cfrac%7B%5Cpsi_p%7D%7B%5CDelta_t%20(%5Cpsi_p/%5Cpsi_n)%7D%0A=%0A%5Cfrac%7B%5Cpsi_n%7D%7B%5CDelta_t%7D%0A%5Cpropto%20n.%0A"></p></li>
+</ul>
+<p>We obtain two distinct time scales:</p>
+<ul>
+<li>A <strong>fast</strong>, dataset-size–independent time <img src="https://latex.codecogs.com/png.latex?%5Ctau_%7B%5Cmathrm%7Bgen%7D%7D"> at which population-level structure is learned.</li>
+<li>A <strong>slow</strong>, dataset-size–proportional time <img src="https://latex.codecogs.com/png.latex?%5Ctau_%7B%5Cmathrm%7Bmem%7D%7D"> at which sample-specific details (and thus memorization) are learned.</li>
+</ul>
+<p>This matches the empirical observation: diffusion models generalize early and memorize only later, with the onset of memorization pushed out as <img src="https://latex.codecogs.com/png.latex?n"> increases.</p>
+<hr>
+</section>
+<section id="conceptual-summary" class="level2">
+<h2 class="anchored" data-anchor-id="conceptual-summary">13. Conceptual summary</h2>
+<p>Starting from diffusion score matching and a random-features score model, we:</p>
+<ol type="1">
+<li>Expressed the training dynamics as a linear ODE in the readout weights <img src="https://latex.codecogs.com/png.latex?A">.</li>
+<li>Identified the Gram matrix <img src="https://latex.codecogs.com/png.latex?U"> as the operator controlling time scales.</li>
+<li>Used Gaussian equivalence and Hermite expansions to reduce <img src="https://latex.codecogs.com/png.latex?U"> to a Gaussian random matrix parameterized by a few scalars.</li>
+<li>Introduced the resolvent and expressed it via a log-determinant and a Gaussian partition function.</li>
+<li>Used replica and saddle-point techniques to derive self-consistent equations for the resolvent.</li>
+<li>Analyzed these equations in the overparameterized regime and found a <strong>two-bulk spectrum</strong>, with eigenvalues at scales <img src="https://latex.codecogs.com/png.latex?O(%5Cpsi_p)"> and <img src="https://latex.codecogs.com/png.latex?O(%5Cpsi_p/%5Cpsi_n)">.</li>
+<li>Translated the spectral edges into relaxation times, obtaining: <img src="https://latex.codecogs.com/png.latex?%0A%5Ctau_%7B%5Cmathrm%7Bgen%7D%7D%20=%20O(1),%0A%5Cqquad%0A%5Ctau_%7B%5Cmathrm%7Bmem%7D%7D%20=%20O(n).%0A"></li>
+</ol>
+<p>The key insight is that <strong>dynamical regularization</strong> arises from a <strong>spectral separation between population modes and sample-specific modes</strong>:</p>
+<ul>
+<li>Large eigenvalues correspond to directions that capture the underlying data distribution; they are learned quickly.</li>
+<li>Small eigenvalues correspond to directions that encode high-frequency, dataset-specific variations; they are learned slowly, on a time scale that grows with <img src="https://latex.codecogs.com/png.latex?n">.</li>
+</ul>
+<p>Even when the model is expressive enough to memorize the data, and even in the absence of explicit regularization, the spectral geometry of the training operator creates a <strong>large window of training time where the model has generalized but not yet memorized</strong>.</p>
+<p>This is the spectral mechanism behind “generalization before memorization” in (this random-feature approximation of) diffusion models.</p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>diffusion</category>
+  <category>replica</category>
+  <category>generative</category>
+  <guid>https://alexxthiery.github.io/notes/diffusion_overfit/diffusion_overfit.html</guid>
+  <pubDate>Thu, 04 Dec 2025 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Gegenbauer Polynomials and the Laplacian</title>
   <link>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</link>
@@ -78,7 +340,7 @@
 </section>
 <section id="gegenbauer-polynomials." class="level3">
 <h3 class="anchored" data-anchor-id="gegenbauer-polynomials.">Gegenbauer polynomials.</h3>
-<p>Equation&nbsp;2 is a second-order ordinary differential equation on the interval <img src="https://latex.codecogs.com/png.latex?%5B-1,1%5D"> and it is customary to parametrize it by <img src="https://latex.codecogs.com/png.latex?%5Calpha%20%3E%20-%5Ctfrac12"> by setting <img src="https://latex.codecogs.com/png.latex?%5Calpha%20=%20d/2-1">. Since the eigenvalues of the spherical Laplacian in dimension <img src="https://latex.codecogs.com/png.latex?d"> are <img src="https://latex.codecogs.com/png.latex?%5Clambda%20=%20n(n+d-2)">, the equation becomes: <span id="eq-gegenbauer-ode-alpha"><img src="https://latex.codecogs.com/png.latex?(1-z%5E2)%20y''(z)%20-%20(2%5Calpha%20+%201)%20z%20y'(z)%20+%20n(n+2%5Calpha)%5C,%20y(z)%20=%200.%0A%5Ctag%7B3%7D"></span> One can then show that this equation admits polynomial solutions of degree <img src="https://latex.codecogs.com/png.latex?n">, called the <a href="https://en.wikipedia.org/wiki/Gegenbauer_polynomials">Gegenbauer polynomials</a> and usually denoted by <img src="https://latex.codecogs.com/png.latex?C_n%5E%7B(%5Calpha)%7D(z)">. Furthermore, if we insist that the solutions be regular on the entire interval <img src="https://latex.codecogs.com/png.latex?%5B-1,1%5D"> and can be lifted to smooth functions on the sphere, then these polynomial solutions are the only ones! They can be recursively defined as <img src="https://latex.codecogs.com/png.latex?C_0%5E%7B(%5Calpha)%7D(z)%20=%201"> and <img src="https://latex.codecogs.com/png.latex?C_1%5E%7B(%5Calpha)%7D(z)%20=%202%5Calpha%20z">, together with the recurrence relation: <img src="https://latex.codecogs.com/png.latex?%0An(n+1)%20%5C,%20C_%7Bn+1%7D%5E%7B(%5Calpha)%7D(z)%0A=%202%20(n+%5Calpha)%20z%20%5C,%20C_n%5E%7B(%5Calpha)%7D(z)%0A-%20(n+2%5Calpha%20-1)%20%5C,%20C_%7Bn-1%7D%5E%7B(%5Calpha)%7D(z).%0A"></p>
+<p>Equation&nbsp;2 is a second-order ordinary differential equation on the interval <img src="https://latex.codecogs.com/png.latex?%5B-1,1%5D"> and it is customary to parametrize it by <img src="https://latex.codecogs.com/png.latex?%5Calpha%20%3E%20-%5Ctfrac12"> by setting <img src="https://latex.codecogs.com/png.latex?%5Calpha%20=%20d/2-1">. Since the eigenvalues of the spherical Laplacian in dimension <img src="https://latex.codecogs.com/png.latex?d"> are <img src="https://latex.codecogs.com/png.latex?%5Clambda%20=%20n(n+d-2)">, the equation becomes: <span id="eq-gegenbauer-ode-alpha"><img src="https://latex.codecogs.com/png.latex?(1-z%5E2)%20y''(z)%20-%20(2%5Calpha%20+%201)%20z%20y'(z)%20+%20n(n+2%5Calpha)%5C,%20y(z)%20=%200.%0A%5Ctag%7B3%7D"></span> One can then show that this equation admits polynomial solutions of degree <img src="https://latex.codecogs.com/png.latex?n">, called the <a href="https://en.wikipedia.org/wiki/Gegenbauer_polynomials">Gegenbauer polynomials</a> and usually denoted by <img src="https://latex.codecogs.com/png.latex?C_n%5E%7B(%5Calpha)%7D(z)">. Furthermore, if we insist that the solutions be regular on the entire interval <img src="https://latex.codecogs.com/png.latex?%5B-1,1%5D"> and can be lifted to smooth functions on the sphere, then these polynomial solutions are the only ones! For a given dimension <img src="https://latex.codecogs.com/png.latex?d=2%5Calpha+2"> and eigenvalue <img src="https://latex.codecogs.com/png.latex?%5Clambda%20=%20n(n+d-2)"> of the spherical Laplacian, up to rotational symmetry and normalization, there is a unique eigenfunction and it is described by the Gegenbauer polynomial <img src="https://latex.codecogs.com/png.latex?C_n%5E%7B(%5Calpha)%7D(z)">. They can be recursively defined as <img src="https://latex.codecogs.com/png.latex?C_0%5E%7B(%5Calpha)%7D(z)%20=%201"> and <img src="https://latex.codecogs.com/png.latex?C_1%5E%7B(%5Calpha)%7D(z)%20=%202%5Calpha%20z">, together with the recurrence relation: <img src="https://latex.codecogs.com/png.latex?%0An(n+1)%20%5C,%20C_%7Bn+1%7D%5E%7B(%5Calpha)%7D(z)%0A=%202%20(n+%5Calpha)%20z%20%5C,%20C_n%5E%7B(%5Calpha)%7D(z)%0A-%20(n+2%5Calpha%20-1)%20%5C,%20C_%7Bn-1%7D%5E%7B(%5Calpha)%7D(z).%0A"></p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -96,6 +358,115 @@
  ]]></description>
   <category>analysis</category>
   <guid>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</guid>
+  <pubDate>Sun, 23 Nov 2025 16:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Gegenbauer Polynomials and the Laplacian</title>
+  <link>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer_gram.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/Leopold_Gegenbauer">Leopold Gegenbauer</a> (1849 – 1903)</figcaption>
+</figure>
+</div>
+</div>
+<section id="gegenbauer-polynomials-and-positive-semidefinite-gram-matrices" class="level2">
+<h2 class="anchored" data-anchor-id="gegenbauer-polynomials-and-positive-semidefinite-gram-matrices">Gegenbauer polynomials and positive semidefinite Gram matrices</h2>
+<p>In the previous post, we met Gegenbauer polynomials as the zonal spherical harmonics on the unit sphere <img src="https://latex.codecogs.com/png.latex?S%5E%7Bd-1%7D">. In this note, I will use that viewpoint to prove a simple but useful fact:</p>
+<blockquote class="blockquote">
+<p>If <img src="https://latex.codecogs.com/png.latex?x_1,%5Cdots,x_n%20%5Cin%20S%5E%7Bd-1%7D"> are unit vectors in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5Ed"> and <img src="https://latex.codecogs.com/png.latex?%0A%20%20G_%7Bij%7D%20=%20x_i%20%5Ccdot%20x_j%0A"> is their Gram matrix, then applying a Gegenbauer polynomial <img src="https://latex.codecogs.com/png.latex?C_%5Cell%5E%7B(%5Calpha)%7D"> entrywise to <img src="https://latex.codecogs.com/png.latex?G"> produces another positive semidefinite matrix.</p>
+</blockquote>
+<p>Equivalently, the kernel <img src="https://latex.codecogs.com/png.latex?%0AK_%5Cell(x,y)%20=%20C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20y),%0A%5Cqquad%20x,y%20%5Cin%20S%5E%7Bd-1%7D,%0A"> is positive semidefinite on the sphere. Here <img src="https://latex.codecogs.com/png.latex?%5Calpha%20=%20d/2%20-%201"> and <img src="https://latex.codecogs.com/png.latex?%5Cell%20%5Cge%200"> is an integer.</p>
+<p>This is the basic example of a rotation invariant kernel on the sphere. It is also a very concrete instance of the general principle</p>
+<blockquote class="blockquote">
+<p>“irreducible spherical harmonics give positive definite kernels.”</p>
+</blockquote>
+<p>I will keep the proof elementary and stay as close as possible to the differential operator viewpoint developed before.</p>
+<section id="gram-matrices-and-positive-semidefinite-kernels" class="level3">
+<h3 class="anchored" data-anchor-id="gram-matrices-and-positive-semidefinite-kernels">Gram matrices and positive semidefinite kernels</h3>
+<p>A <strong>Gram matrix</strong> is built from vectors <img src="https://latex.codecogs.com/png.latex?v_1,%5Cdots,v_n"> in an inner product space: <img src="https://latex.codecogs.com/png.latex?%0AG_%7Bij%7D%20=%20%5Clangle%20v_i,%20v_j%5Crangle.%0A"> By construction, <img src="https://latex.codecogs.com/png.latex?G"> is always positive semidefinite. Indeed, for any <img src="https://latex.codecogs.com/png.latex?u%20%5Cin%20%5Cmathbb%7BR%7D%5En">: <img src="https://latex.codecogs.com/png.latex?%0Au%5E%5Ctop%20G%20u%0A=%20%5Csum_%7Bi,j%7D%20u_i%20u_j%20%5Clangle%20v_i,%20v_j%5Crangle%0A=%20%5CBig%5Clangle%20%5Csum_i%20u_i%20v_i,%20%5Csum_j%20u_j%20v_j%20%5CBig%5Crangle%0A=%20%5CBig%5C%7C%5Csum_i%20u_i%20v_i%5CBig%5C%7C%5E2%0A%5Cge%200.%0A"></p>
+<p>Now let <img src="https://latex.codecogs.com/png.latex?X"> be a set and <img src="https://latex.codecogs.com/png.latex?K%5Ccolon%20X%20%5Ctimes%20X%20%5Cto%20%5Cmathbb%7BR%7D"> a function, usually called a kernel. For a finite family of points <img src="https://latex.codecogs.com/png.latex?x_1,%5Cdots,x_n%20%5Cin%20X">, we can form the matrix <img src="https://latex.codecogs.com/png.latex?%0AK(x_i,x_j)_%7B1%20%5Cle%20i,j%20%5Cle%20n%7D.%0A"> The kernel <img src="https://latex.codecogs.com/png.latex?K"> is said to be <strong>positive semidefinite</strong> if all such matrices are positive semidefinite.</p>
+<p>A simple way to produce psd kernels is to choose a feature map <img src="https://latex.codecogs.com/png.latex?%5CPhi%5Ccolon%20X%20%5Cto%20H"> into some Hilbert space and set <img src="https://latex.codecogs.com/png.latex?%0AK(x,y)%20=%20%5Clangle%20%5CPhi(x),%20%5CPhi(y)%5Crangle_H.%0A"> Then <img src="https://latex.codecogs.com/png.latex?K(x_i,x_j)"> is exactly the Gram matrix of the vectors <img src="https://latex.codecogs.com/png.latex?%5CPhi(x_i)">.</p>
+<p>The claim of this post is that the Gegenbauer kernel <img src="https://latex.codecogs.com/png.latex?K_%5Cell(x,y)%20=%20C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20y)"> has such a Gram representation, with the feature map given by degree <img src="https://latex.codecogs.com/png.latex?%5Cell"> spherical harmonics.</p>
+</section>
+<section id="zonal-spherical-harmonics-and-gegenbauer-recap" class="level3">
+<h3 class="anchored" data-anchor-id="zonal-spherical-harmonics-and-gegenbauer-recap">Zonal spherical harmonics and Gegenbauer recap</h3>
+<p>Recall from the previous post:</p>
+<ul>
+<li><p>A function <img src="https://latex.codecogs.com/png.latex?f%5Ccolon%20S%5E%7Bd-1%7D%20%5Cto%20%5Cmathbb%7BR%7D"> is <strong>zonal</strong> (with respect to a unit vector <img src="https://latex.codecogs.com/png.latex?e">) if <img src="https://latex.codecogs.com/png.latex?%0Af(x)%20=%20F(%5Ctheta_1)%20=%20G(z),%0A"> where <img src="https://latex.codecogs.com/png.latex?%5Ctheta_1"> is the polar angle with respect to <img src="https://latex.codecogs.com/png.latex?e"> and <img src="https://latex.codecogs.com/png.latex?z%20=%20x%20%5Ccdot%20e%20=%20%5Ccos%20%5Ctheta_1">. In other words, <img src="https://latex.codecogs.com/png.latex?f"> depends only on the inner product <img src="https://latex.codecogs.com/png.latex?x%20%5Ccdot%20e">.</p></li>
+<li><p>The spherical Laplacian <img src="https://latex.codecogs.com/png.latex?%5CDelta_%7BS%5E%7Bd-1%7D%7D"> restricts on zonal functions to the one dimensional operator <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D_d%20f(z)%0A=%0A(1-z%5E2)%20f''(z)%20-%20(d-1)%20z%20f'(z),%0A%5Cqquad%20z%20%5Cin%20%5B-1,1%5D.%0A"></p></li>
+<li><p>Eigenfunctions of <img src="https://latex.codecogs.com/png.latex?-%5CDelta_%7BS%5E%7Bd-1%7D%7D"> that are zonal therefore satisfy the ordinary differential equation <img src="https://latex.codecogs.com/png.latex?%0A(1-z%5E2)%20f''(z)%20-%20(d-1)%20z%20f'(z)%20+%20%5Clambda%20f(z)%20=%200.%0A"></p></li>
+</ul>
+<p>If we write <img src="https://latex.codecogs.com/png.latex?%5Calpha%20=%20d/2%20-%201">, the eigenvalues of the spherical Laplacian are <img src="https://latex.codecogs.com/png.latex?%5Clambda%20=%20%5Cell(%5Cell+d-2)%20=%20%5Cell(%5Cell+2%5Calpha)"> for integers <img src="https://latex.codecogs.com/png.latex?%5Cell%20%5Cge%200">. The corresponding ODE <img src="https://latex.codecogs.com/png.latex?%0A(1-z%5E2)%20y''(z)%20-%20(2%5Calpha+1)%20z%20y'(z)%20+%20%5Cell(%5Cell+2%5Calpha)%5C,%20y(z)%20=%200%0A"> is the Gegenbauer equation. It admits polynomial solutions of degree <img src="https://latex.codecogs.com/png.latex?%5Cell">, denoted <img src="https://latex.codecogs.com/png.latex?C_%5Cell%5E%7B(%5Calpha)%7D(z)">.</p>
+<p>By construction, for any unit vector <img src="https://latex.codecogs.com/png.latex?e%20%5Cin%20S%5E%7Bd-1%7D">, <img src="https://latex.codecogs.com/png.latex?%0AY_%5Cell(x)%20:=%20C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20e)%0A"> is a zonal spherical harmonic of degree <img src="https://latex.codecogs.com/png.latex?%5Cell">. Conversely, any zonal spherical harmonic of degree <img src="https://latex.codecogs.com/png.latex?%5Cell"> is a nonzero scalar multiple of <img src="https://latex.codecogs.com/png.latex?C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20e)">.</p>
+<p>This is the only property of Gegenbauer polynomials we will use.</p>
+</section>
+<section id="spherical-harmonics-via-harmonic-polynomials" class="level3">
+<h3 class="anchored" data-anchor-id="spherical-harmonics-via-harmonic-polynomials">Spherical harmonics via harmonic polynomials</h3>
+<p>A convenient way to define spherical harmonics of degree <img src="https://latex.codecogs.com/png.latex?%5Cell"> is via ordinary polynomials on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5Ed">. Let <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BP%7D_%5Cell"> be the vector space of homogeneous polynomials of degree <img src="https://latex.codecogs.com/png.latex?%5Cell">; it is finite dimensional because only finitely many monomials <img src="https://latex.codecogs.com/png.latex?x%5E%5Calpha"> satisfy <img src="https://latex.codecogs.com/png.latex?%7C%5Calpha%7C=%5Cell">. The Euclidean Laplacian is <img src="https://latex.codecogs.com/png.latex?%5CDelta=%5Csum_%7Bi=1%7D%5Ed%20%5Cpartial_%7Bx_i%7D%5E2">, and a polynomial <img src="https://latex.codecogs.com/png.latex?P%5Cin%20%5Cmathcal%7BP%7D_%5Cell"> is <strong>harmonic</strong> if <img src="https://latex.codecogs.com/png.latex?%5CDelta%20P=0">. Harmonic homogeneous polynomials form a finite dimensional subspace <img src="https://latex.codecogs.com/png.latex?H_%5Cell%5E%7B%5Cmathrm%7Bpoly%7D%7D%5Csubset%20%5Cmathcal%7BP%7D_%5Cell">. Restricting such a polynomial to the unit sphere, <img src="https://latex.codecogs.com/png.latex?%0AY(x)=P(x),%5Cqquad%20%5C%7Cx%5C%7C=1,%0A"> produces a function satisfying the spherical Laplace eigenvalue equation <img src="https://latex.codecogs.com/png.latex?-%5CDelta_%7BS%5E%7Bd-1%7D%7D%20Y%20=%20%5Cell(%5Cell+d-2)Y">. These restrictions are the <strong>spherical harmonics of degree <img src="https://latex.codecogs.com/png.latex?%5Cell"></strong>. A key fact is that this construction captures all eigenfunctions of the spherical Laplacian: every solution of <img src="https://latex.codecogs.com/png.latex?-%5CDelta_%7BS%5E%7Bd-1%7D%7D%20Y%20=%20%5Cell(%5Cell+d-2)Y"> arises uniquely as the restriction of some <img src="https://latex.codecogs.com/png.latex?P%5Cin%20H_%5Cell%5E%7B%5Cmathrm%7Bpoly%7D%7D">. No additional angular eigenfunctions exist beyond those obtained from homogeneous harmonic polynomials, and each eigenspace of <img src="https://latex.codecogs.com/png.latex?-%5CDelta_%7BS%5E%7Bd-1%7D%7D"> corresponds exactly to one degree <img src="https://latex.codecogs.com/png.latex?%5Cell">.</p>
+</section>
+<section id="the-harmonic-kernel-k_ell" class="level3">
+<h3 class="anchored" data-anchor-id="the-harmonic-kernel-k_ell">The harmonic kernel <img src="https://latex.codecogs.com/png.latex?K_%5Cell"></h3>
+<p>Fix a degree <img src="https://latex.codecogs.com/png.latex?%5Cell%20%5Cge%200"> and let <img src="https://latex.codecogs.com/png.latex?H_%5Cell"> be the space of spherical harmonics of degree <img src="https://latex.codecogs.com/png.latex?%5Cell"> on <img src="https://latex.codecogs.com/png.latex?S%5E%7Bd-1%7D">. This is a finite dimensional subspace of <img src="https://latex.codecogs.com/png.latex?L%5E2(S%5E%7Bd-1%7D)">.</p>
+<p>Choose an orthonormal basis <img src="https://latex.codecogs.com/png.latex?%0A%5C%7BY_%7B%5Cell,1%7D,%5Cdots,Y_%7B%5Cell,d_%5Cell%7D%5C%7D%20%5Csubset%20H_%5Cell,%0A"> where the inner product is <img src="https://latex.codecogs.com/png.latex?%0A%5Clangle%20f,g%5Crangle%20=%20%5Cint_%7BS%5E%7Bd-1%7D%7D%20f(x)%20g(x)%5C,%20d%5Csigma(x),%0A"> and <img src="https://latex.codecogs.com/png.latex?d%5Csigma"> is the rotation invariant probability measure on the sphere.</p>
+<p>Define the kernel <img src="https://latex.codecogs.com/png.latex?%0AK_%5Cell(x,y)%0A=%0A%5Csum_%7Bm=1%7D%5E%7Bd_%5Cell%7D%20Y_%7B%5Cell,m%7D(x)%5C,Y_%7B%5Cell,m%7D(y),%0A%5Cqquad%20x,y%20%5Cin%20S%5E%7Bd-1%7D.%0A"></p>
+<p>Several basic facts are immediate.</p>
+<ol type="1">
+<li><p><strong>Basis independence.</strong> If we replace <img src="https://latex.codecogs.com/png.latex?%5C%7BY_%7B%5Cell,m%7D%5C%7D"> by another orthonormal basis <img src="https://latex.codecogs.com/png.latex?%5C%7BZ_%7B%5Cell,m%7D%5C%7D"> of <img src="https://latex.codecogs.com/png.latex?H_%5Cell">, the kernel <img src="https://latex.codecogs.com/png.latex?K_%5Cell"> does not change.</p>
+<p>Indeed, any two orthonormal bases are related by an orthogonal matrix <img src="https://latex.codecogs.com/png.latex?A%20=%20(a_%7Bmn%7D)">: <img src="https://latex.codecogs.com/png.latex?%0AZ_%7B%5Cell,m%7D%20=%20%5Csum_%7Bn%7D%20a_%7Bmn%7D%20Y_%7B%5Cell,n%7D.%0A"> Then <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Csum_m%20Z_%7B%5Cell,m%7D(x)%20Z_%7B%5Cell,m%7D(y)%0A&amp;=%20%5Csum_m%20%5Csum_%7Bn,p%7D%20a_%7Bmn%7D%20a_%7Bmp%7D%20Y_%7B%5Cell,n%7D(x)%20Y_%7B%5Cell,p%7D(y)%20%5C%5C%0A&amp;=%20%5Csum_%7Bn,p%7D%20%5CBig(%5Csum_m%20a_%7Bmn%7D%20a_%7Bmp%7D%5CBig)%20Y_%7B%5Cell,n%7D(x)%20Y_%7B%5Cell,p%7D(y)%20%5C%5C%0A&amp;=%20%5Csum_n%20Y_%7B%5Cell,n%7D(x)%20Y_%7B%5Cell,n%7D(y),%0A%5Cend%7Baligned%7D%0A"> since <img src="https://latex.codecogs.com/png.latex?A"> is orthogonal.</p></li>
+<li><p><strong>Harmonicity in each argument.</strong> For fixed <img src="https://latex.codecogs.com/png.latex?y">, the function <img src="https://latex.codecogs.com/png.latex?x%20%5Cmapsto%20K_%5Cell(x,y)"> is a linear combination of the <img src="https://latex.codecogs.com/png.latex?Y_%7B%5Cell,m%7D(x)">, so it lies in <img src="https://latex.codecogs.com/png.latex?H_%5Cell">. It is therefore a spherical harmonic of degree <img src="https://latex.codecogs.com/png.latex?%5Cell">. The same holds in the second argument.</p></li>
+<li><p><strong>Rotation invariance.</strong> Let <img src="https://latex.codecogs.com/png.latex?R%20%5Cin%20SO(d)">. Rotations act on functions by <img src="https://latex.codecogs.com/png.latex?%0A(T_R%20f)(x)%20:=%20f(R%5E%7B-1%7Dx).%0A"> This action preserves harmonicity and degree, and it is an isometry of <img src="https://latex.codecogs.com/png.latex?L%5E2(S%5E%7Bd-1%7D)">. Therefore <img src="https://latex.codecogs.com/png.latex?T_R"> maps <img src="https://latex.codecogs.com/png.latex?H_%5Cell"> to itself and acts on <img src="https://latex.codecogs.com/png.latex?H_%5Cell"> by an orthogonal matrix <img src="https://latex.codecogs.com/png.latex?A(R)%20=%20(a_%7Bmn%7D(R))">: <img src="https://latex.codecogs.com/png.latex?%0AY_%7B%5Cell,m%7D(R%5E%7B-1%7Dx)%20=%20%5Csum_n%20a_%7Bmn%7D(R)%20Y_%7B%5Cell,n%7D(x).%0A"> Using this, <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0AK_%5Cell(Rx,Ry)%0A&amp;=%20%5Csum_m%20Y_%7B%5Cell,m%7D(Rx)%5C,Y_%7B%5Cell,m%7D(Ry)%20%5C%5C%0A&amp;=%20%5Csum_m%20%5CBig(%5Csum_n%20a_%7Bmn%7D(R%5E%7B-1%7D)%20Y_%7B%5Cell,n%7D(x)%5CBig)%0A%20%20%20%20%20%20%20%20%20%20%5CBig(%5Csum_p%20a_%7Bmp%7D(R%5E%7B-1%7D)%20Y_%7B%5Cell,p%7D(y)%5CBig)%20%5C%5C%0A&amp;=%20%5Csum_%7Bn,p%7D%20%5CBig(%5Csum_m%20a_%7Bmn%7D(R%5E%7B-1%7D)%20a_%7Bmp%7D(R%5E%7B-1%7D)%5CBig)%0A%20%20%20%20%20Y_%7B%5Cell,n%7D(x)%20Y_%7B%5Cell,p%7D(y)%20%5C%5C%0A&amp;=%20%5Csum_n%20Y_%7B%5Cell,n%7D(x)%20Y_%7B%5Cell,n%7D(y)%20%5C%5C%0A&amp;=%20K_%5Cell(x,y),%0A%5Cend%7Baligned%7D%0A"> since <img src="https://latex.codecogs.com/png.latex?A(R%5E%7B-1%7D)"> is orthogonal.</p></li>
+</ol>
+<p>Summarizing: <img src="https://latex.codecogs.com/png.latex?K_%5Cell"> is independent of the choice of basis, it is harmonic of degree <img src="https://latex.codecogs.com/png.latex?%5Cell"> in each argument, and it is invariant under simultaneous rotation of both arguments.</p>
+</section>
+<section id="from-rotational-invariance-to-a-zonal-form" class="level3">
+<h3 class="anchored" data-anchor-id="from-rotational-invariance-to-a-zonal-form">From rotational invariance to a zonal form</h3>
+<p>Fix <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20S%5E%7Bd-1%7D"> and consider the function <img src="https://latex.codecogs.com/png.latex?%0AF_y(x)%20:=%20K_%5Cell(x,y).%0A"></p>
+<p>By definition, <img src="https://latex.codecogs.com/png.latex?F_y%20%5Cin%20H_%5Cell">, so it is a spherical harmonic of degree <img src="https://latex.codecogs.com/png.latex?%5Cell">. Rotation invariance implies that it is zonal around <img src="https://latex.codecogs.com/png.latex?y">.</p>
+<p>To see this, take two points <img src="https://latex.codecogs.com/png.latex?x_1,x_2%20%5Cin%20S%5E%7Bd-1%7D"> with <img src="https://latex.codecogs.com/png.latex?%0Ax_1%20%5Ccdot%20y%20=%20x_2%20%5Ccdot%20y.%0A"> There exists a rotation <img src="https://latex.codecogs.com/png.latex?R%20%5Cin%20SO(d)"> such that <img src="https://latex.codecogs.com/png.latex?Ry%20=%20y"> and <img src="https://latex.codecogs.com/png.latex?Rx_1%20=%20x_2">. Using invariance of <img src="https://latex.codecogs.com/png.latex?K_%5Cell">, <img src="https://latex.codecogs.com/png.latex?%0AF_y(x_2)%0A=%20K_%5Cell(x_2,y)%0A=%20K_%5Cell(Rx_1,Ry)%0A=%20K_%5Cell(x_1,y)%0A=%20F_y(x_1).%0A"> So <img src="https://latex.codecogs.com/png.latex?F_y(x)"> depends only on the inner product <img src="https://latex.codecogs.com/png.latex?x%20%5Ccdot%20y">.</p>
+<p>Therefore there exists a scalar function <img src="https://latex.codecogs.com/png.latex?%5CPhi_%5Cell%5Ccolon%20%5B-1,1%5D%20%5Cto%20%5Cmathbb%7BR%7D"> such that <img src="https://latex.codecogs.com/png.latex?%0AK_%5Cell(x,y)%20=%20%5CPhi_%5Cell(x%20%5Ccdot%20y).%0A"></p>
+<p>At the same time, for fixed <img src="https://latex.codecogs.com/png.latex?y">, the function <img src="https://latex.codecogs.com/png.latex?x%20%5Cmapsto%20K_%5Cell(x,y)"> lies in <img src="https://latex.codecogs.com/png.latex?H_%5Cell">, so it is a spherical harmonic of degree <img src="https://latex.codecogs.com/png.latex?%5Cell">. Combined with the observation above, this means:</p>
+<blockquote class="blockquote">
+<p>For each fixed <img src="https://latex.codecogs.com/png.latex?y">, the function <img src="https://latex.codecogs.com/png.latex?x%20%5Cmapsto%20K_%5Cell(x,y)"> is a <strong>zonal spherical harmonic of degree <img src="https://latex.codecogs.com/png.latex?%5Cell"></strong>.</p>
+</blockquote>
+<p>The space of such functions is one dimensional and spanned by the Gegenbauer zonal harmonic <img src="https://latex.codecogs.com/png.latex?C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20y)">. Hence there exists a nonzero constant <img src="https://latex.codecogs.com/png.latex?c_%7B%5Cell,d%7D"> such that <img src="https://latex.codecogs.com/png.latex?%0AK_%5Cell(x,y)%20=%20c_%7B%5Cell,d%7D%5C,%20C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20y),%0A%5Cqquad%20x,y%20%5Cin%20S%5E%7Bd-1%7D.%0A"></p>
+<p>This is the addition theorem in exactly the form that is needed here. There is no need to compute <img src="https://latex.codecogs.com/png.latex?c_%7B%5Cell,d%7D">.</p>
+</section>
+<section id="from-the-addition-theorem-to-positive-semidefiniteness" class="level3">
+<h3 class="anchored" data-anchor-id="from-the-addition-theorem-to-positive-semidefiniteness">From the addition theorem to positive semidefiniteness</h3>
+<p>Now take arbitrary points <img src="https://latex.codecogs.com/png.latex?x_1,%5Cdots,x_n%20%5Cin%20S%5E%7Bd-1%7D"> and form their Gram matrix <img src="https://latex.codecogs.com/png.latex?%0AG_%7Bij%7D%20=%20x_i%20%5Ccdot%20x_j.%0A"> By definition, this matrix is positive semidefinite.</p>
+<p>Next, build the <img src="https://latex.codecogs.com/png.latex?n%20%5Ctimes%20d_%5Cell"> matrix <img src="https://latex.codecogs.com/png.latex?V"> of spherical harmonics of degree <img src="https://latex.codecogs.com/png.latex?%5Cell"> evaluated at the points: <img src="https://latex.codecogs.com/png.latex?%0AV_%7Bi,m%7D%20:=%20Y_%7B%5Cell,m%7D(x_i),%0A%5Cqquad%201%20%5Cle%20i%20%5Cle%20n,%5C%201%20%5Cle%20m%20%5Cle%20d_%5Cell.%0A"></p>
+<p>Using the definition of <img src="https://latex.codecogs.com/png.latex?K_%5Cell">, <img src="https://latex.codecogs.com/png.latex?%0A(V%20V%5E%5Ctop)_%7Bij%7D%0A=%20%5Csum_%7Bm=1%7D%5E%7Bd_%5Cell%7D%20Y_%7B%5Cell,m%7D(x_i)%5C,Y_%7B%5Cell,m%7D(x_j)%0A=%20K_%5Cell(x_i,x_j).%0A"></p>
+<p>The addition theorem gives <img src="https://latex.codecogs.com/png.latex?%0AK_%5Cell(x_i,x_j)%0A=%20c_%7B%5Cell,d%7D%5C,%20C_%5Cell%5E%7B(%5Calpha)%7D(x_i%20%5Ccdot%20x_j)%0A=%20c_%7B%5Cell,d%7D%5C,%20C_%5Cell%5E%7B(%5Calpha)%7D(G_%7Bij%7D).%0A"></p>
+<p>Therefore <img src="https://latex.codecogs.com/png.latex?%0A(V%20V%5E%5Ctop)_%7Bij%7D%0A=%20c_%7B%5Cell,d%7D%5C,%20C_%5Cell%5E%7B(%5Calpha)%7D(G_%7Bij%7D),%0A"> or in matrix notation <img src="https://latex.codecogs.com/png.latex?%0AC_%5Cell%5E%7B(%5Calpha)%7D%5BG%5D%20=%20%5Cfrac%7B1%7D%7Bc_%7B%5Cell,d%7D%7D%5C,%20V%20V%5E%5Ctop.%0A"></p>
+<p>Here <img src="https://latex.codecogs.com/png.latex?C_%5Cell%5E%7B(%5Calpha)%7D%5BG%5D"> denotes the matrix obtained by applying the polynomial <img src="https://latex.codecogs.com/png.latex?C_%5Cell%5E%7B(%5Calpha)%7D"> <strong>entrywise</strong> to <img src="https://latex.codecogs.com/png.latex?G">. The right hand side is a Gram matrix, hence positive semidefinite.</p>
+<p>Since scaling by a positive constant preserves positive semidefiniteness, we conclude:</p>
+<blockquote class="blockquote">
+<p>For any points <img src="https://latex.codecogs.com/png.latex?x_1,%5Cdots,x_n%20%5Cin%20S%5E%7Bd-1%7D">, the matrix with entries <img src="https://latex.codecogs.com/png.latex?%0AC_%5Cell%5E%7B(%5Calpha)%7D(x_i%20%5Ccdot%20x_j)%0A"> is positive semidefinite.</p>
+</blockquote>
+<p>Equivalently, the kernel <img src="https://latex.codecogs.com/png.latex?%0AK_%5Cell(x,y)%20=%20C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20y)%0A"> is positive semidefinite on the sphere.</p>
+<p>Note that this statement is naturally formulated for <strong>correlation matrices</strong>, that is, Gram matrices of unit vectors. The domain of <img src="https://latex.codecogs.com/png.latex?C_%5Cell%5E%7B(%5Calpha)%7D"> is the interval <img src="https://latex.codecogs.com/png.latex?%5B-1,1%5D">, which is exactly the range of inner products of unit vectors.</p>
+</section>
+<section id="interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
+<p>The proof makes the feature map completely explicit. The kernel <img src="https://latex.codecogs.com/png.latex?%0AK_%5Cell(x,y)%20=%20C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20y)%0A"> is, up to a scalar factor, the Gram kernel of the map <img src="https://latex.codecogs.com/png.latex?%0A%5CPhi_%5Cell%5Ccolon%20S%5E%7Bd-1%7D%20%5Cto%20%5Cmathbb%7BR%7D%5E%7Bd_%5Cell%7D,%0A%5Cqquad%0A%5CPhi_%5Cell(x)%20=%20%5Cbig(Y_%7B%5Cell,1%7D(x),%5Cdots,Y_%7B%5Cell,d_%5Cell%7D(x)%5Cbig).%0A"> Indeed, <img src="https://latex.codecogs.com/png.latex?%0A%5Clangle%20%5CPhi_%5Cell(x),%20%5CPhi_%5Cell(y)%5Crangle%0A=%20%5Csum_m%20Y_%7B%5Cell,m%7D(x)%20Y_%7B%5Cell,m%7D(y)%0A=%20K_%5Cell(x,y)%0A=%20c_%7B%5Cell,d%7D%5C,%20C_%5Cell%5E%7B(%5Calpha)%7D(x%20%5Ccdot%20y).%0A"></p>
+<p>From this point of view, applying the Gegenbauer polynomial to a Gram matrix is nothing more than computing the Gram matrix of the transformed points <img src="https://latex.codecogs.com/png.latex?%5CPhi_%5Cell(x_i)"> in harmonic feature space.</p>
+<p>More general positive semidefinite, rotation invariant kernels on the sphere arise as nonnegative combinations <img src="https://latex.codecogs.com/png.latex?%0Af(t)%20=%20%5Csum_%7B%5Cell=0%7D%5E%5Cinfty%20a_%5Cell%20C_%5Cell%5E%7B(%5Calpha)%7D(t),%20%5Cqquad%20a_%5Cell%20%5Cge%200,%0A"> but the single building blocks <img src="https://latex.codecogs.com/png.latex?C_%5Cell%5E%7B(%5Calpha)%7D"> already capture the essential mechanism: spherical harmonics plus the addition theorem produce Gram matrices, and Gram matrices are automatically positive semidefinite.</p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>analysis</category>
+  <guid>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer_gram.html</guid>
   <pubDate>Sun, 23 Nov 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
@@ -369,11 +740,12 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
 
 
 
+
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/infinite_products/hadamard.jpg" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Jacques_Hadamard">Jacques Hadamard</a> (1865 – 1963)</figcaption>
+<figcaption><a href="https://en.wikipedia.org/wiki/Jacques_Hadamard">Jacques Hadamard</a> (1865 – 1963)</figcaption>
 </figure>
 </div>
 </div>
@@ -405,7 +777,7 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/infinite_products/Gamma_abs_3D.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Gamma_function">Gamma function</a></figcaption>
+<figcaption><a href="https://en.wikipedia.org/wiki/Gamma_function">Gamma function</a></figcaption>
 </figure>
 </div>
 </div>
@@ -433,7 +805,7 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/infinite_products/zeta_plot.jpg" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">Zeta function, where are the zeros?</figcaption>
+<figcaption>Zeta function, where are the zeros?</figcaption>
 </figure>
 </div>
 </div>
@@ -456,11 +828,12 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
 
 
 
+
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/fisher-rao/rao.jpg" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/C._R._Rao">Calyampudi Radhakrishna Rao</a> (1920 – 2023)</figcaption>
+<figcaption><a href="https://en.wikipedia.org/wiki/C._R._Rao">Calyampudi Radhakrishna Rao</a> (1920 – 2023)</figcaption>
 </figure>
 </div>
 </div>
@@ -489,7 +862,7 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/fisher-rao/FR_geodesic.gif" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Here is how a geodesic paths looks like under the Fisher-Rao metric</figcaption>
+<figcaption>Here is how a geodesic paths looks like under the Fisher-Rao metric</figcaption>
 </figure>
 </div>
 </div>
@@ -508,7 +881,7 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/fisher-rao/FR_gradient_flow.gif" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Minimising <img src="https://latex.codecogs.com/png.latex?D_%7B%5Ctext%7BKL%7D%7D(%5Crho,%20%5Cpi)"> with Fisher-Rao gradient flow</figcaption>
+<figcaption>Minimising <img src="https://latex.codecogs.com/png.latex?D_%7B%5Ctext%7BKL%7D%7D(%5Crho,%20%5Cpi)"> with Fisher-Rao gradient flow</figcaption>
 </figure>
 </div>
 </div>
@@ -517,7 +890,7 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-crucinio2025sequential" class="csl-entry">
 Crucinio, Francesca R, and Sahani Pathiraja. 2025. <span>“Sequential Monte Carlo Approximations of Wasserstein–Fisher–Rao Gradient Flows.”</span> <em>arXiv Preprint arXiv:2506.05905</em>.
 </div>
@@ -645,10 +1018,11 @@ Pontryagin, Lev Semenovich. 1962. <em>Mathematical Theory of Optimal Processes</
 
 
 
+
 <p><em>These notes are mainly for my own reference; I’m pretty clueless about GPs at the moment, and that needs to change. Read at your own risk; typos and mistakes are likely.</em></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><video src="SparseGP.mp4" class="img-fluid" style="width:100.0%" controls=""><a href="SparseGP.mp4">Video</a></video></p>
+<p><video src="SparseGP.mp4" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%" controls=""><a href="SparseGP.mp4">Video</a></video></p>
 </figure>
 </div>
 <p>Let <img src="https://latex.codecogs.com/png.latex?f(%5Ccdot)%20%5Csim%20%5Cmathrm%7BGP%7D(m,%20K)"> denote a Gaussian Process (GP) prior with zero mean <img src="https://latex.codecogs.com/png.latex?m=0"> and covariance kernel <img src="https://latex.codecogs.com/png.latex?K">. Assume we observe <img src="https://latex.codecogs.com/png.latex?n%20%5Cgg%201"> noisy measurements <img src="https://latex.codecogs.com/png.latex?y%20=%20(y_i)%7Bi=1%7D%5En"> of <img src="https://latex.codecogs.com/png.latex?f_i%20=%20f(x_i)"> at input locations <img src="https://latex.codecogs.com/png.latex?x%20=%20(x_i)%7Bi=1%7D%5En">. The goal is to compute the posterior of <img src="https://latex.codecogs.com/png.latex?f%20=%20(f_i)_%7Bi=1%7D%5En"> and to infer GP hyperparameters. The main challenge with GP models is the cubic complexity of the matrix inversion required to many of the posterior computations.</p>
@@ -699,7 +1073,7 @@ Pontryagin, Lev Semenovich. 1962. <em>Mathematical Theory of Optimal Processes</
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-titsias2009variational" class="csl-entry">
 Titsias, Michalis. 2009. <span>“Variational Learning of Inducing Variables in Sparse Gaussian Processes.”</span> In <em>Artificial Intelligence and Statistics</em>, 567–74. PMLR.
 </div>
@@ -716,6 +1090,7 @@ Titsias, Michalis. 2009. <span>“Variational Learning of Inducing Variables in 
 
 
 
+
 <!-- \begin{figure}[h]
 \centering
 \includegraphics[width=0.3\textwidth]{polymer-selfavoiding.png}
@@ -725,7 +1100,7 @@ Titsias, Michalis. 2009. <span>“Variational Learning of Inducing Variables in 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/SAW/polymer-selfavoiding.png" class="img-fluid figure-img" style="width:35.0%"></p>
-<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Self-avoiding_walk">A 2D self-avoiding walk</a></figcaption>
+<figcaption><a href="https://en.wikipedia.org/wiki/Self-avoiding_walk">A 2D self-avoiding walk</a></figcaption>
 </figure>
 </div>
 </div>
@@ -748,7 +1123,7 @@ Titsias, Michalis. 2009. <span>“Variational Learning of Inducing Variables in 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/SAW/SAW_SMC.png" class="img-fluid figure-img" style="width:95.0%"></p>
-<figcaption class="figure-caption">Importance Sampling (Rosenbluth method)</figcaption>
+<figcaption>Importance Sampling (Rosenbluth method)</figcaption>
 </figure>
 </div>
 </div>
@@ -782,7 +1157,7 @@ Titsias, Michalis. 2009. <span>“Variational Learning of Inducing Variables in 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/SAW/SMC_mu_estimates.png" class="img-fluid figure-img" style="width:95.0%"></p>
-<figcaption class="figure-caption">Sequential Monte Carlo</figcaption>
+<figcaption>Sequential Monte Carlo</figcaption>
 </figure>
 </div>
 </div>
@@ -802,7 +1177,7 @@ Titsias, Michalis. 2009. <span>“Variational Learning of Inducing Variables in 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-rosenbluth1955monte" class="csl-entry">
 Rosenbluth, Marshall N, and Arianna W Rosenbluth. 1955. <span>“Monte Carlo Calculation of the Average Extension of Molecular Chains.”</span> <em>The Journal of Chemical Physics</em> 23 (2). American Institute of Physics: 356–59.
 </div>
@@ -910,13 +1285,14 @@ Vargas, Francisco, Shreyas Padhy, Denis Blessing, and Nikolas Nüsken. 2024. <sp
 
 
 
+
 <p>Unfortunately, I am totally ignorant about <a href="https://en.wikipedia.org/wiki/Conformal_prediction">conformal inference</a>. However, in today’s seminar, I attended a very interesting talk on the topic, and I think it’s time I try implementing the most basic version of it. It seems like a useful concept, and I might even explain it next semester in my simulation class. What I’ll describe below is the simplest version of conformal inference. There appear to be many extensions and variations of it, most of which I don’t yet understand. For now, I just want to spend a few minutes implementing it myself to ensure I grasp the basic idea.</p>
 <p>Consider the (simulated) 1D dataset <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D%20=%20%5C%7Bx_i,%20y_i%5C%7D_%7Bi=1%7D%5EN"> below; our goal is to build prediction confidence intervals <img src="https://latex.codecogs.com/png.latex?%5BL(x),%20U(x)%5D"> for the target variable <img src="https://latex.codecogs.com/png.latex?y"> given a new input <img src="https://latex.codecogs.com/png.latex?x">. Crucially, we would like these predictions to be well-calibrated in the sense that <img src="https://latex.codecogs.com/png.latex?y%20%5Cin%20%5BL(x),%20U(x)%5D"> with probability <img src="https://latex.codecogs.com/png.latex?90%5C%25">, say.</p>
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/conformal_inference/data.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">1D regression dataset</figcaption>
+<figcaption>1D regression dataset</figcaption>
 </figure>
 </div>
 </div>
@@ -925,7 +1301,7 @@ Vargas, Francisco, Shreyas Padhy, Denis Blessing, and Nikolas Nüsken. 2024. <sp
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/conformal_inference/conformal_basic.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">1D regression dataset: basic conformal inference</figcaption>
+<figcaption>1D regression dataset: basic conformal inference</figcaption>
 </figure>
 </div>
 </div>
@@ -936,7 +1312,7 @@ Vargas, Francisco, Shreyas Padhy, Denis Blessing, and Nikolas Nüsken. 2024. <sp
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/conformal_inference/conformal.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">1D regression dataset: less useless conformal inference</figcaption>
+<figcaption>1D regression dataset: less useless conformal inference</figcaption>
 </figure>
 </div>
 </div>
@@ -952,7 +1328,7 @@ Vargas, Francisco, Shreyas Padhy, Denis Blessing, and Nikolas Nüsken. 2024. <sp
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-gibbs2023conformal" class="csl-entry">
 Gibbs, Isaac, John J Cherian, and Emmanuel J Candès. 2023. <span>“Conformal Prediction with Conditional Guarantees.”</span> <em>arXiv Preprint arXiv:2305.12616</em>.
 </div>
@@ -975,10 +1351,11 @@ Lei, Jing, and Larry Wasserman. 2014. <span>“Distribution-Free Prediction Band
 
 
 
+
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/VIASM_2024/viasm_2024.jpg" class="img-fluid figure-img" style="width:95.0%"></p>
+<p><img src="https://alexxthiery.github.io/notes/VIASM_2024/viasm_2024.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%"></p>
 </figure>
 </div>
 </div>
@@ -1139,11 +1516,12 @@ $$ -->
 
 
 
+
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/girsanov/girsanov_portrait.jpg" class="img-fluid figure-img" style="width:35.0%"></p>
-<figcaption class="figure-caption"><a href="https://en.wikipedia.org/wiki/Igor_Girsanov">Igor Girsanov</a> (1934 – 1967)</figcaption>
+<figcaption><a href="https://en.wikipedia.org/wiki/Igor_Girsanov">Igor Girsanov</a> (1934 – 1967)</figcaption>
 </figure>
 </div>
 </div>
@@ -1151,7 +1529,7 @@ $$ -->
 <p><span id="eq-girsanov"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bq%5E%7Bu%7D(x)%7D%7Bq(x)%7D%0A=%0A%5Cexp%20%7B%5Cleft%5C%7B%20-%20%5Cfrac%7B1%7D%7B2%7D%20%5C%7C%20u%5C%7C%5E2%20+%20%5Cleft%3C%20u,%20%5C,%20%5CGamma%5E%7B-1/2%7D(x-%5Cmu)%20%5Cright%3E%20%5Cright%5C%7D%7D%20.%0A%5Ctag%7B1%7D"></span></p>
 <p>We will see that, not very surprisingly, a similar change-of-probability result holds in continuous time. On the time interval <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D">, let <img src="https://latex.codecogs.com/png.latex?W_t"> be a standard Brownian motion in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED"> and <img src="https://latex.codecogs.com/png.latex?X_t"> be the solution to the <a href="https://en.wikipedia.org/wiki/Stochastic_differential_equation">SDE</a></p>
 <p><span id="eq-sde-original"><img src="https://latex.codecogs.com/png.latex?%0AdX_t%20%5C;%20=%20%5C;%20b(X_t)%20%5C,%20dt%20+%20%5Csigma(X_t)%20%5C,%20dW_t%0A%5Ctag%7B2%7D"></span></p>
-<p>for some drift <img src="https://latex.codecogs.com/png.latex?b:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5ED"> and diffusion <img src="https://latex.codecogs.com/png.latex?%5Csigma:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5E%7BD%20%5Ctimes%20D%7D"> and initial distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_0(dx_0)">. This SDE defines a probability measure <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D"> on the <a href="https://en.wikipedia.org/wiki/Classical_Wiener_space">path-space</a> <img src="https://latex.codecogs.com/png.latex?C(%5B0,T%5D;%20%5Cmathbb%7BR%7D%5ED)">, the space of continuous functions from <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D"> to <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED">. Consider a perturbation drift function <img src="https://latex.codecogs.com/png.latex?u:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5ED"> and associated perturbed SDE given by</p>
+<p>for some drift <img src="https://latex.codecogs.com/png.latex?b:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5ED"> and diffusion <img src="https://latex.codecogs.com/png.latex?%5Csigma:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5E%7BD%20%5Ctimes%20D%7D"> and initial distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_0(dx_0)">. This SDE defines a probability measure <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D"> on the <a href="https://en.wikipedia.org/wiki/Classical_Wiener_space">path-space</a> <img src="https://latex.codecogs.com/png.latex?C(%5B0,T%5D;%20%5Cmathbb%7BR%7D%5ED)">, the space of continuous functions from <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D"> to <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED">. Consider a perturbation drift function <img src="https://latex.codecogs.com/png.latex?u:%20%5Cmathbb%7BR%7D%5ED%20%20%5Cto%20%5Cmathbb%7BR%7D%5ED"> and associated perturbed SDE given by</p>
 <p><span id="eq-sde-perturbed"><img src="https://latex.codecogs.com/png.latex?%0AdX_t%5Eu%20%5C;%20=%20%5C;%20b(X_t%5Eu)%20%5C,%20dt%20+%20%5Csigma(X_t%5Eu)%20%5C,%20%20%7B%5Cleft%5C%7B%20%20dW_t%20+%20%20%5Ctextcolor%7Bblue%7D%7Bu(X_t%5Eu)%20%5C,%20dt%7D%20%20%5Cright%5C%7D%7D%20.%0A%5Ctag%7B3%7D"></span></p>
 <p>This perturbed SDE, started from the same initial distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_0(dx_0)">, defines a probability measure <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5Eu"> on the path-space <img src="https://latex.codecogs.com/png.latex?C(%5B0,T%5D;%20%5Cmathbb%7BR%7D%5ED)"> and it is often useful to understand the Radon-Nikodym derivative of <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5Eu"> with respect to <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D">. I have never really liked the way this is <a href="https://en.wikipedia.org/wiki/Girsanov_theorem">usually</a> derived, and also never really remember the result. It takes only a few lines of algebra to re-derive these results, at least informally. For this purpose, consider a simpler <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler discretization</a> of the SDE with time-discretization <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20=%20T/N"> for <img src="https://latex.codecogs.com/png.latex?N%20%5Cgg%201">. Consider a discretized paths <img src="https://latex.codecogs.com/png.latex?(x_0,%20x_%7B%5Cdelta%7D,%20%5Cldots,%20x_%7BT%7D)"> of Equation&nbsp;2 obtained by iterating the update</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0Ax_%7Bt_%7Bk+1%7D%7D%20%5C;%20=%20%5C;%20x_%7Bt_k%7D%20+%20b(x_%7Bt_k%7D)%5C,%5Cdelta%20+%20%5Csigma(x_%7Bt_k%7D)%20%5C,%20(%5CDelta%20W_%7Bt_k%7D)%0A"></p>
@@ -1221,7 +1599,7 @@ $$ -->
 <p>The infinitesimal generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D"> of the conditioned process is</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi(t,%20x_t)%20=%20%5Clim_%7B%5Cdelta%20%5Cto%200%5E+%7D%20%5C;%20%5Cfrac%7B%5Cmathbb%7BE%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20y_T%5D%20-%20%5Cvarphi(x_t)%7D%7B%5Cdelta%7D.%0A"></p>
 <p>Plugging Equation&nbsp;3 within Equation&nbsp;2 directly gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi%5C;%20=%20%5C;%20%5Cmathcal%7BL%7D%5Cvarphi+%20%5Cfrac%7B%5Cmathcal%7BL%7D%5B%5Cvarphi%5C,%20h%5D%7D%7Bh%7D%20+%20%5Cvarphi%5Cfrac%7B%5Cpartial_t%20h%7D%7Bh%7D.%0A"></p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi%0A%5C;%20=%20%5C;%0A%5Cfrac%7B(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%5Bh%20%5C,%20%5Cvarphi%5D%7D%7Bh%7D%0A%5C;%20=%20%5C;%0A%5Cfrac%7B%5Cmathcal%7BL%7D%5B%5Cvarphi%5C,%20h%5D%7D%7Bh%7D%20+%20%5Cvarphi%5Cfrac%7B%5Cpartial_t%20h%7D%7Bh%7D.%0A"></p>
 <details>
 <summary>
 Some details:
@@ -1234,7 +1612,7 @@ Some details:
 <p>for some function <img src="https://latex.codecogs.com/png.latex?f:%5B0,T%5D%20%5Ctimes%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D">. One can define the function <img src="https://latex.codecogs.com/png.latex?h"> similarly as</p>
 <p><span id="eq-h-gen"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%20h(t,%20x_t)%20%5C;%20=%20%5C;%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7Bt%7D%5ET%20f(X_s)%20%5C,%20ds%20+%20g(x_T)%20%5Cright%5C%7D%7D%20%20%5Cmid%20x_t%20%5Cright%5D%7D%20%7D.%0A%5Ctag%7B5%7D"></span></p>
 <p>This function satisfies the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac formula</a> <img src="https://latex.codecogs.com/png.latex?(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%20%5C,%20h%20=%200"> and one obtains entirely similarly that the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> describes a Markov process with infinitesimal generator</p>
-<p><span id="eq-doob-transforms"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi%5C;%20=%20%5C;%20%5Cmathcal%7BL%7D%5Cvarphi+%20%5Cfrac%7B%5Cmathcal%7BL%7D%5Bh%20%5C,%20%5Cvarphi%5D%7D%7Bh%7D%20+%20%20%7B%5Cleft(%20%20%5Cfrac%7B%5Cpartial_t%20h%7D%20%7Bh%7D%20+%20f%20%5Cright)%7D%20%20%5C,%20%5Cvarphi.%7D%0A%5Ctag%7B6%7D"></span></p>
+<p><span id="eq-doob-transforms"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi%0A%5C;%20=%20%5C;%0A%5Cfrac%7B(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%5Bh%20%5C,%20%5Cvarphi%5D%7D%7Bh%7D%0A%5C;%20=%20%5C;%0A%5Cfrac%7B%5Cmathcal%7BL%7D%5Bh%20%5C,%20%5Cvarphi%5D%7D%7Bh%7D%20+%20%20%7B%5Cleft(%20%20%5Cfrac%7B%5Cpartial_t%20h%7D%20%7Bh%7D%20+%20f%20%5Cright)%7D%20%20%5C,%20%5Cvarphi.%7D%0A%5Ctag%7B6%7D"></span></p>
 <details>
 <summary>
 Some details:
@@ -1316,10 +1694,11 @@ An interpretation of the conditioned process is as follows. Suppose for example 
 
 
 
+
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -1333,7 +1712,7 @@ An interpretation of the conditioned process is as follows. Suppose for example 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/projection_onto_M.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Projection onto <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> from <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span></figcaption>
+<figcaption>Projection onto <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> from <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span></figcaption>
 </figure>
 </div>
 </div>
@@ -1346,7 +1725,7 @@ An interpretation of the conditioned process is as follows. Suppose for example 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/reverse_mcmc.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Reversibility check <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span></figcaption>
+<figcaption>Reversibility check <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span></figcaption>
 </figure>
 </div>
 </div>
@@ -1371,7 +1750,7 @@ An interpretation of the conditioned process is as follows. Suppose for example 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/RWM_double_torus.gif" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">30k RWM chains ran in parallel to explore a double torus.</figcaption>
+<figcaption>30k RWM chains ran in parallel to explore a double torus.</figcaption>
 </figure>
 </div>
 </div>
@@ -1382,7 +1761,7 @@ An interpretation of the conditioned process is as follows. Suppose for example 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/RWM_manifold_tuning.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Tuning of manifold-RWM</figcaption>
+<figcaption>Tuning of manifold-RWM</figcaption>
 </figure>
 </div>
 </div>
@@ -1405,7 +1784,7 @@ An interpretation of the conditioned process is as follows. Suppose for example 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/HMC_double_torus_compressed.gif" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">5k HMC chains ran in parallel: the momentum is not refreshed</figcaption>
+<figcaption>5k HMC chains ran in parallel: the momentum is not refreshed</figcaption>
 </figure>
 </div>
 </div>
@@ -1415,7 +1794,7 @@ An interpretation of the conditioned process is as follows. Suppose for example 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-au2020manifold" class="csl-entry">
 Au, Khai Xiang, Matthew M Graham, and Alexandre H Thiery. 2022. <span>“Manifold Lifting: Scaling MCMC to the Vanishing Noise Regime.”</span> <em>Journal of the Royal Statistical Society: Series B</em>. <a href="https://arxiv.org/abs/2003.03950">https://arxiv.org/abs/2003.03950</a>.
 </div>
@@ -1444,6 +1823,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
   <title>Metropolis-Hastings ratio with deterministic proposals</title>
   <link>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</link>
   <description><![CDATA[ 
+
 
 
 
@@ -1482,7 +1862,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/mcmc_deterministic.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/mcmc_deterministic.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -1492,7 +1872,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-andrieu2020general" class="csl-entry">
 Andrieu, Christophe, Anthony Lee, and Sam Livingstone. 2020. <span>“A General Perspective on the Metropolis-Hastings Kernel.”</span> <em>arXiv Preprint arXiv:2012.14881</em>.
 </div>
@@ -1511,6 +1891,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
   <title>Averaging and homogenization</title>
   <link>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</link>
   <description><![CDATA[ 
+
 
 
 
@@ -1616,7 +1997,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-hinch_1991" class="csl-entry">
 Hinch, E. J. 1991. <em>Perturbation Methods</em>. Cambridge University Press.
 </div>
@@ -1636,139 +2017,6 @@ Weinan, E. 2011. <em>Principles of Multiscale Modeling</em>. Cambridge Universit
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</guid>
   <pubDate>Mon, 27 Nov 2023 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Ensemble Kalman Smoother (EnKS)</title>
-  <link>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>Consider a linear-Gaussian state space model with <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5E%7BD_x%7D">-valued dynamics <img src="https://latex.codecogs.com/png.latex?X_%7Bt+1%7D%20%5Csim%20F%20%5C,%20X_t%20+%20%5Cmathcal%7BN%7D(0,Q)"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5E%7BD_y%7D">-valued observations <img src="https://latex.codecogs.com/png.latex?Y_t%20%5Csim%20H%20%20X_t%20+%20%5Cmathcal%7BN%7D(0,R)">. Assuming a Gaussian initial distribution, the <strong>filtering distributions</strong> <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_t%20%5Cin%20dx%20%5C,%20%7C%20Y_%7B1:t%7D)%20%5Cequiv%20%5Cmathcal%7BN%7D(%5Cmu_%7Bt%7Ct%7D,%20P_%7Bt%7Ct%7D)"> are Gaussian and can be sequentially computed with the <a href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman Filter</a>. Similarly, the <strong>predictive distributions</strong> <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_%7Bt+1%7D%20%5Cin%20dx%20%5C,%20%7C%20Y_%7B1:t%7D)%20%5Cequiv%20%5Cmathcal%7BN%7D(%5Cmu_%7Bt+1%7Ct%7D,%20P_%7Bt+1%7Ct%7D)"> are straightforward to obtain from the filtering distributions: <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7Bt+1%7Ct%7D%20=%20F%20%5C,%20%5Cmu_%7Bt%7Ct%7D"> and <img src="https://latex.codecogs.com/png.latex?P_%7Bt+1%7Ct%7D%20=%20F%20%5C,%20P_%7Bt%7Ct%7D%20%5C,%20F%5E%5Ctop%20+%20Q">. Given observations <img src="https://latex.codecogs.com/png.latex?y_%7B1:T%7D%20%5Cequiv%20(y_1,%20%5Cldots,%20y_T)"> and <img src="https://latex.codecogs.com/png.latex?1%20%5Cleq%20t%20%5Cleq%20T">, the <strong>smoothing distributions</strong> <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_t%20%5Cin%20dx%20%5C,%20%7C%20Y_%7B1:T%7D)%20%5Cequiv%20%5Cmathcal%7BN%7D(%5Cmu_%7Bt%7CT%7D,%20P_%7Bt%7CT%7D)"> can computed by performing a “backward pass”. Since everything is linear and Gaussian, it is just an exercise in Linear Algebra &amp; Gaussian-conditioning, as described by the Rauch-Tung-Striebel <span class="citation" data-cites="rauch1965maximum">(Rauch, Tung, and Striebel 1965)</span> smoothing recursions. The backward recursion reads</p>
-<p><span id="eq-RTS"><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0A%5Cmu_%7Bt%7CT%7D%0A&amp;=%20%5Cmu_%7Bt%7Ct%7D%20+%20B_t%20%5C,%20%20%7B%5Cleft(%20%5Cmu_%7Bt+1%7CT%7D%20-%20%5Cmu_%7Bt+1%7Ct%7D%20%5Cright)%7D%20%5C%5C%0AP_%7Bt%7CT%7D%0A&amp;=%0AP_%7Bt%7Ct%7D%20+%20B_t%20%20%7B%5Cleft(%20%20P_%7Bt+1%7CT%7D%20-%20P_%7Bt+1%7Ct%7D%20%20%5Cright)%7D%20%20B%5E%5Ctop_%7Bt%7D%0A%5Cend%7Baligned%7D%0A%5Cright.%0A%5Ctag%7B1%7D"></span></p>
-<p>and allows one to compute the smoothing means and covariances matrices <img src="https://latex.codecogs.com/png.latex?(%5Cmu_%7Bt%7CT%7D,%20P_%7Bt%7CT%7D)"> for <img src="https://latex.codecogs.com/png.latex?1%20%5Cleq%20t%20%5Cleq%20T"> starting from the knowledge of <img src="https://latex.codecogs.com/png.latex?(%5Cmu_%7BT%7CT%7D,%20P_%7BT%7CT%7D)">. In Equation&nbsp;1, the <strong>smoothing gain matrix</strong> <img src="https://latex.codecogs.com/png.latex?B_t"> is given by</p>
-<p><span id="eq-B-cond"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AB_t%20&amp;=%0A%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(X_t,%20X_%7Bt+1%7D%20%5C,%20%7C%20y_%7B1:t%7D)%20%5C,%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D(X_%7Bt+1%7D%20%5C,%20%7C%20y_%7B1:t%7D)%5E%7B-1%7D%20%5C%5C%0A&amp;=%0AP_%7Bt%7Ct%7D%20F%5E%5Ctop%20%5C,%20%20%7B%5Cleft(%20F%20%5C,%20P_%7Bt%7Ct%7D%20%5C,%20F%5E%5Ctop%20+%20Q%20%5Cright)%7D%20%5E%7B-1%7D.%0A%5Cend%7Balign%7D%0A%5Ctag%7B2%7D"></span></p>
-<p><a href="../../notes/Gaussian_Assimilation/gaussian_assimilation.html">The Ensemble Kalman Filter</a> (EnKF) is a non-linear equivalent of the Kalman filter, and the purpose of these notes is to derive the equivalent “ensemble version” of the backward recursion Equation&nbsp;1. For this purpose, it is important to understand slightly better the role of the smoothing gain matrix <img src="https://latex.codecogs.com/png.latex?B_t">. Consider the pair of random variable <img src="https://latex.codecogs.com/png.latex?(X%5Ef_t,%20X%5Ep_%7Bt+1%7D)"> distributed according to the joint distribution between the filtering distribution at time <img src="https://latex.codecogs.com/png.latex?t"> and the predictive distribution at time <img src="https://latex.codecogs.com/png.latex?t+1"> in the sense that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A(X%5Ef_t,%20X%5Ep_t)%20%5C;%20%5Cunderbrace%7B=%7D_%7B%5Ctext%7B(law)%7D%7D%5C;%20(X_t,%20X_%7Bt+1%7D%20%5C,%20%5Cmid%20%5C,%20y_%7B1:t%7D).%0A"></p>
-<p>This means that <img src="https://latex.codecogs.com/png.latex?X%5Ef_t%20%5Csim%20%5Cmathcal%7BN%7D(%5Cmu_%7Bt%7Ct%7D,%20P_%7Bt%7Ct%7D)"> and <img src="https://latex.codecogs.com/png.latex?X%5Ep_%7Bt+1%7D%20%5Csim%20%5Cmathcal%7BN%7D(%5Cmu_%7Bt+1%7Ct%7D,%20P_%7Bt+1%7Ct%7D)"> and <img src="https://latex.codecogs.com/png.latex?X%5Ep_t%20=%20F%20%5C,%20X%5Ef_t%20+%20%5Cmathcal%7BN%7D(0,%20Q)">. Furthermore, Equation&nbsp;2 and the standard <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Conditional_distributions">gaussian conditional probabilities</a> formulas give that the conditional means and covariances are given by</p>
-<p><span id="eq-gauss-cond"><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0A%5Ctextrm%7BMean%7D%20%7B%5Cleft(%20X%5Ef_t%20%7C%20(X%5Ep_%7Bt+1%7D=x_%7Bt+1%7D)%20%5Cright)%7D%20%20%0A%5C;%20&amp;=%20%5C;%0A%5Cmu_%7Bt%7Ct%7D%20+%20B_t%20(x_%7Bt+1%7D%20-%20%5Cmu_%7Bt+1%7Ct%7D)%20%5C%5C%0A%5Ctextrm%7BCov%7D%20%7B%5Cleft(%20X%5Ef_t%20%7C%20(X%5Ep_%7Bt+1%7D=x_%7Bt+1%7D)%20%5Cright)%7D%20%20%0A%5C;%20&amp;=%20%5C;%0AP_%7Bt%7Ct%7D%20-%20B_t%20%5C,%20P_%7Bt+1%7Ct%7D%20%5C,%20B_t%5E%5Ctop.%0A%5Cend%7Balign%7D%0A%5Cright.%0A%5Ctag%7B3%7D"></span></p>
-<p>The above expression for the conditional mean also shows that the matrix <img src="https://latex.codecogs.com/png.latex?B_t"> is a minimizer of the loss</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AM%20%5C;%20%5Cmapsto%20%5C;%0A%5Cmathbb%7BE%7D%20%7B%5Cleft(%20%20%5Cleft%5C%7C%20(X%5Ef_t%20-%20%5Cmu_%7Bt%7Ct%7D)%20-%20B%20(X%5Ep_%7Bt+1%7D%20-%20%5Cmu_%7Bt+1%7Ct%7D)%20%5Cright%5C%7C%5E2%20%20%5Cright)%7D%0A"></p>
-<p>over all matrices <img src="https://latex.codecogs.com/png.latex?M%20%5Cin%20%5Cmathbb%7BR%7D%5E%7BD_x,%20D_x%7D">. Heuristically, this shows that the smoothing gain matrix <img src="https://latex.codecogs.com/png.latex?B_t"> can easily be computed by <strong>regressing</strong> <img src="https://latex.codecogs.com/png.latex?X%5Ef_t"> against <img src="https://latex.codecogs.com/png.latex?X%5Ep_%7Bt+1%7D">. We can use this remark to build an ensemble version of the backward recursion Equation&nbsp;1. Recall that when running a EnKF for filtering the observations <img src="https://latex.codecogs.com/png.latex?y_%7B1:T%7D">, the final stage proceeds in two steps:</p>
-<ol type="1">
-<li>Obtain an ensemble of particles <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,p%7D_%7BT%7D%20=%20F%20%5C,%20X%5E%7Bi,f%7D_%7BT-1%7D%20+%20%5Cmathcal%7BN%7D(0,Q)"> that approximate the predictive distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_T%20%7C%20y_%7B1:T-1%7D)">.<br>
-</li>
-<li><a href="../../notes/Gaussian_Assimilation/gaussian_assimilation.html">Assimilate</a> the last observation <img src="https://latex.codecogs.com/png.latex?y_T"> using the Kalman gain matrix <img src="https://latex.codecogs.com/png.latex?K_T"> and the correction <img src="https://latex.codecogs.com/png.latex?%5CDelta_T%5Ei%20=%20K_T%20%5C,%20(%5Ctilde%7By%7D_%7Bi,%5Cstar%7D%20-%20H%20%5C,%20X%5E%7Bi,p%7D_T)"> by setting <span id="eq-pred-perturb"><img src="https://latex.codecogs.com/png.latex?%0AX%5E%7Bi,s%7D_T%20=%20X%5E%7Bi,p%7D_T%20+%20%5CDelta_T%5Ei.%0A%5Ctag%7B4%7D"></span> The particles <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,s%7D_T"> approximate the smoothing distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_T%20%7C%20y_%7B1:T%7D)">.</li>
-</ol>
-<p>Following our discussion of the smoothing gain matrix <img src="https://latex.codecogs.com/png.latex?B_%7Bt%7D"> and Equation&nbsp;4, it seems sensible to set</p>
-<p><span id="eq-rec-ens"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AX%5E%7Bi,s%7D_%7BT-1%7D%0A&amp;=%20X%5E%7Bi,f%7D_%7BT-1%7D%20+%20B_%7BT-1%7D%20%5C,%20%5CDelta%5Ei_T%5C%5C%0A&amp;=%20X%5E%7Bi,f%7D_%7BT-1%7D%20+%20B_%7BT-1%7D%20%5C,%20(X%5E%7Bi,s%7D_%7BT%7D%20-%20X%5E%7Bi,p%7D_%7BT%7D)%0A%5Cend%7Balign%7D%0A%5Ctag%7B5%7D"></span></p>
-<p>and hope that the ensemble of updated particles <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,s%7D_%7BT-1%7D"> approximate the smoothing distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_%7BT-1%7D%20%7C%20y_%7B1:T%7D)">. In words, the particle <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,s%7D_%7BT-1%7D"> is obtained by “pulling” the correction term <img src="https://latex.codecogs.com/png.latex?%5CDelta%5Ei_%7BT%7D%20=%20X%5E%7Bi,s%7D_%7BT%7D%20-%20X%5E%7Bi,p%7D_%7BT%7D"> back to <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,f%7D_%7BT-1%7D"> through the “regression” smoothing gain matrix <img src="https://latex.codecogs.com/png.latex?B_%7BT-1%7D">. To check that the particles <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,s%7D_%7BT-1%7D"> indeed approximate the smoothing distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_%7BT-1%7D%20%5C,%7Cy_%7B1:T%7D)">, it suffices to compute the mean/variance and verify that they are matching the one given by Equation&nbsp;1. Recall that Equation&nbsp;3 gives that the filtering/predictive distributions satisfy</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AX%5Ef_%7BT-1%7D%20=%20%5Cmu_%7BT-1%7CT-1%7D%20+%20B_%7BT-1%7D%20%5C,%20(X%5Ep_%7BT%7D%20-%20%5Cmu_%7BT%7CT-1%7D)%20+%20%5Cvarepsilon_t%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon_t%20%5Csim%20%5Cmathcal%7BN%7D(0,%20P_%7BT-1%7CT-1%7D%20-%20B_%7BT-1%7D%20%5C,%20P_%7BT%7CT-1%7D%20%5C,%20B_%7BT-1%7D%5E%5Ctop)"> is independent from all other sources of randomness. Plugging this into Equation&nbsp;5 gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AX%5E%7Bi,s%7D_%7BT-1%7D%0A=%0A%5Cmu_%7BT-1%7CT-1%7D%20+%20B_%7BT-1%7D%20%5C,%20(X%5E%7Bi,s%7D_%7BT%7D%20-%20%5Cmu_%7BT%7CT-1%7D)%20+%20%5Cvarepsilon_t.%0A"></p>
-<p>Since the <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,s%7D_%7BT%7D"> are distributed according to the smoothing distribution, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,s%7D_%7BT%7D%20%5Csim%20%5Cmathcal%7BN%7D(%5Cmu_%7BT%7CT%7D,%20P_%7BT%7CT%7D)">, this immediately shows that <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,s%7D_%7BT-1%7D"> is Gaussian with</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0A%5Ctextrm%7BMean%7D%20&amp;=%20%5Cmu_%7BT-1%7CT%7D%20=%20%5Cmu_%7BT-1%7CT-1%7D%20+%20B_%7BT-1%7D%20%5C,%20%20%7B%5Cleft(%20%5Cmu_%7BT%7CT%7D%20-%20%5Cmu_%7BT%7CT-1%7D%20%5Cright)%7D%20%5C%5C%0A%5Ctextrm%7BCovariance%7D%20&amp;=%20P_%7BT-1%7CT%7D%20=%20P_%7BT-1%7CT-1%7D%20+%20B_%7BT-1%7D%20%20%7B%5Cleft(%20%20P_%7BT%7CT%7D%20-%20P_%7BT%7CT-1%7D%20%20%5Cright)%7D%20%20B%5E%5Ctop_%7BT-1%7D,%0A%5Cend%7Balign%7D%0A%5Cright.%0A"></p>
-<p>as it should. One can then iterate this construction to obtain particle approximations of the smoothing distributions <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_t%20%7C%20y_%7B1:T%7D)"> for <img src="https://latex.codecogs.com/png.latex?1%20%5Cleq%20t%20%5Cleq%20T"> by running a backward pass and recursively setting</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AX%5E%7Bi,s%7D_t%20%5C;%20=%20%5C;%20X%5E%7Bi,f%7D_t%20+%20B_t%20%5C,%20%20%7B%5Cleft(%20X%5E%7Bi,s%7D_%7Bt+1%7D%20-%20X%5E%7Bi,p%7D_%7Bt+1%7D%20%5Cright)%7D%20.%0A"></p>
-<p>The ensemble of particles <img src="https://latex.codecogs.com/png.latex?X%5E%7Bi,s%7D_t"> approximates the smoothing distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_t%20%7C%20y_%7B1:T%7D)">. In a nonlinear setting, it suffices to approximate the smoothing gain matrices with</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cwidehat%7BB%7D_t%20=%20%5Cmathop%7B%5Cmathrm%7BCov%7D%7D%20%7B%5Cleft(%20%20x%5Ef_%7Bt,i%7D,%20x%5Ep_%7Bt+1,i%7D%20%20%5Cright)%7D%20%20%5C,%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D%20%7B%5Cleft(%20%20x%5Ep_%7Bt+1,i%7D%20%20%5Cright)%7D%20%5E%7B-1%7D.%0A"></p>
-<p>[Experiments: TODO]</p>
-
-
-
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
-<div id="ref-rauch1965maximum" class="csl-entry">
-Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likelihood Estimates of Linear Dynamic Systems.”</span> <em>AIAA Journal</em> 3 (8): 1445–50.
-</div>
-</div></section></div> ]]></description>
-  <category>enkf</category>
-  <category>data-assimilation</category>
-  <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</guid>
-  <pubDate>Fri, 17 Nov 2023 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Asymptotic variance &amp; Poisson Equation</title>
-  <link>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/poisson_eq.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
-</figure>
-</div>
-</div>
-<p>Consider a continuous time Markov process <img src="https://latex.codecogs.com/png.latex?X_t"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED"> that is ergodic with respect to the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)">. A Langevin diffusion is a typical example. Call <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> the generator of this process so that for a test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D"> we have</p>
-<p><span id="eq-martingale"><img src="https://latex.codecogs.com/png.latex?%0A%5Cvarphi(X_t)%20=%20%5Cvarphi(X_0)%20+%20%5Cint_%7Bs=0%7D%5Et%20%5Cmathcal%7BL%7D%5Cvarphi(X_s)%20%5C,%20ds%20+%20%5Ctextrm%7B($M_t%20%5Cequiv$%20martingale)%7D.%0A%5Ctag%7B1%7D"></span></p>
-<p>Now, assume further that <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D_%7B%5Cpi%7D%5B%5Cvarphi(X)%5D%20=%200"> and that a Central Limit Theorem holds,</p>
-<p><span id="eq-CLT"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B1%7D%7B%5Csqrt%7BT%7D%7D%20%5Cint_%7Bs=0%7D%5ET%20%5Cvarphi(X_s)%20%5C,%20ds%20%5C;%20%5Cto%20%5C;%20%5Cmathcal%7BN%7D(0,%20%5Csigma%5E2).%0A%5Ctag%7B2%7D"></span></p>
-<p>How can one estimate the asymptotic variance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2">?</p>
-<section id="approach-i-integrated-autocovariance" class="level3">
-<h3 class="anchored" data-anchor-id="approach-i-integrated-autocovariance">Approach I: Integrated autocovariance</h3>
-<p>One can directly try to compute the second moment of Equation&nbsp;2 and obtain that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%20%5C;%20=%20%5C;%20%5Clim_%7BT%20%5Cto%20%5Cinfty%7D%20%5C;%0A%5Cfrac%7B1%7D%7BT%7D%20%5C,%20%5Ciint_%7B0%20%5Cleq%20s,t%20%5Cleq%20T%7D%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X_s)%20%5Cvarphi(X_t)%5D%20%5C,%20ds%20%5C,%20dt%0A"></p>
-<p>Since <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5B%5Cvarphi(X_s)%20%5Cvarphi(X_t)%5D"> falls quickly to zero as <img src="https://latex.codecogs.com/png.latex?%7Cs-t%7C%20%5Cto%200"> and defining the auto-covariance at lag <img src="https://latex.codecogs.com/png.latex?r%20%3E%200"> as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AC(r)%20=%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X_t)%20%5Cvarphi(X_%7Bt+r%7D)%5D,%0A"></p>
-<p>one obtains that an expression of the asymptotic as the integrated autocovariance function,</p>
-<p><span id="eq-autocov"><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%20%5C;%20=%20%5C;%202%20%5C,%20%5Cint_%7Br=0%7D%5E%5Cinfty%20C(r)%20%5C,%20dr.%0A%5Ctag%7B3%7D"></span></p>
-<p>In the MCMC literature, this relation is often expressed as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%20%5C;%20=%20%5C;%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D_%7B%5Cpi%7D%5B%5Cvarphi%5D%20%5C,%20%5Ctimes%20%5C,%20%5Ctextrm%7B(IACT)%7D%0A"></p>
-<p>where the <strong>integrated autocorrelation</strong> function is defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextrm%7B(IACT)%7D%20=%202%20%5C,%20%5Cint_%7Br=0%7D%5E%5Cinfty%20%5Crho(r)%20%5C,%20dr.%0A"></p>
-<p>for autocorrelation at lag <img src="https://latex.codecogs.com/png.latex?r%5Cgeq%200"> defined as <img src="https://latex.codecogs.com/png.latex?%5Crho(r)%20%5Cequiv%20%5Cmathop%7B%5Cmathrm%7BCorr%7D%7D%5B%5Cvarphi(X_t),%20%5Cvarphi(X_%7Bt+r%7D)%5D">. The slower the autocorrelation function <img src="https://latex.codecogs.com/png.latex?%5Crho(r)"> falls to zero as <img src="https://latex.codecogs.com/png.latex?r%20%5Cto%20%5Cinfty">, the larger the asymptotic variance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2">. Although Equation&nbsp;3 is very intuitive, it can be difficult to estimate the autocorrelation function.</p>
-</section>
-<section id="approach-ii-poisson-equation" class="level3">
-<h3 class="anchored" data-anchor-id="approach-ii-poisson-equation">Approach II: Poisson Equation</h3>
-<p>Under relatively general and mild conditions, since the expectation of <img src="https://latex.codecogs.com/png.latex?%5Cvarphi"> under the invariant distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi"> is zero and the Markov process is ergodic with respect to <img src="https://latex.codecogs.com/png.latex?%5Cpi">, there exists a function <img src="https://latex.codecogs.com/png.latex?%5CPhi:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D"> such that</p>
-<p><span id="eq-poisson"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5CPhi%20%5C;%20=%20%5C;%20%5Cvarphi.%0A%5Ctag%7B4%7D"></span></p>
-<p>Equation&nbsp;4 is called a <a href="https://en.wikipedia.org/wiki/Poisson%27s_equation">Poisson Equation</a> since <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> is often a Laplacian-like operator (eg. diffusion-type processes). Equation&nbsp;1 gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B1%7D%7B%5Csqrt%7BT%7D%7D%20%5Cint_%7Bs=0%7D%5ET%20%5Cvarphi(X_s)%20%5C,%20ds%0A%5C;%20=%20%5C;%0A%5Cfrac%7BM_T%7D%7B%5Csqrt%7BT%7D%7D%20+%20%20%7B%5Cleft%5C%7B%20%20%5Cfrac%7B%5CPhi(X_T)%20-%20%5CPhi(X_0)%7D%7B%5Csqrt%7BT%7D%7D%20%20%5Cright%5C%7D%7D%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?M_T"> is the martingale and <img src="https://latex.codecogs.com/png.latex?%5B%5CPhi(X_T)%20-%20%5CPhi(X_0)%5D/%5Csqrt%7BT%7D"> typically vanishes as <img src="https://latex.codecogs.com/png.latex?T%20%5Cto%20%5Cinfty"> and can be neglected. For computing the asymptotic variance, it suffices to estimate <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D(M_T%5E2)">. And using the martingale property, it equals <img src="https://latex.codecogs.com/png.latex?%5Cint_%7Bs=0%7D%5ET%20%5Cmathbb%7BE%7D(dM_t)%5E2">. Also, since <img src="https://latex.codecogs.com/png.latex?M_t%20=%20%5Cvarphi(X_t)%20-%20%5Cvarphi(X_0)%20-%20%5Cint_%7Bs=0%7D%5Et%20%5Cmathcal%7BL%7D%5Cvarphi(X_s)%20%5C,%20ds">, algebra gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B1%7D%7B%5Cvarepsilon%7D%20%5C,%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20(M_%7Bt+%5Cvarepsilon%7D%20-%20M_t)%5E2%20%20%5Cright%5D%7D%20%20%5Capprox%202%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20(%5CGamma%20%5CPhi)(X_t)%20%20%5Cright%5D%7D%0A"></p>
-<p>where the so-called <strong>carré du champ</strong> <img src="https://latex.codecogs.com/png.latex?(%5CGamma%20%5CPhi)"> is defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A2%20%5C,%20(%5CGamma%20%5CPhi)(X_t)%0A%5C;%20=%20%5C;%20%20%7B%5Cleft(%20%20%5Cmathcal%7BL%7D(%5CPhi%5E2)%20-%202%20%5CPhi%20%5Cmathcal%7BL%7D%5CPhi%20%5Cright)%7D%20(X_t)%0A%5C;%20=%20%5C;%20%5Clim_%7B%5Cvarepsilon%5Cto%200%7D%20%5C;%20%5Cfrac%7B1%7D%7B%5Cvarepsilon%7D%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D(%5CPhi(X_%7Bt+%5Cvarepsilon%7D)%20%5C,%20%7C%20%5C,%20X_t).%0A"></p>
-<p>This shows that the asymptotic variance satisfies</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%0A%5C;%20=%20%5C;%0A%5Clim_%7BT%20%5Cto%20%5Cinfty%7D%20%5Cfrac%7B2%7D%7BT%7D%20%5Cint_%7Bs=0%7D%5ET%20%5CGamma%20%5CPhi(X_s)%20%5C,%20ds%0A%5C;%20=%20%5C;%0A2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5CGamma%20%5CPhi(x)%20%5C,%20%5Cpi(dx).%0A"></p>
-<p>Finally, since <img src="https://latex.codecogs.com/png.latex?%5Cint%20(%5Cmathcal%7BL%7D%5CPhi%5E2)(x)%20%5C,%20%5Cpi(dx)%20=%200">, this can equivalently be written as</p>
-<p><span id="eq-asymp-var-poisson"><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%0A%5C;%20=%20%5C;%0A-2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5CPhi(x)%20%5C,%20%5Cmathcal%7BL%7D%5CPhi(x)%20%5C,%20%5Cpi(dx)%0A%5C;%20=%20%5C;%202%20%5C,%20%5Cmathcal%7BD%7D(%5CPhi)%0A%5Ctag%7B5%7D"></span></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D(%5CPhi)"> is the so-called Dirichlet form. In summary, we have just shown that the asymptotic variance of the additive functional <img src="https://latex.codecogs.com/png.latex?T%5E%7B-1/2%7D%20%5C,%20%5Cint_0%5ET%20%5Cvarphi(X_s)%20%5C,%20ds"> is given by two times the Dirichlet form <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D(%5CPsi)"> where <img src="https://latex.codecogs.com/png.latex?%5CPhi"> is solution to the Poisson equation <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5CPhi%20=%20%5Cvarphi">. Note that this implies that the generator <img src="https://latex.codecogs.com/png.latex?%5CPhi"> is a negative operator in the sense that for a test function <img src="https://latex.codecogs.com/png.latex?%5CPhi"> we have that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%3C%20%5CPhi,%20%5Cmathcal%7BL%7D%5CPhi%20%5Cright%3E_%7B%5Cpi%7D%20%5C;%20%5Cleq%20%5C;%200%0A"></p>
-<p>where we have used the dot-product notation <img src="https://latex.codecogs.com/png.latex?%5Cleft%3C%20f,g%20%5Cright%3E_%7B%5Cpi%7D%20=%20%5Cint%20f(x)%20g(x)%20%5Cpi(dx)">.</p>
-</section>
-<section id="poisson-equation-integral-representation" class="level3">
-<h3 class="anchored" data-anchor-id="poisson-equation-integral-representation">Poisson equation: Integral representation</h3>
-<p>It is often useful to think of the generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> as an infinite dimensional equivalent of a standard negative definite symmetric matrix/operator <img src="https://latex.codecogs.com/png.latex?M%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bn,n%7D">. And since <img src="https://latex.codecogs.com/png.latex?M%5E%7B-1%7D%20=%20-%5Cint_%7Bt=0%7D%5E%7B%5Cinfty%7D%20%5Cexp(tM)%20%5C,%20dt">, as can be seen by diagonalizing <img src="https://latex.codecogs.com/png.latex?M">, one can expect the following equation to hold,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B-1%7D%20%5C;%20=%20%5C;%20-%5Cint_%7Bt=0%7D%5E%7B%5Cinfty%7D%20e%5E%7Bt%20%5C,%20%5Cmathcal%7BL%7D%7D%20%5C,%20dt.%0A"></p>
-<p>That is just another way of writing that the solution <img src="https://latex.codecogs.com/png.latex?%5CPhi"> to the Poisson equation <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5CPhi%20=%20%5Cvarphi">, with the <strong>centering condition</strong> <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D_%7B%5Cpi%7D%5B%5CPhi(X)%5D=0"> for picking one solution out of the many possible solutions to the Poisson equation differing from each other by an additive constant, can be expressed as</p>
-<p><span id="eq-expansion"><img src="https://latex.codecogs.com/png.latex?%0A%5CPhi(x)%20%5C,%20=%20%5C,%20-%5Cint_%7Bt=0%7D%5E%7B%5Cinfty%7D%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X_t)%7CX_0=x%5D%20%5C,%20dt.%0A%5Ctag%7B6%7D"></span></p>
-<p>Equation&nbsp;6 is easily proved with Equation&nbsp;1 by writing</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5CPhi(x)-%5CPhi(X_T)%20=%20-%5Cint_%7Bt=0%7D%5E%5Cinfty%20%5Cvarphi(X_t)%20%5C,%20dt%20+%20%5Ctextrm%7B(martingale)%7D%0A"></p>
-<p>and by taking expectation from both sides and noticing that <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5B%5CPhi(X_T)%5D%20%5Cto%200"> thanks to the assumed centering condition <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D_%7B%5Cpi%7D%5B%5CPhi(X)%5D=0">. Note that this remarks allows to give another derivation of Equation&nbsp;5 starting from the integrated autocovariance formulation Equation&nbsp;3. Indeed, note that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Csigma%5E2%20&amp;=%202%20%5C,%20%5Cint_%7Br=0%7D%5E%7B%5Cinfty%7D%20C(r)%20%5C,%20dr%5C%5C%0A&amp;=%0A2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5Cvarphi(x)%20%20%7B%5Cleft%5C%7B%20%20%5Cint_%7Br=0%7D%5E%7B%5Cinfty%7D%20%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X_t)%20%7C%20X_0=x%5D%20%5C,%20dr%20%20%5Cright%5C%7D%7D%20%20%5C,%20%5Cpi(dx)%5C%5C%0A&amp;=%0A-2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5Cvarphi(x)%20%5CPhi(x)%20%5C,%20%5Cpi(dx)%0A=%0A-2%20%5Cleft%3C%20%5CPhi,%20%5Cmathcal%7BL%7D%5CPhi%20%5Cright%3E_%7B%5Cpi%7D.%0A%5Cend%7Balign%7D%0A"></p>
-</section>
-<section id="example-ou-process" class="level3">
-<h3 class="anchored" data-anchor-id="example-ou-process">Example: OU process</h3>
-<p>Consider a OU process that is ergodic with respect to the standard Gaussian density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%20=%20e%5E%7B-x%5E2/2%7D%20/%20%5Csqrt%7B2%5Cpi%7D">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%0A%5C;%20=%20%5C;%0A-%5Cvarepsilon%5E%7B-1%7DX%20%5C,%20dt%20+%20%5Csqrt%7B2%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%7D%20%5C,%20dW.%0A"></p>
-<p>That’s a standard OU process accelerated by a factor <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1%7D%20%3E%200">. Its generator reads</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5C,%20=%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%20%5B-x%20%5C,%20%5Cpartial_x%20+%20%5Cpartial_%7Bxx%7D%5D.%0A"></p>
-<p>The function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi(x)=x"> is such that <img src="https://latex.codecogs.com/png.latex?%5Cpi(%5Cvarphi)=0"> and a solution to the Poisson equation <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5CPhi%20=%20%5Cvarphi"> is <img src="https://latex.codecogs.com/png.latex?%5CPhi(x)%20=%20-%5Cvarepsilon%5C,%20x">. This shows that the asymptotic variance is</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%0A%5C;%20=%20%5C;%0A2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5Cvarepsilon%20x%5E2%20%5C,%20%5Cpi(dx)%20%5C;%20=%20%5C;%202%20%5Cvarepsilon.%0A"></p>
-<p>As expected, accelerating the OU process by a factor <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1%7D"> means reducing the variance by a factor <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon">.</p>
-
-
-</section>
-
- ]]></description>
-  <category>markov</category>
-  <guid>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</guid>
-  <pubDate>Fri, 10 Nov 2023 16:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
