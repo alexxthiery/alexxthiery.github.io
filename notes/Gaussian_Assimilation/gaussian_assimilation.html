@@ -232,19 +232,19 @@ window.Quarto = {
 
 <section id="ensemble-kalman-updates" class="level2">
 <h2 class="anchored" data-anchor-id="ensemble-kalman-updates">Ensemble Kalman Updates</h2>
-<p>Assume a prior Gaussian prior distribution <span class="math inline">\(\pi_0 \equiv \mathcal{N}(m_0,P_0)\)</span> and a noisy observation <span class="math inline">\(y_\star \in \mathbb{R}^{D_y}\)</span> with</p>
+<p>Assume a prior Gaussian prior distribution <span class="math inline">\(\pi_0 \equiv \mathcal{N}(m_x,P_x)\)</span> and a noisy observation <span class="math inline">\(y_\star \in \mathbb{R}^{D_y}\)</span> with</p>
 <p><span class="math display">\[
 y_\star = H x + \xi
 \qquad \text{with} \qquad
 \xi \sim \mathcal{N}(0,R)
 \]</span></p>
-<p>where <span class="math inline">\(x \in \mathbb{R}^{D_x}\)</span> is an unknown quantity of interest. The posterior distribution <span class="math inline">\(\pi \equiv \mathcal{N}(m,P)\)</span> is Gaussian and is given by</p>
+<p>where <span class="math inline">\(x \in \mathbb{R}^{D_x}\)</span> is an unknown quantity of interest. The posterior distribution <span class="math inline">\(\pi \equiv \mathcal{N}(m^{a}_x,P^{a}_x)\)</span> is Gaussian and is given by</p>
 <p><span class="math display">\[
 \begin{align}
 \left\{
 \begin{aligned}
-m &amp;= m_0 + P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}(y_\star - H m)\\
-P &amp;= P_0 - P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1} \, H P_0,
+m_x^{a} &amp;= m_x + P_x H^\top  {\left( H P_x H^\top + R \right)} ^{-1}(y_\star - H m_x)\\
+P_x^{a} &amp;= P_x - P_x H^\top  {\left( H P_x H^\top + R \right)} ^{-1} \, H P_x,
 \end{aligned}
 \right.
 \end{align}
@@ -254,40 +254,40 @@ P &amp;= P_0 - P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1} \, H P_0,
 \begin{align}
 \left\{
 \begin{aligned}
-m &amp;= m_0 + K \, (y_\star - H m_0)\\
-P &amp;= (I - K \, H) P_0,
+m_x^{a &amp;= m_x + K \, (y_\star - H m_x)\\
+P_x^{a &amp;= (I - K \, H) P_x,
 \end{aligned}
 \right.
 \end{align}
 \]</span></p>
 <p>for <strong><a href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman</a> Gain Matrix</strong> <span class="math inline">\(K \in \mathbb{R}^{D_x,D_y}\)</span> defined as</p>
 <p><span id="eq-kalman"><span class="math display">\[
-K \; = \; P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}.
+K \; = \; P_x H^\top  {\left( H P_x H^\top + R \right)} ^{-1}.
 \tag{1}\]</span></span></p>
 <p>which can also be expressed as</p>
 <p><span class="math display">\[
-K \; = \; \mathop{\mathrm{Cov}}(X, HX) \, \mathop{\mathrm{Var}}(Y)^{-1}.
+K \; = \; P_{xy} \, P_y^{-1}.
 \]</span></p>
-<p>for <span class="math inline">\(X \sim \pi_0\)</span> and <span class="math inline">\(Y = HX + \mathcal{N}(0,R)\)</span>; this point of view can be a useful for establishing generalization to non-linear scenarios. The important remark is that the posterior covariance matrix <span class="math inline">\(P \in \mathbb{R}^{D_x,D_x}\)</span> and the posterior mean <span class="math inline">\(m \in \mathbb{R}^{D_x}\)</span> can also be expressed as</p>
+<p>for <span class="math inline">\(X \sim \pi_0\)</span> and <span class="math inline">\(Y = HX + \mathcal{N}(0,R)\)</span>; this point of view can be a useful for establishing generalization to non-linear scenarios. The important remark is that the posterior covariance matrix <span class="math inline">\(P_x^{a} \in \mathbb{R}^{D_x,D_x}\)</span> and the posterior mean <span class="math inline">\(m^{a}_x \in \mathbb{R}^{D_x}\)</span> can also be expressed as</p>
 <p><span id="eq-gain"><span class="math display">\[
 \begin{align}
 \left\{
 \begin{aligned}
-m &amp;=  \textcolor{red}{(I - K \, H)} \, m_0 +  \textcolor{blue}{K} \, y_\star\\
-P &amp;= \;  \textcolor{red}{(I - K \, H)} \, P_0 \,  \textcolor{red}{(I - K \, H)^\top} +  \textcolor{blue}{K} R  \textcolor{blue}{K^\top}.
+m_x^{a} &amp;=  \textcolor{red}{(I - K \, H)} \, m_x +  \textcolor{blue}{K} \, y_\star\\
+P_x^{a} &amp;= \;  \textcolor{red}{(I - K \, H)} \, P_x \,  \textcolor{red}{(I - K \, H)^\top} +  \textcolor{blue}{K} R  \textcolor{blue}{K^\top}.
 \end{aligned}
 \right.
 \end{align}
 \tag{2}\]</span></span></p>
-<p>This shows that <span class="math inline">\(P\)</span> is indeed positive semi-definite. More importantly, this gives a mechanism for transforming samples from the prior distributions into samples from the posterior distributions. Indeed, consider <span class="math inline">\(N\)</span> iid samples from the prior distribution, <span class="math inline">\(x_1, \ldots, x_N \sim \pi_0(dx)\)</span>, and set</p>
+<p>This shows that <span class="math inline">\(P\)</span> is indeed positive semi-definite. More importantly, this gives a mechanism for transforming samples from the prior distributions into samples from the posterior distributions. This step is often referred to as the <strong>assimilation</strong> step in the data-assimilation literature. Indeed, consider <span class="math inline">\(N\)</span> iid samples from the prior distribution, <span class="math inline">\(x_1, \ldots, x_N \sim \pi_0(dx)\)</span>. Define the “assimilated” samples as:</p>
 <p><span class="math display">\[
-\widetilde{x}_i
+x^{a}_i
 =
 \textcolor{red}{(I - K \, H)} \, x_i +  \textcolor{blue}{K}(y_\star - \xi_i)
 \]</span></p>
-<p>for iid noise terms <span class="math inline">\(\xi_i \sim \mathcal{N}(0,R)\)</span>. From <a href="#eq-gain" class="quarto-xref">Equation&nbsp;2</a> it is clear that <span class="math inline">\(\widetilde{x}_1, \ldots, \widetilde{x}_N\)</span> are iid samples from the Gaussian posterior distribution <span class="math inline">\(\pi = \mathcal{N}(m,P)\)</span>. It is more intuitive to write this as</p>
+<p>for iid noise terms <span class="math inline">\(\xi_i \sim \mathcal{N}(0,R)\)</span>. From <a href="#eq-gain" class="quarto-xref">Equation&nbsp;2</a> it is clear that <span class="math inline">\(x^{a}_1, \ldots, x^{a}_N\)</span> are iid samples from the Gaussian posterior distribution <span class="math inline">\(\pi = \mathcal{N}(m_x^{a},P_x^{a})\)</span>. It is more intuitive to write this as</p>
 <p><span class="math display">\[
-\widetilde{x}_i
+x^{a}_i
 =
 x_i + K \, (y_\star -   \textcolor{green}{ y_{i} } )
 \]</span></p>
@@ -305,17 +305,21 @@ y_\star = \mathcal{H}(x) + \xi
 \]</span></p>
 <p>and possibly-nonlinear observation operator <span class="math inline">\(\mathcal{H}: \mathbb{R}^{D_x} \to \mathbb{R}^{D_y}\)</span>. Assume that we also have <span class="math inline">\(N\)</span> samples <span class="math inline">\(x_1, \ldots, x_N\)</span> generated from some (unkown) prior distribution. For example, these samples could come from another numerical procedure. In order to obtain <span class="math inline">\(N\)</span> approximate samples from the posterior distribution, one can set</p>
 <p><span class="math display">\[
-\widetilde{x}_i
+x^{a}_i
 =
 x_i + \widehat{K} \, [ y_{\star} -  \textcolor{green}{y_i} ]
 \]</span></p>
-<p>for fake observations <span class="math inline">\( \textcolor{green}{y_{i} = \mathcal{H}(x_i) + \xi_i}\)</span>. The approximate Kalman gain matrix <span class="math inline">\(\widehat{K}\)</span> is obtained by noting that in <a href="#eq-kalman" class="quarto-xref">Equation&nbsp;1</a> giving</p>
+<p>for fake observations <span class="math inline">\( \textcolor{green}{y_{i} = \mathcal{H}(x_i) + \xi_i}\)</span>. The approximate Kalman gain matrix <span class="math inline">\(\widehat{K}\)</span> is obtained by noting that the Kalman gain matrix,</p>
 <p><span class="math display">\[
-K \; = \; P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}
+K \; = \; P_x H^\top  {\left( H P_x H^\top + R \right)} ^{-1},
 \]</span></p>
-<p>we have <span class="math inline">\(P_0 H^\top = \mathop{\mathrm{Cov}}(X,HX)\)</span> and <span class="math inline">\(H P_0 H^\top = \mathop{\mathrm{Var}}(HX)\)</span> for <span class="math inline">\(X \sim \pi_0\)</span>. This means that an approximate Kalman matrix can be obtained using empirical estimates of these covariance matrices:</p>
+<p>is expressed in terms of <span class="math inline">\(P_x H^\top = \mathop{\mathrm{Cov}}(X,HX)\)</span> and <span class="math inline">\(H P_x H^\top = \mathop{\mathrm{Var}}(HX)\)</span> for <span class="math inline">\(X \sim \pi_0\)</span>. This means that an approximate Kalman matrix can be obtained using empirical estimates of these covariance matrices:</p>
 <p><span class="math display">\[
 \widehat{K} \; = \; \widehat{\mathop{\mathrm{Cov}}}([x_i]_i, [\mathcal{H}(x_i)]_i) \,  {\left( \widehat{\mathop{\mathrm{Var}}}([\mathcal{H}(x_i)]_i) + R \right)} ^{-1}.
+\]</span></p>
+<p>or slightly more generally if the noise is not additive and Gaussian,</p>
+<p><span class="math display">\[
+\widehat{K} \; = \; \widehat{P}_{xy} \, \widehat{P}_y^{-1}.
 \]</span></p>
 <p>These updates form the basis of the <a href="https://en.wikipedia.org/wiki/Ensemble_Kalman_filter">Ensemble Kalman filter (EnKF)</a>, and very successful and scalable approach to data-assimilation of high-dimensional dynamical systems. This method is operationally employed across various weather forecasting centers across the globe.</p>
 <div style="text-align:center;">
@@ -326,15 +330,28 @@ K \; = \; P_0 H^\top  {\left( H P_0 H^\top + R \right)} ^{-1}
 </figure>
 </div>
 </div>
+<!-- ### High-dimensional settings
+In high-dimensional settings where $D_x \gg N$, the empirical covariance matrices are of much lower rank than the actual covariance matrices. Furthermore, the empirical covariance matrices are often very noisy with a lot of spurious correlations. This can lead to catastrophic divergence of the EnKF procedure. Furthermore, if not done carefully, the assimilation step can be computationally very expensive.
+
+It is standard to introduce the prior mean vector $\mu_x = (1/N) \sum_{i=1}^N x_i$ and the prior observation mean vector $\mu_y = (1/N) \sum_{i=1}^N \cH(x_i)$, as well as the **scaled anomaly matrices** $X \in \bbR^{D_x,N}$ and $Y \in \bbR^{D_y,N}$ whose columns are the scaled anomalies:
+
+$$
+\left\{
+\begin{align}
+X(:,i) &= (x_i - \mu_x)/\sqrt{N-1}\\
+Y(:,i) &= (\cH(x_i) - \mu_y)/\sqrt{N-1}
+\end{align}
+\right.
+$$  -->
 </section>
 <section id="matherons-rule" class="level3">
 <h3 class="anchored" data-anchor-id="matherons-rule">Matheron’s Rule</h3>
 <p>Consider a jointly Gaussian random vector <span class="math inline">\((X,Y) \in \mathbb{R}^{D_x + D_y}\)</span>. To sample from the conditional distribution <span class="math inline">\(X|Y=y_\star\)</span>, one can sample first sample <span class="math inline">\((X,Y)\)</span> from the unconditional distribution and then set:</p>
 <p><span class="math display">\[
-% \widetilde{X} \; = \; X + \cov(X,Y) \, \var(Y)^{-1} (y_\star - Y).
-\widetilde{X} \; = \; X + C_{XY} \, C_{YY}^{-1} (y_\star - Y).
+% X^{a} \; = \; X + \cov(X,Y) \, \var(Y)^{-1} (y_\star - Y).
+X^{a} \; = \; X + P_{xy} \, P_{yy}^{-1} (y_\star - Y).
 \]</span></p>
-<p>The sample <span class="math inline">\(\widetilde{X}\)</span> is a sample from the conditional distribution <span class="math inline">\(X|Y=y_\star\)</span> and the proof is straightforward: it suffices to compute the first two moments of the Gaussian vector <span class="math inline">\(\widetilde{X}\)</span> and check that they are equal to what they should be. This method is often called the <strong>Matheron’s rule</strong> and <span class="citation" data-cites="wilson2020efficiently">(<a href="#ref-wilson2020efficiently" role="doc-biblioref">Wilson et al. 2020</a>)</span> mentions that this “notion of conditioning by kriging was first presented by Matheron in the early 1970s”. Naturally, this provides another avenue to derive the EnKF update equations, as has been described by a number of authors <span class="citation" data-cites="doucet2010note">(<a href="#ref-doucet2010note" role="doc-biblioref">Doucet 2010</a>)</span>. Given samples <span class="math inline">\(x_i\)</span> from the Gaussian prior, generate samples <span class="math inline">\(y_i = \mathcal{H}(x_i) + \xi_i\)</span> for <span class="math inline">\(\xi_i \sim \mathcal{N}(0,R)\)</span>: this gives pairs samples <span class="math inline">\((x_i,y_i)\)</span> from the joint “prior”. One can obtain samples from the posterior by setting <span class="math inline">\(\widetilde{x}_i = x_i + C_{xx} \, C_{yy}^{-1} (y_\star - y_i)\)</span>. Naturally, the matrix <span class="math inline">\(C_{xy}\)</span> can be estimated as <span class="math inline">\(\widehat{\mathop{\mathrm{Cov}}}([x_i]_i, [\mathcal{H}(x_i)]_i)\)</span> and <span class="math inline">\(C_{yy}\)</span> is estimated as <span class="math inline">\(\widehat{\mathop{\mathrm{Var}}}([\mathcal{H}(x_i)]_i) + R\)</span>. Indeed, this is exactly the EnKF update!</p>
+<p>The sample <span class="math inline">\(X^{a}\)</span> is a sample from the conditional distribution <span class="math inline">\(X|Y=y_\star\)</span> and the proof is straightforward: it suffices to compute the first two moments of the Gaussian vector <span class="math inline">\(X^{a}\)</span> and check that they are equal to what they should be. This method is often called the <strong>Matheron’s rule</strong> and <span class="citation" data-cites="wilson2020efficiently">(<a href="#ref-wilson2020efficiently" role="doc-biblioref">Wilson et al. 2020</a>)</span> mentions that this “notion of conditioning by kriging was first presented by Matheron in the early 1970s”. Naturally, this provides another avenue to derive the EnKF update equations, as has been described by a number of authors <span class="citation" data-cites="doucet2010note">(<a href="#ref-doucet2010note" role="doc-biblioref">Doucet 2010</a>)</span>. Given samples <span class="math inline">\(x_i\)</span> from the Gaussian prior, generate samples <span class="math inline">\(y_i = \mathcal{H}(x_i) + \xi_i\)</span> for <span class="math inline">\(\xi_i \sim \mathcal{N}(0,R)\)</span>: this gives pairs samples <span class="math inline">\((x_i,y_i)\)</span> from the joint “prior”. One can obtain samples from the posterior by setting <span class="math inline">\(x^{a}_i = x_i + P_{xx} \, P_{yy}^{-1} (y_\star - y_i)\)</span>. Naturally, the matrix <span class="math inline">\(P_{xy}\)</span> can be estimated as <span class="math inline">\(\widehat{\mathop{\mathrm{Cov}}}([x_i]_i, [\mathcal{H}(x_i)]_i)\)</span> and <span class="math inline">\(P_{y}\)</span> is estimated as <span class="math inline">\(\widehat{\mathop{\mathrm{Var}}}([\mathcal{H}(x_i)]_i) + R\)</span>. This is exactly the EnKF update!</p>
 </section>
 <section id="derivative-free-optimization" class="level3">
 <h3 class="anchored" data-anchor-id="derivative-free-optimization">Derivative-Free optimization</h3>
