@@ -234,45 +234,45 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<p>Consider two discrete probability distributions <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> over <span class="math inline">\([[1,n]]\)</span>. We would like to find a <a href="https://en.wikipedia.org/wiki/Coupling_(probability)">coupling</a> <span class="math inline">\(\pi(x_0,x_1)\)</span> between <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> such that, under this coupling <span class="math inline">\((X_0,X_1) \sim \pi\)</span>, the distance <span class="math inline">\(d(X_0,X_1)\)</span> between <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span> is small. Naturally, this can be formulated as the following <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a> problem:</p>
+<p>Consider two discrete probability distributions <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> over <span class="math inline">\([[1,n]]\)</span>. We would like to find a <a href="https://en.wikipedia.org/wiki/Coupling_(probability)">coupling</a> <span class="math inline">\(\gamma(x_0,x_1)\)</span> between <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> such that, under this coupling <span class="math inline">\((X_0,X_1) \sim \gamma\)</span>, the distance <span class="math inline">\(d(X_0,X_1)\)</span> between <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span> is small. Naturally, this can be formulated as the following <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a> problem:</p>
 <p><span class="math display">\[
-\mathop{\mathrm{argmin}}_{\pi \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \pi(x_0,x_1),
+\mathop{\mathrm{argmin}}_{\gamma \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \gamma(x_0,x_1),
 \]</span></p>
-<p>where <span class="math inline">\(\Pi(\nu_0, \nu_1)\)</span> is the set of couplings between <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span>. It is a <a href="https://en.wikipedia.org/wiki/Linear_programming">linear program</a> and can be solved efficiently when <span class="math inline">\(n\)</span> is not too large. However, the optimal transport plan <span class="math inline">\(\pi\)</span> is often very sparse since it puts mass on at most <span class="math inline">\((2n-1)\)</span> pairs <span class="math inline">\((x_0,x_1)\)</span>. This can be undesirable in some applications. Furthermore, small changes in the distributions <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> can lead to large changes in the optimal transport plan. This sensitivity can be problematic in practice, especially when the distributions are estimated from data.</p>
+<p>where <span class="math inline">\(\Pi(\nu_0, \nu_1)\)</span> is the set of couplings between <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span>. It is a <a href="https://en.wikipedia.org/wiki/Linear_programming">linear program</a> and can be solved efficiently when <span class="math inline">\(n\)</span> is not too large. However, the optimal transport plan is often very sparse since it puts mass on at most <span class="math inline">\((2n-1)\)</span> pairs <span class="math inline">\((x_0,x_1)\)</span>. This can be undesirable in some applications. Furthermore, small changes in the distributions <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> can lead to large changes in the optimal transport plan. This sensitivity can be problematic in practice, especially when the distributions are estimated from data.</p>
 <section id="static-shrödinger-bridge-problem" class="level3">
 <h3 class="anchored" data-anchor-id="static-shrödinger-bridge-problem">Static Shrödinger Bridge Problem</h3>
-<p>A standard way to address these issues is to add an entropic regularization term to the objective function. The resulting problem is known as the Schrödinger bridge problem and can be formulated as follows. Consider a reference joint distribution <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1)\)</span> over <span class="math inline">\([[1,n]] \times [[1,n]]\)</span> and find the coupling <span class="math inline">\(\pi(x_0,x_1)\)</span> that minimizes the Kullback-Leibler divergence to <span class="math inline">\(\mu_{\mathrm{ref}}\)</span> while matching the marginals <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span>:</p>
+<p>A standard way to address these issues is to add an entropic regularization term to the objective function. The resulting problem is known as the Schrödinger bridge problem and can be formulated as follows. Consider a reference joint distribution <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1)\)</span> over <span class="math inline">\([[1,n]] \times [[1,n]]\)</span> and find the coupling <span class="math inline">\(\gamma(x_0,x_1)\)</span> that minimizes the Kullback-Leibler divergence to <span class="math inline">\(\mu_{\mathrm{ref}}\)</span> while matching the marginals <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span>:</p>
 <p><span id="eq-kl-contrained"><span class="math display">\[
-\mathop{\mathrm{argmin}}_{\pi \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} \pi(x_0,x_1) \log \frac{\pi(x_0,x_1)}{\mu_{\mathrm{ref}}(x_0,x_1)}.
+\mathop{\mathrm{argmin}}_{\gamma \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} \gamma(x_0,x_1) \log \frac{\gamma(x_0,x_1)}{\mu_{\mathrm{ref}}(x_0,x_1)}.
 \tag{1}\]</span></span></p>
-<p>Furthermore, since the marginals are fixed, one can readily see that the optimal coupling <span class="math inline">\(\pi\)</span> only depends on the conditional distributions of the reference measure <span class="math inline">\(\mu_{\mathrm{ref}}\)</span>, i.e.&nbsp;the conditional law <span class="math inline">\(\mu_{\mathrm{ref}}(x_1|x_0)\)</span> and <span class="math inline">\(\mu_{\mathrm{ref}}(x_0|x_1)\)</span> but not <span class="math inline">\(\mu_{\mathrm{ref}}(x_0)\)</span> or <span class="math inline">\(\mu_{\mathrm{ref}}(x_1)\)</span>. A common choice for the reference measure is a distribution of the form <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1) \propto \nu(x_0) \, \exp(-d(x_0,x_1)/\varepsilon)\)</span>. This choice encourages the coupling <span class="math inline">\(\pi\)</span> to put more mass on pairs <span class="math inline">\((x_0,x_1)\)</span> that are close according to the distance <span class="math inline">\(d\)</span> and the resulting optimization problem can be rewritten as:</p>
+<p><strong>Remark (invariance under separable rescaling).</strong> Only the “interaction structure” of <span class="math inline">\(\mu_{\mathrm{ref}}\)</span> matters: if one replaces <span class="math inline">\(\mu_{\mathrm{ref}}\)</span> by <span class="math inline">\(\tilde\mu_{\mathrm{ref}}(x_0,x_1)\propto a(x_0)\,\mu_{\mathrm{ref}}(x_0,x_1)\,b(x_1)\)</span> with positive <span class="math inline">\(a,b\)</span>, then the optimal coupling can still be written in the same form below, with the factors <span class="math inline">\(a,b\)</span> absorbed into the potentials. Equivalently, the solution depends on <span class="math inline">\(\mu_{\mathrm{ref}}\)</span> only through its kernel up to left/right diagonal scaling.</p>
+<p>A common choice for the reference measure is a distribution of the form <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1) \propto \exp(-d(x_0,x_1)/\varepsilon)\)</span> (optionally times separable factors). This choice encourages the coupling <span class="math inline">\(\gamma\)</span> to put more mass on pairs <span class="math inline">\((x_0,x_1)\)</span> that are close according to the distance <span class="math inline">\(d\)</span>, and the resulting optimization problem can be rewritten (up to an additive constant) as:</p>
 <p><span id="eq-entropic-ot"><span class="math display">\[
-\mathop{\mathrm{argmin}}_{\pi \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \pi(x_0,x_1)  \textcolor{blue}{\; - \; \varepsilon\, \mathrm{H}(\pi)}
+\mathop{\mathrm{argmin}}_{\gamma \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \gamma(x_0,x_1)  \textcolor{blue}{\; - \; \varepsilon\, \mathrm{H}(\gamma)}
 \tag{2}\]</span></span></p>
-<p>where <span class="math inline">\(\mathrm{H}(\pi) = - \sum_{x_0,x_1} \pi(x_0,x_1) \log \pi(x_0,x_1)\)</span> is the <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">entropy</a> of the coupling <span class="math inline">\(\pi\)</span>. Note that since the marginals of <span class="math inline">\(\pi\)</span> are fixed, it is also equivalent to replacing the entropy term by the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback-Leibler</a> divergence to the independent coupling <span class="math inline">\(\nu_0(x_0) \otimes \nu_1(x_1)\)</span>,</p>
+<p>where <span class="math inline">\(\mathrm{H}(\gamma) = - \sum_{x_0,x_1} \gamma(x_0,x_1) \log \gamma(x_0,x_1)\)</span> is the <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">entropy</a> of the coupling <span class="math inline">\(\gamma\)</span>. Note that since the marginals of <span class="math inline">\(\gamma\)</span> are fixed, it is also equivalent (up to constants) to replacing the entropy term by the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback-Leibler</a> divergence to the independent coupling <span class="math inline">\(\nu_0(x_0) \otimes \nu_1(x_1)\)</span>,</p>
 <p><span class="math display">\[
-\mathop{\mathrm{argmin}}_{\pi \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \pi(x_0,x_1)  \textcolor{blue}{\; + \; \varepsilon\, D_{\text{KL}}(\pi \mid \nu_0 \otimes \nu_1)}.
+\mathop{\mathrm{argmin}}_{\gamma \in \Pi(\nu_0, \nu_1)} \; \sum_{x_0,x_1} d(x_0,x_1) \, \gamma(x_0,x_1)  \textcolor{blue}{\; + \; \varepsilon\, D_{\text{KL}}(\gamma \mid \nu_0 \otimes \nu_1)}.
 \]</span></p>
-<p>This can be slightly easier to deal with when working with continuous distributions since the <a href="https://en.wikipedia.org/wiki/Differential_entropy">differential entropy</a> <span class="math inline">\(\mathrm{H}(\pi)\)</span> is not an informationally meaningful quantity because it depends on the choice of coordinates and scale. The entropic regularization term encourages the coupling to be more spread out, which can lead to more robust solutions. The parameter <span class="math inline">\(\varepsilon\)</span> controls the trade-off between minimizing the transport cost and maximizing the entropy of the coupling. As <span class="math inline">\(\varepsilon\to 0\)</span>, the solution approaches the optimal transport plan, while as <span class="math inline">\(\varepsilon\to \infty\)</span>, the solution approaches the independent coupling <span class="math inline">\(\pi(x_0,x_1) = \nu_0(x_0) \nu_1(x_1)\)</span>. Writing the <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange dual</a> formulation of the problem <a href="#eq-entropic-ot" class="quarto-xref">Equation&nbsp;2</a> provides fast algorithms to solve it such as the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">iterative proportional fitting</a> procedure (IPFP), also known as the Sinkhorn-Knopp algorithm in the optimal transport literature <span class="citation" data-cites="cuturi2013sinkhorn">(<a href="#ref-cuturi2013sinkhorn" role="doc-biblioref">Cuturi 2013</a>)</span>. Importantly, it also almost immediately shows that the optimal coupling has a very simple form,</p>
+<p>Writing the <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange dual</a> formulation of the problem <a href="#eq-entropic-ot" class="quarto-xref">Equation&nbsp;2</a> provides fast algorithms to solve it such as the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">iterative proportional fitting</a> procedure (IPFP), also known as the Sinkhorn-Knopp algorithm in the optimal transport literature <span class="citation" data-cites="cuturi2013sinkhorn">(<a href="#ref-cuturi2013sinkhorn" role="doc-biblioref">Cuturi 2013</a>)</span>. Importantly, it also almost immediately shows that the optimal coupling has a very simple form,</p>
 <p><span id="eq-schrodinger-solution"><span class="math display">\[
-\pi(x_0,x_1) = f(x_0)  \, \mu_{\mathrm{ref}}(x_0,x_1) \, g(x_1),
+\gamma(x_0,x_1) = f_0(x_0) \, \mu_{\mathrm{ref}}(x_0,x_1) \, g_1(x_1).
 \tag{3}\]</span></span></p>
-<p>for two positive potential functions <span class="math inline">\(f(x_0)\)</span> and <span class="math inline">\(g(x_1)\)</span>. These potentials function need to satisfy the marginal constraints,</p>
+<p>These potentials must satisfy the marginal constraints, equivalently the <strong>Schrödinger/Sinkhorn scaling equations</strong>:</p>
 <p><span class="math display">\[
 \left\{
-\begin{align*}
-\nu_0(x_0) &amp;= \mu_{\mathrm{ref}}(x_0) \, f(x_0) \, g(0, x_0)\\
-\nu_1(x_1) &amp;= \mu_{\mathrm{ref}}(x_1) \, g(x_1) \, f(1, x_1),
-\end{align*}
+\begin{aligned}
+\nu_0(x_0) &amp;= f_0(x_0)\,(\mu_{\mathrm{ref}} \, g_1)(x_0),\\
+\nu_1(x_1) &amp;= g_1(x_1)\,(\mu_{\mathrm{ref}} \, f_0)(x_1),
+\end{aligned}
 \right.
 \]</span></p>
-<p>where we defined the quantities <span class="math inline">\(g(0,x_0)\)</span> and <span class="math inline">\(f(1,x_1)\)</span> as follows:</p>
-<p><span class="math display">\[
+<p>where <span class="math display">\[
 \left\{
-\begin{align*}
-g(0,x_0) &amp;= \sum_{x_1} \mu_{\mathrm{ref}}(x_1 \mid x_0) \, g(x_1) = \mathbb{E}_{\mu_{\mathrm{ref}}}[g(X_1) \mid X_0 = x_0],\\
-f(1,x_1) &amp;= \sum_{x_0} \mu_{\mathrm{ref}}(x_0 \mid x_1) \, f(x_0) = \mathbb{E}_{\mu_{\mathrm{ref}}}[f(X_0) \mid X_1 = x_1].
-\end{align*}
+\begin{aligned}
+(\mu_{\mathrm{ref}} \, g_1)(x_0) &amp;:= \sum_{x_1} \mu_{\mathrm{ref}}(x_0,x_1) \,g_1(x_1),\\
+(\mu_{\mathrm{ref}} f_0)(x_1) &amp;:= \sum_{x_0} \mu_{\mathrm{ref}}(x_0,x_1) \,f_0(x_0).
+\end{aligned}
 \right.
 \]</span></p>
 <details>
@@ -282,51 +282,69 @@ Some details:
 <p style="color: blue;">
 The Lagrangian of the constrained convex optimization <a href="#eq-kl-contrained" class="quarto-xref">Equation&nbsp;1</a> reads: <span class="math display">\[
 \begin{align*}
-\sum_{x_0,x_1} \pi(x_0,x_1) \log \frac{\pi(x_0,x_1)}{\mu_{\mathrm{ref}}(x_0,x_1)}
-&amp;+ \sum_x \alpha(x_0) \left( \nu_0(x_0) - \sum_y \pi(x_0,x_1) \right)\\
-&amp;+ \sum_y \beta(x_1) \left( \nu_1(x_1) - \sum_x \pi(x_0,x_1) \right).
+\sum_{x_0,x_1} \gamma(x_0,x_1) \log \frac{\gamma(x_0,x_1)}{\mu_{\mathrm{ref}}(x_0,x_1)}
+&amp;+ \sum_{x_0} \alpha(x_0) \left( \nu_0(x_0) - \sum_{x_1} \gamma(x_0,x_1) \right)\\
+&amp;+ \sum_{x_1} \beta(x_1) \left( \nu_1(x_1) - \sum_{x_0} \gamma(x_0,x_1) \right).
 \end{align*}
-\]</span> There is no need to impose a constraint on the total mass of <span class="math inline">\(\pi\)</span> since it is automatically satisfied by the marginal constraints. For a fixed set of dual variables <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, minimizing the Lagrangian with respect to <span class="math inline">\(\pi\)</span> leads to optimum <span class="math inline">\(\pi_{\alpha, \beta}(x_0,x_1) = \mu_{\mathrm{ref}}(x_0,x_1) \, e^{\alpha(x_0) + \beta(x_1) -1}\)</span>, hence proving <a href="#eq-schrodinger-solution" class="quarto-xref">Equation&nbsp;3</a>. Plugging this expression back into the Lagrangian gives: <span class="math display">\[
-\mathcal{L}(\alpha, \beta) = \sum_x \alpha(x_0) \, \nu_0(x_0) + \sum_y \beta(x_1) \, \nu_1(x_1) - \sum_{x_0,x_1} \pi_{\alpha, \beta}(x_0,x_1).
-\]</span> If one chooses to alternate between maximizing <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> while keeping the other fixed, this corresponds to alternately enforcing the marginal constraints on <span class="math inline">\(\pi_{\alpha, \beta}\)</span>, i.e.&nbsp;the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">Iterative proportional fitting</a> procedure (IPFP) also known as the Sinkhorn-Knopp algorithm in the optimal transport literature. Directly maximizing the Lagrange dual <span class="math inline">\(\mathcal{L}(\alpha, \beta)\)</span> using gradient ascent methods such as <a href="https://en.wikipedia.org/wiki/Limited-memory_BFGS">L-BFGS</a> is also possible and can lead to faster convergence in some cases. Note that the dual problem only has <span class="math inline">\(2n\)</span> variables, while the primal problem has <span class="math inline">\(n^2\)</span> variables!
+\]</span> There is no need to impose a constraint on the total mass of <span class="math inline">\(\gamma\)</span> since it is automatically satisfied by the marginal constraints. For a fixed set of dual variables <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, minimizing the Lagrangian with respect to <span class="math inline">\(\gamma\)</span> leads to the optimum <span class="math inline">\(\gamma_{\alpha, \beta}(x_0,x_1) = \mu_{\mathrm{ref}}(x_0,x_1) \, e^{\alpha(x_0) + \beta(x_1) -1}\)</span>, hence proving <a href="#eq-schrodinger-solution" class="quarto-xref">Equation&nbsp;3</a> with <span class="math inline">\(f_0=e^{\alpha-1}\)</span> and <span class="math inline">\(g_1=e^\beta\)</span> (up to scaling). Plugging this expression back into the Lagrangian gives: <span class="math display">\[
+\mathcal{L}(\alpha, \beta) = \sum_{x_0} \alpha(x_0) \, \nu_0(x_0) + \sum_{x_1} \beta(x_1) \, \nu_1(x_1) - \sum_{x_0,x_1} \gamma_{\alpha, \beta}(x_0,x_1).
+\]</span> Alternating maximization in <span class="math inline">\((\alpha,\beta)\)</span> corresponds to alternately enforcing the two marginal constraints, i.e.&nbsp;IPFP / Sinkhorn scaling. Directly maximizing the Lagrange dual <span class="math inline">\(\mathcal{L}(\alpha, \beta)\)</span> using gradient ascent methods such as <a href="https://en.wikipedia.org/wiki/Limited-memory_BFGS">L-BFGS</a> is also possible and can lead to faster convergence in some cases. Note that the dual problem only has <span class="math inline">\(2n\)</span> variables, while the primal problem has <span class="math inline">\(n^2\)</span> variables!
 </p>
 </details>
 </section>
 <section id="dynamic-schrödinger-bridge-problem" class="level3">
 <h3 class="anchored" data-anchor-id="dynamic-schrödinger-bridge-problem">Dynamic Schrödinger Bridge Problem</h3>
-<p>Now, suppose that the reference distribution <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1)\)</span> is given as the two-time marginal of a Markov process <span class="math inline">\((X_t)_{t \in [0,1]}\)</span> with initial distribution <span class="math inline">\(\mu_{\mathrm{ref},0}(x_0)\)</span> and transition kernels <span class="math inline">\(p_{s,t}(x_s,x_t)\)</span>. Since the solution to the static Schrödinger bridge problem only depends on the conditional distributions of the reference measure <span class="math inline">\(\mu_{\mathrm{ref}}\)</span>, one can always assume without loss of generality that the reference process starts from the initial distribution <span class="math inline">\(\nu_0\)</span>. For example, <span class="math inline">\((X_t)\)</span> could be the solution of a stochastic differential equation. We still denotes by <span class="math inline">\(\mu_{\mathrm{ref}}([x_t]_{t \in [0,1]})\)</span> the distribution of the full path <span class="math inline">\((X_t)_{t \in [0,1]}\)</span>. The dynamic Schrödinger bridge problem consists in finding a new Markov process <span class="math inline">\((X_t)_{t \in [0,1]}\)</span>, with distribution <span class="math inline">\(\pi([x_t]_{t \in [0,1]})\)</span> on path space, such that the starting and ending marginals are <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span> respectively, while minimizing the Kullback-Leibler divergence to the reference path distribution <span class="math inline">\(\mu_{\mathrm{ref}}\)</span>. The chain rule for Kullback-Leibler divergences shows that this problem is equivalent to the static Schrödinger bridge problem <a href="#eq-kl-contrained" class="quarto-xref">Equation&nbsp;1</a>. One can first solve the corresponding static problem with respect to the two-time marginal <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1)\)</span> to obtain the Schrödinger coupling <span class="math inline">\(\pi(x_0,x_1)\)</span>, and then fill in the dynamics in between times <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span> by using the same transition kernels as the reference process but conditioned on the endpoints. In other words, once the static Schrödinger bridge problem is solved, one can construct the solution to the dynamic Schrödinger bridge problem as follows:</p>
+<p>Now, suppose that the reference distribution <span class="math inline">\(\mu_{\mathrm{ref}}(x_0,x_1)\)</span> is given as the two-time marginal of a Markov process <span class="math inline">\((X_t)_{t \in [0,1]}\)</span> with transition kernels <span class="math inline">\(p^{\text{ref}}_{s,t}(x_s,x_t)\)</span> and path measure <span class="math inline">\(\mathbb{P}^{\text{ref}}\)</span> on trajectories <span class="math inline">\(x_{[0,1]}\)</span>.</p>
+<p>The dynamic Schrödinger bridge problem consists in finding a new path measure <span class="math inline">\(\mathbb{Q}\)</span> on trajectories <span class="math inline">\(x_{[0,1]}\)</span> such that the starting and ending marginals are <span class="math inline">\(\nu_0\)</span> and <span class="math inline">\(\nu_1\)</span>, while minimizing the Kullback-Leibler divergence to the reference path distribution <span class="math inline">\(\mathbb{P}^{\text{ref}}\)</span>:</p>
+<p><span class="math display">\[
+\mathop{\mathrm{argmin}}_{\mathbb{Q}:\ \mathbb{Q}_0=\nu_0,\ \mathbb{Q}_1=\nu_1}\; \mathrm{KL}(\mathbb{Q}\mid \mathbb{P}^{\text{ref}}).
+\]</span></p>
+<p>When the reference is Markov, the chain rule for KL (disintegration with respect to <span class="math inline">\((X_0,X_1)\)</span>) shows this is equivalent to the static Schrödinger bridge problem for the two-time marginal of <span class="math inline">\(\mathbb{P}^{\text{ref}}\)</span>: one first solves for the optimal endpoint coupling <span class="math inline">\(\gamma^\star(x_0,x_1)\)</span>, and then fills in intermediate times using the <strong>reference bridges</strong> <span class="math inline">\(\mathbb{P}^{\text{ref}}(\cdot\mid X_0=x_0,X_1=x_1)\)</span>:</p>
 <ol type="1">
-<li>Sample the endpoints <span class="math inline">\((X_0, X_1) \sim \pi(x_0,x_1)\)</span> from the static Schrödinger bridge coupling.<br>
+<li>Sample the endpoints <span class="math inline">\((X_0, X_1) \sim \gamma^\star(x_0,x_1)\)</span>.<br>
 </li>
-<li>Sample the intermediate points of the path according to the conditional distribution of the reference process given the endpoints, i.e.&nbsp;<span class="math inline">\((X_t)_{t \in (0,1)} \sim \mu_{\mathrm{ref}}([x_t]_{t \in [0,1]} \mid X_0, X_1)\)</span>.</li>
+<li>Sample the intermediate points according to the conditional law of the reference process given the endpoints, i.e.&nbsp;<span class="math inline">\((X_t)_{t \in (0,1)} \sim \mathbb{P}^{\text{ref}}(\cdot \mid X_0, X_1)\)</span>.</li>
 </ol>
+<p><strong>Continuous-Time Stochastic Processes:</strong></p>
 <p>A typical setting is when the reference process <span class="math inline">\((X_t)\)</span> is given as the solution of a stochastic differential equation of the form</p>
 <p><span class="math display">\[
 dX_t = b_t(X_t) \, dt + \sigma \, dW_t,
 \]</span></p>
-<p>started from the initial distribution <span class="math inline">\(\nu_0(x_0)\)</span>. The solution to the dynamic Schrödinger bridge problem is given by the twisted path distribution:</p>
+<p>started from some initial distribution (one may take it to be <span class="math inline">\(\nu_0\)</span> without loss of generality, since any mismatch can be absorbed into the endpoint tilt below). The solution to the dynamic Schrödinger bridge problem is given by the twisted path distribution:</p>
 <p><span class="math display">\[
-\pi(x_{[0,1]}) = f(X_0) \, \mu_{\mathrm{ref}}(x_{[0,1]}) \, g(X_1),
+\frac{d\mathbb{Q}^\star}{d\mathbb{P}^{\text{ref}}}(x_{[0,1]})
+\propto f_0(X_0)\,g_1(X_1),
 \]</span></p>
-<p>for potential functions <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> satisfying the marginal constraints. The marginal distribution at time <span class="math inline">\(t \in [0,1]\)</span> of the Schrödinger bridge process is given by:</p>
-<p><span class="math display">\[\pi_t(x_t) = \mu_{\mathrm{ref}}(x_t) \, f(t,x_t) \, g(t,x_t)\]</span></p>
-<p>where, as previously, we defined the quantities:</p>
-<p><span class="math display">\[\left\{
-\begin{align*}
-f(t,x_t) &amp;= \int f(x_0) \, \mu_{\mathrm{ref}}(x_0 \mid x_t) \, dx_0,\\
-g(t,x_t) &amp;= \int g(x_1) \, \mu_{\mathrm{ref}}(x_1 \mid x_t) \, dx_1.
-\end{align*}
+<p>for endpoint potentials <span class="math inline">\(f_0\)</span> and <span class="math inline">\(g_1\)</span> satisfying the marginal constraints at <span class="math inline">\(t=0\)</span> and <span class="math inline">\(t=1\)</span>.</p>
+<p>The marginal density at intermediate time <span class="math inline">\(t\in[0,1]\)</span> factorizes as:</p>
+<p><span class="math display">\[
+q_t(x) = p_t^{\text{ref}}(x)\,\hat\varphi(t,x)\,\varphi(t,x),
+\]</span></p>
+<p>where <span class="math inline">\(p_t^{\text{ref}}\)</span> is the time-<span class="math inline">\(t\)</span> marginal density of the reference process, and where the time-dependent Schrödinger potentials are defined by:</p>
+<p><span class="math display">\[
+\left\{
+\begin{aligned}
+\varphi(t,x) &amp;= \mathbb{E}_{\mathbb{P}^{\text{ref}}}[g_1(X_1)\mid X_t=x],\\
+\hat\varphi(t,x) &amp;= \mathbb{E}_{\mathbb{P}^{\text{ref}}}[f_0(X_0)\mid X_t=x],
+\end{aligned}
 \right.
 \]</span></p>
-<p>Naturally, the dynamics of the Schrödinger bridge process can be described as a new stochastic differential equation obtained by applying a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> to the reference SDE,</p>
+<p>(with <span class="math inline">\(\varphi(1,\cdot)=g_1\)</span> and <span class="math inline">\(\hat\varphi(0,\cdot)=f_0\)</span>, up to normalization). Naturally, the dynamics of the Schrödinger bridge process can be described as a new stochastic differential equation obtained by applying a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> to the reference SDE,</p>
 <p><span class="math display">\[
-dX_t = b_t(X_t) \, dt +  \textcolor{blue}{ \sigma \sigma^\top \nabla_x \log g(t, X_t) dt} + \sigma \, dW_t,
+dX_t = b_t(X_t)\,dt +  \textcolor{blue}{\sigma \sigma^\top \nabla_x \log \varphi(t, X_t)\,dt} + \sigma\,dW_t,
 \]</span></p>
-<p>where, as explained in these previous <a href="../../notes/doob_transforms/doob.html">notes</a> the <span class="math inline">\(h\)</span>-function is given by the usual formula,</p>
-<p><span class="math display">\[
-g(t, x_t) = \mathbb{E}_{\mu_{\mathrm{ref}}}[g(X_1) \mid X_t = x_t] = \int g(x_1) \, \mu_{\mathrm{ref}}(x_1 \mid x_t) \, dx_1.
+<p>where, as explained in these previous <a href="../../notes/doob_transforms/doob.html">notes</a>, the function <span class="math inline">\(\varphi(t,x)\)</span> is the harmonic extension of the terminal potential <span class="math inline">\(g_1\)</span> defined above.</p>
+<p><strong>Discrete-Time Markov Chains:</strong></p>
+<p>It is often useful to state the Schrödinger bridge dynamics directly on a discrete time grid <span class="math inline">\(0=t_0&lt;t_1&lt;\cdots&lt;t_N=1\)</span>. Let the reference process be a Markov chain with one-step kernels <span class="math inline">\(K_k(x,dy)\)</span>, i.e. <span class="math display">\[
+\mathbb{P}^{\text{ref}}(X_{k+1}\in dy\mid X_k=x)=K_k(x,dy).
+\]</span> Let <span class="math inline">\(g_1\)</span> be the terminal potential at time <span class="math inline">\(t_N\)</span> and define the backward (harmonic) potentials defined by <span class="math inline">\(\varphi_N(x)=g_1(x)\)</span> and recursively as: <span class="math display">\[
+\varphi_k = K_k \varphi_{k+1}
 \]</span></p>
-<p>It is a difficult problem since the potentials <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">(<a href="#ref-shi2023diffusion" role="doc-biblioref">Shi et al. 2023</a>)</span>; <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref">De Bortoli et al. 2021</a>)</span>; <span class="citation" data-cites="vargas2021solving">(<a href="#ref-vargas2021solving" role="doc-biblioref">Vargas et al. 2021</a>)</span>; <span class="citation" data-cites="chen2021likelihood">(<a href="#ref-chen2021likelihood" role="doc-biblioref">Chen, Liu, and Theodorou 2021</a>)</span>.</p>
+<p>Then the Schrödinger bridge <span class="math inline">\(\mathbb{Q}^\star\)</span> is Markov and its <strong>forward transition kernels</strong> are given by the discrete Doob <span class="math inline">\(h\)</span>-transform: <span class="math display">\[
+\mathbb{Q}^\star(X_{k+1}\in dy\mid X_k=x)
+=\frac{K_k(x,dy)\,\varphi_{k+1}(y)}{\varphi_k(x)}.
+\]</span> This is the discrete-time counterpart of the continuous-time drift correction <span class="math inline">\(b_t \mapsto b_t + \sigma\sigma^\top\nabla\log\varphi(t,\cdot)\)</span>.</p>
+<p>In general, Schrödinger bridge problems are difficult problems since the endpoint potentials <span class="math inline">\(f_0\)</span> and <span class="math inline">\(g_1\)</span> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">(<a href="#ref-shi2023diffusion" role="doc-biblioref">Shi et al. 2023</a>)</span>; <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref">De Bortoli et al. 2021</a>)</span>; <span class="citation" data-cites="vargas2021solving">(<a href="#ref-vargas2021solving" role="doc-biblioref">Vargas et al. 2021</a>)</span>; <span class="citation" data-cites="chen2021likelihood">(<a href="#ref-chen2021likelihood" role="doc-biblioref">Chen, Liu, and Theodorou 2021</a>)</span>.</p>
 
 
 
