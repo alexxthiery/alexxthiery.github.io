@@ -199,7 +199,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">19 10 2025</p>
+        <p class="date-modified">18 02 2026</p>
       </div>
     </div>
       
@@ -256,22 +256,14 @@ window.Quarto = {
 \]</span></p>
 <p>Writing the <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange dual</a> formulation of the problem <a href="#eq-entropic-ot" class="quarto-xref">Equation&nbsp;2</a> provides fast algorithms to solve it such as the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">iterative proportional fitting</a> procedure (IPFP), also known as the Sinkhorn-Knopp algorithm in the optimal transport literature <span class="citation" data-cites="cuturi2013sinkhorn">(<a href="#ref-cuturi2013sinkhorn" role="doc-biblioref">Cuturi 2013</a>)</span>. Importantly, it also almost immediately shows that the optimal coupling has a very simple form,</p>
 <p><span id="eq-schrodinger-solution"><span class="math display">\[
-\gamma(x_0,x_1) = f_0(x_0) \, \mu_{\mathrm{ref}}(x_0,x_1) \, g_1(x_1).
+\gamma(x_0,x_1) = f(x_0) \, \mu_{\mathrm{ref}}(x_0,x_1) \, g(x_1).
 \tag{3}\]</span></span></p>
 <p>These potentials must satisfy the marginal constraints, equivalently the <strong>Schrödinger/Sinkhorn scaling equations</strong>:</p>
 <p><span class="math display">\[
 \left\{
 \begin{aligned}
-\nu_0(x_0) &amp;= f_0(x_0)\,(\mu_{\mathrm{ref}} \, g_1)(x_0),\\
-\nu_1(x_1) &amp;= g_1(x_1)\,(\mu_{\mathrm{ref}} \, f_0)(x_1),
-\end{aligned}
-\right.
-\]</span></p>
-<p>where <span class="math display">\[
-\left\{
-\begin{aligned}
-(\mu_{\mathrm{ref}} \, g_1)(x_0) &amp;:= \sum_{x_1} \mu_{\mathrm{ref}}(x_0,x_1) \,g_1(x_1),\\
-(\mu_{\mathrm{ref}} f_0)(x_1) &amp;:= \sum_{x_0} \mu_{\mathrm{ref}}(x_0,x_1) \,f_0(x_0).
+\nu_0(x_0) &amp;= \sum_{x_1} f(x_0)\, \mu_{\mathrm{ref}}(x_0,x_1)\, g(x_1),\\
+\nu_1(x_1) &amp;= \sum_{x_0} f(x_0)\, \mu_{\mathrm{ref}}(x_0,x_1)\, g(x_1).
 \end{aligned}
 \right.
 \]</span></p>
@@ -286,7 +278,7 @@ The Lagrangian of the constrained convex optimization <a href="#eq-kl-contrained
 &amp;+ \sum_{x_0} \alpha(x_0) \left( \nu_0(x_0) - \sum_{x_1} \gamma(x_0,x_1) \right)\\
 &amp;+ \sum_{x_1} \beta(x_1) \left( \nu_1(x_1) - \sum_{x_0} \gamma(x_0,x_1) \right).
 \end{align*}
-\]</span> There is no need to impose a constraint on the total mass of <span class="math inline">\(\gamma\)</span> since it is automatically satisfied by the marginal constraints. For a fixed set of dual variables <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, minimizing the Lagrangian with respect to <span class="math inline">\(\gamma\)</span> leads to the optimum <span class="math inline">\(\gamma_{\alpha, \beta}(x_0,x_1) = \mu_{\mathrm{ref}}(x_0,x_1) \, e^{\alpha(x_0) + \beta(x_1) -1}\)</span>, hence proving <a href="#eq-schrodinger-solution" class="quarto-xref">Equation&nbsp;3</a> with <span class="math inline">\(f_0=e^{\alpha-1}\)</span> and <span class="math inline">\(g_1=e^\beta\)</span> (up to scaling). Plugging this expression back into the Lagrangian gives: <span class="math display">\[
+\]</span> There is no need to impose a constraint on the total mass of <span class="math inline">\(\gamma\)</span> since it is automatically satisfied by the marginal constraints. For a fixed set of dual variables <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, minimizing the Lagrangian with respect to <span class="math inline">\(\gamma\)</span> leads to the optimum <span class="math inline">\(\gamma_{\alpha, \beta}(x_0,x_1) = \mu_{\mathrm{ref}}(x_0,x_1) \, e^{\alpha(x_0) + \beta(x_1) -1}\)</span>, hence proving <a href="#eq-schrodinger-solution" class="quarto-xref">Equation&nbsp;3</a> with <span class="math inline">\(f=e^{\alpha-1}\)</span> and <span class="math inline">\(g=e^\beta\)</span> (up to scaling). Plugging this expression back into the Lagrangian gives: <span class="math display">\[
 \mathcal{L}(\alpha, \beta) = \sum_{x_0} \alpha(x_0) \, \nu_0(x_0) + \sum_{x_1} \beta(x_1) \, \nu_1(x_1) - \sum_{x_0,x_1} \gamma_{\alpha, \beta}(x_0,x_1).
 \]</span> Alternating maximization in <span class="math inline">\((\alpha,\beta)\)</span> corresponds to alternately enforcing the two marginal constraints, i.e.&nbsp;IPFP / Sinkhorn scaling. Directly maximizing the Lagrange dual <span class="math inline">\(\mathcal{L}(\alpha, \beta)\)</span> using gradient ascent methods such as <a href="https://en.wikipedia.org/wiki/Limited-memory_BFGS">L-BFGS</a> is also possible and can lead to faster convergence in some cases. Note that the dual problem only has <span class="math inline">\(2n\)</span> variables, while the primal problem has <span class="math inline">\(n^2\)</span> variables!
 </p>
@@ -313,38 +305,38 @@ dX_t = b_t(X_t) \, dt + \sigma \, dW_t,
 <p>started from some initial distribution (one may take it to be <span class="math inline">\(\nu_0\)</span> without loss of generality, since any mismatch can be absorbed into the endpoint tilt below). The solution to the dynamic Schrödinger bridge problem is given by the twisted path distribution:</p>
 <p><span class="math display">\[
 \frac{d\mathbb{Q}^\star}{d\mathbb{P}^{\text{ref}}}(x_{[0,1]})
-\propto f_0(X_0)\,g_1(X_1),
+\propto f(X_0)\,g(X_1),
 \]</span></p>
-<p>for endpoint potentials <span class="math inline">\(f_0\)</span> and <span class="math inline">\(g_1\)</span> satisfying the marginal constraints at <span class="math inline">\(t=0\)</span> and <span class="math inline">\(t=1\)</span>.</p>
+<p>for endpoint potentials <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> satisfying the marginal constraints at <span class="math inline">\(t=0\)</span> and <span class="math inline">\(t=1\)</span>.</p>
 <p>The marginal density at intermediate time <span class="math inline">\(t\in[0,1]\)</span> factorizes as:</p>
 <p><span class="math display">\[
-q_t(x) = p_t^{\text{ref}}(x)\,\hat\varphi(t,x)\,\varphi(t,x),
+q_t(x) = p_t^{\text{ref}}(x)\,\widehat{\varphi}_t(x)\,\varphi_t(x),
 \]</span></p>
 <p>where <span class="math inline">\(p_t^{\text{ref}}\)</span> is the time-<span class="math inline">\(t\)</span> marginal density of the reference process, and where the time-dependent Schrödinger potentials are defined by:</p>
 <p><span class="math display">\[
 \left\{
 \begin{aligned}
-\varphi(t,x) &amp;= \mathbb{E}_{\mathbb{P}^{\text{ref}}}[g_1(X_1)\mid X_t=x],\\
-\hat\varphi(t,x) &amp;= \mathbb{E}_{\mathbb{P}^{\text{ref}}}[f_0(X_0)\mid X_t=x],
+\varphi_t(x) &amp;= \mathbb{E}_{\mathbb{P}^{\text{ref}}}[g(X_1)\mid X_t=x],\\
+\widehat{\varphi}_t(x) &amp;= \mathbb{E}_{\mathbb{P}^{\text{ref}}}[f(X_0)\mid X_t=x],
 \end{aligned}
 \right.
 \]</span></p>
-<p>(with <span class="math inline">\(\varphi(1,\cdot)=g_1\)</span> and <span class="math inline">\(\hat\varphi(0,\cdot)=f_0\)</span>, up to normalization). Naturally, the dynamics of the Schrödinger bridge process can be described as a new stochastic differential equation obtained by applying a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> to the reference SDE,</p>
+<p>(with <span class="math inline">\(\varphi_1 \equiv g\)</span> and <span class="math inline">\(\widehat{\varphi}_0 \equiv f\)</span>, up to normalization). Naturally, the dynamics of the Schrödinger bridge process can be described as a new stochastic differential equation obtained by applying a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> to the reference SDE,</p>
 <p><span class="math display">\[
-dX_t = b_t(X_t)\,dt +  \textcolor{blue}{\sigma \sigma^\top \nabla_x \log \varphi(t, X_t)\,dt} + \sigma\,dW_t,
+dX_t = b_t(X_t)\,dt +  \textcolor{blue}{\sigma \sigma^\top \nabla_x \log \varphi_t( X_t)\,dt} + \sigma\,dW_t,
 \]</span></p>
-<p>where, as explained in these previous <a href="../../notes/doob_transforms/doob.html">notes</a>, the function <span class="math inline">\(\varphi(t,x)\)</span> is the harmonic extension of the terminal potential <span class="math inline">\(g_1\)</span> defined above.</p>
+<p>where, as explained in these previous <a href="../../notes/doob_transforms/doob.html">notes</a>, the function <span class="math inline">\(\varphi_t(x)\)</span> is the harmonic extension of the terminal potential <span class="math inline">\(g\)</span> defined above.</p>
 <p><strong>Discrete-Time Markov Chains:</strong></p>
-<p>It is often useful to state the Schrödinger bridge dynamics directly on a discrete time grid <span class="math inline">\(0=t_0&lt;t_1&lt;\cdots&lt;t_N=1\)</span>. Let the reference process be a Markov chain with one-step kernels <span class="math inline">\(K_k(x,dy)\)</span>, i.e. <span class="math display">\[
-\mathbb{P}^{\text{ref}}(X_{k+1}\in dy\mid X_k=x)=K_k(x,dy).
-\]</span> Let <span class="math inline">\(g_1\)</span> be the terminal potential at time <span class="math inline">\(t_N\)</span> and define the backward (harmonic) potentials defined by <span class="math inline">\(\varphi_N(x)=g_1(x)\)</span> and recursively as: <span class="math display">\[
-\varphi_k = K_k \varphi_{k+1}
+<p>It is often useful to state the Schrödinger bridge dynamics in a discrete setting. Let the reference process be a Markov chain <span class="math inline">\(X_0, \ldots, X_T\)</span> with one-step kernels <span class="math inline">\(M_k(x,dy)\)</span>, i.e. <span class="math display">\[
+\mathbb{P}^{\text{ref}}(X_{k+1}\in dy\mid X_k=x)=M_k(x,dy).
+\]</span> Let <span class="math inline">\(g\)</span> be the terminal potential at time <span class="math inline">\(T\)</span> and define the backward (harmonic) potentials defined by <span class="math inline">\(\varphi_T \equiv g\)</span> and recursively as: <span class="math display">\[
+\varphi_k(x) = \int M_k(x,dy)\,\varphi_{k+1}(y).
 \]</span></p>
 <p>Then the Schrödinger bridge <span class="math inline">\(\mathbb{Q}^\star\)</span> is Markov and its <strong>forward transition kernels</strong> are given by the discrete Doob <span class="math inline">\(h\)</span>-transform: <span class="math display">\[
 \mathbb{Q}^\star(X_{k+1}\in dy\mid X_k=x)
-=\frac{K_k(x,dy)\,\varphi_{k+1}(y)}{\varphi_k(x)}.
-\]</span> This is the discrete-time counterpart of the continuous-time drift correction <span class="math inline">\(b_t \mapsto b_t + \sigma\sigma^\top\nabla\log\varphi(t,\cdot)\)</span>.</p>
-<p>In general, Schrödinger bridge problems are difficult problems since the endpoint potentials <span class="math inline">\(f_0\)</span> and <span class="math inline">\(g_1\)</span> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">(<a href="#ref-shi2023diffusion" role="doc-biblioref">Shi et al. 2023</a>)</span>; <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref">De Bortoli et al. 2021</a>)</span>; <span class="citation" data-cites="vargas2021solving">(<a href="#ref-vargas2021solving" role="doc-biblioref">Vargas et al. 2021</a>)</span>; <span class="citation" data-cites="chen2021likelihood">(<a href="#ref-chen2021likelihood" role="doc-biblioref">Chen, Liu, and Theodorou 2021</a>)</span>.</p>
+=\frac{M_k(x,dy)\,\varphi_{k+1}(y)}{\varphi_k(x)}.
+\]</span> This is the discrete-time counterpart of the continuous-time drift correction <span class="math inline">\(b_t \mapsto b_t + \sigma\sigma^\top\nabla\log\varphi_t(\cdot)\)</span>.</p>
+<p>In general, Schrödinger bridge problems are difficult problems since the endpoint potentials <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">(<a href="#ref-shi2023diffusion" role="doc-biblioref">Shi et al. 2023</a>)</span>; <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref">De Bortoli et al. 2021</a>)</span>; <span class="citation" data-cites="vargas2021solving">(<a href="#ref-vargas2021solving" role="doc-biblioref">Vargas et al. 2021</a>)</span>; <span class="citation" data-cites="chen2021likelihood">(<a href="#ref-chen2021likelihood" role="doc-biblioref">Chen, Liu, and Theodorou 2021</a>)</span>.</p>
 
 
 
