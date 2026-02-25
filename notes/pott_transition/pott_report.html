@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>pott_report – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#correctness-report-the-mean-field-potts-model" id="toc-correctness-report-the-mean-field-potts-model" class="nav-link active" data-scroll-target="#correctness-report-the-mean-field-potts-model">Correctness Report: “The mean-field Potts model”</a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#claim-by-claim-verification" id="toc-claim-by-claim-verification" class="nav-link" data-scroll-target="#claim-by-claim-verification">Claim-by-claim verification</a>
+  <ul class="collapse">
+  <li><a href="#energy-rewriting-esigma-to-erho" id="toc-energy-rewriting-esigma-to-erho" class="nav-link" data-scroll-target="#energy-rewriting-esigma-to-erho">1. Energy rewriting: <span class="math inline">\(E(\sigma) \to E(\rho)\)</span></a></li>
+  <li><a href="#free-energy-functional-phi_beta" id="toc-free-energy-functional-phi_beta" class="nav-link" data-scroll-target="#free-energy-functional-phi_beta">2. Free energy functional <span class="math inline">\(\Phi_\beta\)</span></a></li>
+  <li><a href="#lagrange-condition-and-critical-point-types" id="toc-lagrange-condition-and-critical-point-types" class="nav-link" data-scroll-target="#lagrange-condition-and-critical-point-types">3. Lagrange condition and critical point types</a></li>
+  <li><a href="#coexistence-formula-beta_cfrac2q-1logq-1q-2" id="toc-coexistence-formula-beta_cfrac2q-1logq-1q-2" class="nav-link" data-scroll-target="#coexistence-formula-beta_cfrac2q-1logq-1q-2">4. Coexistence formula <span class="math inline">\(\beta_c=\frac{2(q-1)\log(q-1)}{q-2}\)</span></a></li>
+  <li><a href="#phase-diagram-and-qualitative-claims" id="toc-phase-diagram-and-qualitative-claims" class="nav-link" data-scroll-target="#phase-diagram-and-qualitative-claims">5. Phase diagram and qualitative claims</a></li>
+  <li><a href="#spinodal-threshold-beta_s" id="toc-spinodal-threshold-beta_s" class="nav-link" data-scroll-target="#spinodal-threshold-beta_s">6. Spinodal threshold <span class="math inline">\(\beta_s\)</span></a></li>
+  </ul></li>
+  <li><a href="#expositional-remarks" id="toc-expositional-remarks" class="nav-link" data-scroll-target="#expositional-remarks">Expositional remarks</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="correctness-report-the-mean-field-potts-model" class="level1">
+<h1>Correctness Report: “The mean-field Potts model”</h1>
+<p><strong>Source:</strong> <code>pott.qmd</code> <strong>Date:</strong> 2026-02-25</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>All formulas and qualitative claims in the note are <strong>correct</strong>. Five computations were verified independently; no errors found. A few minor expositional remarks are collected at the end.</p>
+<hr>
+</section>
+<section id="claim-by-claim-verification" class="level2">
+<h2 class="anchored" data-anchor-id="claim-by-claim-verification">Claim-by-claim verification</h2>
+<section id="energy-rewriting-esigma-to-erho" class="level3">
+<h3 class="anchored" data-anchor-id="energy-rewriting-esigma-to-erho">1. Energy rewriting: <span class="math inline">\(E(\sigma) \to E(\rho)\)</span></h3>
+<p><strong>Claim.</strong> <span class="math inline">\(E(\sigma)=-\frac{1}{2N}\sum_{i,j=1}^N\mathbf{1}\{\sigma_i=\sigma_j\}\)</span> rewrites as <span class="math inline">\(E(\rho)=-\frac{N}{2}\sum_a\rho_a^2\)</span> up to an additive constant.</p>
+<p><strong>Verification.</strong> Let <span class="math inline">\(N_a=|\{i:\sigma_i=a\}|=N\rho_a\)</span>. The double sum decomposes by color:</p>
+<p><span class="math display">\[
+\sum_{i,j=1}^N\mathbf{1}\{\sigma_i=\sigma_j\}
+= \sum_{a=1}^q N_a^2
+= N^2\sum_a\rho_a^2
+\]</span></p>
+<p>Dividing by <span class="math inline">\(-2N\)</span>:</p>
+<p><span class="math display">\[
+E(\sigma) = -\frac{N}{2}\sum_a\rho_a^2
+\]</span></p>
+<p>The sum includes diagonal terms <span class="math inline">\(i=j\)</span> (contributing <span class="math inline">\(N\)</span> to the total), so the exact identity is <span class="math inline">\(E=-\frac{N}{2}\sum_a\rho_a^2\)</span>, which equals the off-diagonal version plus <span class="math inline">\(-1/2\)</span>. The document correctly flags “up to an additive constant irrelevant for Gibbs weights.”</p>
+<p><strong>PASS.</strong></p>
+<hr>
+</section>
+<section id="free-energy-functional-phi_beta" class="level3">
+<h3 class="anchored" data-anchor-id="free-energy-functional-phi_beta">2. Free energy functional <span class="math inline">\(\Phi_\beta\)</span></h3>
+<p><strong>Claim.</strong> Typical samples from <span class="math inline">\(\mu_\beta\)</span> concentrate near minimizers of</p>
+<p><span class="math display">\[
+\Phi_\beta(\rho)=\sum_a\rho_a\log\rho_a - \frac{\beta}{2}\sum_a\rho_a^2
+\]</span></p>
+<p><strong>Verification.</strong> The number of configurations with empirical proportions <span class="math inline">\(\rho\)</span> is the multinomial coefficient</p>
+<p><span class="math display">\[
+\binom{N}{N\rho_1,\ldots,N\rho_q}
+= \frac{N!}{\prod_a(N\rho_a)!}
+\sim \exp\{NH(\rho)\}
+\]</span></p>
+<p>by Stirling, where <span class="math inline">\(H(\rho)=-\sum_a\rho_a\log\rho_a\)</span>. The Boltzmann weight is <span class="math inline">\(e^{-\beta E(\rho)}=\exp\{\frac{\beta N}{2}\sum_a\rho_a^2\}\)</span>. So the probability of macrostate <span class="math inline">\(\rho\)</span> scales as</p>
+<p><span class="math display">\[
+\mu_\beta(\rho)\propto\exp\left\{N\!\left(-\sum_a\rho_a\log\rho_a+\frac{\beta}{2}\sum_a\rho_a^2\right)\right\}
+\]</span></p>
+<p>Typical <span class="math inline">\(\rho\)</span> maximizes the exponent, equivalently minimizes its negation <span class="math inline">\(\Phi_\beta\)</span>.</p>
+<p><strong>PASS.</strong></p>
+<hr>
+</section>
+<section id="lagrange-condition-and-critical-point-types" class="level3">
+<h3 class="anchored" data-anchor-id="lagrange-condition-and-critical-point-types">3. Lagrange condition and critical point types</h3>
+<p><strong>Claim (a).</strong> Stationary points on the simplex satisfy <span class="math inline">\(\log\rho_a+1-\beta\rho_a=\lambda\)</span> for all <span class="math inline">\(a\)</span>.</p>
+<p><strong>Verification.</strong> <span class="math inline">\(\frac{\partial\Phi_\beta}{\partial\rho_a}=\log\rho_a+1-\beta\rho_a\)</span>. The simplex constraint <span class="math inline">\(\sum_a\rho_a=1\)</span> yields a single Lagrange multiplier <span class="math inline">\(\lambda\)</span>. Correct.</p>
+<p><strong>Claim (b).</strong> All local minima are disordered (<span class="math inline">\(\rho_a=1/q\)</span>) or ordered with one dominant color (<span class="math inline">\(k=1\)</span>).</p>
+<p><strong>Verification.</strong> The scalar function <span class="math inline">\(f(x)=\log x+1-\beta x\)</span> is strictly concave (<span class="math inline">\(f''=-1/x^2&lt;0\)</span>), so <span class="math inline">\(f(x)=\lambda\)</span> has at most 2 solutions. Each <span class="math inline">\(\rho_a\)</span> takes one of these solutions. This gives stationary points where <span class="math inline">\(k\)</span> coordinates equal <span class="math inline">\(r\)</span> and <span class="math inline">\(q-k\)</span> equal <span class="math inline">\(s=(1-kr)/(q-k)\)</span>. Checking which are local minima requires the Hessian on the simplex tangent space.</p>
+<p>The Hessian of <span class="math inline">\(\Phi_\beta\)</span> is diagonal: <span class="math inline">\(H_{ab}=(1/\rho_a-\beta)\,\delta_{ab}\)</span>. For the <span class="math inline">\(k\)</span>-ordered point:</p>
+<ul>
+<li>Within-<span class="math inline">\(r\)</span>-block eigenvalue: <span class="math inline">\(1/r-\beta\)</span>, multiplicity <span class="math inline">\(k-1\)</span></li>
+<li>Within-<span class="math inline">\(s\)</span>-block eigenvalue: <span class="math inline">\(1/s-\beta\)</span>, multiplicity <span class="math inline">\(q-k-1\)</span></li>
+<li>Cross eigenvalue: <span class="math inline">\(1/r+1/s-2\beta\)</span></li>
+</ul>
+<p>For <span class="math inline">\(k\geq 2\)</span>: these ordered branches emerge from the uniform state at <span class="math inline">\(\beta=q\)</span> with <span class="math inline">\(r\approx 1/q\)</span>, giving <span class="math inline">\(1/r-\beta\approx q-q=0\)</span>. Along the branch, <span class="math inline">\(r\)</span> increases while <span class="math inline">\(\beta\)</span> increases, so <span class="math inline">\(1/r-\beta&lt;0\)</span>: the within-<span class="math inline">\(r\)</span>-block direction is a saddle direction. Partially ordered states (<span class="math inline">\(k\geq 2\)</span>) are therefore never local minima.</p>
+<p>Only the disordered point and <span class="math inline">\(k=1\)</span> ordered points can be local minima.</p>
+<p><strong>PASS.</strong></p>
+<hr>
+</section>
+<section id="coexistence-formula-beta_cfrac2q-1logq-1q-2" class="level3">
+<h3 class="anchored" data-anchor-id="coexistence-formula-beta_cfrac2q-1logq-1q-2">4. Coexistence formula <span class="math inline">\(\beta_c=\frac{2(q-1)\log(q-1)}{q-2}\)</span></h3>
+<p><strong>Claim.</strong> At <span class="math inline">\(\beta_c\)</span>, the disordered and ordered free energies are equal.</p>
+<p><strong>Verification.</strong> Parametrize the order parameter as <span class="math inline">\(m\in[0,1]\)</span> with <span class="math inline">\(r=\frac{1+(q-1)m}{q}\)</span>, <span class="math inline">\(s=\frac{1-m}{q}\)</span>.</p>
+<p><em>Stationarity condition:</em> <span class="math inline">\(\log\frac{1+(q-1)m}{1-m}=\beta m\)</span>, giving <span class="math inline">\(\beta=\frac{1}{m}\log\frac{1+(q-1)m}{1-m}\)</span>.</p>
+<p><em>Equal free energy condition</em> (<span class="math inline">\(\Phi(m)=\Phi(0)\)</span>): after substituting <span class="math inline">\(\beta\)</span> and simplifying,</p>
+<p><span class="math display">\[
+\left(1+\tfrac{(q-1)m}{2}\right)\log(1+(q-1)m)
++\left((q-1)-\tfrac{(q-1)m}{2}\right)\log(1-m)=0
+\]</span></p>
+<p><strong>Solving.</strong> Try <span class="math inline">\(m^*=\frac{q-2}{q-1}\)</span>. Then:</p>
+<ul>
+<li><span class="math inline">\(1+(q-1)m^*=q-1\)</span></li>
+<li><span class="math inline">\(1-m^*=\frac{1}{q-1}\)</span></li>
+<li>Both prefactors equal <span class="math inline">\(\frac{q}{2}\)</span></li>
+</ul>
+<p>LHS <span class="math inline">\(= \frac{q}{2}\log(q-1)+\frac{q}{2}\log\frac{1}{q-1}=0\)</span>. Confirmed.</p>
+<p>Substituting <span class="math inline">\(m^*\)</span> into the stationarity condition:</p>
+<p><span class="math display">\[
+\beta_c=\frac{q-1}{q-2}\cdot\log\frac{q-1}{1/(q-1)}
+=\frac{q-1}{q-2}\cdot 2\log(q-1)
+=\frac{2(q-1)\log(q-1)}{q-2}
+\]</span></p>
+<p><strong>Numerical checks:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(q\)</span></th>
+<th><span class="math inline">\(\beta_c\)</span> (formula)</th>
+<th>Decimal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3</td>
+<td><span class="math inline">\(4\log 2\)</span></td>
+<td>2.773</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><span class="math inline">\(3\log 3\)</span></td>
+<td>3.296</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><span class="math inline">\(\frac{8\log 4}{3}\)</span></td>
+<td>3.697</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Consistency with <span class="math inline">\(q=2\)</span>:</strong> The formula is <span class="math inline">\(0/0\)</span> at <span class="math inline">\(q=2\)</span>, but <span class="math inline">\(\lim_{q\to 2}\frac{2(q-1)\log(q-1)}{q-2}=2\)</span> by L’Hopital, recovering the mean-field Ising critical point <span class="math inline">\(\beta_c=2\)</span>. The document correctly restricts to <span class="math inline">\(q\geq 3\)</span>.</p>
+<p><strong>PASS.</strong></p>
+<hr>
+</section>
+<section id="phase-diagram-and-qualitative-claims" class="level3">
+<h3 class="anchored" data-anchor-id="phase-diagram-and-qualitative-claims">5. Phase diagram and qualitative claims</h3>
+<p><strong>Claim (a): <span class="math inline">\(\beta_s&lt;\beta_c\)</span> for <span class="math inline">\(q\geq 3\)</span>.</strong> The ordered local minima appear (via saddle-node bifurcation) before they become global minimizers. Standard result, consistent with the metastable window. CORRECT.</p>
+<p><strong>Claim (b): First-order transition for <span class="math inline">\(q\geq 3\)</span>.</strong> At <span class="math inline">\(\beta_c\)</span>, the order parameter jumps from <span class="math inline">\(m=0\)</span> to <span class="math inline">\(m^*=(q-2)/(q-1)&gt;0\)</span>. This is a discontinuous change in the minimizer. CORRECT.</p>
+<p><strong>Claim (c): Second-order transition for <span class="math inline">\(q=2\)</span>.</strong> The mean-field Ising model (<span class="math inline">\(q=2\)</span>) has a continuous pitchfork bifurcation at <span class="math inline">\(\beta=2\)</span>. The ordered state emerges smoothly from the disordered one. CORRECT.</p>
+<p><strong>Claim (d): “Second spinodal on the low-temperature side.”</strong> The disordered point loses local stability when the Hessian becomes indefinite. The Hessian of <span class="math inline">\(\Phi_\beta\)</span> at <span class="math inline">\(\rho^{\rm dis}\)</span> restricted to the simplex tangent space is <span class="math inline">\((q-\beta)I\)</span>. So the disordered point loses stability at <span class="math inline">\(\beta=q\)</span>. For <span class="math inline">\(q=3\)</span>: <span class="math inline">\(\beta=3&gt;\beta_c\approx 2.773\)</span>, confirming that the disordered local minimum persists above <span class="math inline">\(\beta_c\)</span> and vanishes at a second spinodal. CORRECT.</p>
+<p><strong>Claim (e): Three-regime summary.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 21%">
+<col style="width: 23%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Regime</th>
+<th>Condition</th>
+<th>Global min</th>
+<th>Ordered local min?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>High temp</td>
+<td><span class="math inline">\(\beta&lt;\beta_s\)</span></td>
+<td>disordered</td>
+<td>no</td>
+</tr>
+<tr class="even">
+<td>Metastable</td>
+<td><span class="math inline">\(\beta_s&lt;\beta&lt;\beta_c\)</span></td>
+<td>disordered</td>
+<td>yes</td>
+</tr>
+<tr class="odd">
+<td>Low temp</td>
+<td><span class="math inline">\(\beta&gt;\beta_c\)</span></td>
+<td>ordered</td>
+<td>yes (disordered is metastable)</td>
+</tr>
+</tbody>
+</table>
+<p>All descriptions match. CORRECT.</p>
+<p><strong>PASS.</strong></p>
+<hr>
+</section>
+<section id="spinodal-threshold-beta_s" class="level3">
+<h3 class="anchored" data-anchor-id="spinodal-threshold-beta_s">6. Spinodal threshold <span class="math inline">\(\beta_s\)</span></h3>
+<p>The note defines <span class="math inline">\(\beta_s\)</span> qualitatively as the inverse temperature where ordered local minima first appear. No closed form exists, but there is a clean implicit characterization.</p>
+<p><strong>Derivation.</strong> Using the order parameter <span class="math inline">\(m\)</span>, the stationarity condition for ordered points is <span class="math inline">\(\beta=g(m)\)</span> where</p>
+<p><span class="math display">\[
+g(m)=\frac{1}{m}\log\frac{1+(q-1)m}{1-m}
+\]</span></p>
+<p>The spinodal <span class="math inline">\(\beta_s\)</span> is the minimum of <span class="math inline">\(g\)</span> over <span class="math inline">\(m\in(0,1)\)</span>: it is the smallest <span class="math inline">\(\beta\)</span> for which the stationarity equation has a non-trivial solution.</p>
+<p>Setting <span class="math inline">\(g'(m_s)=0\)</span> and simplifying gives the tangency condition</p>
+<p><span class="math display">\[
+\beta_s = \frac{q-1}{1+(q-1)m_s}+\frac{1}{1-m_s}
+\]</span></p>
+<p>where <span class="math inline">\(m_s\in(0,1)\)</span> simultaneously satisfies</p>
+<p><span class="math display">\[
+m_s\!\left(\frac{q-1}{1+(q-1)m_s}+\frac{1}{1-m_s}\right)=\log\frac{1+(q-1)m_s}{1-m_s}
+\]</span></p>
+<p>In the document’s notation (<span class="math inline">\(r_s = \frac{1+(q-1)m_s}{q}\)</span>, <span class="math inline">\(s_s = \frac{1-m_s}{q}\)</span>), this reads:</p>
+<p><span class="math display">\[
+\beta_s = \frac{q-1}{q}\cdot\frac{1+(q-2)r_s}{r_s(1-r_s)}
+\]</span></p>
+<p>This is a transcendental equation (no closed form), but it pins down <span class="math inline">\(\beta_s\)</span> uniquely.</p>
+<p><strong>Numerical values:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(q\)</span></th>
+<th><span class="math inline">\(\beta_s\)</span></th>
+<th><span class="math inline">\(\beta_c\)</span></th>
+<th><span class="math inline">\(q\)</span> (disordered spinodal)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3</td>
+<td>2.746</td>
+<td>2.773</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>3.219</td>
+<td>3.296</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>3.565</td>
+<td>3.697</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>4.560</td>
+<td>4.944</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<p>The ordering <span class="math inline">\(\beta_s&lt;\beta_c&lt;q\)</span> holds in all cases, confirming the metastable window.</p>
+<p><strong>PASS.</strong></p>
+<hr>
+</section>
+</section>
+<section id="expositional-remarks" class="level2">
+<h2 class="anchored" data-anchor-id="expositional-remarks">Expositional remarks</h2>
+<p>These are not errors. They are minor points of precision that a reader might notice.</p>
+<ol type="1">
+<li><p><strong>“All local minima are necessarily of the following two types” (line 48).</strong> Strictly, the Lagrange analysis identifies all <em>stationary points</em>, which include saddle points. The subsequent paragraph (“The remaining work is algebra…”) correctly acknowledges that determining minima vs.&nbsp;saddles requires further analysis. The claim is true as stated (local minima are a subset of stationary points, and the only stationary points that can be minima are the two listed types), but the phrasing could be read as saying the Lagrange condition alone classifies minima.</p></li>
+<li><p><strong>“The global minimizer changes discontinuously” at <span class="math inline">\(\beta_c\)</span> (line 95).</strong> At <span class="math inline">\(\beta=\beta_c\)</span> exactly, the disordered and ordered states are both global minimizers (equal free energy). The discontinuity is in the sense that for <span class="math inline">\(\beta&lt;\beta_c\)</span> the global minimizer is disordered and for <span class="math inline">\(\beta&gt;\beta_c\)</span> it is ordered, with a jump in the order parameter. This is the standard usage, but a pedantic reader might note that “changes discontinuously” glosses over the coexistence at <span class="math inline">\(\beta_c\)</span> itself.</p></li>
+<li><p><strong>No explicit formula for <span class="math inline">\(\beta_s\)</span> in the note.</strong> The implicit characterization (section 6 above) is clean enough to include. Adding it would complete the quantitative picture alongside <span class="math inline">\(\beta_c\)</span>.</p></li>
+</ol>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>All five mathematical claims (energy rewriting, free energy functional, Lagrange condition, coexistence formula, phase diagram) are correct. The coexistence formula <span class="math inline">\(\beta_c=\frac{2(q-1)\log(q-1)}{q-2}\)</span> was verified both analytically (via the ansatz <span class="math inline">\(m^*=(q-2)/(q-1)\)</span>) and numerically for <span class="math inline">\(q=3,4,5\)</span>. The <span class="math inline">\(q\to 2\)</span> limit correctly recovers the mean-field Ising critical point. No mathematical errors were found.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

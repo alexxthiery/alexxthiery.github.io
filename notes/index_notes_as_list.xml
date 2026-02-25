@@ -10,7 +10,90 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Sun, 23 Nov 2025 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 23 Feb 2026 17:00:00 GMT</lastBuildDate>
+<item>
+  <title>The mean-field Potts model</title>
+  <link>https://alexxthiery.github.io/notes/potts_transition/potts.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<!-- ::: {style="text-align:center;"}
+![[Renfrey Potts](https://en.wikipedia.org/wiki/Renfrey_Potts) (1925–2005)](./potts.jpg){fig-align="center" width=35%}
+::: -->
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/potts_transition/potts_scatter.gif" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>Mean Field Potts model, with <img src="https://latex.codecogs.com/png.latex?q=3"> displayed in barycentric coordinates</figcaption>
+</figure>
+</div>
+</div>
+<p>The mean-field <a href="https://en.wikipedia.org/wiki/Potts_model">Potts model</a> is a very simple model with a first order phase transition; for Monte-Carlo simulation, it is especially interesting since this first order <a href="https://en.wikipedia.org/wiki/Phase_transition">phase transition</a> implies that standard tempering strategies such as <a href="https://en.wikipedia.org/wiki/Parallel_tempering">parallel-tempering</a> or sequential-monte-carlo are inefficient. Increasing the number of intermediate temperature just does not help (much) producing samples at low temperatures <span class="citation" data-cites="woodard2009sufficient bhatnagar2004torpid">(Woodard, Schmidler, and Huber 2009; Bhatnagar and Randall 2004)</span></p>
+<section id="potts-model" class="level3">
+<h3 class="anchored" data-anchor-id="potts-model">Potts model</h3>
+<p>Consider the Potts model with <img src="https://latex.codecogs.com/png.latex?q"> colors on the complete graph with <img src="https://latex.codecogs.com/png.latex?N"> vertices. A configuration is <img src="https://latex.codecogs.com/png.latex?%5Csigma=(%5Csigma_1,%5Cdots,%5Csigma_N)"> with <img src="https://latex.codecogs.com/png.latex?%5Csigma_i%5Cin%5C%7B1,%5Cdots,q%5C%7D">. Define the energy <img src="https://latex.codecogs.com/png.latex?%0AE(%5Csigma)%5C;=%5C;-%5Cfrac%7B1%7D%7B2N%7D%5Csum_%7Bi,j=1%7D%5EN%20%5Cmathbf%201%5C%7B%5Csigma_i=%5Csigma_j%5C%7D.%0A"> At inverse temperature <img src="https://latex.codecogs.com/png.latex?%5Cbeta">, the Boltzmann distribution is <img src="https://latex.codecogs.com/png.latex?%5Cmu_%5Cbeta(%5Csigma)=e%5E%7B-%5Cbeta%20E(%5Csigma)%7D%20/%20Z_%5Cbeta">. On the complete graph, the only relevant macroscopic variable is the empirical proportions vector <img src="https://latex.codecogs.com/png.latex?%0A%5Crho=(%5Crho_1,%5Cdots,%5Crho_q),%5Cqquad%0A%5Crho_a=%5Cfrac1N%5Cbigl%7C%5C%7Bi:%5Csigma_i=a%5C%7D%5Cbigr%7C.%0A"></p>
+<p>so that <img src="https://latex.codecogs.com/png.latex?%5Csum_%7Ba=1%7D%5Eq%20%5Crho_a=1">. A short computation rewrites the energy in terms of <img src="https://latex.codecogs.com/png.latex?%5Crho">: <img src="https://latex.codecogs.com/png.latex?%0AE(%5Crho)=%20-%5Cfrac%7BN%7D%7B2%7D%5Csum_%7Ba=1%7D%5Eq%20%5Crho_a%5E2,%0A"> up to an additive constant irrelevant for Gibbs weights. The number of configurations with a given <img src="https://latex.codecogs.com/png.latex?%5Crho"> is <img src="https://latex.codecogs.com/png.latex?%5Cexp%5C%7BN%20%5C,%20H(%5Crho)+o(N)%5C%7D">, where <img src="https://latex.codecogs.com/png.latex?H(%5Crho)=-%5Csum_a%20%5Crho_a%5Clog%5Crho_a"> is the <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">Shannon entropy</a>. Putting energy and entropy together, typical samples from <img src="https://latex.codecogs.com/png.latex?%5Cmu_%5Cbeta"> concentrate near minimizers of the mean-field free-energy functional: <img src="https://latex.codecogs.com/png.latex?%0A%5CPhi_%5Cbeta(%5Crho)%0A=%5Csum_%7Ba=1%7D%5Eq%20%5Crho_a%5Clog%5Crho_a%0A-%5Cfrac%7B%5Cbeta%7D%7B2%7D%5Csum_%7Ba=1%7D%5Eq%20%5Crho_a%5E2%0A"></p>
+<p>constrained to the probability simplex. Everything that follows is geometry: how the minima of <img src="https://latex.codecogs.com/png.latex?%5CPhi_%5Cbeta"> evolve as the inverse temperature <img src="https://latex.codecogs.com/png.latex?%5Cbeta"> varies.</p>
+<p><strong>Local minima:</strong> Two features make the analysis almost trivial. First, permuting colors leaves <img src="https://latex.codecogs.com/png.latex?%5CPhi_%5Cbeta"> unchanged. Second, a stationary point under the simplex constraint satisfies a Lagrange-multiplier condition <img src="https://latex.codecogs.com/png.latex?%0A%5Clog%5Crho_a+1-%5Cbeta%5Crho_a=%5Clambda%0A"> for <img src="https://latex.codecogs.com/png.latex?a=1,%5Cdots,q">. Hence each coordinate <img src="https://latex.codecogs.com/png.latex?%5Crho_a"> must solve the same scalar equation. From this, one finds that all local minima are necessarily of the following two types:</p>
+<ul>
+<li><p><strong>Disordered point</strong> (uniform): <img src="https://latex.codecogs.com/png.latex?%0A%5Crho%5E%7B%5Cmathrm%7Bdis%7D%7D=%5CBigl(%5Cfrac1q,%5Cdots,%5Cfrac1q%5CBigr),%0A"> always a stationary point.</p></li>
+<li><p><strong>Ordered points</strong> (one dominant color, the rest equal): <img src="https://latex.codecogs.com/png.latex?%0A%5Crho%5E%7B%5Cmathrm%7Bord%7D%7D(r)=%5CBigl(r,%5C%20%5Cunderbrace%7B%5Cfrac%7B1-r%7D%7Bq-1%7D,%5Cdots,%5Cfrac%7B1-r%7D%7Bq-1%7D%7D_%7Bq-1%5C%20%5Ctext%7Btimes%7D%7D%5CBigr)%0A"> for some dominant proportion <img src="https://latex.codecogs.com/png.latex?r%3E1/q">. There are <img src="https://latex.codecogs.com/png.latex?q"> such points by choosing which color is dominant.</p></li>
+</ul>
+<p>The remaining work is algebra: determine, as a function of <img src="https://latex.codecogs.com/png.latex?%5Cbeta">, when ordered stationary points exist, and which of the stationary points are local minima versus saddles. The details are routine and add little insight.</p>
+</section>
+<section id="the-phase-diagram-in-beta" class="level2">
+<h2 class="anchored" data-anchor-id="the-phase-diagram-in-beta">The phase diagram in <img src="https://latex.codecogs.com/png.latex?%5Cbeta"></h2>
+<p>Assume <img src="https://latex.codecogs.com/png.latex?q%5Cge%203">. Then the model exhibits a first-order transition, and metastability appears on both sides. There are two key inverse temperatures:</p>
+<ul>
+<li><strong>Spinodal threshold <img src="https://latex.codecogs.com/png.latex?%5Cbeta_s"></strong>: the ordered stationary points appear as local minima.</li>
+<li><strong>Coexistence threshold <img src="https://latex.codecogs.com/png.latex?%5Cbeta_c"></strong>: the disordered minimum and the ordered minimum have equal free energy.</li>
+</ul>
+<p>For the normalization above, the coexistence point is <img src="https://latex.codecogs.com/png.latex?%0A%5Cbeta_c=%5Cfrac%7B2(q-1)%5Clog(q-1)%7D%7Bq-2%7D.%0A"></p>
+<p>The geometry of <img src="https://latex.codecogs.com/png.latex?%5CPhi_%5Cbeta"> splits into three regimes.</p>
+<section id="high-temperature-betabeta_s" class="level3">
+<h3 class="anchored" data-anchor-id="high-temperature-betabeta_s">High temperature: <img src="https://latex.codecogs.com/png.latex?%5Cbeta%3C%5Cbeta_s"></h3>
+<ul>
+<li><strong>Critical points:</strong> only the uniform point <img src="https://latex.codecogs.com/png.latex?%5Crho%5E%7B%5Cmathrm%7Bdis%7D%7D">.</li>
+<li><strong>Landscape:</strong> <img src="https://latex.codecogs.com/png.latex?%5CPhi_%5Cbeta"> is strictly minimized at <img src="https://latex.codecogs.com/png.latex?%5Crho%5E%7B%5Cmathrm%7Bdis%7D%7D">.</li>
+<li><strong>Meaning:</strong> entropy dominates; colors mix.</li>
+</ul>
+</section>
+<section id="metastable-coexistence-beta_sbetabeta_c" class="level3">
+<h3 class="anchored" data-anchor-id="metastable-coexistence-beta_sbetabeta_c">Metastable coexistence: <img src="https://latex.codecogs.com/png.latex?%5Cbeta_s%3C%5Cbeta%3C%5Cbeta_c"></h3>
+<ul>
+<li><strong>Critical points:</strong> the uniform point remains a (global) minimum, but there are also <img src="https://latex.codecogs.com/png.latex?q"> ordered local minima <img src="https://latex.codecogs.com/png.latex?%5Crho%5E%7B%5Cmathrm%7Bord%7D%7D"> and corresponding saddles separating them from the uniform basin.</li>
+<li><strong>Landscape:</strong> multiple basins exist, but the uniform basin is lowest.</li>
+</ul>
+</section>
+<section id="low-temperature-betabeta_c" class="level3">
+<h3 class="anchored" data-anchor-id="low-temperature-betabeta_c">Low temperature: <img src="https://latex.codecogs.com/png.latex?%5Cbeta%3E%5Cbeta_c"></h3>
+<ul>
+<li><strong>Critical points:</strong> the ordered minima become the global minima; the uniform point persists as a local minimum (until it eventually disappears at a second spinodal on the low-temperature side).</li>
+<li><strong>Landscape:</strong> the roles swap: ordered basins are deepest; the uniform basin becomes metastable.</li>
+<li><strong>Meaning:</strong> energy dominates; one color wins.</li>
+</ul>
+<p>At <img src="https://latex.codecogs.com/png.latex?%5Cbeta=%5Cbeta_c">, the global minimizer changes discontinuously (as can be seen in the animation at the start of these notes): the equilibrium state jumps from <img src="https://latex.codecogs.com/png.latex?%5Crho%5E%7B%5Cmathrm%7Bdis%7D%7D"> to an ordered vector with one strictly larger coordinate. This is in contrast with the (mean-field) Curie–Weiss Ising model (<img src="https://latex.codecogs.com/png.latex?q=2">), where the ordered minimizers bifurcate continuously from the disordered one, i.e.&nbsp;a second-order transition. For <img src="https://latex.codecogs.com/png.latex?q%5Cge%203">, ordered minima appear while the uniform minimum is still globally optimal, and the eventual swap of global minima happens with a jump. That single change in the geometry of <img src="https://latex.codecogs.com/png.latex?%5CPhi_%5Cbeta"> is the entire origin of the first-order transition and the metastable window.</p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-bhatnagar2004torpid" class="csl-entry">
+Bhatnagar, Nayantara, and Dana Randall. 2004. <span>“Torpid Mixing of Simulated Tempering on the Potts Model.”</span> In <em>SODA</em>, 4:478–87.
+</div>
+<div id="ref-woodard2009sufficient" class="csl-entry">
+Woodard, Dawn, Scott Schmidler, and Mark Huber. 2009. <span>“Sufficient Conditions for Torpid Mixing of Parallel and Simulated Tempering.”</span>
+</div>
+</div></section></div> ]]></description>
+  <category>analysis</category>
+  <guid>https://alexxthiery.github.io/notes/potts_transition/potts.html</guid>
+  <pubDate>Mon, 23 Feb 2026 17:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Gegenbauer Polynomials and the Laplacian</title>
   <link>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</link>
@@ -96,7 +179,7 @@
  ]]></description>
   <category>analysis</category>
   <guid>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</guid>
-  <pubDate>Sun, 23 Nov 2025 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 23 Nov 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Scoring Rules for Probabilistic Forecasts</title>
@@ -150,7 +233,7 @@ Székely, Gábor J, and Maria L Rizzo. 2013. <span>“Energy Statistics: A Class
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/scoring_rules/scoring.html</guid>
-  <pubDate>Fri, 21 Nov 2025 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 21 Nov 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Masked Discrete Diffusion</title>
@@ -268,7 +351,7 @@ Shi, Jiaxin, Kehang Han, Zhe Wang, Arnaud Doucet, and Michalis Titsias. 2024. <s
   <category>DDPM</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/DiscreteDiff/DiscreteDiff.html</guid>
-  <pubDate>Mon, 20 Oct 2025 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 20 Oct 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Schrödinger Bridges</title>
@@ -287,53 +370,59 @@ Shi, Jiaxin, Kehang Han, Zhe Wang, Arnaud Doucet, and Michalis Titsias. 2024. <s
 </figure>
 </div>
 </div>
-<p>Consider two discrete probability distributions <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1"> over <img src="https://latex.codecogs.com/png.latex?%5B%5B1,n%5D%5D">. We would like to find a <a href="https://en.wikipedia.org/wiki/Coupling_(probability)">coupling</a> <img src="https://latex.codecogs.com/png.latex?%5Cpi(x_0,x_1)"> between <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1"> such that, under this coupling <img src="https://latex.codecogs.com/png.latex?(X_0,X_1)%20%5Csim%20%5Cpi">, the distance <img src="https://latex.codecogs.com/png.latex?d(X_0,X_1)"> between <img src="https://latex.codecogs.com/png.latex?X_0"> and <img src="https://latex.codecogs.com/png.latex?X_1"> is small. Naturally, this can be formulated as the following <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a> problem:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cpi%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20d(x_0,x_1)%20%5C,%20%5Cpi(x_0,x_1),%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%5CPi(%5Cnu_0,%20%5Cnu_1)"> is the set of couplings between <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1">. It is a <a href="https://en.wikipedia.org/wiki/Linear_programming">linear program</a> and can be solved efficiently when <img src="https://latex.codecogs.com/png.latex?n"> is not too large. However, the optimal transport plan <img src="https://latex.codecogs.com/png.latex?%5Cpi"> is often very sparse since it puts mass on at most <img src="https://latex.codecogs.com/png.latex?(2n-1)"> pairs <img src="https://latex.codecogs.com/png.latex?(x_0,x_1)">. This can be undesirable in some applications. Furthermore, small changes in the distributions <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1"> can lead to large changes in the optimal transport plan. This sensitivity can be problematic in practice, especially when the distributions are estimated from data.</p>
+<p>Consider two discrete probability distributions <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1"> over <img src="https://latex.codecogs.com/png.latex?%5B%5B1,n%5D%5D">. We would like to find a <a href="https://en.wikipedia.org/wiki/Coupling_(probability)">coupling</a> <img src="https://latex.codecogs.com/png.latex?%5Cgamma(x_0,x_1)"> between <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1"> such that, under this coupling <img src="https://latex.codecogs.com/png.latex?(X_0,X_1)%20%5Csim%20%5Cgamma">, the distance <img src="https://latex.codecogs.com/png.latex?d(X_0,X_1)"> between <img src="https://latex.codecogs.com/png.latex?X_0"> and <img src="https://latex.codecogs.com/png.latex?X_1"> is small. Naturally, this can be formulated as the following <a href="https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)">optimal transport</a> problem:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cgamma%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20d(x_0,x_1)%20%5C,%20%5Cgamma(x_0,x_1),%0A"></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?%5CPi(%5Cnu_0,%20%5Cnu_1)"> is the set of couplings between <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1">. It is a <a href="https://en.wikipedia.org/wiki/Linear_programming">linear program</a> and can be solved efficiently when <img src="https://latex.codecogs.com/png.latex?n"> is not too large. However, the optimal transport plan is often very sparse since it puts mass on at most <img src="https://latex.codecogs.com/png.latex?(2n-1)"> pairs <img src="https://latex.codecogs.com/png.latex?(x_0,x_1)">. This can be undesirable in some applications. Furthermore, small changes in the distributions <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1"> can lead to large changes in the optimal transport plan. This sensitivity can be problematic in practice, especially when the distributions are estimated from data.</p>
 <section id="static-shrödinger-bridge-problem" class="level3">
 <h3 class="anchored" data-anchor-id="static-shrödinger-bridge-problem">Static Shrödinger Bridge Problem</h3>
-<p>A standard way to address these issues is to add an entropic regularization term to the objective function. The resulting problem is known as the Schrödinger bridge problem and can be formulated as follows. Consider a reference joint distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)"> over <img src="https://latex.codecogs.com/png.latex?%5B%5B1,n%5D%5D%20%5Ctimes%20%5B%5B1,n%5D%5D"> and find the coupling <img src="https://latex.codecogs.com/png.latex?%5Cpi(x_0,x_1)"> that minimizes the Kullback-Leibler divergence to <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D"> while matching the marginals <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1">:</p>
-<p><span id="eq-kl-contrained"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cpi%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20%5Cpi(x_0,x_1)%20%5Clog%20%5Cfrac%7B%5Cpi(x_0,x_1)%7D%7B%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%7D.%0A%5Ctag%7B1%7D"></span></p>
-<p>Furthermore, since the marginals are fixed, one can readily see that the optimal coupling <img src="https://latex.codecogs.com/png.latex?%5Cpi"> only depends on the conditional distributions of the reference measure <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D">, i.e.&nbsp;the conditional law <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_1%7Cx_0)"> and <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0%7Cx_1)"> but not <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0)"> or <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_1)">. A common choice for the reference measure is a distribution of the form <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%20%5Cpropto%20%5Cnu(x_0)%20%5C,%20%5Cexp(-d(x_0,x_1)/%5Cvarepsilon)">. This choice encourages the coupling <img src="https://latex.codecogs.com/png.latex?%5Cpi"> to put more mass on pairs <img src="https://latex.codecogs.com/png.latex?(x_0,x_1)"> that are close according to the distance <img src="https://latex.codecogs.com/png.latex?d"> and the resulting optimization problem can be rewritten as:</p>
-<p><span id="eq-entropic-ot"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cpi%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20d(x_0,x_1)%20%5C,%20%5Cpi(x_0,x_1)%20%20%5Ctextcolor%7Bblue%7D%7B%5C;%20-%20%5C;%20%5Cvarepsilon%5C,%20%5Cmathrm%7BH%7D(%5Cpi)%7D%0A%5Ctag%7B2%7D"></span></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%5Cmathrm%7BH%7D(%5Cpi)%20=%20-%20%5Csum_%7Bx_0,x_1%7D%20%5Cpi(x_0,x_1)%20%5Clog%20%5Cpi(x_0,x_1)"> is the <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">entropy</a> of the coupling <img src="https://latex.codecogs.com/png.latex?%5Cpi">. Note that since the marginals of <img src="https://latex.codecogs.com/png.latex?%5Cpi"> are fixed, it is also equivalent to replacing the entropy term by the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback-Leibler</a> divergence to the independent coupling <img src="https://latex.codecogs.com/png.latex?%5Cnu_0(x_0)%20%5Cotimes%20%5Cnu_1(x_1)">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cpi%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20d(x_0,x_1)%20%5C,%20%5Cpi(x_0,x_1)%20%20%5Ctextcolor%7Bblue%7D%7B%5C;%20+%20%5C;%20%5Cvarepsilon%5C,%20D_%7B%5Ctext%7BKL%7D%7D(%5Cpi%20%5Cmid%20%5Cnu_0%20%5Cotimes%20%5Cnu_1)%7D.%0A"></p>
-<p>This can be slightly easier to deal with when working with continuous distributions since the <a href="https://en.wikipedia.org/wiki/Differential_entropy">differential entropy</a> <img src="https://latex.codecogs.com/png.latex?%5Cmathrm%7BH%7D(%5Cpi)"> is not an informationally meaningful quantity because it depends on the choice of coordinates and scale. The entropic regularization term encourages the coupling to be more spread out, which can lead to more robust solutions. The parameter <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon"> controls the trade-off between minimizing the transport cost and maximizing the entropy of the coupling. As <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200">, the solution approaches the optimal transport plan, while as <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%20%5Cinfty">, the solution approaches the independent coupling <img src="https://latex.codecogs.com/png.latex?%5Cpi(x_0,x_1)%20=%20%5Cnu_0(x_0)%20%5Cnu_1(x_1)">. Writing the <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange dual</a> formulation of the problem Equation&nbsp;2 provides fast algorithms to solve it such as the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">iterative proportional fitting</a> procedure (IPFP), also known as the Sinkhorn-Knopp algorithm in the optimal transport literature <span class="citation" data-cites="cuturi2013sinkhorn">(Cuturi 2013)</span>. Importantly, it also almost immediately shows that the optimal coupling has a very simple form,</p>
-<p><span id="eq-schrodinger-solution"><img src="https://latex.codecogs.com/png.latex?%0A%5Cpi(x_0,x_1)%20=%20f(x_0)%20%20%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%20%5C,%20g(x_1),%0A%5Ctag%7B3%7D"></span></p>
-<p>for two positive potential functions <img src="https://latex.codecogs.com/png.latex?f(x_0)"> and <img src="https://latex.codecogs.com/png.latex?g(x_1)">. These potentials function need to satisfy the marginal constraints,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign*%7D%0A%5Cnu_0(x_0)%20&amp;=%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0)%20%5C,%20f(x_0)%20%5C,%20g(0,%20x_0)%5C%5C%0A%5Cnu_1(x_1)%20&amp;=%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_1)%20%5C,%20g(x_1)%20%5C,%20f(1,%20x_1),%0A%5Cend%7Balign*%7D%0A%5Cright.%0A"></p>
-<p>where we defined the quantities <img src="https://latex.codecogs.com/png.latex?g(0,x_0)"> and <img src="https://latex.codecogs.com/png.latex?f(1,x_1)"> as follows:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign*%7D%0Ag(0,x_0)%20&amp;=%20%5Csum_%7Bx_1%7D%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_1%20%5Cmid%20x_0)%20%5C,%20g(x_1)%20=%20%5Cmathbb%7BE%7D_%7B%5Cmu_%7B%5Cmathrm%7Bref%7D%7D%7D%5Bg(X_1)%20%5Cmid%20X_0%20=%20x_0%5D,%5C%5C%0Af(1,x_1)%20&amp;=%20%5Csum_%7Bx_0%7D%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0%20%5Cmid%20x_1)%20%5C,%20f(x_0)%20=%20%5Cmathbb%7BE%7D_%7B%5Cmu_%7B%5Cmathrm%7Bref%7D%7D%7D%5Bf(X_0)%20%5Cmid%20X_1%20=%20x_1%5D.%0A%5Cend%7Balign*%7D%0A%5Cright.%0A"></p>
+<p>A standard way to address these issues is to add an entropic regularization term to the objective function. The resulting problem is known as the Schrödinger bridge problem and can be formulated as follows. Consider a reference joint distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)"> over <img src="https://latex.codecogs.com/png.latex?%5B%5B1,n%5D%5D%20%5Ctimes%20%5B%5B1,n%5D%5D"> and find the coupling <img src="https://latex.codecogs.com/png.latex?%5Cgamma(x_0,x_1)"> that minimizes the Kullback-Leibler divergence to <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D"> while matching the marginals <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1">:</p>
+<p><span id="eq-kl-contrained"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cgamma%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20%5Cgamma(x_0,x_1)%20%5Clog%20%5Cfrac%7B%5Cgamma(x_0,x_1)%7D%7B%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%7D.%0A%5Ctag%7B1%7D"></span></p>
+<p><strong>Remark (invariance under separable rescaling).</strong> Only the “interaction structure” of <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D"> matters: if one replaces <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D"> by <img src="https://latex.codecogs.com/png.latex?%5Ctilde%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%5Cpropto%20a(x_0)%5C,%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%5C,b(x_1)"> with positive <img src="https://latex.codecogs.com/png.latex?a,b">, then the optimal coupling can still be written in the same form below, with the factors <img src="https://latex.codecogs.com/png.latex?a,b"> absorbed into the potentials. Equivalently, the solution depends on <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D"> only through its kernel up to left/right diagonal scaling.</p>
+<p>A common choice for the reference measure is a distribution of the form <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%20%5Cpropto%20%5Cexp(-d(x_0,x_1)/%5Cvarepsilon)"> (optionally times separable factors). This choice encourages the coupling <img src="https://latex.codecogs.com/png.latex?%5Cgamma"> to put more mass on pairs <img src="https://latex.codecogs.com/png.latex?(x_0,x_1)"> that are close according to the distance <img src="https://latex.codecogs.com/png.latex?d">, and the resulting optimization problem can be rewritten (up to an additive constant) as:</p>
+<p><span id="eq-entropic-ot"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cgamma%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20d(x_0,x_1)%20%5C,%20%5Cgamma(x_0,x_1)%20%20%5Ctextcolor%7Bblue%7D%7B%5C;%20-%20%5C;%20%5Cvarepsilon%5C,%20%5Cmathrm%7BH%7D(%5Cgamma)%7D%0A%5Ctag%7B2%7D"></span></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?%5Cmathrm%7BH%7D(%5Cgamma)%20=%20-%20%5Csum_%7Bx_0,x_1%7D%20%5Cgamma(x_0,x_1)%20%5Clog%20%5Cgamma(x_0,x_1)"> is the <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">entropy</a> of the coupling <img src="https://latex.codecogs.com/png.latex?%5Cgamma">. Note that since the marginals of <img src="https://latex.codecogs.com/png.latex?%5Cgamma"> are fixed, it is also equivalent (up to constants) to replacing the entropy term by the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback-Leibler</a> divergence to the independent coupling <img src="https://latex.codecogs.com/png.latex?%5Cnu_0(x_0)%20%5Cotimes%20%5Cnu_1(x_1)">,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cgamma%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20d(x_0,x_1)%20%5C,%20%5Cgamma(x_0,x_1)%20%20%5Ctextcolor%7Bblue%7D%7B%5C;%20+%20%5C;%20%5Cvarepsilon%5C,%20D_%7B%5Ctext%7BKL%7D%7D(%5Cgamma%20%5Cmid%20%5Cnu_0%20%5Cotimes%20%5Cnu_1)%7D.%0A"></p>
+<p>Writing the <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange dual</a> formulation of the problem Equation&nbsp;2 provides fast algorithms to solve it such as the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">iterative proportional fitting</a> procedure (IPFP), also known as the Sinkhorn-Knopp algorithm in the optimal transport literature <span class="citation" data-cites="cuturi2013sinkhorn">(Cuturi 2013)</span>. Importantly, it also almost immediately shows that the optimal coupling has a very simple form,</p>
+<p><span id="eq-schrodinger-solution"><img src="https://latex.codecogs.com/png.latex?%0A%5Cgamma(x_0,x_1)%20=%20f(x_0)%20%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%20%5C,%20g(x_1).%0A%5Ctag%7B3%7D"></span></p>
+<p>These potentials must satisfy the marginal constraints, equivalently the <strong>Schrödinger/Sinkhorn scaling equations</strong>:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0A%5Cnu_0(x_0)%20&amp;=%20%5Csum_%7Bx_1%7D%20f(x_0)%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%5C,%20g(x_1),%5C%5C%0A%5Cnu_1(x_1)%20&amp;=%20%5Csum_%7Bx_0%7D%20f(x_0)%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%5C,%20g(x_1).%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
 <details>
 <summary>
 Some details:
 </summary>
 <p style="color: blue;">
-The Lagrangian of the constrained convex optimization Equation&nbsp;1 reads: <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign*%7D%0A%5Csum_%7Bx_0,x_1%7D%20%5Cpi(x_0,x_1)%20%5Clog%20%5Cfrac%7B%5Cpi(x_0,x_1)%7D%7B%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%7D%0A&amp;+%20%5Csum_x%20%5Calpha(x_0)%20%5Cleft(%20%5Cnu_0(x_0)%20-%20%5Csum_y%20%5Cpi(x_0,x_1)%20%5Cright)%5C%5C%0A&amp;+%20%5Csum_y%20%5Cbeta(x_1)%20%5Cleft(%20%5Cnu_1(x_1)%20-%20%5Csum_x%20%5Cpi(x_0,x_1)%20%5Cright).%0A%5Cend%7Balign*%7D%0A"> There is no need to impose a constraint on the total mass of <img src="https://latex.codecogs.com/png.latex?%5Cpi"> since it is automatically satisfied by the marginal constraints. For a fixed set of dual variables <img src="https://latex.codecogs.com/png.latex?%5Calpha"> and <img src="https://latex.codecogs.com/png.latex?%5Cbeta">, minimizing the Lagrangian with respect to <img src="https://latex.codecogs.com/png.latex?%5Cpi"> leads to optimum <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Calpha,%20%5Cbeta%7D(x_0,x_1)%20=%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%20%5C,%20e%5E%7B%5Calpha(x_0)%20+%20%5Cbeta(x_1)%20-1%7D">, hence proving Equation&nbsp;3. Plugging this expression back into the Lagrangian gives: <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D(%5Calpha,%20%5Cbeta)%20=%20%5Csum_x%20%5Calpha(x_0)%20%5C,%20%5Cnu_0(x_0)%20+%20%5Csum_y%20%5Cbeta(x_1)%20%5C,%20%5Cnu_1(x_1)%20-%20%5Csum_%7Bx_0,x_1%7D%20%5Cpi_%7B%5Calpha,%20%5Cbeta%7D(x_0,x_1).%0A"> If one chooses to alternate between maximizing <img src="https://latex.codecogs.com/png.latex?%5Calpha"> and <img src="https://latex.codecogs.com/png.latex?%5Cbeta"> while keeping the other fixed, this corresponds to alternately enforcing the marginal constraints on <img src="https://latex.codecogs.com/png.latex?%5Cpi_%7B%5Calpha,%20%5Cbeta%7D">, i.e.&nbsp;the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">Iterative proportional fitting</a> procedure (IPFP) also known as the Sinkhorn-Knopp algorithm in the optimal transport literature. Directly maximizing the Lagrange dual <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D(%5Calpha,%20%5Cbeta)"> using gradient ascent methods such as <a href="https://en.wikipedia.org/wiki/Limited-memory_BFGS">L-BFGS</a> is also possible and can lead to faster convergence in some cases. Note that the dual problem only has <img src="https://latex.codecogs.com/png.latex?2n"> variables, while the primal problem has <img src="https://latex.codecogs.com/png.latex?n%5E2"> variables!
+The Lagrangian of the constrained convex optimization Equation&nbsp;1 reads: <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign*%7D%0A%5Csum_%7Bx_0,x_1%7D%20%5Cgamma(x_0,x_1)%20%5Clog%20%5Cfrac%7B%5Cgamma(x_0,x_1)%7D%7B%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%7D%0A&amp;+%20%5Csum_%7Bx_0%7D%20%5Calpha(x_0)%20%5Cleft(%20%5Cnu_0(x_0)%20-%20%5Csum_%7Bx_1%7D%20%5Cgamma(x_0,x_1)%20%5Cright)%5C%5C%0A&amp;+%20%5Csum_%7Bx_1%7D%20%5Cbeta(x_1)%20%5Cleft(%20%5Cnu_1(x_1)%20-%20%5Csum_%7Bx_0%7D%20%5Cgamma(x_0,x_1)%20%5Cright).%0A%5Cend%7Balign*%7D%0A"> There is no need to impose a constraint on the total mass of <img src="https://latex.codecogs.com/png.latex?%5Cgamma"> since it is automatically satisfied by the marginal constraints. For a fixed set of dual variables <img src="https://latex.codecogs.com/png.latex?%5Calpha"> and <img src="https://latex.codecogs.com/png.latex?%5Cbeta">, minimizing the Lagrangian with respect to <img src="https://latex.codecogs.com/png.latex?%5Cgamma"> leads to the optimum <img src="https://latex.codecogs.com/png.latex?%5Cgamma_%7B%5Calpha,%20%5Cbeta%7D(x_0,x_1)%20=%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%20%5C,%20e%5E%7B%5Calpha(x_0)%20+%20%5Cbeta(x_1)%20-1%7D">, hence proving Equation&nbsp;3 with <img src="https://latex.codecogs.com/png.latex?f=e%5E%7B%5Calpha-1%7D"> and <img src="https://latex.codecogs.com/png.latex?g=e%5E%5Cbeta"> (up to scaling). Plugging this expression back into the Lagrangian gives: <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D(%5Calpha,%20%5Cbeta)%20=%20%5Csum_%7Bx_0%7D%20%5Calpha(x_0)%20%5C,%20%5Cnu_0(x_0)%20+%20%5Csum_%7Bx_1%7D%20%5Cbeta(x_1)%20%5C,%20%5Cnu_1(x_1)%20-%20%5Csum_%7Bx_0,x_1%7D%20%5Cgamma_%7B%5Calpha,%20%5Cbeta%7D(x_0,x_1).%0A"> Alternating maximization in <img src="https://latex.codecogs.com/png.latex?(%5Calpha,%5Cbeta)"> corresponds to alternately enforcing the two marginal constraints, i.e.&nbsp;IPFP / Sinkhorn scaling. Directly maximizing the Lagrange dual <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D(%5Calpha,%20%5Cbeta)"> using gradient ascent methods such as <a href="https://en.wikipedia.org/wiki/Limited-memory_BFGS">L-BFGS</a> is also possible and can lead to faster convergence in some cases. Note that the dual problem only has <img src="https://latex.codecogs.com/png.latex?2n"> variables, while the primal problem has <img src="https://latex.codecogs.com/png.latex?n%5E2"> variables!
 </p>
 </details>
 </section>
 <section id="dynamic-schrödinger-bridge-problem" class="level3">
 <h3 class="anchored" data-anchor-id="dynamic-schrödinger-bridge-problem">Dynamic Schrödinger Bridge Problem</h3>
-<p>Now, suppose that the reference distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)"> is given as the two-time marginal of a Markov process <img src="https://latex.codecogs.com/png.latex?(X_t)_%7Bt%20%5Cin%20%5B0,1%5D%7D"> with initial distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D,0%7D(x_0)"> and transition kernels <img src="https://latex.codecogs.com/png.latex?p_%7Bs,t%7D(x_s,x_t)">. Since the solution to the static Schrödinger bridge problem only depends on the conditional distributions of the reference measure <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D">, one can always assume without loss of generality that the reference process starts from the initial distribution <img src="https://latex.codecogs.com/png.latex?%5Cnu_0">. For example, <img src="https://latex.codecogs.com/png.latex?(X_t)"> could be the solution of a stochastic differential equation. We still denotes by <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(%5Bx_t%5D_%7Bt%20%5Cin%20%5B0,1%5D%7D)"> the distribution of the full path <img src="https://latex.codecogs.com/png.latex?(X_t)_%7Bt%20%5Cin%20%5B0,1%5D%7D">. The dynamic Schrödinger bridge problem consists in finding a new Markov process <img src="https://latex.codecogs.com/png.latex?(X_t)_%7Bt%20%5Cin%20%5B0,1%5D%7D">, with distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi(%5Bx_t%5D_%7Bt%20%5Cin%20%5B0,1%5D%7D)"> on path space, such that the starting and ending marginals are <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1"> respectively, while minimizing the Kullback-Leibler divergence to the reference path distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D">. The chain rule for Kullback-Leibler divergences shows that this problem is equivalent to the static Schrödinger bridge problem Equation&nbsp;1. One can first solve the corresponding static problem with respect to the two-time marginal <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)"> to obtain the Schrödinger coupling <img src="https://latex.codecogs.com/png.latex?%5Cpi(x_0,x_1)">, and then fill in the dynamics in between times <img src="https://latex.codecogs.com/png.latex?0"> and <img src="https://latex.codecogs.com/png.latex?1"> by using the same transition kernels as the reference process but conditioned on the endpoints. In other words, once the static Schrödinger bridge problem is solved, one can construct the solution to the dynamic Schrödinger bridge problem as follows:</p>
+<p>Now, suppose that the reference distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)"> is given as the two-time marginal of a Markov process <img src="https://latex.codecogs.com/png.latex?(X_t)_%7Bt%20%5Cin%20%5B0,1%5D%7D"> with transition kernels <img src="https://latex.codecogs.com/png.latex?p%5E%7B%5Ctext%7Bref%7D%7D_%7Bs,t%7D(x_s,x_t)"> and path measure <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D"> on trajectories <img src="https://latex.codecogs.com/png.latex?x_%7B%5B0,1%5D%7D">.</p>
+<p>The dynamic Schrödinger bridge problem consists in finding a new path measure <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> on trajectories <img src="https://latex.codecogs.com/png.latex?x_%7B%5B0,1%5D%7D"> such that the starting and ending marginals are <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu_1">, while minimizing the Kullback-Leibler divergence to the reference path distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D">:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cmathbb%7BQ%7D:%5C%20%5Cmathbb%7BQ%7D_0=%5Cnu_0,%5C%20%5Cmathbb%7BQ%7D_1=%5Cnu_1%7D%5C;%20%5Cmathrm%7BKL%7D(%5Cmathbb%7BQ%7D%5Cmid%20%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D).%0A"></p>
+<p>When the reference is Markov, the chain rule for KL (disintegration with respect to <img src="https://latex.codecogs.com/png.latex?(X_0,X_1)">) shows this is equivalent to the static Schrödinger bridge problem for the two-time marginal of <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D">: one first solves for the optimal endpoint coupling <img src="https://latex.codecogs.com/png.latex?%5Cgamma%5E%5Cstar(x_0,x_1)">, and then fills in intermediate times using the <strong>reference bridges</strong> <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D(%5Ccdot%5Cmid%20X_0=x_0,X_1=x_1)">:</p>
 <ol type="1">
-<li>Sample the endpoints <img src="https://latex.codecogs.com/png.latex?(X_0,%20X_1)%20%5Csim%20%5Cpi(x_0,x_1)"> from the static Schrödinger bridge coupling.<br>
+<li>Sample the endpoints <img src="https://latex.codecogs.com/png.latex?(X_0,%20X_1)%20%5Csim%20%5Cgamma%5E%5Cstar(x_0,x_1)">.<br>
 </li>
-<li>Sample the intermediate points of the path according to the conditional distribution of the reference process given the endpoints, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?(X_t)_%7Bt%20%5Cin%20(0,1)%7D%20%5Csim%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(%5Bx_t%5D_%7Bt%20%5Cin%20%5B0,1%5D%7D%20%5Cmid%20X_0,%20X_1)">.</li>
+<li>Sample the intermediate points according to the conditional law of the reference process given the endpoints, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?(X_t)_%7Bt%20%5Cin%20(0,1)%7D%20%5Csim%20%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D(%5Ccdot%20%5Cmid%20X_0,%20X_1)">.</li>
 </ol>
+<p><strong>Continuous-Time Stochastic Processes:</strong></p>
 <p>A typical setting is when the reference process <img src="https://latex.codecogs.com/png.latex?(X_t)"> is given as the solution of a stochastic differential equation of the form</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0AdX_t%20=%20b_t(X_t)%20%5C,%20dt%20+%20%5Csigma%20%5C,%20dW_t,%0A"></p>
-<p>started from the initial distribution <img src="https://latex.codecogs.com/png.latex?%5Cnu_0(x_0)">. The solution to the dynamic Schrödinger bridge problem is given by the twisted path distribution:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cpi(x_%7B%5B0,1%5D%7D)%20=%20f(X_0)%20%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_%7B%5B0,1%5D%7D)%20%5C,%20g(X_1),%0A"></p>
-<p>for potential functions <img src="https://latex.codecogs.com/png.latex?f"> and <img src="https://latex.codecogs.com/png.latex?g"> satisfying the marginal constraints. The marginal distribution at time <img src="https://latex.codecogs.com/png.latex?t%20%5Cin%20%5B0,1%5D"> of the Schrödinger bridge process is given by:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Cpi_t(x_t)%20=%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_t)%20%5C,%20f(t,x_t)%20%5C,%20g(t,x_t)"></p>
-<p>where, as previously, we defined the quantities:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Cleft%5C%7B%0A%5Cbegin%7Balign*%7D%0Af(t,x_t)%20&amp;=%20%5Cint%20f(x_0)%20%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0%20%5Cmid%20x_t)%20%5C,%20dx_0,%5C%5C%0Ag(t,x_t)%20&amp;=%20%5Cint%20g(x_1)%20%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_1%20%5Cmid%20x_t)%20%5C,%20dx_1.%0A%5Cend%7Balign*%7D%0A%5Cright.%0A"></p>
-<p>Naturally, the dynamics of the Schrödinger bridge process can be described as a new stochastic differential equation obtained by applying a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> to the reference SDE,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX_t%20=%20b_t(X_t)%20%5C,%20dt%20+%20%20%5Ctextcolor%7Bblue%7D%7B%20%5Csigma%20%5Csigma%5E%5Ctop%20%5Cnabla_x%20%5Clog%20g(t,%20X_t)%20dt%7D%20+%20%5Csigma%20%5C,%20dW_t,%0A"></p>
-<p>where, as explained in these previous <a href="../../notes/doob_transforms/doob.html">notes</a> the <img src="https://latex.codecogs.com/png.latex?h">-function is given by the usual formula,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ag(t,%20x_t)%20=%20%5Cmathbb%7BE%7D_%7B%5Cmu_%7B%5Cmathrm%7Bref%7D%7D%7D%5Bg(X_1)%20%5Cmid%20X_t%20=%20x_t%5D%20=%20%5Cint%20g(x_1)%20%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_1%20%5Cmid%20x_t)%20%5C,%20dx_1.%0A"></p>
-<p>It is a difficult problem since the potentials <img src="https://latex.codecogs.com/png.latex?f"> and <img src="https://latex.codecogs.com/png.latex?g"> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">(Shi et al. 2023)</span>; <span class="citation" data-cites="de2021diffusion">(De Bortoli et al. 2021)</span>; <span class="citation" data-cites="vargas2021solving">(Vargas et al. 2021)</span>; <span class="citation" data-cites="chen2021likelihood">(Chen, Liu, and Theodorou 2021)</span>.</p>
+<p>started from some initial distribution (one may take it to be <img src="https://latex.codecogs.com/png.latex?%5Cnu_0"> without loss of generality, since any mismatch can be absorbed into the endpoint tilt below). The solution to the dynamic Schrödinger bridge problem is given by the twisted path distribution:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%5Cmathbb%7BQ%7D%5E%5Cstar%7D%7Bd%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D%7D(x_%7B%5B0,1%5D%7D)%0A%5Cpropto%20f(X_0)%5C,g(X_1),%0A"></p>
+<p>for endpoint potentials <img src="https://latex.codecogs.com/png.latex?f"> and <img src="https://latex.codecogs.com/png.latex?g"> satisfying the marginal constraints at <img src="https://latex.codecogs.com/png.latex?t=0"> and <img src="https://latex.codecogs.com/png.latex?t=1">.</p>
+<p>The marginal density at intermediate time <img src="https://latex.codecogs.com/png.latex?t%5Cin%5B0,1%5D"> factorizes as:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Aq_t(x)%20=%20p_t%5E%7B%5Ctext%7Bref%7D%7D(x)%5C,%5Cwidehat%7B%5Cvarphi%7D_t(x)%5C,%5Cvarphi_t(x),%0A"></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?p_t%5E%7B%5Ctext%7Bref%7D%7D"> is the time-<img src="https://latex.codecogs.com/png.latex?t"> marginal density of the reference process, and where the time-dependent Schrödinger potentials are defined by:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0A%5Cvarphi_t(x)%20&amp;=%20%5Cmathbb%7BE%7D_%7B%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D%7D%5Bg(X_1)%5Cmid%20X_t=x%5D,%5C%5C%0A%5Cwidehat%7B%5Cvarphi%7D_t(x)%20&amp;=%20%5Cmathbb%7BE%7D_%7B%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D%7D%5Bf(X_0)%5Cmid%20X_t=x%5D,%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
+<p>(with <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_1%20%5Cequiv%20g"> and <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_0%20%5Cequiv%20f">, up to normalization). Naturally, the dynamics of the Schrödinger bridge process can be described as a new stochastic differential equation obtained by applying a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> to the reference SDE,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AdX_t%20=%20b_t(X_t)%5C,dt%20+%20%20%5Ctextcolor%7Bblue%7D%7B%5Csigma%20%5Csigma%5E%5Ctop%20%5Cnabla_x%20%5Clog%20%5Cvarphi_t(%20X_t)%5C,dt%7D%20+%20%5Csigma%5C,dW_t,%0A"></p>
+<p>where, as explained in these previous <a href="../../notes/doob_transforms/doob.html">notes</a>, the function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_t(x)"> is the harmonic extension of the terminal potential <img src="https://latex.codecogs.com/png.latex?g"> defined above.</p>
+<p><strong>Discrete-Time Markov Chains:</strong></p>
+<p>It is often useful to state the Schrödinger bridge dynamics in a discrete setting. Let the reference process be a Markov chain <img src="https://latex.codecogs.com/png.latex?X_0,%20%5Cldots,%20X_T"> with one-step kernels <img src="https://latex.codecogs.com/png.latex?M_k(x,dy)">, i.e. <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D(X_%7Bk+1%7D%5Cin%20dy%5Cmid%20X_k=x)=M_k(x,dy).%0A"> Let <img src="https://latex.codecogs.com/png.latex?g"> be the terminal potential at time <img src="https://latex.codecogs.com/png.latex?T"> and define the backward (harmonic) potentials defined by <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_T%20%5Cequiv%20g"> and recursively as: <img src="https://latex.codecogs.com/png.latex?%0A%5Cvarphi_k(x)%20=%20%5Cint%20M_k(x,dy)%5C,%5Cvarphi_%7Bk+1%7D(y).%0A"></p>
+<p>Then the Schrödinger bridge <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%5Cstar"> is Markov and its <strong>forward transition kernels</strong> are given by the discrete Doob <img src="https://latex.codecogs.com/png.latex?h">-transform: <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BQ%7D%5E%5Cstar(X_%7Bk+1%7D%5Cin%20dy%5Cmid%20X_k=x)%0A=%5Cfrac%7BM_k(x,dy)%5C,%5Cvarphi_%7Bk+1%7D(y)%7D%7B%5Cvarphi_k(x)%7D.%0A"> This is the discrete-time counterpart of the continuous-time drift correction <img src="https://latex.codecogs.com/png.latex?b_t%20%5Cmapsto%20b_t%20+%20%5Csigma%5Csigma%5E%5Ctop%5Cnabla%5Clog%5Cvarphi_t(%5Ccdot)">.</p>
+<p>In general, Schrödinger bridge problems are difficult problems since the endpoint potentials <img src="https://latex.codecogs.com/png.latex?f"> and <img src="https://latex.codecogs.com/png.latex?g"> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">(Shi et al. 2023)</span>; <span class="citation" data-cites="de2021diffusion">(De Bortoli et al. 2021)</span>; <span class="citation" data-cites="vargas2021solving">(Vargas et al. 2021)</span>; <span class="citation" data-cites="chen2021likelihood">(Chen, Liu, and Theodorou 2021)</span>.</p>
 
 
 
@@ -359,7 +448,7 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/shrodinger_bridge/shrodinger.html</guid>
-  <pubDate>Sat, 18 Oct 2025 16:00:00 GMT</pubDate>
+  <pubDate>Sat, 18 Oct 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Infinite Products</title>
@@ -447,7 +536,7 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
  ]]></description>
   <category>complex_analysis</category>
   <guid>https://alexxthiery.github.io/notes/infinite_products/inft_prod.html</guid>
-  <pubDate>Sat, 14 Jun 2025 16:00:00 GMT</pubDate>
+  <pubDate>Sat, 14 Jun 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Fisher-Rao Geometry</title>
@@ -527,7 +616,7 @@ Crucinio, Francesca R, and Sahani Pathiraja. 2025. <span>“Sequential Monte Car
   <category>probability</category>
   <category>information-geometry</category>
   <guid>https://alexxthiery.github.io/notes/fisher-rao/distance.html</guid>
-  <pubDate>Thu, 12 Jun 2025 16:00:00 GMT</pubDate>
+  <pubDate>Thu, 12 Jun 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Adjoint method for sensitivities</title>
@@ -637,7 +726,7 @@ Pontryagin, Lev Semenovich. 1962. <em>Mathematical Theory of Optimal Processes</
   <category>PDE</category>
   <category>Adjoint</category>
   <guid>https://alexxthiery.github.io/notes/adjoint_method/adjoint.html</guid>
-  <pubDate>Fri, 09 May 2025 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 09 May 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sparse GP</title>
@@ -709,7 +798,7 @@ Titsias, Michalis. 2009. <span>“Variational Learning of Inducing Variables in 
 </div></section></div> ]]></description>
   <category>GP</category>
   <guid>https://alexxthiery.github.io/notes/sparse_GP/sparse_gp.html</guid>
-  <pubDate>Thu, 17 Apr 2025 16:00:00 GMT</pubDate>
+  <pubDate>Thu, 17 Apr 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Self Avoiding Walks</title>
@@ -813,7 +902,7 @@ Rosenbluth, Marshall N, and Arianna W Rosenbluth. 1955. <span>“Monte Carlo Cal
 </div></section></div> ]]></description>
   <category>monte-carlo</category>
   <guid>https://alexxthiery.github.io/notes/SAW/SAW.html</guid>
-  <pubDate>Fri, 04 Apr 2025 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 04 Apr 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Jarzynski and Crooks</title>
@@ -904,7 +993,7 @@ Vargas, Francisco, Shreyas Padhy, Denis Blessing, and Nikolas Nüsken. 2024. <sp
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/jarzynski/jarzynski.html</guid>
-  <pubDate>Fri, 21 Feb 2025 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 21 Feb 2025 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Basic Conformal Inference</title>
@@ -970,7 +1059,7 @@ Lei, Jing, and Larry Wasserman. 2014. <span>“Distribution-Free Prediction Band
 </div></section></div> ]]></description>
   <category>conformal</category>
   <guid>https://alexxthiery.github.io/notes/conformal_inference/conformal.html</guid>
-  <pubDate>Sat, 07 Dec 2024 16:00:00 GMT</pubDate>
+  <pubDate>Sat, 07 Dec 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>VIASM mini-course on diffusions and flows</title>
@@ -995,7 +1084,7 @@ Lei, Jing, and Larry Wasserman. 2014. <span>“Distribution-Free Prediction Band
  ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/VIASM_2024/VIASM_2024.html</guid>
-  <pubDate>Mon, 29 Jul 2024 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 29 Jul 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Doob, Girsanov and Bellman</title>
@@ -1135,7 +1224,7 @@ $$ -->
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/HJB/HJB.html</guid>
-  <pubDate>Mon, 10 Jun 2024 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 10 Jun 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Girsanov and Importance Sampling</title>
@@ -1195,7 +1284,7 @@ $$ -->
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/girsanov/girsanov.html</guid>
-  <pubDate>Sun, 02 Jun 2024 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 02 Jun 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Joe Doob &amp; Change of measures on path-space</title>
@@ -1313,7 +1402,7 @@ An interpretation of the conditioned process is as follows. Suppose for example 
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/doob_transforms/doob.html</guid>
-  <pubDate>Mon, 13 May 2024 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 13 May 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>RWM &amp; HMC on manifolds</title>
@@ -1446,7 +1535,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
   <category>MCMC</category>
   <category>manifold</category>
   <guid>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</guid>
-  <pubDate>Fri, 08 Mar 2024 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 08 Mar 2024 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Metropolis-Hastings ratio with deterministic proposals</title>
@@ -1514,7 +1603,7 @@ Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“Monte
 </div></section></div> ]]></description>
   <category>auxiliary-variable</category>
   <guid>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</guid>
-  <pubDate>Sun, 17 Dec 2023 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 17 Dec 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Averaging and homogenization</title>
@@ -1645,7 +1734,7 @@ Weinan, E. 2011. <em>Principles of Multiscale Modeling</em>. Cambridge Universit
 </div></section></div> ]]></description>
   <category>diffusion</category>
   <guid>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</guid>
-  <pubDate>Mon, 27 Nov 2023 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 27 Nov 2023 17:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Ensemble Kalman Smoother (EnKS)</title>
@@ -1697,89 +1786,7 @@ Rauch, Herbert E, F Tung, and Charlotte T Striebel. 1965. <span>“Maximum Likel
   <category>enkf</category>
   <category>data-assimilation</category>
   <guid>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html</guid>
-  <pubDate>Fri, 17 Nov 2023 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Asymptotic variance &amp; Poisson Equation</title>
-  <link>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/poisson_eq.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
-</figure>
-</div>
-</div>
-<p>Consider a continuous time Markov process <img src="https://latex.codecogs.com/png.latex?X_t"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED"> that is ergodic with respect to the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)">. A Langevin diffusion is a typical example. Call <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> the generator of this process so that for a test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D"> we have</p>
-<p><span id="eq-martingale"><img src="https://latex.codecogs.com/png.latex?%0A%5Cvarphi(X_t)%20=%20%5Cvarphi(X_0)%20+%20%5Cint_%7Bs=0%7D%5Et%20%5Cmathcal%7BL%7D%5Cvarphi(X_s)%20%5C,%20ds%20+%20%5Ctextrm%7B($M_t%20%5Cequiv$%20martingale)%7D.%0A%5Ctag%7B1%7D"></span></p>
-<p>Now, assume further that <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D_%7B%5Cpi%7D%5B%5Cvarphi(X)%5D%20=%200"> and that a Central Limit Theorem holds,</p>
-<p><span id="eq-CLT"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B1%7D%7B%5Csqrt%7BT%7D%7D%20%5Cint_%7Bs=0%7D%5ET%20%5Cvarphi(X_s)%20%5C,%20ds%20%5C;%20%5Cto%20%5C;%20%5Cmathcal%7BN%7D(0,%20%5Csigma%5E2).%0A%5Ctag%7B2%7D"></span></p>
-<p>How can one estimate the asymptotic variance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2">?</p>
-<section id="approach-i-integrated-autocovariance" class="level3">
-<h3 class="anchored" data-anchor-id="approach-i-integrated-autocovariance">Approach I: Integrated autocovariance</h3>
-<p>One can directly try to compute the second moment of Equation&nbsp;2 and obtain that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%20%5C;%20=%20%5C;%20%5Clim_%7BT%20%5Cto%20%5Cinfty%7D%20%5C;%0A%5Cfrac%7B1%7D%7BT%7D%20%5C,%20%5Ciint_%7B0%20%5Cleq%20s,t%20%5Cleq%20T%7D%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X_s)%20%5Cvarphi(X_t)%5D%20%5C,%20ds%20%5C,%20dt%0A"></p>
-<p>Since <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5B%5Cvarphi(X_s)%20%5Cvarphi(X_t)%5D"> falls quickly to zero as <img src="https://latex.codecogs.com/png.latex?%7Cs-t%7C%20%5Cto%200"> and defining the auto-covariance at lag <img src="https://latex.codecogs.com/png.latex?r%20%3E%200"> as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AC(r)%20=%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X_t)%20%5Cvarphi(X_%7Bt+r%7D)%5D,%0A"></p>
-<p>one obtains that an expression of the asymptotic as the integrated autocovariance function,</p>
-<p><span id="eq-autocov"><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%20%5C;%20=%20%5C;%202%20%5C,%20%5Cint_%7Br=0%7D%5E%5Cinfty%20C(r)%20%5C,%20dr.%0A%5Ctag%7B3%7D"></span></p>
-<p>In the MCMC literature, this relation is often expressed as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%20%5C;%20=%20%5C;%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D_%7B%5Cpi%7D%5B%5Cvarphi%5D%20%5C,%20%5Ctimes%20%5C,%20%5Ctextrm%7B(IACT)%7D%0A"></p>
-<p>where the <strong>integrated autocorrelation</strong> function is defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextrm%7B(IACT)%7D%20=%202%20%5C,%20%5Cint_%7Br=0%7D%5E%5Cinfty%20%5Crho(r)%20%5C,%20dr.%0A"></p>
-<p>for autocorrelation at lag <img src="https://latex.codecogs.com/png.latex?r%5Cgeq%200"> defined as <img src="https://latex.codecogs.com/png.latex?%5Crho(r)%20%5Cequiv%20%5Cmathop%7B%5Cmathrm%7BCorr%7D%7D%5B%5Cvarphi(X_t),%20%5Cvarphi(X_%7Bt+r%7D)%5D">. The slower the autocorrelation function <img src="https://latex.codecogs.com/png.latex?%5Crho(r)"> falls to zero as <img src="https://latex.codecogs.com/png.latex?r%20%5Cto%20%5Cinfty">, the larger the asymptotic variance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2">. Although Equation&nbsp;3 is very intuitive, it can be difficult to estimate the autocorrelation function.</p>
-</section>
-<section id="approach-ii-poisson-equation" class="level3">
-<h3 class="anchored" data-anchor-id="approach-ii-poisson-equation">Approach II: Poisson Equation</h3>
-<p>Under relatively general and mild conditions, since the expectation of <img src="https://latex.codecogs.com/png.latex?%5Cvarphi"> under the invariant distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi"> is zero and the Markov process is ergodic with respect to <img src="https://latex.codecogs.com/png.latex?%5Cpi">, there exists a function <img src="https://latex.codecogs.com/png.latex?%5CPhi:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D"> such that</p>
-<p><span id="eq-poisson"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5CPhi%20%5C;%20=%20%5C;%20%5Cvarphi.%0A%5Ctag%7B4%7D"></span></p>
-<p>Equation&nbsp;4 is called a <a href="https://en.wikipedia.org/wiki/Poisson%27s_equation">Poisson Equation</a> since <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> is often a Laplacian-like operator (eg. diffusion-type processes). Equation&nbsp;1 gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B1%7D%7B%5Csqrt%7BT%7D%7D%20%5Cint_%7Bs=0%7D%5ET%20%5Cvarphi(X_s)%20%5C,%20ds%0A%5C;%20=%20%5C;%0A%5Cfrac%7BM_T%7D%7B%5Csqrt%7BT%7D%7D%20+%20%20%7B%5Cleft%5C%7B%20%20%5Cfrac%7B%5CPhi(X_T)%20-%20%5CPhi(X_0)%7D%7B%5Csqrt%7BT%7D%7D%20%20%5Cright%5C%7D%7D%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?M_T"> is the martingale and <img src="https://latex.codecogs.com/png.latex?%5B%5CPhi(X_T)%20-%20%5CPhi(X_0)%5D/%5Csqrt%7BT%7D"> typically vanishes as <img src="https://latex.codecogs.com/png.latex?T%20%5Cto%20%5Cinfty"> and can be neglected. For computing the asymptotic variance, it suffices to estimate <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D(M_T%5E2)">. And using the martingale property, it equals <img src="https://latex.codecogs.com/png.latex?%5Cint_%7Bs=0%7D%5ET%20%5Cmathbb%7BE%7D(dM_t)%5E2">. Also, since <img src="https://latex.codecogs.com/png.latex?M_t%20=%20%5Cvarphi(X_t)%20-%20%5Cvarphi(X_0)%20-%20%5Cint_%7Bs=0%7D%5Et%20%5Cmathcal%7BL%7D%5Cvarphi(X_s)%20%5C,%20ds">, algebra gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B1%7D%7B%5Cvarepsilon%7D%20%5C,%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20(M_%7Bt+%5Cvarepsilon%7D%20-%20M_t)%5E2%20%20%5Cright%5D%7D%20%20%5Capprox%202%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20(%5CGamma%20%5CPhi)(X_t)%20%20%5Cright%5D%7D%0A"></p>
-<p>where the so-called <strong>carré du champ</strong> <img src="https://latex.codecogs.com/png.latex?(%5CGamma%20%5CPhi)"> is defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A2%20%5C,%20(%5CGamma%20%5CPhi)(X_t)%0A%5C;%20=%20%5C;%20%20%7B%5Cleft(%20%20%5Cmathcal%7BL%7D(%5CPhi%5E2)%20-%202%20%5CPhi%20%5Cmathcal%7BL%7D%5CPhi%20%5Cright)%7D%20(X_t)%0A%5C;%20=%20%5C;%20%5Clim_%7B%5Cvarepsilon%5Cto%200%7D%20%5C;%20%5Cfrac%7B1%7D%7B%5Cvarepsilon%7D%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D(%5CPhi(X_%7Bt+%5Cvarepsilon%7D)%20%5C,%20%7C%20%5C,%20X_t).%0A"></p>
-<p>This shows that the asymptotic variance satisfies</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%0A%5C;%20=%20%5C;%0A%5Clim_%7BT%20%5Cto%20%5Cinfty%7D%20%5Cfrac%7B2%7D%7BT%7D%20%5Cint_%7Bs=0%7D%5ET%20%5CGamma%20%5CPhi(X_s)%20%5C,%20ds%0A%5C;%20=%20%5C;%0A2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5CGamma%20%5CPhi(x)%20%5C,%20%5Cpi(dx).%0A"></p>
-<p>Finally, since <img src="https://latex.codecogs.com/png.latex?%5Cint%20(%5Cmathcal%7BL%7D%5CPhi%5E2)(x)%20%5C,%20%5Cpi(dx)%20=%200">, this can equivalently be written as</p>
-<p><span id="eq-asymp-var-poisson"><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%0A%5C;%20=%20%5C;%0A-2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5CPhi(x)%20%5C,%20%5Cmathcal%7BL%7D%5CPhi(x)%20%5C,%20%5Cpi(dx)%0A%5C;%20=%20%5C;%202%20%5C,%20%5Cmathcal%7BD%7D(%5CPhi)%0A%5Ctag%7B5%7D"></span></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D(%5CPhi)"> is the so-called Dirichlet form. In summary, we have just shown that the asymptotic variance of the additive functional <img src="https://latex.codecogs.com/png.latex?T%5E%7B-1/2%7D%20%5C,%20%5Cint_0%5ET%20%5Cvarphi(X_s)%20%5C,%20ds"> is given by two times the Dirichlet form <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D(%5CPsi)"> where <img src="https://latex.codecogs.com/png.latex?%5CPhi"> is solution to the Poisson equation <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5CPhi%20=%20%5Cvarphi">. Note that this implies that the generator <img src="https://latex.codecogs.com/png.latex?%5CPhi"> is a negative operator in the sense that for a test function <img src="https://latex.codecogs.com/png.latex?%5CPhi"> we have that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%3C%20%5CPhi,%20%5Cmathcal%7BL%7D%5CPhi%20%5Cright%3E_%7B%5Cpi%7D%20%5C;%20%5Cleq%20%5C;%200%0A"></p>
-<p>where we have used the dot-product notation <img src="https://latex.codecogs.com/png.latex?%5Cleft%3C%20f,g%20%5Cright%3E_%7B%5Cpi%7D%20=%20%5Cint%20f(x)%20g(x)%20%5Cpi(dx)">.</p>
-</section>
-<section id="poisson-equation-integral-representation" class="level3">
-<h3 class="anchored" data-anchor-id="poisson-equation-integral-representation">Poisson equation: Integral representation</h3>
-<p>It is often useful to think of the generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> as an infinite dimensional equivalent of a standard negative definite symmetric matrix/operator <img src="https://latex.codecogs.com/png.latex?M%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bn,n%7D">. And since <img src="https://latex.codecogs.com/png.latex?M%5E%7B-1%7D%20=%20-%5Cint_%7Bt=0%7D%5E%7B%5Cinfty%7D%20%5Cexp(tM)%20%5C,%20dt">, as can be seen by diagonalizing <img src="https://latex.codecogs.com/png.latex?M">, one can expect the following equation to hold,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B-1%7D%20%5C;%20=%20%5C;%20-%5Cint_%7Bt=0%7D%5E%7B%5Cinfty%7D%20e%5E%7Bt%20%5C,%20%5Cmathcal%7BL%7D%7D%20%5C,%20dt.%0A"></p>
-<p>That is just another way of writing that the solution <img src="https://latex.codecogs.com/png.latex?%5CPhi"> to the Poisson equation <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5CPhi%20=%20%5Cvarphi">, with the <strong>centering condition</strong> <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D_%7B%5Cpi%7D%5B%5CPhi(X)%5D=0"> for picking one solution out of the many possible solutions to the Poisson equation differing from each other by an additive constant, can be expressed as</p>
-<p><span id="eq-expansion"><img src="https://latex.codecogs.com/png.latex?%0A%5CPhi(x)%20%5C,%20=%20%5C,%20-%5Cint_%7Bt=0%7D%5E%7B%5Cinfty%7D%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X_t)%7CX_0=x%5D%20%5C,%20dt.%0A%5Ctag%7B6%7D"></span></p>
-<p>Equation&nbsp;6 is easily proved with Equation&nbsp;1 by writing</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5CPhi(x)-%5CPhi(X_T)%20=%20-%5Cint_%7Bt=0%7D%5E%5Cinfty%20%5Cvarphi(X_t)%20%5C,%20dt%20+%20%5Ctextrm%7B(martingale)%7D%0A"></p>
-<p>and by taking expectation from both sides and noticing that <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5B%5CPhi(X_T)%5D%20%5Cto%200"> thanks to the assumed centering condition <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D_%7B%5Cpi%7D%5B%5CPhi(X)%5D=0">. Note that this remarks allows to give another derivation of Equation&nbsp;5 starting from the integrated autocovariance formulation Equation&nbsp;3. Indeed, note that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Csigma%5E2%20&amp;=%202%20%5C,%20%5Cint_%7Br=0%7D%5E%7B%5Cinfty%7D%20C(r)%20%5C,%20dr%5C%5C%0A&amp;=%0A2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5Cvarphi(x)%20%20%7B%5Cleft%5C%7B%20%20%5Cint_%7Br=0%7D%5E%7B%5Cinfty%7D%20%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X_t)%20%7C%20X_0=x%5D%20%5C,%20dr%20%20%5Cright%5C%7D%7D%20%20%5C,%20%5Cpi(dx)%5C%5C%0A&amp;=%0A-2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5Cvarphi(x)%20%5CPhi(x)%20%5C,%20%5Cpi(dx)%0A=%0A-2%20%5Cleft%3C%20%5CPhi,%20%5Cmathcal%7BL%7D%5CPhi%20%5Cright%3E_%7B%5Cpi%7D.%0A%5Cend%7Balign%7D%0A"></p>
-</section>
-<section id="example-ou-process" class="level3">
-<h3 class="anchored" data-anchor-id="example-ou-process">Example: OU process</h3>
-<p>Consider a OU process that is ergodic with respect to the standard Gaussian density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%20=%20e%5E%7B-x%5E2/2%7D%20/%20%5Csqrt%7B2%5Cpi%7D">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%0A%5C;%20=%20%5C;%0A-%5Cvarepsilon%5E%7B-1%7DX%20%5C,%20dt%20+%20%5Csqrt%7B2%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%7D%20%5C,%20dW.%0A"></p>
-<p>That’s a standard OU process accelerated by a factor <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1%7D%20%3E%200">. Its generator reads</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5C,%20=%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%20%5B-x%20%5C,%20%5Cpartial_x%20+%20%5Cpartial_%7Bxx%7D%5D.%0A"></p>
-<p>The function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi(x)=x"> is such that <img src="https://latex.codecogs.com/png.latex?%5Cpi(%5Cvarphi)=0"> and a solution to the Poisson equation <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5CPhi%20=%20%5Cvarphi"> is <img src="https://latex.codecogs.com/png.latex?%5CPhi(x)%20=%20-%5Cvarepsilon%5C,%20x">. This shows that the asymptotic variance is</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csigma%5E2%0A%5C;%20=%20%5C;%0A2%20%5C,%20%5Cint_%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5ED%7D%20%5Cvarepsilon%20x%5E2%20%5C,%20%5Cpi(dx)%20%5C;%20=%20%5C;%202%20%5Cvarepsilon.%0A"></p>
-<p>As expected, accelerating the OU process by a factor <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1%7D"> means reducing the variance by a factor <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon">.</p>
-
-
-</section>
-
- ]]></description>
-  <category>markov</category>
-  <guid>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</guid>
-  <pubDate>Fri, 10 Nov 2023 16:00:00 GMT</pubDate>
+  <pubDate>Fri, 17 Nov 2023 17:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
