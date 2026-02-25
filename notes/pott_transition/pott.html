@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Notes – Alexandre Thiéry</title>
+<title>The mean-field Potts model – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,22 +20,42 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -61,15 +81,46 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Notes – Alexandre Thiéry">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="The mean-field Potts model – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/pott_transition/potts_scatter.gif">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Notes – Alexandre Thiéry">
+<meta name="twitter:title" content="The mean-field Potts model – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/pott_transition/potts_scatter.gif">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -79,7 +130,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -89,29 +140,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html"> 
+    <a class="nav-link" href="../../people/index_people.html"> 
 <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html"> 
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
 <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html"> 
+    <a class="nav-link" href="../../teaching/teaching.html"> 
 <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" aria-current="page"> 
+    <a class="nav-link" href="../../notes/index_notes.html"> 
 <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html"> 
+    <a class="nav-link" href="../../about/about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -126,9 +177,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
+      <h1 class="title">The mean-field Potts model</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">index</div>
+                <div class="quarto-category">analysis</div>
               </div>
                   </div>
   </div>
@@ -140,10 +191,16 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
+        <p class="date">24 02 2026</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">24 02 2026</p>
+      </div>
+    </div>
       
     </div>
     
@@ -156,11 +213,13 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theorygeometry" id="toc-information-theorygeometry" class="nav-link" data-scroll-target="#information-theorygeometry">Information Theory/Geometry</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
-  <li><a href="#other" id="toc-other" class="nav-link" data-scroll-target="#other">Other</a></li>
+  <li><a href="#potts-model" id="toc-potts-model" class="nav-link active" data-scroll-target="#potts-model">Potts model</a></li>
+  <li><a href="#the-phase-diagram-in-beta" id="toc-the-phase-diagram-in-beta" class="nav-link" data-scroll-target="#the-phase-diagram-in-beta">The phase diagram in <span class="math inline">\(\beta\)</span></a>
+  <ul class="collapse">
+  <li><a href="#high-temperature-betabeta_s" id="toc-high-temperature-betabeta_s" class="nav-link" data-scroll-target="#high-temperature-betabeta_s">High temperature: <span class="math inline">\(\beta&lt;\beta_s\)</span></a></li>
+  <li><a href="#metastable-coexistence-beta_sbetabeta_c" id="toc-metastable-coexistence-beta_sbetabeta_c" class="nav-link" data-scroll-target="#metastable-coexistence-beta_sbetabeta_c">Metastable coexistence: <span class="math inline">\(\beta_s&lt;\beta&lt;\beta_c\)</span></a></li>
+  <li><a href="#low-temperature-betabeta_c" id="toc-low-temperature-betabeta_c" class="nav-link" data-scroll-target="#low-temperature-betabeta_c">Low temperature: <span class="math inline">\(\beta&gt;\beta_c\)</span></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -171,76 +230,95 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">dates</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
+<!-- ::: {style="text-align:center;"}
+![[Renfrey Potts](https://en.wikipedia.org/wiki/Renfrey_Potts) (1925–2005)](./potts.jpg){fig-align="center" width=35%}
+::: -->
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./potts_scatter.gif" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>Mean Field Potts model, with <span class="math inline">\(q=3\)</span> displayed in barycentric coordinates</figcaption>
+</figure>
+</div>
+</div>
+<p>The mean-field <a href="https://en.wikipedia.org/wiki/Potts_model">Potts model</a> is a very simple model with a first order phase transition; for Monte-Carlo simulation, it is especially interesting since this first order transition implies that standard tempering strategies such as parallel-tempering or sequential-monte-carlo are inefficient. Increasing the number of intermediate temperature just does not help (much) producing samples at low temperatures <span class="citation" data-cites="woodard2009sufficient bhatnagar2004torpid">(<a href="#ref-woodard2009sufficient" role="doc-biblioref">Woodard, Schmidler, and Huber 2009</a>; <a href="#ref-bhatnagar2004torpid" role="doc-biblioref">Bhatnagar and Randall 2004</a>)</span></p>
+<section id="potts-model" class="level3">
+<h3 class="anchored" data-anchor-id="potts-model">Potts model</h3>
+<p>Consider the Potts model with <span class="math inline">\(q\)</span> colors on the complete graph with <span class="math inline">\(N\)</span> vertices. A configuration is <span class="math inline">\(\sigma=(\sigma_1,\dots,\sigma_N)\)</span> with <span class="math inline">\(\sigma_i\in\{1,\dots,q\}\)</span>. Define the energy <span class="math display">\[
+E(\sigma)\;=\;-\frac{1}{2N}\sum_{i,j=1}^N \mathbf 1\{\sigma_i=\sigma_j\}.
+\]</span> At inverse temperature <span class="math inline">\(\beta\)</span>, the Boltzmann distribution is <span class="math inline">\(\mu_\beta(\sigma)=e^{-\beta E(\sigma)} / Z_\beta\)</span>. On the complete graph, the only relevant macroscopic variable is the empirical proportions vector <span class="math display">\[
+\rho=(\rho_1,\dots,\rho_q),\qquad
+\rho_a=\frac1N\bigl|\{i:\sigma_i=a\}\bigr|.
+\]</span></p>
+<p>so that <span class="math inline">\(\sum_{a=1}^q \rho_a=1\)</span>. A short computation rewrites the energy in terms of <span class="math inline">\(\rho\)</span>: <span class="math display">\[
+E(\rho)= -\frac{N}{2}\sum_{a=1}^q \rho_a^2,
+\]</span> up to an additive constant irrelevant for Gibbs weights. The number of configurations with a given <span class="math inline">\(\rho\)</span> is <span class="math inline">\(\exp\{N \, H(\rho)+o(N)\}\)</span>, where <span class="math inline">\(H(\rho)=-\sum_a \rho_a\log\rho_a\)</span> is the Shannon entropy. Putting energy and entropy together, typical samples from <span class="math inline">\(\mu_\beta\)</span> concentrate near minimizers of the mean-field free-energy functional: <span class="math display">\[
+\Phi_\beta(\rho)
+=\sum_{a=1}^q \rho_a\log\rho_a
+-\frac{\beta}{2}\sum_{a=1}^q \rho_a^2
+\]</span></p>
+<p>constrained to the probability simplex. Everything that follows is geometry: how the minima of <span class="math inline">\(\Phi_\beta\)</span> evolve as the inverse temperature <span class="math inline">\(\beta\)</span> varies.</p>
+<p><strong>Local minima:</strong> Two features make the analysis almost trivial. First, permuting colors leaves <span class="math inline">\(\Phi_\beta\)</span> unchanged. Second, a stationary point under the simplex constraint satisfies a Lagrange-multiplier condition <span class="math display">\[
+\log\rho_a+1-\beta\rho_a=\lambda
+\]</span> for <span class="math inline">\(a=1,\dots,q\)</span>. Hence each coordinate <span class="math inline">\(\rho_a\)</span> must solve the same scalar equation. From this, one finds that all local minima are necessarily of the following two types:</p>
 <ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-<li><a href="../notes/VIASM_2024/VIASM_2024.html">VIASM mini-course on diffusions and flows</a></li>
+<li><p><strong>Disordered point</strong> (uniform): <span class="math display">\[
+\rho^{\mathrm{dis}}=\Bigl(\frac1q,\dots,\frac1q\Bigr),
+\]</span> always a stationary point.</p></li>
+<li><p><strong>Ordered points</strong> (one dominant color, the rest equal): <span class="math display">\[
+\rho^{\mathrm{ord}}(r)=\Bigl(r,\ \underbrace{\frac{1-r}{q-1},\dots,\frac{1-r}{q-1}}_{q-1\ \text{times}}\Bigr)
+\]</span> for some dominant proportion <span class="math inline">\(r&gt;1/q\)</span>. There are <span class="math inline">\(q\)</span> such points by choosing which color is dominant.</p></li>
+</ul>
+<p>The remaining work is algebra: determine, as a function of <span class="math inline">\(\beta\)</span>, when ordered stationary points exist, and which of the stationary points are local minima versus saddles. The details are routine and add little insight.</p>
+</section>
+<section id="the-phase-diagram-in-beta" class="level2">
+<h2 class="anchored" data-anchor-id="the-phase-diagram-in-beta">The phase diagram in <span class="math inline">\(\beta\)</span></h2>
+<p>Assume <span class="math inline">\(q\ge 3\)</span>. Then the model exhibits a first-order transition, and metastability appears on both sides. There are two key inverse temperatures:</p>
+<ul>
+<li><strong>Spinodal threshold <span class="math inline">\(\beta_s\)</span></strong>: the ordered stationary points appear as local minima.</li>
+<li><strong>Coexistence threshold <span class="math inline">\(\beta_c\)</span></strong>: the disordered minimum and the ordered minimum have equal free energy.</li>
+</ul>
+<p>For the normalization above, the coexistence point is <span class="math display">\[
+\beta_c=\frac{2(q-1)\log(q-1)}{q-2}.
+\]</span></p>
+<p>The geometry of <span class="math inline">\(\Phi_\beta\)</span> splits into three regimes.</p>
+<section id="high-temperature-betabeta_s" class="level3">
+<h3 class="anchored" data-anchor-id="high-temperature-betabeta_s">High temperature: <span class="math inline">\(\beta&lt;\beta_s\)</span></h3>
+<ul>
+<li><strong>Critical points:</strong> only the uniform point <span class="math inline">\(\rho^{\mathrm{dis}}\)</span>.</li>
+<li><strong>Landscape:</strong> <span class="math inline">\(\Phi_\beta\)</span> is strictly minimized at <span class="math inline">\(\rho^{\mathrm{dis}}\)</span>.</li>
+<li><strong>Meaning:</strong> entropy dominates; colors mix.</li>
 </ul>
 </section>
-<section id="information-theorygeometry" class="level3">
-<h3 class="anchored" data-anchor-id="information-theorygeometry">Information Theory/Geometry</h3>
+<section id="metastable-coexistence-beta_sbetabeta_c" class="level3">
+<h3 class="anchored" data-anchor-id="metastable-coexistence-beta_sbetabeta_c">Metastable coexistence: <span class="math inline">\(\beta_s&lt;\beta&lt;\beta_c\)</span></h3>
 <ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-<li><a href="../notes/fisher-rao/distance.html">Fisher-Rao Geometry</a></li>
+<li><strong>Critical points:</strong> the uniform point remains a (global) minimum, but there are also <span class="math inline">\(q\)</span> ordered local minima <span class="math inline">\(\rho^{\mathrm{ord}}\)</span> and corresponding saddles separating them from the uniform basin.</li>
+<li><strong>Landscape:</strong> multiple basins exist, but the uniform basin is lowest.</li>
 </ul>
 </section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
+<section id="low-temperature-betabeta_c" class="level3">
+<h3 class="anchored" data-anchor-id="low-temperature-betabeta_c">Low temperature: <span class="math inline">\(\beta&gt;\beta_c\)</span></h3>
 <ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation &amp; the EnKF</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html">Ensemble Kalman Smoothers</a></li>
-<li><a href="../notes/MCMC_deterministic_proposals/MCMC_deterministic.html">MCMC with deterministic proposals</a></li>
-<li><a href="../notes/MCMC_on_manifold/mcmc_manifold.html">RWM &amp; HMC on Manifolds</a></li>
-<li><a href="../notes/SAW/SAW.html">Self-Avoiding-Walks</a></li>
+<li><strong>Critical points:</strong> the ordered minima become the global minima; the uniform point persists as a local minimum (until it eventually disappears at a second spinodal on the low-temperature side).</li>
+<li><strong>Landscape:</strong> the roles swap: ordered basins are deepest; the uniform basin becomes metastable.</li>
+<li><strong>Meaning:</strong> energy dominates; one color wins.</li>
 </ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-<li><a href="../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson Equation &amp; Asymptotic Variance</a></li>
-<li><a href="../notes/averaging_homogenization/averaging_homogenization.html">Averaging and Homogenization</a></li>
-<li><a href="../notes/doob_transforms/doob.html">Joe Doob &amp; Change of measures on path space</a></li>
-<li><a href="../notes/girsanov/girsanov.html">Girsanov and importance sampling</a></li>
-<li><a href="../notes/HJB/HJB.html">Doob, Girsanov and Bellman</a></li>
-<li><a href="../notes/conformal_inference/conformal.html">Basic Conformal Inference</a></li>
-<li><a href="../notes/jarzynski/jarzynski.html">Jarzynski and Crooks</a></li>
-<li><a href="../notes/sparse_GP/sparse_gp.html">Sparse Gaussian Processes</a></li>
-<li><a href="../notes/shrodinger_bridge/shrodinger.html">Shrodinger Bridges</a></li>
-<li><a href="../notes/DiscreteDiff/DiscreteDiff.html">Masked Discrete Diffusion</a></li>
-<li><a href="../notes/scoring_rules/scoring.html">Scoring Rules for Probabilistic Forecasts</a></li>
-<li><a href="../notes/potts_transition/potts.html">Mean Field Potts Model</a></li>
-</ul>
-</section>
-<section id="other" class="level3">
-<h3 class="anchored" data-anchor-id="other">Other</h3>
-<ul>
-<li><a href="../notes/adjoint_method/adjoint.html">Adjoint Method for Sensitivities</a></li>
-<li><a href="../notes/infinite_products/inft_prod.html">Infinite Products</a></li>
-<li><a href="../notes/gegenbauer/gegenbauer.html">Gegenbauer Polynomials</a></li>
-</ul>
+<p>At <span class="math inline">\(\beta=\beta_c\)</span>, the global minimizer changes discontinuously (as can be seen in the animation at the start of these notes): the equilibrium state jumps from <span class="math inline">\(\rho^{\mathrm{dis}}\)</span> to an ordered vector with one strictly larger coordinate. This is in contrast with the (mean-field) Curie–Weiss Ising model (<span class="math inline">\(q=2\)</span>), where the ordered minimizers bifurcate continuously from the disordered one, i.e.&nbsp;a second-order transition. For <span class="math inline">\(q\ge 3\)</span>, ordered minima appear while the uniform minimum is still globally optimal, and the eventual swap of global minima happens with a jump. That single change in the geometry of <span class="math inline">\(\Phi_\beta\)</span> is the entire origin of the first-order transition and the metastable window.</p>
 
 
+
+</section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bhatnagar2004torpid" class="csl-entry" role="listitem">
+Bhatnagar, Nayantara, and Dana Randall. 2004. <span>“Torpid Mixing of Simulated Tempering on the Potts Model.”</span> In <em>SODA</em>, 4:478–87.
+</div>
+<div id="ref-woodard2009sufficient" class="csl-entry" role="listitem">
+Woodard, Dawn, Scott Schmidler, and Mark Huber. 2009. <span>“Sufficient Conditions for Torpid Mixing of Parallel and Simulated Tempering.”</span>
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
