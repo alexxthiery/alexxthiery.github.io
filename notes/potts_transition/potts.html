@@ -237,7 +237,7 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./potts_scatter.gif" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption>Mean Field Potts model, with <span class="math inline">\(q=3\)</span> displayed in barycentric coordinates</figcaption>
+<figcaption>Mean Field Potts model with <span class="math inline">\(N=200\)</span>, with <span class="math inline">\(q=3\)</span> displayed in barycentric coordinates</figcaption>
 </figure>
 </div>
 </div>
@@ -305,6 +305,14 @@ E(\rho)= -\frac{N}{2}\sum_{a=1}^q \rho_a^2,
 <li><strong>Meaning:</strong> energy dominates; one color wins.</li>
 </ul>
 <p>At <span class="math inline">\(\beta=\beta_c\)</span>, the global minimizer changes discontinuously (as can be seen in the animation at the start of these notes): the equilibrium state jumps from <span class="math inline">\(\rho^{\mathrm{dis}}\)</span> to an ordered vector with one strictly larger coordinate. This is in contrast with the (mean-field) Curie–Weiss Ising model (<span class="math inline">\(q=2\)</span>), where the ordered minimizers bifurcate continuously from the disordered one, i.e.&nbsp;a second-order transition. For <span class="math inline">\(q\ge 3\)</span>, ordered minima appear while the uniform minimum is still globally optimal, and the eventual swap of global minima happens with a jump. That single change in the geometry of <span class="math inline">\(\Phi_\beta\)</span> is the entire origin of the first-order transition and the metastable window.</p>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./potts_scatter_N10000_S5000_F50.gif" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>Mean Field Potts model with <span class="math inline">\(N=10^4\)</span>, with <span class="math inline">\(q=3\)</span> displayed in barycentric coordinates</figcaption>
+</figure>
+</div>
+</div>
 
 
 
