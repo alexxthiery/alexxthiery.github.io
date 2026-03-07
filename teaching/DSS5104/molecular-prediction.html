@@ -138,7 +138,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <li><a href="#molecular-representations" id="toc-molecular-representations" class="nav-link" data-scroll-target="#molecular-representations"><strong>Molecular Representations</strong></a></li>
   <li><a href="#modeling-with-gnns" id="toc-modeling-with-gnns" class="nav-link" data-scroll-target="#modeling-with-gnns"><strong>Modeling with GNNs</strong></a></li>
   <li><a href="#assignment-tasks" id="toc-assignment-tasks" class="nav-link" data-scroll-target="#assignment-tasks"><strong>Assignment Tasks</strong></a></li>
-  <li><a href="#evaluation-metric" id="toc-evaluation-metric" class="nav-link" data-scroll-target="#evaluation-metric"><strong>Evaluation Metric</strong></a></li>
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics"><strong>Evaluation Metrics</strong></a></li>
   <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables"><strong>Deliverables</strong></a></li>
   <li><a href="#why-this-matters-in-practice" id="toc-why-this-matters-in-practice" class="nav-link" data-scroll-target="#why-this-matters-in-practice"><strong>Why This Matters in Practice</strong></a></li>
   </ul>
@@ -179,13 +179,14 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <hr>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview"><strong>Overview</strong></h3>
-<p>The goal of this assignment is to explore the use of <strong>deep learning</strong>, and in particular <strong>Graph Neural Networks (GNNs)</strong>, for <strong>molecular property prediction</strong>. While traditional cheminformatics has relied on handcrafted features like molecular fingerprints, recent advances in graph-based learning allow us to learn directly from the molecular graph structure. This assignment challenges you to understand both paradigms, classical feature engineering and deep graph representation learning, and critically compare their strengths and limitations.</p>
-<p>You will work with the <strong>Tox21 dataset</strong> , which consists of thousands of molecules labeled for activity against 12 different toxicity-related biological targets. Your task is to build and evaluate both traditional machine learning models and modern GNN-based approaches to predict molecular activity.</p>
+<p>The goal of this assignment is to explore the use of <strong>deep learning</strong>, and in particular <strong>Graph Neural Networks (GNNs)</strong>, for <strong>molecular property prediction</strong>. Traditional cheminformatics relies on molecular fingerprints and other engineered features; GNNs instead learn representations directly from the molecular graph structure, starting from hand-designed atom and bond features. Both paradigms involve feature engineering, but GNNs automate the step of combining local features into a global molecular representation.</p>
+<p>This assignment challenges you to understand both approaches, classical feature-based models and deep graph representation learning, and critically compare their strengths and limitations. A key part of the exercise is honest evaluation: on small datasets like Tox21, you may find that fingerprint baselines are competitive with or outperform GNNs. This is a valid and important result, not a failure.</p>
+<p>You will work with the <strong>Tox21 dataset</strong>, which consists of thousands of molecules labeled for activity against 12 different toxicity-related biological targets. Your task is to build and evaluate both traditional machine learning models and GNN-based approaches to predict molecular activity.</p>
 <hr>
 </section>
 <section id="dataset-tox21" class="level3">
 <h3 class="anchored" data-anchor-id="dataset-tox21"><strong>Dataset: Tox21</strong></h3>
-<p>The Tox21 dataset (available on CANVAS) is a benchmark in computational toxicology. It includes:</p>
+<p>The Tox21 dataset (publicly available via <a href="https://moleculenet.org/">MoleculeNet</a> or <a href="https://www.kaggle.com/datasets/epicskills/tox21-dataset">Kaggle</a>) is a benchmark in computational toxicology. It includes:</p>
 <ul>
 <li><strong>Compounds</strong> represented as <strong>SMILES strings</strong></li>
 <li><strong>12 binary classification tasks</strong> (e.g., activation of nuclear receptors or stress pathways)</li>
@@ -193,6 +194,11 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <li><strong>Multi-label setup</strong> (a molecule can be active in multiple assays)</li>
 </ul>
 <p>The dataset has been preprocessed and split into training, validation, and test sets.</p>
+<p><strong>Practical considerations you must handle:</strong></p>
+<ul>
+<li><strong>Missing labels.</strong> Not every molecule has been tested on every assay. The label matrix contains missing values (NaNs). You must mask these missing entries during loss computation; do not treat them as negatives.</li>
+<li><strong>Class imbalance.</strong> Several of the 12 targets are heavily imbalanced, with fewer than 5% positive examples. Be aware of this when interpreting your results and choosing evaluation metrics.</li>
+</ul>
 <hr>
 </section>
 <section id="molecular-representations" class="level3">
@@ -205,28 +211,30 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <h4 class="anchored" data-anchor-id="from-smiles-to-graphs"><strong>From SMILES to Graphs</strong></h4>
 <p>You can use cheminformatics libraries like <strong>RDKit</strong> to convert a SMILES string into a molecular graph, where:</p>
 <ul>
-<li><strong>Nodes</strong> = atoms (with features like element, degree, charge)</li>
-<li><strong>Edges</strong> = bonds (with features like bond type)</li>
+<li><strong>Nodes</strong> = atoms (with features like element type, degree, formal charge, aromaticity)</li>
+<li><strong>Edges</strong> = bonds (with features like bond type, conjugation, ring membership)</li>
 </ul>
+<p>Note that this atom/bond featurization is itself a form of feature engineering. GNNs learn to compose these local features into molecular-level representations through message passing, but the input features are still hand-designed.</p>
 <hr>
 </section>
 </section>
 <section id="modeling-with-gnns" class="level3">
 <h3 class="anchored" data-anchor-id="modeling-with-gnns"><strong>Modeling with GNNs</strong></h3>
-<p>GNNs operate directly on molecular graphs by <strong>passing messages between atoms</strong>, aggregating neighborhood information, and learning rich, hierarchical molecular representations. In this assignment, you may explore architectures such as:</p>
+<p>GNNs operate directly on molecular graphs by <strong>passing messages between atoms</strong>, aggregating neighborhood information, and learning hierarchical molecular representations. In this assignment, you may explore architectures such as:</p>
 <ul>
 <li>Graph Convolutional Networks (GCNs)</li>
 <li>Message Passing Neural Networks (MPNNs)</li>
-<li>AttentiveFP or D-MPNN (ChemProp)</li>
+<li>AttentiveFP or D-MPNN (Directed Message Passing Neural Network, implemented in the <a href="https://github.com/chemprop/chemprop">ChemProp</a> package)</li>
 </ul>
-<p>You do not have to analyse all of these architectures: choose one or two that you find interesting and implement them. These models typically include:</p>
+<p>You do not have to explore all of these architectures: choose one or two that you find interesting and implement them. These models typically include:</p>
 <ul>
 <li>Atom/bond featurization</li>
 <li>Message passing layers</li>
 <li>A readout/pooling step to produce a fixed-size molecular embedding</li>
 <li>A final MLP for classification</li>
 </ul>
-<p>You may use any high-level libraries of your choice to implement GNNs. You can also use existing implementations of the models you choose. The purpose of this assignment is not to implement the models from scratch, but to understand how GNNs work, how to train them and leverage them for molecular property prediction.</p>
+<p><strong>Suggested libraries:</strong> <a href="https://pytorch-geometric.readthedocs.io/">PyTorch Geometric</a>, <a href="https://www.dgl.ai/">DGL</a>, or <a href="https://deepchem.io/">DeepChem</a>. You may use existing implementations of the architectures you choose. The purpose of this assignment is not to implement GNNs from scratch, but to understand how they work, how to train them, and to critically evaluate their performance against classical baselines.</p>
+<p><strong>Compute:</strong> All experiments should be runnable on Google Colab (free tier GPU is sufficient). If training takes more than a few hours, simplify your model or reduce hyperparameter search.</p>
 <hr>
 </section>
 <section id="assignment-tasks" class="level3">
@@ -234,30 +242,48 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <section id="part-1-classical-ml-baseline-with-molecular-fingerprints" class="level4">
 <h4 class="anchored" data-anchor-id="part-1-classical-ml-baseline-with-molecular-fingerprints"><strong>Part 1: Classical ML Baseline with Molecular Fingerprints</strong></h4>
 <ol type="1">
-<li>Use <strong>RDKit</strong> to compute <strong>ECFP4 (Extended Connectivity Fingerprints)</strong> for all molecules: these are features that characterize the local environment of each atom in the molecule. ECFP4 is a widely used fingerprint for molecular similarity and property prediction. You are free to also explore other types of fingerprints/features (e.g., MACCS keys, Morgan fingerprints) if you wish. For this, do not hesitate to read the literature and/or brainstorm with a LLM-assistant.</li>
+<li>Use <strong>RDKit</strong> to compute <strong>Morgan fingerprints</strong> for all molecules. Morgan fingerprints (also known as Extended Connectivity Fingerprints, or ECFP) encode the local chemical environment of each atom up to a given radius. ECFP4 refers specifically to Morgan fingerprints with radius 2, and is one of the most widely used representations for molecular similarity and property prediction. You are free to experiment with different radii and bit vector lengths, or to explore other fingerprint types (e.g., MACCS keys, RDKit topological fingerprints). For this, do not hesitate to read the literature and/or brainstorm with an LLM-assistant.</li>
 <li>Train <strong>Random Forest</strong> or <strong>Gradient Boosting</strong> classifiers (e.g., XGBoost) using these fingerprints.</li>
 <li>Report performance on all 12 targets.</li>
 </ol>
-<p>This will serve as a baseline for comparison with GNNs. You may also explore other classical models (e.g., SVM, logistic regression) or additional features (e.g., molecular descriptors) if you wish.</p>
+<p>This serves as your baseline. You may also explore other classical models (e.g., SVM, logistic regression) or additional features (e.g., molecular descriptors) if you wish.</p>
 </section>
 <section id="part-2-graph-neural-network-modeling" class="level4">
 <h4 class="anchored" data-anchor-id="part-2-graph-neural-network-modeling"><strong>Part 2: Graph Neural Network Modeling</strong></h4>
 <ol type="1">
-<li>Convert each SMILES string into a <strong>molecular graph</strong>.</li>
-<li>Build a GNN model using any of the recommended architectures.</li>
-<li>Train and evaluate on the same prediction tasks and metrics.</li>
+<li>Convert each SMILES string into a <strong>molecular graph</strong> with appropriate atom and bond features.</li>
+<li>Build a GNN model using one of the suggested architectures.</li>
+<li>Train and evaluate on the same prediction tasks and metrics as Part 1.</li>
+<li><strong>Splitting comparison.</strong> Compare model performance using <strong>random splits</strong> vs.&nbsp;<strong>scaffold splits</strong> (where molecules are grouped by their core chemical scaffold, so that structurally similar molecules do not appear in both train and test). Discuss which splitting strategy is more appropriate for real-world deployment, and how the choice of split affects your conclusions about model performance.</li>
 </ol>
-<p>If time permits:</p>
-<ol type="1">
-<li>combine GNNs with some of the classical features you have explored in Part 1.</li>
-<li>compare to RNNs (eg. LSTM, biLSTM, 1D-CNN) that operate on the SMILES strings directly.</li>
-</ol>
+</section>
+<section id="part-3-analysis-and-ablation" class="level4">
+<h4 class="anchored" data-anchor-id="part-3-analysis-and-ablation"><strong>Part 3: Analysis and Ablation</strong></h4>
+<p>Conduct a structured ablation study on GNN design choices. Investigate how at least two of the following affect performance:</p>
+<ul>
+<li>Number of message passing layers</li>
+<li>Atom featurization (which features to include, how to encode them)</li>
+<li>Readout/pooling function (sum, mean, attention-based)</li>
+<li>Combining GNN embeddings with classical fingerprint features</li>
+<li>Comparison to sequence models (e.g., LSTM, 1D-CNN) operating on SMILES strings directly</li>
+</ul>
+<p>Report results with clear tables or figures showing the effect of each choice.</p>
+</section>
+<section id="additional-datasets-optional" class="level4">
+<h4 class="anchored" data-anchor-id="additional-datasets-optional"><strong>Additional datasets (optional)</strong></h4>
+<p>You are encouraged to validate your findings on additional datasets from the <a href="https://moleculenet.org/">MoleculeNet</a> benchmark suite (e.g., BBBP, BACE) or the <a href="https://ogb.stanford.edu/">Open Graph Benchmark</a> (<code>ogbg-molhiv</code>). These provide useful points of comparison, especially for understanding how dataset size affects the relative performance of fingerprints vs.&nbsp;GNNs.</p>
 <hr>
 </section>
 </section>
-<section id="evaluation-metric" class="level3">
-<h3 class="anchored" data-anchor-id="evaluation-metric"><strong>Evaluation Metric</strong></h3>
-<p>Use <strong>Area Under the ROC Curve (AUC ROC)</strong> for each of the 12 targets, and report: - Individual AUC scores - Mean and median AUC across tasks</p>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics"><strong>Evaluation Metrics</strong></h3>
+<p>Use <strong>Area Under the ROC Curve (AUC-ROC)</strong> for each of the 12 targets, and report:</p>
+<ul>
+<li>Individual AUC scores per target</li>
+<li>Mean and median AUC across tasks</li>
+</ul>
+<p>Given the class imbalance in several Tox21 targets, also report <strong>AUC-PR (Area Under the Precision-Recall Curve)</strong> as a complementary metric. Discuss any cases where AUC-ROC and AUC-PR tell different stories.</p>
+<p><strong>Reproducibility:</strong> Run all experiments with at least <strong>3 different random seeds</strong> and report mean and standard deviation of your metrics. Single-run numbers are not meaningful on a dataset of this size.</p>
 <hr>
 </section>
 <section id="deliverables" class="level3">
@@ -267,25 +293,24 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <li><strong>A written report (PDF)</strong>
 <ul>
 <li>A report of at most 10 pages; shorter is better if concise</li>
-<li>Clearly describe your methodology, experiments, results, and findings<br>
-</li>
-<li>Include key plots or tables where relevant (e.g., ROC curves, performance comparisons)</li>
+<li>Clearly describe your methodology, experiments, results, and findings</li>
+<li>Include key plots or tables where relevant (e.g., ROC curves, performance comparisons across splits, ablation results)</li>
+<li>Include a <strong>limitations</strong> section: discuss where your models fail, what they cannot do, and what you would do with more time or data</li>
 <li>Do not include code in the report</li>
 </ul></li>
-<li><strong>Code</strong>
+<li><strong>Your code</strong>
 <ul>
-<li>Submit as a <strong>GitHub repo</strong> or <strong>zip file</strong><br>
-</li>
-<li>Should include all scripts/notebooks for data loading, feature generation, model training, and evaluation<br>
-</li>
-<li>Make your code clean and reproducible</li>
+<li>Create a <strong>GitHub repository</strong> containing all your code. Include the repository link in your report. Do not submit code on CANVAS.</li>
+<li>All results reported in the PDF must be reproducible from the repository. Include a README with clear instructions to run your experiments.</li>
+<li>Should include all scripts/notebooks for data loading, feature generation, model training, and evaluation</li>
+<li>Include a <code>requirements.txt</code> or <code>environment.yml</code></li>
 </ul></li>
 </ol>
 <hr>
 </section>
 <section id="why-this-matters-in-practice" class="level3">
 <h3 class="anchored" data-anchor-id="why-this-matters-in-practice"><strong>Why This Matters in Practice</strong></h3>
-<p>Drug discovery increasingly depends on accurate, data-driven prediction of molecular properties. While traditional cheminformatics models still play a role, deep learning, especially GNNs, offers a powerful way to move beyond hand-designed descriptors.</p>
+<p>Drug discovery increasingly depends on accurate, data-driven prediction of molecular properties. Traditional cheminformatics models remain highly competitive, especially on smaller datasets typical of early-stage drug discovery programs. GNNs offer a way to learn molecular representations from graph structure, but whether this translates to better predictions depends heavily on dataset size, molecular diversity, and the specific property being predicted. Understanding when and why one approach outperforms another is more valuable than assuming deep learning always wins.</p>
 
 
 </section>

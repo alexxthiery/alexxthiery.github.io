@@ -133,9 +133,12 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><strong>Overview</strong></a></li>
   <li><a href="#assignment-objectives" id="toc-assignment-objectives" class="nav-link" data-scroll-target="#assignment-objectives"><strong>Assignment Objectives</strong></a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods"><strong>Methods</strong></a></li>
   <li><a href="#datasets-and-prediction-tasks" id="toc-datasets-and-prediction-tasks" class="nav-link" data-scroll-target="#datasets-and-prediction-tasks"><strong>Datasets and Prediction Tasks</strong></a></li>
+  <li><a href="#experimental-protocol" id="toc-experimental-protocol" class="nav-link" data-scroll-target="#experimental-protocol"><strong>Experimental Protocol</strong></a></li>
   <li><a href="#key-questions-to-address" id="toc-key-questions-to-address" class="nav-link" data-scroll-target="#key-questions-to-address"><strong>Key Questions to Address</strong></a></li>
   <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables"><strong>Deliverables</strong></a></li>
+  <li><a href="#key-references" id="toc-key-references" class="nav-link" data-scroll-target="#key-references"><strong>Key References</strong></a></li>
   <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts"><strong>Final Thoughts</strong></a></li>
   </ul>
 </nav>
@@ -165,51 +168,124 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </header>
 
 
-<!-- \begin{figure}[h]
-\centering
-\includegraphics[width=0.3\textwidth]{polymer-selfavoiding.png}
-\caption{A 2D self-avoiding walk}
-\end{figure} -->
-<!-- ::: {style="text-align:center;"}
-![[A 2D self-avoiding walk](https://en.wikipedia.org/wiki/Self-avoiding_walk)](./polymer-selfavoiding.png){fig-align="center" width=35%}
-::: -->
 <hr>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview"><strong>Overview</strong></h3>
-<p>The goal of this assignment is to <strong>critically explore and evaluate recent deep learning methods for tabular data prediction</strong>. While deep learning has achieved dramatic success in domains like vision and language, tabular data, often structured, heterogeneous, and small-to-medium in size, has long remained a domain dominated by tree-based models such as XGBoost. However, in recent years, new deep learning architectures specifically tailored for tabular data have emerged, including TabNet, NODE, and FT-Transformer and a host of others. These models leverage the strengths of deep learning, such as representation learning and attention mechanisms, to tackle tabular prediction tasks.</p>
-<p>In this assignment, you will evaluate the <strong>performance, robustness, and interpretability</strong> of a selection of these methods <strong>using publicly available implementations</strong> on a variety of <strong>non-trivial tabular prediction tasks</strong>. You are not expected to re-implement these models from scratch, but you are expected to understand how to use them properly and interpret their behavior.</p>
+<p>The goal of this assignment is to <strong>critically explore and evaluate recent deep learning methods for tabular data prediction</strong>. While deep learning has transformed vision and language, tabular data, often structured, heterogeneous, and small-to-medium in size, remains a domain where simpler methods frequently win. Linear models still dominate in regulated industries (credit scoring, insurance) where interpretability is paramount, and tree-based models such as XGBoost consistently perform well across a wide range of tabular tasks with minimal preprocessing. Yet in recent years, new deep learning architectures designed for tabular data have emerged, including TabNet, NODE, FT-Transformer, and others. These models attempt to bring the benefits of representation learning to structured data.</p>
+<p>The empirical picture is nuanced. Grinsztajn et al.&nbsp;(2022) provide evidence that tree-based models still outperform deep learning on typical tabular data, while Gorishniy et al.&nbsp;(2021) show that well-tuned deep models can be competitive on certain benchmarks. Your job is to run your own experiments and form your own view.</p>
+<p>In this assignment, you will evaluate the <strong>performance, robustness, preprocessing requirements, and inference cost</strong> of a selection of these methods <strong>using publicly available implementations</strong> on a variety of <strong>non-trivial tabular prediction tasks</strong>. You are not expected to re-implement these models from scratch, but you are expected to understand how to use them properly and interpret their behavior.</p>
 <hr>
 </section>
 <section id="assignment-objectives" class="level3">
 <h3 class="anchored" data-anchor-id="assignment-objectives"><strong>Assignment Objectives</strong></h3>
 <ul>
-<li>Understand and implement recent <strong>deep learning methods for tabular data</strong></li>
-<li>Critically assess their performance across <strong>multiple datasets</strong></li>
-<li>Compare their results against <strong>classical baselines</strong> like gradient boosting and random forests.</li>
-<li>Analyze the <strong>strengths, weaknesses, and practical challenges</strong> of deep learning models in the tabular setting</li>
+<li>Understand and apply recent <strong>deep learning methods for tabular data</strong> using existing libraries</li>
+<li>Critically assess their performance across <strong>multiple datasets</strong> using a rigorous experimental protocol</li>
+<li>Compare their results against <strong>classical baselines</strong> (gradient boosting, logistic regression, random forests)</li>
+<li>Analyze the <strong>practical trade-offs</strong>: preprocessing effort, training cost, inference speed, and sensitivity to hyperparameters</li>
 <li>Reflect on <strong>when and why</strong> these methods may be preferable, or not, to classical approaches</li>
 </ul>
 <hr>
 </section>
+<section id="methods" class="level3">
+<h3 class="anchored" data-anchor-id="methods"><strong>Methods</strong></h3>
+<p>You must compare at least <strong>two deep learning methods</strong> and at least <strong>two classical baselines</strong>.</p>
+<p><strong>Deep learning methods</strong> (pick at least 2):</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1908.07442">TabNet</a></li>
+<li><a href="https://arxiv.org/abs/2106.11959">FT-Transformer</a></li>
+<li><a href="https://arxiv.org/abs/1909.06312">NODE</a> (Neural Oblivious Decision Ensembles)</li>
+<li><a href="https://arxiv.org/abs/2012.06678">TabTransformer</a></li>
+<li><a href="https://arxiv.org/abs/2106.01342">SAINT</a></li>
+<li>Tabular ResNet (as described in Gorishniy et al., 2021)</li>
+</ul>
+<p><strong>Classical baselines</strong> (pick at least 2):</p>
+<ul>
+<li>XGBoost, LightGBM, or CatBoost</li>
+<li>Logistic regression (classification) or ridge regression (regression)</li>
+<li>Random forest</li>
+</ul>
+<p>You may include additional methods beyond this list, but the above sets the minimum.</p>
+<hr>
+</section>
 <section id="datasets-and-prediction-tasks" class="level3">
 <h3 class="anchored" data-anchor-id="datasets-and-prediction-tasks"><strong>Datasets and Prediction Tasks</strong></h3>
-<p>You must choose <strong>at least five datasets</strong> for tabular regression and/or classification. These should be:</p>
+<p>Choose <strong>3 to 4 datasets</strong> satisfying the following constraints:</p>
 <ul>
-<li>Non-trivial in size, dimensionality, or complexity</li>
-<li>From diverse domains (e.g., finance, healthcare, retail, education, etc.)</li>
-<li>Publicly available</li>
+<li><strong>Minimum size</strong>: at least 5,000 rows per dataset. No toy datasets (Iris, Wine, Boston Housing, Titanic).</li>
+<li><strong>Task diversity</strong>: include at least one regression task and at least one classification task.</li>
+<li><strong>Feature diversity</strong>: at least one dataset should have significant missing values or high-cardinality categorical features, since these expose important practical differences between model families.</li>
 </ul>
+<p><strong>Suggested datasets</strong> (you may choose others meeting the criteria above):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>Task</th>
+<th>Rows</th>
+<th>Why it is interesting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset">California Housing</a></td>
+<td>Regression</td>
+<td>~20K</td>
+<td>Well-understood baseline, continuous features</td>
+</tr>
+<tr class="even">
+<td><a href="https://archive.ics.uci.edu/ml/datasets/adult">Adult Income (Census)</a></td>
+<td>Classification</td>
+<td>~49K</td>
+<td>Mixed feature types, moderate size</td>
+</tr>
+<tr class="odd">
+<td><a href="https://archive.ics.uci.edu/ml/datasets/covertype">Covertype</a></td>
+<td>Classification</td>
+<td>~580K</td>
+<td>Larger scale, tests scalability</td>
+</tr>
+<tr class="even">
+<td><a href="https://archive.ics.uci.edu/ml/datasets/HIGGS">HIGGS</a></td>
+<td>Classification</td>
+<td>~11M</td>
+<td>Known to favor neural nets at scale (subsample if needed)</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.kaggle.com/c/porto-seguro-safe-driver-prediction">Porto Seguro Safe Driver</a></td>
+<td>Classification</td>
+<td>~595K</td>
+<td>Heavy missing values, categorical features</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="experimental-protocol" class="level3">
+<h3 class="anchored" data-anchor-id="experimental-protocol"><strong>Experimental Protocol</strong></h3>
+<p>Fair comparison requires a consistent experimental setup. Follow these rules:</p>
+<ol type="1">
+<li><strong>Data splits</strong>: Use either 5-fold cross-validation or a fixed train/validation/test split (e.g., 60/20/20). Use the same splits for all methods.</li>
+<li><strong>Random seeds</strong>: Report results as mean and standard deviation across at least 3 random seeds.</li>
+<li><strong>Hyperparameter tuning</strong>: Apply a comparable tuning budget to all methods. For example, 50 trials of <a href="https://optuna.org/">Optuna</a> per method, or a documented manual search of similar effort. Do not extensively tune one method while using defaults for another.</li>
+<li><strong>Evaluation metrics</strong>: Report at least two metrics per task type.
+<ul>
+<li>Classification: accuracy plus AUC-ROC or F1-score</li>
+<li>Regression: RMSE plus MAE or R-squared</li>
+</ul></li>
+</ol>
 <hr>
 </section>
 <section id="key-questions-to-address" class="level3">
 <h3 class="anchored" data-anchor-id="key-questions-to-address"><strong>Key Questions to Address</strong></h3>
 <p>In your report, aim to answer:</p>
 <ol type="1">
-<li><strong>Performance:</strong> How well do deep learning models perform relative to classical baselines? Are there specific datasets or characteristics where they shine or fail?</li>
-<li><strong>Scalability:</strong> How do training times and resource demands compare?</li>
-<li><strong>Sensitivity:</strong> How sensitive are results to hyperparameters, preprocessing, or random seed?</li>
-<li><strong>Generalization:</strong> Do deep models overfit more easily on small tabular datasets?</li>
-<li><strong>Practical Utility:</strong> Would you recommend using these models in practice? Why or why not?</li>
+<li><strong>Performance</strong>: How well do deep learning models perform relative to classical baselines? Are there dataset characteristics (size, feature types, missingness) that predict which model family wins?</li>
+<li><strong>Preprocessing effort</strong>: How much preprocessing does each model family require? Document the pipeline for each method. Note differences in categorical encoding (one-hot, target encoding, learned embeddings) and missing value handling (imputation vs.&nbsp;native support).</li>
+<li><strong>Inference cost</strong>: Report prediction latency (time per sample or per batch) and model size for each method. Would these models be practical to deploy behind an API?</li>
+<li><strong>Sensitivity</strong>: How sensitive are results to hyperparameters and random seeds? Which methods are more stable?</li>
+<li><strong>Interpretability</strong>: How do feature importance rankings compare across model types? Do deep models and tree-based models agree on which features matter?</li>
+<li><strong>Practical verdict</strong>: Given the full picture (accuracy, cost, effort, stability), would you recommend deep tabular models in practice? Under what conditions?</li>
 </ol>
 <hr>
 </section>
@@ -218,36 +294,38 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <ol type="1">
 <li><strong>A written report in PDF format</strong>
 <ul>
-<li>Your report should be at most 10 pages long, although a much shorter report is possible (and preferable if you are concise).</li>
-<li>No code should be included in the report.</li>
+<li>At most 10 pages (shorter is better if you are concise).</li>
+<li>No code in the report.</li>
+<li>Include summary tables of results (mean +/- std across seeds) and any relevant figures.</li>
 </ul></li>
 <li><strong>Your code</strong>
 <ul>
-<li>Either as a zip file or link to a GitHub repository<br>
-</li>
-<li>Clearly organized notebooks/scripts for:
+<li>Create a <strong>GitHub repository</strong> containing all your code. Include the repository link in your report. Do not submit code on CANVAS.</li>
+<li>All results reported in the PDF must be reproducible from the repository. Include a README with clear instructions to run your experiments.</li>
+<li>Clearly organized notebooks/scripts covering:
 <ul>
-<li>Data preparation</li>
-<li>Model training/evaluation</li>
-<li>Metric reporting</li>
-<li>Visualizations and interpretability analysis<br>
-</li>
+<li>Data preparation and preprocessing pipelines</li>
+<li>Model training and hyperparameter tuning</li>
+<li>Metric reporting and result tables</li>
+<li>Visualizations and interpretability analysis</li>
 </ul></li>
-<li>Must be reproducible</li>
+<li>Include a <code>requirements.txt</code> or <code>environment.yml</code></li>
 </ul></li>
 </ol>
 <hr>
 </section>
+<section id="key-references" class="level3">
+<h3 class="anchored" data-anchor-id="key-references"><strong>Key References</strong></h3>
+<ul>
+<li>Grinsztajn, L., Oyallon, E., &amp; Varoquaux, G. (2022). <em>Why do tree-based models still outperform deep learning on typical tabular data?</em> NeurIPS.</li>
+<li>Gorishniy, Y., Rubachev, I., Khrulkov, V., &amp; Babenko, A. (2021). <em>Revisiting deep learning models for tabular data.</em> NeurIPS.</li>
+</ul>
+<hr>
+</section>
 <section id="final-thoughts" class="level3">
 <h3 class="anchored" data-anchor-id="final-thoughts"><strong>Final Thoughts</strong></h3>
-<p>This assignment encourages you to step beyond traditional modeling and engage with the <strong>frontier of machine learning for structured data</strong>. While deep learning for tabular data remains a debated and fast-evolving space, it is essential for practitioners to develop the <strong>critical skill of evaluating tools, not just using them</strong>.</p>
-<p>You will gain hands-on experience that helps answer:</p>
-<ul>
-<li>Are these models ready for production use?</li>
-<li>When are they worth the added complexity?</li>
-<li>What types of problems benefit from deep tabular models?</li>
-</ul>
-<p>By the end, you should be able to <strong>advocate for or against these methods</strong> with informed reasoning, grounded in your own experiments.</p>
+<p>This assignment asks you to engage with a genuinely open question in applied machine learning. The evidence on deep learning for tabular data is mixed, and the answer depends on the dataset, the compute budget, and the practical constraints of the application. Your job is not to prove that one approach is universally better, but to run careful experiments and draw honest conclusions.</p>
+<p>By the end, you should be able to <strong>advocate for or against deep tabular methods</strong> with reasoning grounded in your own experiments, not in hype or received wisdom.</p>
 
 
 </section>

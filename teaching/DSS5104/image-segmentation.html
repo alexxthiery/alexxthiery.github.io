@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DSS5104 Assignment Topics – Alexandre Thiéry</title>
+<title>Deep Learning for Image Segmentation – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -92,10 +92,10 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta property="og:title" content="Deep Learning for Image Segmentation – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta name="twitter:title" content="Deep Learning for Image Segmentation – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -155,15 +155,32 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#assignment-objectives" id="toc-assignment-objectives" class="nav-link" data-scroll-target="#assignment-objectives">Assignment Objectives</a></li>
+  <li><a href="#architectures" id="toc-architectures" class="nav-link" data-scroll-target="#architectures">Architectures</a></li>
+  <li><a href="#data-augmentation" id="toc-data-augmentation" class="nav-link" data-scroll-target="#data-augmentation">Data Augmentation</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
+  <li><a href="#validation-protocol" id="toc-validation-protocol" class="nav-link" data-scroll-target="#validation-protocol">Validation Protocol</a></li>
+  <li><a href="#experimental-design" id="toc-experimental-design" class="nav-link" data-scroll-target="#experimental-design">Experimental Design</a></li>
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation Metrics</a></li>
+  <li><a href="#key-questions-to-address" id="toc-key-questions-to-address" class="nav-link" data-scroll-target="#key-questions-to-address">Key Questions to Address</a></li>
+  <li><a href="#compute-guidance" id="toc-compute-guidance" class="nav-link" data-scroll-target="#compute-guidance">Compute Guidance</a></li>
+  <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables">Deliverables</a></li>
+  <li><a href="#why-this-matters" id="toc-why-this-matters" class="nav-link" data-scroll-target="#why-this-matters">Why This Matters</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">DSS5104 Assignment Topics</h1>
+<h1 class="title">Deep Learning for Image Segmentation</h1>
   <div class="quarto-categories">
     <div class="quarto-category">DSS5104</div>
   </div>
@@ -184,27 +201,170 @@ window.Quarto = {
 
 
 <hr>
-<p>Here is a list of possible topics for your assignment.</p>
+<section id="overview" class="level3">
+<h3 class="anchored" data-anchor-id="overview">Overview</h3>
+<p>Image segmentation goes beyond classification: instead of assigning a single label to an entire image, the goal is to assign a label to <strong>every pixel</strong>. This makes segmentation a much richer and more challenging task, and one with high practical impact. Medical imaging relies on segmentation to delineate tumors, organs, and cells. Autonomous driving uses it to understand road scenes. Satellite imagery analysis uses it to map land use, detect buildings, or monitor deforestation.</p>
+<p>Deep learning has transformed image segmentation. The Fully Convolutional Network (FCN) introduced the idea of end-to-end pixel-level prediction, and U-Net refined it with skip connections between encoder and decoder, becoming the standard architecture for biomedical segmentation. Since then, models like DeepLabV3, Feature Pyramid Networks, and SegFormer have pushed performance further. More recently, foundation models like Segment Anything (SAM) offer zero-shot segmentation without task-specific training. In this assignment, you will build, train, and evaluate segmentation models on a real-world dataset, and optionally compare your trained models against SAM’s zero-shot predictions.</p>
+<hr>
+</section>
+<section id="assignment-objectives" class="level3">
+<h3 class="anchored" data-anchor-id="assignment-objectives">Assignment Objectives</h3>
 <ul>
-<li><a href="../../teaching/DSS5104/molecular-prediction.html"><strong>Molecular Properties Prediction</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-time-series.html"><strong>Deep Learning for Time-Series Forecasting</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-tabular-data.html"><strong>Deep Learning for Tabular Data</strong></a></li>
-<li><a href="../../teaching/DSS5104/CV-transfer-learning.html"><strong>Transfer Learning for Computer Vision</strong></a></li>
-<li><a href="../../teaching/DSS5104/recommender-systems.html"><strong>Deep Learning for Recommender Systems</strong></a></li>
-<li><a href="../../teaching/DSS5104/fraud-detection.html"><strong>Fraud and Anomaly Detection with Deep Learning</strong></a></li>
-<li><a href="../../teaching/DSS5104/text-classification.html"><strong>Text Classification: From Classical NLP to Transformers</strong></a></li>
-<li><a href="../../teaching/DSS5104/image-segmentation.html"><strong>Deep Learning for Image Segmentation</strong></a></li>
-<li><a href="../../teaching/DSS5104/open_topic.html"><strong>Open Topic</strong></a></li>
+<li>Understand the difference between <strong>semantic segmentation</strong> and <strong>instance segmentation</strong></li>
+<li>Implement and compare <strong>multiple segmentation architectures</strong></li>
+<li>Build a proper <strong>data augmentation pipeline</strong> and measure its impact</li>
+<li>Work with <strong>pixel-level annotations</strong> and understand the associated data challenges, including class imbalance</li>
+<li>Evaluate segmentation quality using <strong>appropriate metrics</strong> (not just pixel accuracy), including per-class breakdowns</li>
+<li>Benchmark models for both <strong>accuracy and efficiency</strong></li>
 </ul>
-<p><strong>Assignment group</strong>: You are reminded that assignments are to be done in groups of <strong>at most 5 students</strong>: each student in a group will be receiving the same mark. In all your reports, do include the list of all students, as well as their student numbers.</p>
-<p><strong>Submission instructions</strong>:</p>
+<hr>
+</section>
+<section id="architectures" class="level3">
+<h3 class="anchored" data-anchor-id="architectures">Architectures</h3>
+<p>You should implement and compare <strong>at least three</strong> segmentation models. Suggested options:</p>
 <ul>
-<li>Submit your <strong>report as a PDF file</strong> on CANVAS. Only PDF files are accepted; no other formats will be graded.</li>
-<li>Your <strong>code must be in a GitHub repository</strong>. Include the link to your repository in your report. Do not submit code on CANVAS. All results stated in your report must be reproducible from the repository.</li>
+<li><strong>U-Net</strong>: the classic encoder-decoder architecture with skip connections, especially strong in medical imaging</li>
+<li><strong>DeepLabV3 / DeepLabV3+</strong>: uses atrous (dilated) convolutions and atrous spatial pyramid pooling for multi-scale context</li>
+<li><strong>Feature Pyramid Network (FPN)</strong>: builds a feature pyramid for multi-scale predictions</li>
+<li><strong>SegFormer</strong>: a Transformer-based segmentation model</li>
+<li><strong>Pretrained backbones</strong>: for all of the above, you can use pretrained encoders (ResNet, EfficientNet, MobileNet) via libraries like <code>segmentation_models_pytorch</code></li>
 </ul>
-<p><strong>Late submissions</strong> will incur a penalty of <strong><span class="math inline">\(10\%\)</span> per day late</strong>: if you original mark is, say, <span class="math inline">\(81/100\)</span>, and you are <span class="math inline">\(6\)</span> days late, your mark will be <span class="math inline">\(81 \times 0.9^6 = 43\)</span>.</p>
+<p>You are encouraged to use the <strong>segmentation_models_pytorch</strong> (smp) library, which provides clean implementations of all major architectures with interchangeable backbones. HuggingFace Transformers also provides segmentation models.</p>
+<p><strong>Optional extension.</strong> Compare your best trained model against SAM (Segment Anything) used in zero-shot mode on your dataset. When does task-specific training beat a foundation model? This is an interesting and timely question.</p>
+<hr>
+</section>
+<section id="data-augmentation" class="level3">
+<h3 class="anchored" data-anchor-id="data-augmentation">Data Augmentation</h3>
+<p>A proper augmentation pipeline is essential for segmentation. Unlike classification, augmentations must be applied consistently to both the image and its mask.</p>
+<p>You are required to:</p>
+<ol type="1">
+<li><p><strong>Implement at least 3 augmentation strategies</strong> using <a href="https://github.com/albumentations-team/AlbumentationsX">AlbumentationsX</a> (<code>pip install albumentationsx</code>), which handles joint image-mask transforms correctly. AlbumentationsX is the actively maintained successor to the original Albumentations library (same API, same import names). Examples include: random horizontal/vertical flips, random rotations, random crops, elastic deformations, color jitter, Gaussian blur, and coarse dropout.</p></li>
+<li><p><strong>Ablate their effect.</strong> Train your best architecture with and without augmentations and report the difference in validation mIoU. If time permits, compare individual augmentation strategies to identify which ones help most for your dataset.</p></li>
+</ol>
+<p>For medical imaging datasets, elastic deformations and rotations tend to be particularly effective. For natural images, random cropping and color jitter are standard.</p>
+<hr>
+</section>
+<section id="datasets" class="level3">
+<h3 class="anchored" data-anchor-id="datasets">Datasets</h3>
+<p>Choose <strong>one primary dataset</strong> for your experiments. Your dataset should have pixel-level annotations and be publicly available. Suggested options:</p>
+<ul>
+<li><strong>Medical imaging</strong>:
+<ul>
+<li>Kvasir-SEG (polyp segmentation in colonoscopy images, ~1000 images)</li>
+<li>ISBI Cell Segmentation</li>
+<li>GlaS (gland segmentation in histology, well-defined evaluation protocol)</li>
+</ul></li>
+<li><strong>Satellite/aerial imagery</strong>:
+<ul>
+<li>Inria Aerial Image Labeling (building segmentation)</li>
+<li>LandCover.ai (land use segmentation)</li>
+<li>Massachusetts Buildings/Roads datasets</li>
+</ul></li>
+<li><strong>Scene understanding</strong>:
+<ul>
+<li>Pascal VOC 2012 (21 classes, ~2,900 segmentation images)</li>
+<li>CamVid (driving scene segmentation, 32 classes)</li>
+<li>Oxford-IIIT Pet Dataset (foreground/background/boundary, ~7,000 images, good for pipeline debugging)</li>
+<li>Cityscapes (if you have sufficient compute)</li>
+</ul></li>
+</ul>
+<p>A note on dataset size: DRIVE (retinal vessels) has only 40 images and is too small for a meaningful deep learning project without very heavy augmentation. If you choose a small dataset, be aware that results will be noisy and validation protocol matters even more.</p>
+<p>All of the above are publicly available and most run on Google Colab with appropriate batch sizes.</p>
+<hr>
+</section>
+<section id="validation-protocol" class="level3">
+<h3 class="anchored" data-anchor-id="validation-protocol">Validation Protocol</h3>
+<p>A sound validation protocol is necessary for meaningful results.</p>
+<ul>
+<li><p><strong>Train/validation/test split.</strong> Split your data into training, validation, and test sets. Use the validation set for hyperparameter tuning, model selection, and ablations. Evaluate on the held-out test set <strong>only once</strong>, for your final reported results.</p></li>
+<li><p><strong>Data leakage.</strong> Be careful with datasets that contain related images. For example, if you extract overlapping patches from the same source image (common in satellite and medical imaging), all patches from one source must go into the same split. A random split on patches will leak information and inflate your metrics.</p></li>
+<li><p><strong>Reporting.</strong> State your split sizes and strategy clearly in the report.</p></li>
+</ul>
+<hr>
+</section>
+<section id="experimental-design" class="level3">
+<h3 class="anchored" data-anchor-id="experimental-design">Experimental Design</h3>
+<p>Your experiments should address the following:</p>
+<ol type="1">
+<li><p><strong>Architecture comparison</strong>: train at least three models on the same dataset with the same training setup. Compare their performance, training time, and model size.</p></li>
+<li><p><strong>Backbone comparison</strong>: for one architecture (e.g., U-Net), compare at least two different pretrained backbones (e.g., ResNet-34 vs.&nbsp;EfficientNet-B3) to assess the impact of the encoder.</p></li>
+<li><p><strong>Loss functions</strong>: compare at least two loss functions appropriate for segmentation:</p>
+<ul>
+<li><strong>Cross-entropy loss</strong>: the standard pixel-wise classification loss. For imbalanced datasets, consider using class weights or focal loss to handle underrepresented classes.</li>
+<li><strong>Dice loss</strong>: directly optimizes the Dice coefficient, often better for imbalanced classes.</li>
+<li><strong>Combined losses</strong>: e.g., cross-entropy + Dice.</li>
+</ul></li>
+<li><p><strong>Augmentation ablation</strong>: compare training with and without your augmentation pipeline (see the Data Augmentation section).</p></li>
+<li><p><strong>Qualitative analysis</strong>: for your best model, show example predictions alongside ground truth masks. Include both good predictions and failure cases. Discuss what the model gets right and where it struggles.</p></li>
+</ol>
+<p><strong>Class imbalance.</strong> Many segmentation datasets are heavily imbalanced: background pixels vastly outnumber foreground, and some classes are much rarer than others. Beyond Dice loss, standard techniques include class weighting in cross-entropy and focal loss. Discuss how you handle class imbalance in your report.</p>
+<hr>
+</section>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics">Evaluation Metrics</h3>
+<p>Pixel accuracy alone is misleading for segmentation (a model that predicts “background” everywhere can achieve high pixel accuracy). Report the following:</p>
+<ul>
+<li><strong>Intersection over Union (IoU / Jaccard index)</strong>: the primary segmentation metric <span class="math display">\[\text{IoU} = \frac{|P \cap G|}{|P \cup G|}\]</span> where <span class="math inline">\(P\)</span> is the predicted mask and <span class="math inline">\(G\)</span> is the ground truth mask.</li>
+<li><strong>Dice coefficient</strong>: closely related to IoU, widely used in medical imaging <span class="math display">\[\text{Dice} = \frac{2|P \cap G|}{|P| + |G|}\]</span> Note that the Dice coefficient is identical to the F1-score for binary segmentation. If you have seen F1 in classification contexts, this is the same formula applied to pixel-level predictions.</li>
+<li><strong>Mean IoU (mIoU)</strong>: IoU averaged across all classes (the standard benchmark metric)</li>
+<li><strong>Per-class IoU breakdown</strong>: report IoU for each class individually, not just the mean. Identify which classes are hardest and discuss why.</li>
+<li><strong>Pixel accuracy</strong>: report it, but discuss its limitations.</li>
+</ul>
+<p><strong>Inference benchmarking.</strong> For each model, report: number of parameters, FLOPs (e.g., using <code>fvcore</code> or <code>ptflops</code>), and inference speed in FPS on your hardware. Discuss the accuracy vs.&nbsp;speed tradeoff across your models. In production settings, a model with slightly lower mIoU but much faster inference is often preferable.</p>
+<hr>
+</section>
+<section id="key-questions-to-address" class="level3">
+<h3 class="anchored" data-anchor-id="key-questions-to-address">Key Questions to Address</h3>
+<ol type="1">
+<li><strong>Architecture comparison</strong>: which model achieves the best segmentation quality? Is there a clear winner, or does performance depend on the dataset characteristics?</li>
+<li><strong>Encoder impact</strong>: how much does the choice of pretrained backbone matter? Does a heavier backbone always improve results?</li>
+<li><strong>Loss function impact</strong>: does Dice loss improve performance over cross-entropy, especially for small or underrepresented classes?</li>
+<li><strong>Augmentation impact</strong>: how much do augmentations improve validation performance? Which augmentations help most?</li>
+<li><strong>Efficiency tradeoff</strong>: which model offers the best balance of accuracy and inference speed?</li>
+<li><strong>Failure analysis</strong>: where does your best model fail? Are errors concentrated at object boundaries, on small objects, or on specific classes?</li>
+<li><strong>Classification vs.&nbsp;segmentation</strong>: how does the difficulty and cost of segmentation compare to classification? What are the additional challenges (annotation cost, compute, evaluation)?</li>
+</ol>
+<hr>
+</section>
+<section id="compute-guidance" class="level3">
+<h3 class="anchored" data-anchor-id="compute-guidance">Compute Guidance</h3>
+<p>Google Colab provides limited GPU time and VRAM. A few practical suggestions:</p>
+<ul>
+<li><strong>Mixed precision training</strong> (<code>torch.cuda.amp</code>) reduces memory usage and speeds up training. Use it by default.</li>
+<li><strong>Gradient accumulation</strong> lets you simulate larger batch sizes when your GPU memory is limited. For example, accumulating gradients over 4 steps with batch size 4 approximates batch size 16.</li>
+<li><strong>Short runs for ablations.</strong> When comparing augmentations, loss functions, or backbones, you do not need to train to convergence. Training for 10-20 epochs is often enough to see relative differences. Reserve longer training for your final model.</li>
+<li><strong>Image resolution.</strong> Downscaling images (e.g., to 256x256 or 512x512) significantly reduces compute cost. State your resolution choice and justify it.</li>
+</ul>
+<hr>
+</section>
+<section id="deliverables" class="level3">
+<h3 class="anchored" data-anchor-id="deliverables">Deliverables</h3>
+<p>You must submit:</p>
+<ol type="1">
+<li><strong>A written report (PDF)</strong>
+<ul>
+<li>Maximum length: 10 pages</li>
+<li>No code in the report</li>
+<li>Clear explanation of your dataset, architectures, augmentation pipeline, experimental setup, and findings</li>
+<li>Include a table comparing all models (mIoU, per-class IoU, Dice, parameters, FPS)</li>
+<li>Include training curves</li>
+<li>Include qualitative results: at least 5 examples showing predicted masks vs.&nbsp;ground truth, covering both successes and failures</li>
+</ul></li>
+<li><strong>Your code</strong>
+<ul>
+<li>Create a <strong>GitHub repository</strong> containing all your code. Include the repository link in your report. Do not submit code on CANVAS.</li>
+<li>All results reported in the PDF must be reproducible from the repository. Include a README with clear instructions to run your experiments.</li>
+<li>Well organized, with documented hyperparameters and a <code>requirements.txt</code> or <code>environment.yml</code></li>
+</ul></li>
+</ol>
+<hr>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h3>
+<p>Image segmentation is at the core of many real-world computer vision systems. Radiologists use segmentation models to measure tumor volumes. Urban planners use them to map buildings from satellite images. Self-driving cars use them to understand road geometry. Unlike classification, segmentation requires the model to produce spatially precise outputs, which raises the bar for both model design and evaluation. This assignment gives you experience with a task that is closer to production computer vision than simple image classification: you will deal with augmentation pipelines, class imbalance, efficiency constraints, and per-class analysis, all of which are standard concerns in applied work.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

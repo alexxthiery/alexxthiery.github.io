@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DSS5104 Assignment Topics – Alexandre Thiéry</title>
+<title>Deep Learning for Recommender Systems – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -92,10 +112,10 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta property="og:title" content="Deep Learning for Recommender Systems – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta name="twitter:title" content="Deep Learning for Recommender Systems – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -155,15 +175,29 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#assignment-objectives" id="toc-assignment-objectives" class="nav-link" data-scroll-target="#assignment-objectives">Assignment Objectives</a></li>
+  <li><a href="#implicit-vs.-explicit-feedback" id="toc-implicit-vs.-explicit-feedback" class="nav-link" data-scroll-target="#implicit-vs.-explicit-feedback">Implicit vs.&nbsp;Explicit Feedback</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
+  <li><a href="#evaluation-protocol" id="toc-evaluation-protocol" class="nav-link" data-scroll-target="#evaluation-protocol">Evaluation Protocol</a></li>
+  <li><a href="#key-questions-to-address" id="toc-key-questions-to-address" class="nav-link" data-scroll-target="#key-questions-to-address">Key Questions to Address</a></li>
+  <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables">Deliverables</a></li>
+  <li><a href="#why-this-matters" id="toc-why-this-matters" class="nav-link" data-scroll-target="#why-this-matters">Why This Matters</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">DSS5104 Assignment Topics</h1>
+<h1 class="title">Deep Learning for Recommender Systems</h1>
   <div class="quarto-categories">
     <div class="quarto-category">DSS5104</div>
   </div>
@@ -184,29 +218,141 @@ window.Quarto = {
 
 
 <hr>
-<p>Here is a list of possible topics for your assignment.</p>
+<section id="overview" class="level3">
+<h3 class="anchored" data-anchor-id="overview">Overview</h3>
+<p>Recommender systems are among the most widely deployed machine learning applications in industry. Every time you see “Recommended for you” on Netflix, Amazon, Spotify, or YouTube, a recommender system is at work. Despite their ubiquity, recommender systems are rarely covered in depth in ML courses.</p>
+<p>Traditionally, collaborative filtering methods such as matrix factorization have been the backbone of recommendation. In recent years, deep learning approaches, including neural collaborative filtering, two-tower retrieval models, and session-based architectures, have been proposed as alternatives that can capture richer user-item interactions. Whether these more complex models actually outperform well-tuned classical baselines remains an active and sometimes contentious debate. <span class="citation" data-cites="dacrema2019progress">Dacrema, Cremonesi, and Jannach (<a href="#ref-dacrema2019progress" role="doc-biblioref">2019</a>)</span> showed that many published deep learning recommender models failed to beat properly tuned classical baselines, a finding that should inform how you approach this assignment.</p>
+<p>In this assignment, you will build and evaluate both <strong>classical and deep learning-based recommender systems</strong> on public datasets. Your goal is to critically assess whether the added complexity of deep learning translates into meaningful improvements in recommendation quality.</p>
+<section id="industry-context-the-multi-stage-pipeline" class="level4">
+<h4 class="anchored" data-anchor-id="industry-context-the-multi-stage-pipeline">Industry context: the multi-stage pipeline</h4>
+<p>Production recommender systems at companies like YouTube, Netflix, or TikTok are not single models. They typically follow a multi-stage pipeline: (1) <strong>candidate generation</strong>, where a fast model (often a two-tower architecture) retrieves a few hundred candidates from millions of items; (2) <strong>ranking</strong>, where a more expressive model scores and orders these candidates; and (3) <strong>re-ranking</strong>, where business rules, diversity constraints, and freshness considerations produce the final list. In this assignment, you will focus on the ranking stage and offline evaluation. Keep the full pipeline in mind, though: understanding where your model fits in a production system is something interviewers and hiring managers care about.</p>
+<hr>
+</section>
+</section>
+<section id="assignment-objectives" class="level3">
+<h3 class="anchored" data-anchor-id="assignment-objectives">Assignment Objectives</h3>
 <ul>
-<li><a href="../../teaching/DSS5104/molecular-prediction.html"><strong>Molecular Properties Prediction</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-time-series.html"><strong>Deep Learning for Time-Series Forecasting</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-tabular-data.html"><strong>Deep Learning for Tabular Data</strong></a></li>
-<li><a href="../../teaching/DSS5104/CV-transfer-learning.html"><strong>Transfer Learning for Computer Vision</strong></a></li>
-<li><a href="../../teaching/DSS5104/recommender-systems.html"><strong>Deep Learning for Recommender Systems</strong></a></li>
-<li><a href="../../teaching/DSS5104/fraud-detection.html"><strong>Fraud and Anomaly Detection with Deep Learning</strong></a></li>
-<li><a href="../../teaching/DSS5104/text-classification.html"><strong>Text Classification: From Classical NLP to Transformers</strong></a></li>
-<li><a href="../../teaching/DSS5104/image-segmentation.html"><strong>Deep Learning for Image Segmentation</strong></a></li>
-<li><a href="../../teaching/DSS5104/open_topic.html"><strong>Open Topic</strong></a></li>
+<li>Understand and implement <strong>collaborative filtering</strong> approaches (both classical and neural)</li>
+<li>Compare deep learning-based recommender models against <strong>well-tuned classical baselines</strong></li>
+<li>Evaluate recommendation quality using <strong>ranking metrics</strong> with a proper temporal evaluation protocol</li>
+<li>Analyze the <strong>trade-offs</strong> between model complexity, training cost, and recommendation quality</li>
+<li>Reflect on when deep learning adds genuine value in recommendation settings</li>
 </ul>
-<p><strong>Assignment group</strong>: You are reminded that assignments are to be done in groups of <strong>at most 5 students</strong>: each student in a group will be receiving the same mark. In all your reports, do include the list of all students, as well as their student numbers.</p>
-<p><strong>Submission instructions</strong>:</p>
+<hr>
+</section>
+<section id="implicit-vs.-explicit-feedback" class="level3">
+<h3 class="anchored" data-anchor-id="implicit-vs.-explicit-feedback">Implicit vs.&nbsp;Explicit Feedback</h3>
+<p>Before diving into methods, it is worth clarifying a distinction that shapes the entire modelling pipeline.</p>
+<p><strong>Explicit feedback</strong> consists of direct user ratings (e.g., 1-5 stars on MovieLens). The signal is clear but sparse: most users rate only a small fraction of items.</p>
+<p><strong>Implicit feedback</strong> consists of behavioural signals like clicks, purchases, or play counts (e.g., Last.fm listening history, Amazon purchase data). Implicit feedback is far more abundant, and most production systems rely on it, but it introduces a fundamental asymmetry: you observe positive interactions, but the absence of an interaction does not mean the user dislikes the item. She may simply not have seen it. This asymmetry affects loss function design (pointwise vs.&nbsp;pairwise vs.&nbsp;BPR loss), requires a <strong>negative sampling</strong> strategy during training (since you cannot treat all unobserved items as negatives), and changes how you evaluate predictions. We require you to work with both types of feedback in this assignment; see the Datasets section below.</p>
+<hr>
+</section>
+<section id="methods" class="level3">
+<h3 class="anchored" data-anchor-id="methods">Methods</h3>
+<p>You should implement and compare models from both paradigms. We require <strong>one non-personalized baseline</strong>, <strong>one classical collaborative filtering model</strong>, and <strong>at least two deep learning models</strong>. This reduced model count (compared to building everything) frees up time for deeper analysis: hyperparameter sensitivity, ablation studies, or embedding visualizations.</p>
+<section id="baselines" class="level4">
+<h4 class="anchored" data-anchor-id="baselines">Baselines</h4>
 <ul>
-<li>Submit your <strong>report as a PDF file</strong> on CANVAS. Only PDF files are accepted; no other formats will be graded.</li>
-<li>Your <strong>code must be in a GitHub repository</strong>. Include the link to your repository in your report. Do not submit code on CANVAS. All results stated in your report must be reproducible from the repository.</li>
+<li><strong>Popularity baseline</strong>: recommend the most popular items (non-personalized). This is a sanity check; any personalized model that cannot beat it has a problem.</li>
+<li><strong>Matrix Factorization</strong>: SVD or ALS-based collaborative filtering (e.g., using Surprise for explicit data, or the <code>implicit</code> library for implicit data)</li>
 </ul>
-<p><strong>Late submissions</strong> will incur a penalty of <strong><span class="math inline">\(10\%\)</span> per day late</strong>: if you original mark is, say, <span class="math inline">\(81/100\)</span>, and you are <span class="math inline">\(6\)</span> days late, your mark will be <span class="math inline">\(81 \times 0.9^6 = 43\)</span>.</p>
+</section>
+<section id="deep-learning-models-choose-at-least-two" class="level4">
+<h4 class="anchored" data-anchor-id="deep-learning-models-choose-at-least-two">Deep Learning Models (choose at least two)</h4>
+<ul>
+<li><strong>Neural Collaborative Filtering (NCF)</strong>: the original NCF model from He et al.&nbsp;(2017) is a hybrid that combines a Generalized Matrix Factorization (GMF) branch with an MLP branch. The GMF branch performs element-wise product of user and item embeddings (a generalization of the standard dot product), while the MLP branch operates on concatenated embeddings to learn nonlinear interactions. The two branches are fused for the final prediction. Note that subsequent work <span class="citation" data-cites="dacrema2019progress">(<a href="#ref-dacrema2019progress" role="doc-biblioref">Dacrema, Cremonesi, and Jannach 2019</a>)</span> has questioned whether this architecture reliably outperforms well-tuned dot-product baselines.</li>
+<li><strong>Two-tower model</strong>: separate user and item encoder networks that produce fixed-size embeddings, combined via dot product or cosine similarity. The use of a simple inner product (rather than a learned cross-attention) is deliberate: it enables fast approximate nearest neighbour retrieval at inference time, which is why two-tower models are the standard architecture for candidate generation in industry.</li>
+<li><strong>Session-based models</strong>: GRU4Rec or SASRec (Transformer-based), which model sequential user behaviour. These require timestamped interaction data with meaningful temporal ordering.</li>
+<li><strong>Autoencoders</strong>: e.g., MultVAE, which treats recommendation as a generative modelling problem.</li>
+</ul>
+<p>Libraries such as <strong>RecBole</strong>, <strong>LensKit</strong>, <strong>Surprise</strong>, or plain <strong>PyTorch</strong> are all suitable. You are free to use existing implementations but must demonstrate understanding of the model you are using.</p>
+<hr>
+</section>
+</section>
+<section id="datasets" class="level3">
+<h3 class="anchored" data-anchor-id="datasets">Datasets</h3>
+<p>Use <strong>two datasets</strong>: one with explicit feedback and one with implicit feedback. This pairing forces you to adapt your training pipeline and evaluation to both settings.</p>
+<ul>
+<li><strong>MovieLens 1M or 100K</strong> (explicit feedback): movie ratings, the classic benchmark. Well-documented, clean, and small enough for Colab.</li>
+<li><strong>Last.fm</strong> (implicit feedback): music listening counts. A natural complement to MovieLens since it requires you to handle implicit signals.</li>
+<li><strong>Amazon Product Reviews</strong> (implicit feedback): purchase and review data. Use a manageable category subset such as <strong>Digital Music</strong> or <strong>Video Games</strong>. Avoid “Books”, which is very large even after subsampling. Use the 2023 version of the dataset.</li>
+</ul>
+<p>Avoid Goodreads (access has become unreliable) and Yelp (very large, requires significant preprocessing that is not the focus of this assignment).</p>
+<p>These datasets are small enough to train on Google Colab. If you use a large dataset, subsample it appropriately and document your choices.</p>
+<hr>
+</section>
+<section id="evaluation-protocol" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-protocol">Evaluation Protocol</h3>
+<p>Since recommendation is fundamentally a <strong>ranking</strong> problem, use ranking-aware metrics. Report the following for each model, computed on a held-out test set:</p>
+<ul>
+<li><strong>Hit Rate at K</strong> (HR@K): fraction of users for whom a relevant item appears in the top-K recommendations</li>
+<li><strong>Normalized Discounted Cumulative Gain at K</strong> (NDCG@K): measures ranking quality, giving more credit to relevant items ranked higher</li>
+<li><strong>Mean Average Precision</strong> (MAP): average precision across users</li>
+</ul>
+<p>Use <span class="math inline">\(K = 10\)</span> as the primary cutoff, and optionally report <span class="math inline">\(K = 5\)</span> and <span class="math inline">\(K = 20\)</span> for comparison.</p>
+<section id="binarization-of-graded-relevance" class="level4">
+<h4 class="anchored" data-anchor-id="binarization-of-graded-relevance">Binarization of graded relevance</h4>
+<p>MAP and HR@K assume binary relevance. For datasets with graded ratings (e.g., MovieLens), you must choose a binarization threshold: for instance, rating <span class="math inline">\(\geq 4\)</span> counts as “relevant”. State your threshold explicitly and keep it consistent across all models. This choice affects absolute metric values, so it must be documented.</p>
+</section>
+<section id="temporal-traintest-splitting" class="level4">
+<h4 class="anchored" data-anchor-id="temporal-traintest-splitting">Temporal train/test splitting</h4>
+<p>Do <strong>not</strong> split data randomly. Random splitting creates data leakage: you end up “predicting” interactions that happened before your training data. Instead, split by timestamp. A reasonable default: train on the first 80% of each user’s interactions chronologically, validate on the next 10%, and test on the final 10%. Use the validation set for hyperparameter selection.</p>
+</section>
+<section id="negative-sampling-note" class="level4">
+<h4 class="anchored" data-anchor-id="negative-sampling-note">Negative sampling note</h4>
+<p>For implicit feedback datasets, you will need a negative sampling strategy during training (e.g., uniform random sampling of unobserved items). The choice of how many negatives to sample per positive, and how to sample them, can significantly affect model performance. Document your choices and, ideally, test sensitivity to the negative sampling ratio.</p>
+</section>
+<section id="cold-start-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="cold-start-evaluation">Cold-start evaluation</h4>
+<p>To evaluate cold-start behaviour, hold out all users with fewer than 5 interactions in the training set. Train your models without these users. Then evaluate your models’ ability to generate recommendations for these held-out users using only their limited interaction history. Report metrics separately for cold-start users and regular users.</p>
+<hr>
+</section>
+</section>
+<section id="key-questions-to-address" class="level3">
+<h3 class="anchored" data-anchor-id="key-questions-to-address">Key Questions to Address</h3>
+<ol type="1">
+<li><strong>Performance</strong>: do deep learning models outperform well-tuned matrix factorization? By how much? Ensure your baselines are properly tuned before drawing conclusions; see <span class="citation" data-cites="dacrema2019progress">Dacrema, Cremonesi, and Jannach (<a href="#ref-dacrema2019progress" role="doc-biblioref">2019</a>)</span> for cautionary context.</li>
+<li><strong>Cold start</strong>: how do different models handle cold-start users (those with fewer than 5 interactions)? Report cold-start metrics separately.</li>
+<li><strong>Sequential patterns</strong>: if you implement a session-based model (GRU4Rec, SASRec), does modelling temporal dynamics help? Or is the ordering of interactions not very informative for your datasets?</li>
+<li><strong>Scalability</strong>: how do training times compare across methods? Is the compute cost of deep models justified by the performance gain?</li>
+<li><strong>Practical recommendation</strong>: given your results, which approach would you recommend to a company building a recommender system from scratch? Under what conditions?</li>
+</ol>
+<hr>
+</section>
+<section id="deliverables" class="level3">
+<h3 class="anchored" data-anchor-id="deliverables">Deliverables</h3>
+<p>You must submit:</p>
+<ol type="1">
+<li><strong>A written report (PDF)</strong>
+<ul>
+<li>Maximum length: 10 pages</li>
+<li>No code in the report</li>
+<li>Clear explanation of your datasets, methodology, experimental setup, results, and analysis</li>
+<li>Include tables and/or figures comparing model performance</li>
+<li>Include a <strong>“Lessons from Baselines”</strong> section: discuss what you learned from the popularity baseline and matrix factorization results before presenting deep learning numbers</li>
+</ul></li>
+<li><strong>Your code</strong>
+<ul>
+<li>Create a <strong>GitHub repository</strong> containing all your code. Include the repository link in your report. Do not submit code on CANVAS.</li>
+<li>All results reported in the PDF must be reproducible from the repository. Include a README with clear instructions to run your experiments.</li>
+<li>Well organized, with a <code>requirements.txt</code> or <code>environment.yml</code></li>
+</ul></li>
+</ol>
+<hr>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h3>
+<p>Recommendation is one of the largest commercial applications of machine learning. Companies like Netflix, Spotify, Amazon, and TikTok invest heavily in their recommender systems because even small improvements in recommendation quality translate directly into user engagement and revenue. Understanding the landscape of recommendation methods, from simple collaborative filtering to deep sequential models, and knowing how to evaluate them rigorously, prepares you for one of the most common ML roles in industry. This assignment gives you the chance to build, evaluate, and reason about these systems from the ground up.</p>
 
 
 
-</main> <!-- /main -->
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-dacrema2019progress" class="csl-entry" role="listitem">
+Dacrema, Maurizio Ferrari, Paolo Cremonesi, and Dietmar Jannach. 2019. <span>“Are We Really Making Much Progress? A Worrying Analysis of Recent Neural Recommendation Approaches.”</span> In <em>Proceedings of the 13th ACM Conference on Recommender Systems</em>, 101–9.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

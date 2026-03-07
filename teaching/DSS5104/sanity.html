@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DSS5104 Assignment Topics – Alexandre Thiéry</title>
+<title>sanity – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,41 +61,12 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta property="og:title" content="Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -155,56 +126,670 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sanity-check-report-dss5104-assignment-descriptions" id="toc-sanity-check-report-dss5104-assignment-descriptions" class="nav-link active" data-scroll-target="#sanity-check-report-dss5104-assignment-descriptions">Sanity Check Report: DSS5104 Assignment Descriptions</a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#issues-requiring-action" id="toc-issues-requiring-action" class="nav-link" data-scroll-target="#issues-requiring-action">Issues Requiring Action</a>
+  <ul class="collapse">
+  <li><a href="#issue-1-albumentations-is-archived-high" id="toc-issue-1-albumentations-is-archived-high" class="nav-link" data-scroll-target="#issue-1-albumentations-is-archived-high">ISSUE 1: Albumentations is archived (HIGH)</a></li>
+  <li><a href="#issue-2-deit-not-in-torchvision-medium" id="toc-issue-2-deit-not-in-torchvision-medium" class="nav-link" data-scroll-target="#issue-2-deit-not-in-torchvision-medium">ISSUE 2: DeiT not in torchvision (MEDIUM)</a></li>
+  <li><a href="#issue-3-d-mpnn-vs-chemprop-low" id="toc-issue-3-d-mpnn-vs-chemprop-low" class="nav-link" data-scroll-target="#issue-3-d-mpnn-vs-chemprop-low">ISSUE 3: D-MPNN vs ChemProp (LOW)</a></li>
+  </ul></li>
+  <li><a href="#papers-and-references-detailed-results" id="toc-papers-and-references-detailed-results" class="nav-link" data-scroll-target="#papers-and-references-detailed-results">Papers and References: Detailed Results</a></li>
+  <li><a href="#dataset-availability-detailed-results" id="toc-dataset-availability-detailed-results" class="nav-link" data-scroll-target="#dataset-availability-detailed-results">Dataset Availability: Detailed Results</a>
+  <ul class="collapse">
+  <li><a href="#freely-available-no-signup" id="toc-freely-available-no-signup" class="nav-link" data-scroll-target="#freely-available-no-signup">Freely available (no signup)</a></li>
+  <li><a href="#require-free-signup-or-agreement" id="toc-require-free-signup-or-agreement" class="nav-link" data-scroll-target="#require-free-signup-or-agreement">Require free signup or agreement</a></li>
+  </ul></li>
+  <li><a href="#libraries-detailed-results" id="toc-libraries-detailed-results" class="nav-link" data-scroll-target="#libraries-detailed-results">Libraries: Detailed Results</a></li>
+  <li><a href="#method-and-model-names-detailed-results" id="toc-method-and-model-names-detailed-results" class="nav-link" data-scroll-target="#method-and-model-names-detailed-results">Method and Model Names: Detailed Results</a></li>
+  <li><a href="#technical-claims-detailed-results" id="toc-technical-claims-detailed-results" class="nav-link" data-scroll-target="#technical-claims-detailed-results">Technical Claims: Detailed Results</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">DSS5104 Assignment Topics</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">DSS5104</div>
-  </div>
-  </div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<hr>
-<p>Here is a list of possible topics for your assignment.</p>
+<section id="sanity-check-report-dss5104-assignment-descriptions" class="level1">
+<h1>Sanity Check Report: DSS5104 Assignment Descriptions</h1>
+<p>Verification date: 2026-03-07. Three categories checked: (1) papers and references, (2) dataset availability, (3) libraries, method names, and technical claims.</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <ul>
-<li><a href="../../teaching/DSS5104/molecular-prediction.html"><strong>Molecular Properties Prediction</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-time-series.html"><strong>Deep Learning for Time-Series Forecasting</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-tabular-data.html"><strong>Deep Learning for Tabular Data</strong></a></li>
-<li><a href="../../teaching/DSS5104/CV-transfer-learning.html"><strong>Transfer Learning for Computer Vision</strong></a></li>
-<li><a href="../../teaching/DSS5104/recommender-systems.html"><strong>Deep Learning for Recommender Systems</strong></a></li>
-<li><a href="../../teaching/DSS5104/fraud-detection.html"><strong>Fraud and Anomaly Detection with Deep Learning</strong></a></li>
-<li><a href="../../teaching/DSS5104/text-classification.html"><strong>Text Classification: From Classical NLP to Transformers</strong></a></li>
-<li><a href="../../teaching/DSS5104/image-segmentation.html"><strong>Deep Learning for Image Segmentation</strong></a></li>
-<li><a href="../../teaching/DSS5104/open_topic.html"><strong>Open Topic</strong></a></li>
+<li><strong>Papers/references</strong>: all 11 items verified correct (titles, authors, years, venues, arxiv IDs, bibtex entry)</li>
+<li><strong>Datasets</strong>: all 47 datasets are accessible. 8 require free signup (Kaggle account or academic registration). None are unavailable.</li>
+<li><strong>Libraries</strong>: all 18 libraries verified as maintained. Two issues found (see below).</li>
+<li><strong>Method names</strong>: all 13 model names verified correct.</li>
+<li><strong>Technical claims</strong>: all 5 factual claims verified correct.</li>
 </ul>
-<p><strong>Assignment group</strong>: You are reminded that assignments are to be done in groups of <strong>at most 5 students</strong>: each student in a group will be receiving the same mark. In all your reports, do include the list of all students, as well as their student numbers.</p>
-<p><strong>Submission instructions</strong>:</p>
-<ul>
-<li>Submit your <strong>report as a PDF file</strong> on CANVAS. Only PDF files are accepted; no other formats will be graded.</li>
-<li>Your <strong>code must be in a GitHub repository</strong>. Include the link to your repository in your report. Do not submit code on CANVAS. All results stated in your report must be reproducible from the repository.</li>
-</ul>
-<p><strong>Late submissions</strong> will incur a penalty of <strong><span class="math inline">\(10\%\)</span> per day late</strong>: if you original mark is, say, <span class="math inline">\(81/100\)</span>, and you are <span class="math inline">\(6\)</span> days late, your mark will be <span class="math inline">\(81 \times 0.9^6 = 43\)</span>.</p>
+</section>
+<section id="issues-requiring-action" class="level2">
+<h2 class="anchored" data-anchor-id="issues-requiring-action">Issues Requiring Action</h2>
+<section id="issue-1-albumentations-is-archived-high" class="level3">
+<h3 class="anchored" data-anchor-id="issue-1-albumentations-is-archived-high">ISSUE 1: Albumentations is archived (HIGH)</h3>
+<p><strong>File</strong>: <code>image-segmentation.qmd</code></p>
+<p>The original <code>albumentations</code> library was archived on July 10, 2025. All development has moved to <strong>AlbumentationsX</strong> (<code>pip install albumentationsx</code>), which is a drop-in replacement with the same API. The assignment currently links to <code>albumentations.ai</code> and recommends Albumentations by name.</p>
+<p><strong>Fix</strong>: update the reference to note that AlbumentationsX is the actively maintained successor, or verify that the archived version still installs and works for the assignment’s purposes.</p>
+</section>
+<section id="issue-2-deit-not-in-torchvision-medium" class="level3">
+<h3 class="anchored" data-anchor-id="issue-2-deit-not-in-torchvision-medium">ISSUE 2: DeiT not in torchvision (MEDIUM)</h3>
+<p><strong>File</strong>: <code>CV-transfer-learning.qmd</code></p>
+<p>DeiT is listed under “Vision Transformers” alongside ViT and Swin. The text says these are “available through libraries such as torchvision, timm, or HuggingFace.” This is technically correct (DeiT is in timm and HuggingFace), but students may expect all listed models to be in torchvision. Torchvision’s ViT uses DeiT’s training recipe but does not expose DeiT as a separate model class (no distillation token).</p>
+<p><strong>Fix</strong>: either remove DeiT from the list, or add a note that DeiT specifically requires <code>timm</code> or HuggingFace Transformers.</p>
+</section>
+<section id="issue-3-d-mpnn-vs-chemprop-low" class="level3">
+<h3 class="anchored" data-anchor-id="issue-3-d-mpnn-vs-chemprop-low">ISSUE 3: D-MPNN vs ChemProp (LOW)</h3>
+<p><strong>File</strong>: <code>molecular-prediction.qmd</code></p>
+<p>The text says “D-MPNN (ChemProp)” implying they are the same. D-MPNN is the architecture; ChemProp is the software package that implements it. Minor inaccuracy, but could confuse students searching for documentation.</p>
+<p><strong>Fix</strong>: change to “D-MPNN (implemented in ChemProp)” for clarity.</p>
+</section>
+</section>
+<section id="papers-and-references-detailed-results" class="level2">
+<h2 class="anchored" data-anchor-id="papers-and-references-detailed-results">Papers and References: Detailed Results</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 19%">
+<col style="width: 25%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Citation</th>
+<th>File</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dacrema et al.&nbsp;(2019) “Are We Really Making Much Progress?”</td>
+<td>recommender-systems.qmd</td>
+<td>CORRECT</td>
+<td>RecSys 2019. Bibtex entry in ref.bib is correct.</td>
+</tr>
+<tr class="even">
+<td>He et al.&nbsp;(2017) Neural Collaborative Filtering</td>
+<td>recommender-systems.qmd</td>
+<td>CORRECT</td>
+<td>WWW 2017</td>
+</tr>
+<tr class="odd">
+<td>Grinsztajn et al.&nbsp;(2022) “Why do tree-based models still outperform…”</td>
+<td>DL-for-tabular-data.qmd</td>
+<td>CORRECT</td>
+<td>NeurIPS 2022 (Datasets and Benchmarks)</td>
+</tr>
+<tr class="even">
+<td>Gorishniy et al.&nbsp;(2021) “Revisiting deep learning models for tabular data”</td>
+<td>DL-for-tabular-data.qmd</td>
+<td>CORRECT</td>
+<td>NeurIPS 2021</td>
+</tr>
+<tr class="odd">
+<td>Zeng et al.&nbsp;(2023) “Are Transformers Effective for Time Series Forecasting?”</td>
+<td>DL-for-time-series.qmd</td>
+<td>CORRECT</td>
+<td>AAAI 2023 (oral)</td>
+</tr>
+<tr class="even">
+<td>TabNet arxiv 1908.07442</td>
+<td>DL-for-tabular-data.qmd</td>
+<td>CORRECT</td>
+<td>Arik and Pfister</td>
+</tr>
+<tr class="odd">
+<td>FT-Transformer arxiv 2106.11959</td>
+<td>DL-for-tabular-data.qmd</td>
+<td>CORRECT</td>
+<td>Same paper as Gorishniy et al.&nbsp;2021</td>
+</tr>
+<tr class="even">
+<td>NODE arxiv 1909.06312</td>
+<td>DL-for-tabular-data.qmd</td>
+<td>CORRECT</td>
+<td>Popov, Morozov, Babenko</td>
+</tr>
+<tr class="odd">
+<td>TabTransformer arxiv 2012.06678</td>
+<td>DL-for-tabular-data.qmd</td>
+<td>CORRECT</td>
+<td>Huang, Khetan, Cvitkovic, Karnin</td>
+</tr>
+<tr class="even">
+<td>SAINT arxiv 2106.01342</td>
+<td>DL-for-tabular-data.qmd</td>
+<td>CORRECT</td>
+<td>Somepalli et al.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dataset-availability-detailed-results" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-availability-detailed-results">Dataset Availability: Detailed Results</h2>
+<section id="freely-available-no-signup" class="level3">
+<h3 class="anchored" data-anchor-id="freely-available-no-signup">Freely available (no signup)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 26%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>File</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MedMNIST variants</td>
+<td>CV-transfer-learning</td>
+<td><code>pip install medmnist</code>, HuggingFace</td>
+</tr>
+<tr class="even">
+<td>ISIC skin lesion</td>
+<td>CV-transfer-learning</td>
+<td>isic-archive.com</td>
+</tr>
+<tr class="odd">
+<td>EuroSAT</td>
+<td>CV-transfer-learning</td>
+<td>torchvision built-in</td>
+</tr>
+<tr class="even">
+<td>UC Merced Land Use</td>
+<td>CV-transfer-learning</td>
+<td>Official site, HuggingFace</td>
+</tr>
+<tr class="odd">
+<td>Food-101</td>
+<td>CV-transfer-learning</td>
+<td>torchvision built-in</td>
+</tr>
+<tr class="even">
+<td>FGVC-Aircraft</td>
+<td>CV-transfer-learning</td>
+<td>Oxford VGG, HuggingFace</td>
+</tr>
+<tr class="odd">
+<td>Oxford Flowers</td>
+<td>CV-transfer-learning</td>
+<td>torchvision built-in</td>
+</tr>
+<tr class="even">
+<td>CUB-200 Birds</td>
+<td>CV-transfer-learning</td>
+<td>Kaggle, GitHub mirrors</td>
+</tr>
+<tr class="odd">
+<td>MovieLens 1M/100K</td>
+<td>recommender-systems</td>
+<td>grouplens.org, direct download</td>
+</tr>
+<tr class="even">
+<td>Last.fm</td>
+<td>recommender-systems</td>
+<td>GroupLens HetRec 2011</td>
+</tr>
+<tr class="odd">
+<td>Amazon Reviews 2023</td>
+<td>recommender-systems</td>
+<td>HuggingFace (McAuley-Lab)</td>
+</tr>
+<tr class="even">
+<td>CICIDS2017</td>
+<td>fraud-detection</td>
+<td>UNB official site</td>
+</tr>
+<tr class="odd">
+<td>IMDb</td>
+<td>text-classification</td>
+<td>HuggingFace, torchtext</td>
+</tr>
+<tr class="even">
+<td>SST-2</td>
+<td>text-classification</td>
+<td>HuggingFace (GLUE)</td>
+</tr>
+<tr class="odd">
+<td>AG News</td>
+<td>text-classification</td>
+<td>HuggingFace, torchtext</td>
+</tr>
+<tr class="even">
+<td>20 Newsgroups</td>
+<td>text-classification</td>
+<td>sklearn built-in</td>
+</tr>
+<tr class="odd">
+<td>Banking77</td>
+<td>text-classification</td>
+<td>HuggingFace</td>
+</tr>
+<tr class="even">
+<td>TweetEval</td>
+<td>text-classification</td>
+<td>HuggingFace (cardiffnlp)</td>
+</tr>
+<tr class="odd">
+<td>Financial PhraseBank</td>
+<td>text-classification</td>
+<td>HuggingFace</td>
+</tr>
+<tr class="even">
+<td>GoEmotions</td>
+<td>text-classification</td>
+<td>HuggingFace</td>
+</tr>
+<tr class="odd">
+<td>ATIS</td>
+<td>text-classification</td>
+<td>Kaggle, GitHub mirrors</td>
+</tr>
+<tr class="even">
+<td>Kvasir-SEG</td>
+<td>image-segmentation</td>
+<td>Simula, Kaggle</td>
+</tr>
+<tr class="odd">
+<td>ISBI Cell Segmentation</td>
+<td>image-segmentation</td>
+<td>Cell Tracking Challenge</td>
+</tr>
+<tr class="even">
+<td>LandCover.ai</td>
+<td>image-segmentation</td>
+<td>Official site, Kaggle</td>
+</tr>
+<tr class="odd">
+<td>Massachusetts Buildings/Roads</td>
+<td>image-segmentation</td>
+<td>Official site, Academic Torrents</td>
+</tr>
+<tr class="even">
+<td>Pascal VOC 2012</td>
+<td>image-segmentation</td>
+<td>torchvision built-in</td>
+</tr>
+<tr class="odd">
+<td>CamVid</td>
+<td>image-segmentation</td>
+<td>Official site, Kaggle</td>
+</tr>
+<tr class="even">
+<td>Oxford-IIIT Pet</td>
+<td>image-segmentation</td>
+<td>torchvision built-in</td>
+</tr>
+<tr class="odd">
+<td>MoleculeNet (BBBP, BACE)</td>
+<td>molecular-prediction</td>
+<td>moleculenet.org, DeepChem, PyG</td>
+</tr>
+<tr class="even">
+<td>OGB ogbg-molhiv</td>
+<td>molecular-prediction</td>
+<td>ogb Python package</td>
+</tr>
+<tr class="odd">
+<td>California Housing</td>
+<td>DL-for-tabular-data</td>
+<td>sklearn built-in</td>
+</tr>
+<tr class="even">
+<td>Adult Income</td>
+<td>DL-for-tabular-data</td>
+<td>UCI ML Repository</td>
+</tr>
+<tr class="odd">
+<td>Covertype</td>
+<td>DL-for-tabular-data</td>
+<td>UCI ML Repository</td>
+</tr>
+<tr class="even">
+<td>HIGGS</td>
+<td>DL-for-tabular-data</td>
+<td>UCI ML Repository (~8GB)</td>
+</tr>
+<tr class="odd">
+<td>ETTh1/ETTh2</td>
+<td>DL-for-time-series</td>
+<td>GitHub (zhouhaoyi/ETDataset)</td>
+</tr>
+<tr class="even">
+<td>Electricity (UCI)</td>
+<td>DL-for-time-series</td>
+<td>UCI ML Repository</td>
+</tr>
+<tr class="odd">
+<td>M4 competition</td>
+<td>DL-for-time-series</td>
+<td>GitHub (Mcompetitions)</td>
+</tr>
+<tr class="even">
+<td>M5 competition</td>
+<td>DL-for-time-series</td>
+<td>GitHub (Mcompetitions)</td>
+</tr>
+<tr class="odd">
+<td>Weather</td>
+<td>DL-for-time-series</td>
+<td>Autoformer benchmark repo</td>
+</tr>
+<tr class="even">
+<td>Traffic</td>
+<td>DL-for-time-series</td>
+<td>Autoformer benchmark repo</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="require-free-signup-or-agreement" class="level3">
+<h3 class="anchored" data-anchor-id="require-free-signup-or-agreement">Require free signup or agreement</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 21%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>File</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CheXpert-small</td>
+<td>CV-transfer-learning</td>
+<td>Stanford research use agreement</td>
+</tr>
+<tr class="even">
+<td>IEEE-CIS Fraud Detection</td>
+<td>fraud-detection</td>
+<td>Kaggle account + competition rules</td>
+</tr>
+<tr class="odd">
+<td>Credit Card Fraud</td>
+<td>fraud-detection</td>
+<td>Kaggle account</td>
+</tr>
+<tr class="even">
+<td>PaySim</td>
+<td>fraud-detection</td>
+<td>Kaggle account</td>
+</tr>
+<tr class="odd">
+<td>GlaS</td>
+<td>image-segmentation</td>
+<td>Warwick registration for credentials</td>
+</tr>
+<tr class="even">
+<td>Inria Aerial Image Labeling</td>
+<td>image-segmentation</td>
+<td>Web form</td>
+</tr>
+<tr class="odd">
+<td>Cityscapes</td>
+<td>image-segmentation</td>
+<td>Academic registration (may take days)</td>
+</tr>
+<tr class="even">
+<td>Porto Seguro Safe Driver</td>
+<td>DL-for-tabular-data</td>
+<td>Kaggle account + competition rules</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="libraries-detailed-results" class="level2">
+<h2 class="anchored" data-anchor-id="libraries-detailed-results">Libraries: Detailed Results</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 33%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Library</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>torchvision</td>
+<td>MAINTAINED</td>
+<td>Includes ResNet, EfficientNet, ConvNeXt, ViT, Swin. DeiT not separate (see Issue 2).</td>
+</tr>
+<tr class="even">
+<td>timm</td>
+<td>MAINTAINED</td>
+<td>v1.0.25 (Feb 2026). 300+ architectures including DeiT.</td>
+</tr>
+<tr class="odd">
+<td>segmentation_models_pytorch</td>
+<td>MAINTAINED</td>
+<td>Supports U-Net, DeepLabV3, FPN. Now under qubvel-org.</td>
+</tr>
+<tr class="even">
+<td>Albumentations</td>
+<td>ARCHIVED</td>
+<td>See Issue 1. Superseded by AlbumentationsX.</td>
+</tr>
+<tr class="odd">
+<td>RecBole</td>
+<td>MAINTAINED</td>
+<td>94 algorithms including NCF, GRU4Rec, SASRec, MultVAE.</td>
+</tr>
+<tr class="even">
+<td>LensKit</td>
+<td>MAINTAINED</td>
+<td>2025.x series, v2026 in development.</td>
+</tr>
+<tr class="odd">
+<td>Surprise</td>
+<td>MAINTENANCE-ONLY</td>
+<td>v1.1.3 works. No new features since 2019. Fine for teaching.</td>
+</tr>
+<tr class="even">
+<td>implicit</td>
+<td>MAINTENANCE-ONLY</td>
+<td>ALS, BPR, GPU support. Reduced activity. Works.</td>
+</tr>
+<tr class="odd">
+<td>PyOD</td>
+<td>MAINTAINED</td>
+<td>PyOD 2 (2025). 50+ algorithms.</td>
+</tr>
+<tr class="even">
+<td>SetFit</td>
+<td>MAINTAINED</td>
+<td>HuggingFace. Contrastive pair generation confirmed slow at scale.</td>
+</tr>
+<tr class="odd">
+<td>PyTorch Geometric</td>
+<td>MAINTAINED</td>
+<td>Supports GCN, MPNN, AttentiveFP.</td>
+</tr>
+<tr class="even">
+<td>DGL</td>
+<td>MAINTAINED</td>
+<td>v2.0.0 released. NVIDIA continues releases.</td>
+</tr>
+<tr class="odd">
+<td>DeepChem</td>
+<td>MAINTAINED</td>
+<td>MoleculeNet datasets included.</td>
+</tr>
+<tr class="even">
+<td>statsforecast</td>
+<td>MAINTAINED</td>
+<td>AutoARIMA, AutoETS, AutoTheta. Part of Nixtla.</td>
+</tr>
+<tr class="odd">
+<td>Darts</td>
+<td>MAINTAINED</td>
+<td>Unit8. Classical + DL models with unified API.</td>
+</tr>
+<tr class="even">
+<td>GluonTS</td>
+<td>MAINTAINED</td>
+<td>AWS Labs. v0.16.2 (June 2025).</td>
+</tr>
+<tr class="odd">
+<td>Nixtla ecosystem</td>
+<td>MAINTAINED</td>
+<td>StatsForecast, NeuralForecast, MLForecast, HierarchicalForecast.</td>
+</tr>
+<tr class="even">
+<td>fvcore / ptflops</td>
+<td>MAINTAINED</td>
+<td>Both work for FLOP counting.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="method-and-model-names-detailed-results" class="level2">
+<h2 class="anchored" data-anchor-id="method-and-model-names-detailed-results">Method and Model Names: Detailed Results</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 24%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Status</th>
+<th>Full name / paper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GRU4Rec</td>
+<td>CORRECT</td>
+<td>Hidasi et al., ICLR 2016</td>
+</tr>
+<tr class="even">
+<td>SASRec</td>
+<td>CORRECT</td>
+<td>Kang and McAuley, ICDM 2018</td>
+</tr>
+<tr class="odd">
+<td>MultVAE</td>
+<td>CORRECT</td>
+<td>Mult-VAE^PR, Liang et al., WWW 2018</td>
+</tr>
+<tr class="even">
+<td>PatchTST</td>
+<td>CORRECT</td>
+<td>“A Time Series is Worth 64 Words”, ICLR 2023</td>
+</tr>
+<tr class="odd">
+<td>N-BEATS</td>
+<td>CORRECT</td>
+<td>Neural Basis Expansion Analysis for Time Series, ICLR 2020</td>
+</tr>
+<tr class="even">
+<td>TiDE</td>
+<td>CORRECT</td>
+<td>Time-series Dense Encoder, Das et al.</td>
+</tr>
+<tr class="odd">
+<td>DeepAR</td>
+<td>CORRECT</td>
+<td>Amazon autoregressive probabilistic model</td>
+</tr>
+<tr class="even">
+<td>DLinear</td>
+<td>CORRECT</td>
+<td>From Zeng et al., AAAI 2023</td>
+</tr>
+<tr class="odd">
+<td>Deep SVDD</td>
+<td>CORRECT</td>
+<td>Deep Support Vector Data Description, Ruff et al., ICML 2018</td>
+</tr>
+<tr class="even">
+<td>AttentiveFP</td>
+<td>CORRECT</td>
+<td>Xiong et al., J. Med. Chem. 2020. In PyG.</td>
+</tr>
+<tr class="odd">
+<td>FCN</td>
+<td>CORRECT</td>
+<td>Long, Shelhamer, Darrell, CVPR 2015</td>
+</tr>
+<tr class="even">
+<td>SegFormer</td>
+<td>CORRECT</td>
+<td>Xie et al., NeurIPS 2021, NVlabs</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="technical-claims-detailed-results" class="level2">
+<h2 class="anchored" data-anchor-id="technical-claims-detailed-results">Technical Claims: Detailed Results</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 28%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Claim</th>
+<th>File</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ImageNet mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]</td>
+<td>CV-transfer-learning</td>
+<td>CORRECT</td>
+</tr>
+<tr class="even">
+<td>BERT has 512 token limit</td>
+<td>text-classification</td>
+<td>CORRECT</td>
+</tr>
+<tr class="odd">
+<td>Dice coefficient = F1-score for binary segmentation</td>
+<td>image-segmentation</td>
+<td>CORRECT (both = 2TP/(2TP+FP+FN))</td>
+</tr>
+<tr class="even">
+<td>ECFP4 = Morgan fingerprint with radius 2</td>
+<td>molecular-prediction</td>
+<td>CORRECT (diameter 4 = radius 2)</td>
+</tr>
+<tr class="odd">
+<td>SetFit slow at full dataset scale due to contrastive pairs</td>
+<td>text-classification</td>
+<td>CORRECT (combinatorial pair generation)</td>
+</tr>
+</tbody>
+</table>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

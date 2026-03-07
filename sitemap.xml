@@ -14,15 +14,15 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/DL-for-time-series.html</loc>
-    <lastmod>2025-03-27T04:40:13.000Z</lastmod>
+    <lastmod>2026-03-07T02:54:24.000Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/molecular-prediction.html</loc>
-    <lastmod>2025-03-27T04:47:57.000Z</lastmod>
+    <lastmod>2026-03-07T05:31:15.356Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/topics_list.html</loc>
-    <lastmod>2025-03-27T04:54:50.000Z</lastmod>
+    <lastmod>2026-03-07T05:32:31.697Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/SAW/SAW.html</loc>
@@ -434,15 +434,15 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/teaching.html</loc>
-    <lastmod>2025-02-28T03:58:38.000Z</lastmod>
+    <lastmod>2026-03-07T04:06:21.510Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/open_topic.html</loc>
-    <lastmod>2025-03-27T04:33:47.000Z</lastmod>
+    <lastmod>2026-03-07T05:29:26.841Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/DL-for-tabular-data.html</loc>
-    <lastmod>2025-03-26T17:58:21.000Z</lastmod>
+    <lastmod>2026-03-07T02:54:23.000Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/creative_linear_regression.html</loc>
@@ -475,5 +475,37 @@
   <url>
     <loc>https://alexxthiery.github.io/notes/potts_transition/potts.html</loc>
     <lastmod>2026-02-25T16:29:37.413Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/CV-transfer-learning.html</loc>
+    <lastmod>2026-03-07T02:54:17.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/fraud-detection.html</loc>
+    <lastmod>2026-03-07T02:54:18.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/recommender-systems.html</loc>
+    <lastmod>2026-03-07T02:54:17.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/image-segmentation.html</loc>
+    <lastmod>2026-03-07T02:54:22.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/text-classification_critic.html</loc>
+    <lastmod>2026-03-07T02:06:18.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/LinearModel/LM_critic.html</loc>
+    <lastmod>2026-03-07T02:06:23.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/text-classification.html</loc>
+    <lastmod>2026-03-07T02:54:21.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/sanity.html</loc>
+    <lastmod>2026-03-07T02:49:34.000Z</lastmod>
   </url>
 </urlset>

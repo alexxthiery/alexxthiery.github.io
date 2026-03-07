@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DSS5104 Assignment Topics – Alexandre Thiéry</title>
+<title>Fraud and Anomaly Detection with Deep Learning – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,41 +61,12 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta property="og:title" content="Fraud and Anomaly Detection with Deep Learning – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta name="twitter:title" content="Fraud and Anomaly Detection with Deep Learning – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -155,15 +126,31 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#assignment-objectives" id="toc-assignment-objectives" class="nav-link" data-scroll-target="#assignment-objectives">Assignment Objectives</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
+  <li><a href="#feature-engineering" id="toc-feature-engineering" class="nav-link" data-scroll-target="#feature-engineering">Feature Engineering</a></li>
+  <li><a href="#data-splitting" id="toc-data-splitting" class="nav-link" data-scroll-target="#data-splitting">Data Splitting</a></li>
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation Metrics</a></li>
+  <li><a href="#error-analysis" id="toc-error-analysis" class="nav-link" data-scroll-target="#error-analysis">Error Analysis</a></li>
+  <li><a href="#key-questions-to-address" id="toc-key-questions-to-address" class="nav-link" data-scroll-target="#key-questions-to-address">Key Questions to Address</a></li>
+  <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables">Deliverables</a></li>
+  <li><a href="#why-this-matters" id="toc-why-this-matters" class="nav-link" data-scroll-target="#why-this-matters">Why This Matters</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">DSS5104 Assignment Topics</h1>
+<h1 class="title">Fraud and Anomaly Detection with Deep Learning</h1>
   <div class="quarto-categories">
     <div class="quarto-category">DSS5104</div>
   </div>
@@ -184,27 +171,162 @@ window.Quarto = {
 
 
 <hr>
-<p>Here is a list of possible topics for your assignment.</p>
+<section id="overview" class="level3">
+<h3 class="anchored" data-anchor-id="overview">Overview</h3>
+<p>Fraud detection and anomaly detection are critical applications of machine learning in finance, cybersecurity, and healthcare. These problems share a common structure: the events you care about (fraudulent transactions, network intrusions) are rare, and the cost of missing them is high. This creates a set of challenges, extreme class imbalance, threshold sensitivity, and asymmetric error costs, that standard classification approaches often handle poorly.</p>
+<p>Classical methods such as isolation forests, one-class SVM, and gradient boosting with class weights have been the workhorses of anomaly detection. More recently, deep learning approaches, particularly autoencoders and variational autoencoders (VAEs), have been proposed as alternatives that can learn richer representations of “normal” behavior and flag deviations from it.</p>
+<p>In this assignment, you will build and evaluate both <strong>classical and deep learning-based anomaly detection systems</strong> on real-world imbalanced datasets. The central question is practical: <strong>do deep learning methods provide meaningful improvements over simpler approaches, and at what cost?</strong></p>
+<hr>
+</section>
+<section id="assignment-objectives" class="level3">
+<h3 class="anchored" data-anchor-id="assignment-objectives">Assignment Objectives</h3>
 <ul>
-<li><a href="../../teaching/DSS5104/molecular-prediction.html"><strong>Molecular Properties Prediction</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-time-series.html"><strong>Deep Learning for Time-Series Forecasting</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-tabular-data.html"><strong>Deep Learning for Tabular Data</strong></a></li>
-<li><a href="../../teaching/DSS5104/CV-transfer-learning.html"><strong>Transfer Learning for Computer Vision</strong></a></li>
-<li><a href="../../teaching/DSS5104/recommender-systems.html"><strong>Deep Learning for Recommender Systems</strong></a></li>
-<li><a href="../../teaching/DSS5104/fraud-detection.html"><strong>Fraud and Anomaly Detection with Deep Learning</strong></a></li>
-<li><a href="../../teaching/DSS5104/text-classification.html"><strong>Text Classification: From Classical NLP to Transformers</strong></a></li>
-<li><a href="../../teaching/DSS5104/image-segmentation.html"><strong>Deep Learning for Image Segmentation</strong></a></li>
-<li><a href="../../teaching/DSS5104/open_topic.html"><strong>Open Topic</strong></a></li>
+<li>Understand the specific challenges of <strong>learning from imbalanced data</strong></li>
+<li>Implement and compare <strong>classical anomaly detection</strong> methods with <strong>deep learning</strong> approaches</li>
+<li>Engineer <strong>domain-specific features</strong> and measure their impact on performance</li>
+<li>Evaluate models using metrics appropriate for <strong>imbalanced settings</strong> (not just accuracy)</li>
+<li>Analyze the <strong>practical trade-offs</strong> between false positives and false negatives through cost-sensitive evaluation</li>
+<li>Develop intuition for <strong>threshold selection</strong> in realistic deployment scenarios</li>
 </ul>
-<p><strong>Assignment group</strong>: You are reminded that assignments are to be done in groups of <strong>at most 5 students</strong>: each student in a group will be receiving the same mark. In all your reports, do include the list of all students, as well as their student numbers.</p>
-<p><strong>Submission instructions</strong>:</p>
+<hr>
+</section>
+<section id="methods" class="level3">
+<h3 class="anchored" data-anchor-id="methods">Methods</h3>
+<p>You should implement and compare methods from both paradigms.</p>
+<section id="classical-baselines" class="level4">
+<h4 class="anchored" data-anchor-id="classical-baselines">Classical Baselines</h4>
 <ul>
-<li>Submit your <strong>report as a PDF file</strong> on CANVAS. Only PDF files are accepted; no other formats will be graded.</li>
-<li>Your <strong>code must be in a GitHub repository</strong>. Include the link to your repository in your report. Do not submit code on CANVAS. All results stated in your report must be reproducible from the repository.</li>
+<li><strong>Isolation Forest</strong>: tree-based anomaly scoring</li>
+<li><strong>Local Outlier Factor (LOF)</strong>: density-based anomaly detection</li>
+<li><strong>Gradient Boosting</strong> (e.g., XGBoost or LightGBM) with appropriate class weighting or oversampling (SMOTE)</li>
+<li>Optionally: <strong>One-Class SVM</strong> or <strong>Elliptic Envelope</strong></li>
 </ul>
-<p><strong>Late submissions</strong> will incur a penalty of <strong><span class="math inline">\(10\%\)</span> per day late</strong>: if you original mark is, say, <span class="math inline">\(81/100\)</span>, and you are <span class="math inline">\(6\)</span> days late, your mark will be <span class="math inline">\(81 \times 0.9^6 = 43\)</span>.</p>
+</section>
+<section id="deep-learning-approaches-choose-at-least-two" class="level4">
+<h4 class="anchored" data-anchor-id="deep-learning-approaches-choose-at-least-two">Deep Learning Approaches (choose at least two)</h4>
+<ul>
+<li><strong>Autoencoder</strong>: train on normal data, flag high-reconstruction-error samples as anomalous</li>
+<li><strong>Variational Autoencoder (VAE)</strong>: use the reconstruction error (or a combination of reconstruction error and KL divergence) as an anomaly score. Note that the standard approach computes reconstruction error by sampling multiple reconstructions from the encoder distribution for each input, then uses the average or a threshold on the resulting score.</li>
+<li><strong>Supervised deep learning</strong>: a standard neural network classifier with class weighting, focal loss, or oversampling</li>
+<li><strong>Deep SVDD</strong> (optional, stretch goal): a neural network variant of one-class classification. Be warned that Deep SVDD is notoriously sensitive to hyperparameters and architecture choices. Only attempt this if you have time after completing the required components.</li>
+</ul>
+<p>For autoencoders and VAEs, you should compare two training regimes:</p>
+<ol type="1">
+<li><strong>Semi-supervised</strong>: train only on “normal” (non-fraudulent) samples, then score all test samples by reconstruction error. The idea is that the model learns what normal looks like and flags anything it cannot reconstruct well.</li>
+<li><strong>Supervised</strong>: train on the full labeled training set (both normal and anomalous), potentially using class weights or a modified loss.</li>
+</ol>
+<p>Compare the two regimes and discuss which works better and why.</p>
+<p>You are free to use existing implementations (e.g., PyOD, scikit-learn, PyTorch) but must demonstrate understanding of the methods you use.</p>
+<hr>
+</section>
+</section>
+<section id="datasets" class="level3">
+<h3 class="anchored" data-anchor-id="datasets">Datasets</h3>
+<p>Work with <strong>two datasets</strong>: one primary dataset for thorough analysis, and one secondary dataset to test whether your findings generalize.</p>
+<section id="primary-dataset-required" class="level4">
+<h4 class="anchored" data-anchor-id="primary-dataset-required">Primary Dataset (required)</h4>
+<p><strong>IEEE-CIS Fraud Detection</strong> (Kaggle): a large-scale e-commerce fraud dataset with raw features (transaction amount, card info, device info, email domain, etc.). This dataset is the recommended primary choice because its raw features allow meaningful feature engineering.</p>
+</section>
+<section id="secondary-dataset-choose-one" class="level4">
+<h4 class="anchored" data-anchor-id="secondary-dataset-choose-one">Secondary Dataset (choose one)</h4>
+<ul>
+<li><strong>Credit Card Fraud</strong> (Kaggle): ~284,000 transactions, 492 fraudulent (0.17%). Note that all features are PCA-transformed and anonymized, so feature engineering is not possible on this dataset. It serves as a modeling-only benchmark.</li>
+<li><strong>CICIDS2017</strong>: modern network intrusion detection dataset with labeled attack types, reflecting current attack patterns.</li>
+<li><strong>PaySim</strong>: a synthetic mobile money dataset with realistic transaction features and full transparency about the generation process.</li>
+</ul>
+<p>All of these are publicly available. Choose datasets with genuine class imbalance; do not artificially balance them before modeling.</p>
+<hr>
+</section>
+</section>
+<section id="feature-engineering" class="level3">
+<h3 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h3>
+<p>On your primary dataset (IEEE-CIS), you must create <strong>aggregate and domain-specific features</strong> and measure their impact on model performance. Examples include:</p>
+<ul>
+<li>Transaction velocity: number of transactions per user/card in the last N hours</li>
+<li>Spending pattern deviations: ratio of current transaction amount to the user’s average</li>
+<li>Time-based features: hour of day, time since last transaction</li>
+<li>Aggregated statistics: mean, max, and standard deviation of transaction amounts per user over rolling windows</li>
+</ul>
+<p>Run your best classical model (e.g., gradient boosting) with and without these engineered features and report the difference in AUPRC. This comparison is a required component of your report.</p>
+<p>Note: the Credit Card Fraud dataset has anonymized PCA features, so feature engineering applies only to IEEE-CIS (or PaySim/CICIDS2017 if chosen as secondary).</p>
+<hr>
+</section>
+<section id="data-splitting" class="level3">
+<h3 class="anchored" data-anchor-id="data-splitting">Data Splitting</h3>
+<p><strong>You must split data chronologically. Random splits are not acceptable for transaction data.</strong> Fraud data is sequential, and random splits leak future information into the training set, producing inflated metrics that do not reflect real-world performance.</p>
+<p>Use the timestamp or time-ordering information available in your dataset to create a temporal train/test split. Justify your choice of split point in the report (e.g., “we used the first 80% of transactions by time for training and the last 20% for testing”).</p>
+<p>If your secondary dataset lacks explicit timestamps, state this and explain your splitting strategy.</p>
+<hr>
+</section>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics">Evaluation Metrics</h3>
+<p>Standard accuracy is <strong>not appropriate</strong> for imbalanced datasets. Report the following:</p>
+<ul>
+<li><strong>Area Under the Precision-Recall Curve (AUPRC)</strong>: the primary metric, as it focuses on the minority class</li>
+<li><strong>ROC AUC</strong>: useful for overall discrimination ability</li>
+<li><strong>Precision, Recall, and F1</strong> at a chosen operating threshold</li>
+<li><strong>Precision-Recall curve</strong>: plotted for your best models, showing the trade-off explicitly</li>
+</ul>
+<section id="cost-sensitive-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="cost-sensitive-evaluation">Cost-Sensitive Evaluation</h4>
+<p>Beyond standard metrics, perform the following exercise for your primary dataset. Assume:</p>
+<ul>
+<li>A <strong>false negative</strong> (missed fraud) costs <strong>$500</strong> on average</li>
+<li>A <strong>false positive</strong> (legitimate transaction flagged) costs <strong>$2</strong> in customer friction</li>
+</ul>
+<p>For your best model, compute the <strong>expected cost per transaction</strong> as a function of the decision threshold. Find the threshold that minimizes total expected cost. Compare this optimal threshold to the one you would choose by maximizing F1. Are they different? Discuss why.</p>
+<hr>
+</section>
+</section>
+<section id="error-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="error-analysis">Error Analysis</h3>
+<p>For your best model on the primary dataset, manually inspect <strong>10-20 false positives</strong> and <strong>10-20 false negatives</strong>. For each group:</p>
+<ul>
+<li>Are there common patterns? (e.g., false positives concentrated in a particular transaction type, false negatives involving small amounts)</li>
+<li>Can you categorize the errors into a few types?</li>
+<li>Do the errors suggest missing features or model limitations?</li>
+</ul>
+<p>Report your findings. This analysis often reveals more about model behavior than aggregate metrics alone.</p>
+<hr>
+</section>
+<section id="key-questions-to-address" class="level3">
+<h3 class="anchored" data-anchor-id="key-questions-to-address">Key Questions to Address</h3>
+<ol type="1">
+<li><strong>Performance</strong>: do deep learning models detect anomalies more effectively than classical methods? On which datasets and under what conditions?</li>
+<li><strong>Feature engineering impact</strong>: how much do engineered features improve performance compared to using raw features alone?</li>
+<li><strong>Semi-supervised vs.&nbsp;supervised</strong>: for autoencoders/VAEs, does training only on normal data outperform training on the full labeled set? Under what conditions?</li>
+<li><strong>Representation learning</strong>: do autoencoders/VAEs learn useful representations of “normal” behavior? Can you visualize the learned latent space?</li>
+<li><strong>Threshold sensitivity</strong>: how sensitive are your results to the choice of decision threshold? How does the cost-optimal threshold differ from the F1-optimal one?</li>
+<li><strong>Practical deployment</strong>: given your results, what approach would you recommend to a fintech company building a fraud detection system? What factors beyond raw performance matter (inference speed, interpretability, maintenance)?</li>
+</ol>
+<hr>
+</section>
+<section id="deliverables" class="level3">
+<h3 class="anchored" data-anchor-id="deliverables">Deliverables</h3>
+<p>You must submit:</p>
+<ol type="1">
+<li><strong>A written report (PDF)</strong>
+<ul>
+<li>Maximum length: 10 pages</li>
+<li>No code in the report</li>
+<li>Clear explanation of your datasets, feature engineering, temporal splitting strategy, methodology, results, and analysis</li>
+<li>Include precision-recall curves, performance comparison tables, cost-threshold analysis, error analysis findings, and any relevant visualizations</li>
+</ul></li>
+<li><strong>Your code</strong>
+<ul>
+<li>Create a <strong>GitHub repository</strong> containing all your code. Include the repository link in your report. Do not submit code on CANVAS.</li>
+<li>All results reported in the PDF must be reproducible from the repository. Include a README with clear instructions to run your experiments.</li>
+<li>Well organized, with a <code>requirements.txt</code> or <code>environment.yml</code></li>
+</ul></li>
+</ol>
+<hr>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h3>
+<p>Fraud detection is one of the highest-impact applications of machine learning in industry. Financial institutions, e-commerce platforms, and insurance companies all rely on automated systems to flag suspicious activity. The challenges you will encounter in this assignment, class imbalance, temporal data splitting, feature engineering, threshold tuning, asymmetric costs, and the tension between precision and recall, are exactly the challenges faced by ML engineers working on these problems in production. Learning to navigate them with both classical and deep learning tools is a valuable and transferable skill.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
