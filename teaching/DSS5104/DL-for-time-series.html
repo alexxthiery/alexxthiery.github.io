@@ -133,7 +133,9 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><strong>Overview</strong></a></li>
   <li><a href="#assignment-objectives" id="toc-assignment-objectives" class="nav-link" data-scroll-target="#assignment-objectives"><strong>Assignment Objectives</strong></a></li>
-  <li><a href="#datasets-and-prediction-tasks" id="toc-datasets-and-prediction-tasks" class="nav-link" data-scroll-target="#datasets-and-prediction-tasks"><strong>Datasets and Prediction Tasks</strong></a></li>
+  <li><a href="#models" id="toc-models" class="nav-link" data-scroll-target="#models"><strong>Models</strong></a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets"><strong>Datasets</strong></a></li>
+  <li><a href="#experimental-protocol" id="toc-experimental-protocol" class="nav-link" data-scroll-target="#experimental-protocol"><strong>Experimental Protocol</strong></a></li>
   <li><a href="#key-questions-to-address" id="toc-key-questions-to-address" class="nav-link" data-scroll-target="#key-questions-to-address"><strong>Key Questions to Address</strong></a></li>
   <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables"><strong>Deliverables</strong></a></li>
   <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts"><strong>Final Thoughts</strong></a></li>
@@ -168,39 +170,127 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <hr>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview"><strong>Overview</strong></h3>
-<p>The goal of this assignment is to <strong>critically explore and evaluate recent deep learning methods for time-series prediction</strong>. While classical models like ARIMA, Prophet, and gradient boosting have long been standard for temporal forecasting, deep learning architectures, particularly those designed for sequential modeling, Deep Learning models have shown increasing promise, althoug it is still not clear if they are the best choice for all time-series problems.</p>
-<p>In this assignment, you will evaluate the <strong>performance, scalability, and robustness</strong> of a selection of modern deep learning methods <strong>using publicly available implementations</strong> on a variety of <strong>real-world time-series forecasting tasks</strong>. You are not expected to implement models from scratch but must demonstrate an understanding of their proper application.</p>
+<p>The goal of this assignment is to <strong>critically explore and evaluate recent deep learning methods for time-series prediction</strong>. Classical models like ARIMA, ETS, and gradient boosting have long been standard for temporal forecasting, and they remain strong. In fact, recent work by Zeng et al.&nbsp;(2023, “Are Transformers Effective for Time Series Forecasting?”) showed that a simple linear model can match or outperform Transformer-based architectures on common benchmarks. The field is actively debating which inductive biases actually help for forecasting, and many of the best-performing deep learning models (PatchTST, DLinear, TiDE) are not sequential at all: they process patches or use simple linear layers rather than RNN-style recurrence.</p>
+<p>In this assignment, you will evaluate the <strong>performance, scalability, and robustness</strong> of a selection of modern deep learning methods <strong>using publicly available implementations</strong> on a variety of <strong>real-world time-series forecasting tasks</strong>. You are not expected to implement models from scratch but must demonstrate an understanding of their proper application and a rigorous experimental methodology.</p>
 <hr>
 </section>
 <section id="assignment-objectives" class="level3">
 <h3 class="anchored" data-anchor-id="assignment-objectives"><strong>Assignment Objectives</strong></h3>
 <ul>
 <li>Understand and apply recent <strong>deep learning models for time-series forecasting</strong></li>
-<li>Benchmark their performance on <strong>multiple datasets</strong></li>
-<li>Compare them against <strong>classical baselines</strong> that do not use deep learning</li>
+<li>Benchmark their performance on <strong>multiple datasets</strong> using a sound experimental protocol</li>
+<li>Compare them against <strong>classical and simple baselines</strong> (including a linear baseline)</li>
 <li>Analyze the <strong>advantages, limitations, and practical considerations</strong> of deep models in time-series settings</li>
-<li>Reflect on <strong>when and why</strong> deep models outperform traditional methods—or don’t</li>
+<li>Reflect on <strong>when and why</strong> deep models outperform traditional methods, or don’t</li>
 </ul>
 <hr>
 </section>
-<section id="datasets-and-prediction-tasks" class="level3">
-<h3 class="anchored" data-anchor-id="datasets-and-prediction-tasks"><strong>Datasets and Prediction Tasks</strong></h3>
-<p>You must choose <strong>at least five time-series datasets</strong>. These should:</p>
+<section id="models" class="level3">
+<h3 class="anchored" data-anchor-id="models"><strong>Models</strong></h3>
+<p>You must evaluate the following models. Use publicly available implementations (e.g., from the Nixtla ecosystem, Darts, GluonTS, or the original authors’ code).</p>
+<p><strong>Deep learning models</strong> (evaluate all four, plus one of your choice):</p>
 <ul>
-<li>Involve forecasting over a meaningful horizon (multi-step if possible)</li>
-<li>Come from diverse domains (e.g., energy, finance, climate, retail, transportation)</li>
-<li>Be publicly available and reasonably complex</li>
+<li><strong>PatchTST</strong>: a Transformer-based model that processes time series as patches</li>
+<li><strong>N-BEATS</strong>: a deep neural architecture based on backward and forward residual links</li>
+<li><strong>TiDE</strong>: a simple MLP-based encoder-decoder model</li>
+<li><strong>DeepAR</strong>: an RNN-based autoregressive model with probabilistic output</li>
 </ul>
+<p><strong>Baselines</strong> (evaluate all three):</p>
+<ul>
+<li><strong>Seasonal naive</strong>: repeat the last observed seasonal pattern</li>
+<li><strong>ETS or AutoARIMA</strong>: classical statistical model (e.g., via <code>statsforecast</code> or <code>statsmodels</code>)</li>
+<li><strong>LightGBM with lag features</strong>: a gradient-boosted approach using hand-crafted temporal features</li>
+</ul>
+<p><strong>Simple linear baseline:</strong></p>
+<ul>
+<li>A <strong>DLinear-style model</strong>: a single linear layer mapping past values to future values. This is critical for grounding your Transformer comparisons, given the results of Zeng et al.</li>
+</ul>
+<p>You may add <strong>one additional model</strong> of your choice (e.g., TimesNet, Informer, Temporal Fusion Transformer) and justify why you selected it.</p>
+<hr>
+</section>
+<section id="datasets" class="level3">
+<h3 class="anchored" data-anchor-id="datasets"><strong>Datasets</strong></h3>
+<p>Choose <strong>three datasets</strong> from the following curated list. You must include <strong>at least one univariate</strong> and <strong>at least one multivariate</strong> dataset.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 19%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>Type</th>
+<th>Domain</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ETTh1 / ETTh2</td>
+<td>Multivariate</td>
+<td>Energy (transformer temperature)</td>
+<td>Standard benchmark, widely used</td>
+</tr>
+<tr class="even">
+<td>Electricity (UCI)</td>
+<td>Multivariate (370 series)</td>
+<td>Energy consumption</td>
+<td>Good for scalability testing</td>
+</tr>
+<tr class="odd">
+<td>M4</td>
+<td>Univariate (100k series)</td>
+<td>Mixed domains</td>
+<td>Competition dataset with known results</td>
+</tr>
+<tr class="even">
+<td>M5</td>
+<td>Hierarchical</td>
+<td>Retail sales</td>
+<td>Walmart sales data</td>
+</tr>
+<tr class="odd">
+<td>Weather</td>
+<td>Multivariate</td>
+<td>Climate</td>
+<td>Regular sampling, well-behaved</td>
+</tr>
+<tr class="even">
+<td>Traffic</td>
+<td>Multivariate</td>
+<td>Transportation</td>
+<td>San Francisco road occupancy</td>
+</tr>
+</tbody>
+</table>
+<p>If you want to use a dataset not on this list, get approval from the instructor first.</p>
+<p><strong>A warning about stock prices:</strong> stock prices are essentially random walks, and predicting them teaches bad habits (overfitting to noise, survivorship bias). If you include stock data, you must use a random walk as your baseline, and you should expect that beating it is very difficult.</p>
+<hr>
+</section>
+<section id="experimental-protocol" class="level3">
+<h3 class="anchored" data-anchor-id="experimental-protocol"><strong>Experimental Protocol</strong></h3>
+<p>A rigorous experimental setup is just as important as the model choice. Follow these requirements.</p>
+<p><strong>Train/validation/test splits.</strong> Use a temporal split: train on the earliest portion, validate on the next, test on the latest. <strong>Never randomly shuffle time-series data.</strong> If your dataset has multiple series, the temporal ordering must be respected within each series.</p>
+<p><strong>Walk-forward validation.</strong> Use expanding-window or sliding-window evaluation. Document which approach you use and why.</p>
+<p><strong>Metrics.</strong> Report at least:</p>
+<ul>
+<li><strong>MAE</strong> (mean absolute error)</li>
+<li>One <strong>relative or scale-free metric</strong>: either <strong>MASE</strong> (mean absolute scaled error) or <strong>sMAPE</strong> (symmetric mean absolute percentage error)</li>
+</ul>
+<p>You may report additional metrics (RMSE, MAPE, etc.) but you must <strong>justify your metric choices</strong> in the report: explain what each metric captures and why it is appropriate for your datasets.</p>
+<p><strong>Multiple seeds.</strong> Run each model with <strong>at least 3 different random seeds</strong> and report mean and standard deviation of your results. Single-seed results are not acceptable.</p>
+<p><strong>Preprocessing.</strong> Document your preprocessing pipeline: normalization strategy (per-series vs.&nbsp;global), handling of missing values, differencing or detrending if applied, and any feature engineering. Justify your choices.</p>
 <hr>
 </section>
 <section id="key-questions-to-address" class="level3">
 <h3 class="anchored" data-anchor-id="key-questions-to-address"><strong>Key Questions to Address</strong></h3>
 <ol type="1">
-<li><strong>Performance:</strong> How do deep time-series models compare to classical models in accuracy? On which kinds of data do they excel or struggle? Are they really better than classical models?</li>
-<li><strong>Scalability:</strong> How do they perform in terms of training time, memory usage, etc…?</li>
-<li><strong>Robustness:</strong> How sensitive are models to data volume, missing values, input noise, and hyperparameters?</li>
-<li><strong>Generalization:</strong> Do deep models overfit, especially on smaller datasets or with limited history?</li>
-<li><strong>Practicality:</strong> Would you recommend deep models in real-world time-series applications? Under what conditions?</li>
+<li><strong>Performance:</strong> How do deep time-series models compare to classical models and the linear baseline in accuracy? On which kinds of data do they excel or struggle? Can they beat the simple baselines?</li>
+<li><strong>Computational cost:</strong> Report training time per model, hardware used (CPU/GPU, memory), and total GPU hours for the full experiment. Would you pay this computational cost in practice?</li>
+<li><strong>Robustness:</strong> How sensitive are models to hyperparameters and data volume? Do deep models overfit on smaller datasets?</li>
+<li><strong>Practicality:</strong> Given your results, would you recommend deep models for time-series forecasting? Under what conditions?</li>
 </ol>
 <hr>
 </section>
@@ -209,32 +299,34 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 <ol type="1">
 <li><strong>Written Report (PDF)</strong>
 <ul>
-<li>Max 10 pages (shorter is welcome if well-written and to the point)<br>
-</li>
+<li>Max 10 pages (shorter is welcome if well-written and to the point)</li>
 <li>Focus on insights, comparisons, and analysis: <strong>no code in the report</strong></li>
+<li>Must include a description of your preprocessing pipeline and experimental protocol</li>
+<li>Must include a table of computational costs (training time, hardware) for each model</li>
 </ul></li>
-<li><strong>Code Submission</strong>
+<li><strong>Your code</strong>
 <ul>
-<li>Organized scripts or notebooks (via GitHub or zip) for:
+<li>Create a <strong>GitHub repository</strong> containing all your code. Include the repository link in your report. Do not submit code on CANVAS.</li>
+<li>All results reported in the PDF must be reproducible from the repository. Include a README with clear instructions to run your experiments.</li>
+<li>Organized scripts or notebooks for:
 <ul>
 <li>Data preprocessing and transformation</li>
 <li>Model training, evaluation, and tuning</li>
-<li>Metrics reporting and visualizations<br>
-</li>
+<li>Metrics reporting and visualizations</li>
 </ul></li>
-<li>Code must be <strong>clear, well-documented, and reproducible</strong></li>
+<li>Include a <code>requirements.txt</code> or <code>environment.yml</code></li>
 </ul></li>
 </ol>
 <hr>
 </section>
 <section id="final-thoughts" class="level3">
 <h3 class="anchored" data-anchor-id="final-thoughts"><strong>Final Thoughts</strong></h3>
-<p>This assignment is your opportunity to engage with the <strong>cutting edge of time-series forecasting</strong> using deep learning. These models bring new capabilities but also new challenges. Through hands-on experimentation and thoughtful evaluation, you’ll build the ability to <strong>choose, justify, and defend</strong> modeling decisions in time-series contexts.</p>
+<p>This assignment is your opportunity to engage with modern time-series forecasting methods and to evaluate them critically. The central question is not “which model gets the best number” but rather “when is the added complexity of deep learning justified?” Simple models are surprisingly strong in this domain, and a good project will take that seriously.</p>
 <p>By the end, you should be able to answer:</p>
 <ul>
 <li>Are deep models worth the overhead in time-series problems? It is fine if you find that they are not!</li>
 <li>When are they most beneficial?</li>
-<li>What trade-offs do they introduce compared to classical approaches?</li>
+<li>What trade-offs (accuracy, compute, engineering effort) do they introduce compared to classical approaches?</li>
 </ul>
 
 

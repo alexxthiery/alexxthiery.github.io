@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DSS5104 Assignment Topics – Alexandre Thiéry</title>
+<title>Transfer Learning for Computer Vision – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,41 +61,12 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta property="og:title" content="Transfer Learning for Computer Vision – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
+<meta name="twitter:title" content="Transfer Learning for Computer Vision – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -155,15 +126,33 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#assignment-objectives" id="toc-assignment-objectives" class="nav-link" data-scroll-target="#assignment-objectives">Assignment Objectives</a></li>
+  <li><a href="#architectures" id="toc-architectures" class="nav-link" data-scroll-target="#architectures">Architectures</a></li>
+  <li><a href="#fine-tuning-strategies" id="toc-fine-tuning-strategies" class="nav-link" data-scroll-target="#fine-tuning-strategies">Fine-Tuning Strategies</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
+  <li><a href="#data-efficiency-experiment" id="toc-data-efficiency-experiment" class="nav-link" data-scroll-target="#data-efficiency-experiment">Data Efficiency Experiment</a></li>
+  <li><a href="#validation-strategy" id="toc-validation-strategy" class="nav-link" data-scroll-target="#validation-strategy">Validation Strategy</a></li>
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation Metrics</a></li>
+  <li><a href="#error-analysis" id="toc-error-analysis" class="nav-link" data-scroll-target="#error-analysis">Error Analysis</a></li>
+  <li><a href="#key-questions-to-address" id="toc-key-questions-to-address" class="nav-link" data-scroll-target="#key-questions-to-address">Key Questions to Address</a></li>
+  <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables">Deliverables</a></li>
+  <li><a href="#practical-tips" id="toc-practical-tips" class="nav-link" data-scroll-target="#practical-tips">Practical Tips</a></li>
+  <li><a href="#why-this-matters" id="toc-why-this-matters" class="nav-link" data-scroll-target="#why-this-matters">Why This Matters</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">DSS5104 Assignment Topics</h1>
+<h1 class="title">Transfer Learning for Computer Vision</h1>
   <div class="quarto-categories">
     <div class="quarto-category">DSS5104</div>
   </div>
@@ -184,27 +173,142 @@ window.Quarto = {
 
 
 <hr>
-<p>Here is a list of possible topics for your assignment.</p>
+<section id="overview" class="level3">
+<h3 class="anchored" data-anchor-id="overview">Overview</h3>
+<p>Transfer learning has become the default approach for computer vision in industry. Rather than training deep networks from scratch, which requires massive datasets and compute, practitioners fine-tune models pretrained on ImageNet (or similar large-scale datasets) for their specific task. Transfer learning often works surprisingly well even when the target domain differs from ImageNet, though the degree of benefit varies with domain gap.</p>
+<p>In this assignment, you will apply transfer learning to a <strong>domain-specific image classification task</strong> of your choice. You will compare multiple pretrained architectures, explore different fine-tuning strategies, and investigate a central practical question: <strong>how little labeled data do you need</strong> for transfer learning to work well?</p>
+<p>This is one of the most common workflows in deployed computer vision systems, from medical imaging to quality control in manufacturing. Understanding when and how transfer learning works is essential for any ML practitioner.</p>
+<hr>
+</section>
+<section id="assignment-objectives" class="level3">
+<h3 class="anchored" data-anchor-id="assignment-objectives">Assignment Objectives</h3>
 <ul>
-<li><a href="../../teaching/DSS5104/molecular-prediction.html"><strong>Molecular Properties Prediction</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-time-series.html"><strong>Deep Learning for Time-Series Forecasting</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-tabular-data.html"><strong>Deep Learning for Tabular Data</strong></a></li>
-<li><a href="../../teaching/DSS5104/CV-transfer-learning.html"><strong>Transfer Learning for Computer Vision</strong></a></li>
-<li><a href="../../teaching/DSS5104/recommender-systems.html"><strong>Deep Learning for Recommender Systems</strong></a></li>
-<li><a href="../../teaching/DSS5104/fraud-detection.html"><strong>Fraud and Anomaly Detection with Deep Learning</strong></a></li>
-<li><a href="../../teaching/DSS5104/text-classification.html"><strong>Text Classification: From Classical NLP to Transformers</strong></a></li>
-<li><a href="../../teaching/DSS5104/image-segmentation.html"><strong>Deep Learning for Image Segmentation</strong></a></li>
-<li><a href="../../teaching/DSS5104/open_topic.html"><strong>Open Topic</strong></a></li>
+<li>Apply <strong>pretrained deep learning models</strong> to a domain-specific image classification task</li>
+<li>Compare multiple architectures and fine-tuning strategies</li>
+<li>Investigate the effect of <strong>training set size</strong> on transfer learning performance</li>
+<li>Benchmark transfer learning against <strong>training from scratch</strong></li>
+<li>Analyze model failures qualitatively, not just quantitatively</li>
+<li>Develop practical intuition for when transfer learning is sufficient and when it is not</li>
 </ul>
-<p><strong>Assignment group</strong>: You are reminded that assignments are to be done in groups of <strong>at most 5 students</strong>: each student in a group will be receiving the same mark. In all your reports, do include the list of all students, as well as their student numbers.</p>
-<p><strong>Submission instructions</strong>:</p>
+<hr>
+</section>
+<section id="architectures" class="level3">
+<h3 class="anchored" data-anchor-id="architectures">Architectures</h3>
+<p>You should compare <strong>at least three</strong> pretrained architectures from different families. Suggested options include:</p>
 <ul>
-<li>Submit your <strong>report as a PDF file</strong> on CANVAS. Only PDF files are accepted; no other formats will be graded.</li>
-<li>Your <strong>code must be in a GitHub repository</strong>. Include the link to your repository in your report. Do not submit code on CANVAS. All results stated in your report must be reproducible from the repository.</li>
+<li><strong>CNNs</strong>: ResNet-50, EfficientNet-B0/B3, ConvNeXt</li>
+<li><strong>Vision Transformers</strong>: ViT-B/16, DeiT, Swin Transformer</li>
 </ul>
-<p><strong>Late submissions</strong> will incur a penalty of <strong><span class="math inline">\(10\%\)</span> per day late</strong>: if you original mark is, say, <span class="math inline">\(81/100\)</span>, and you are <span class="math inline">\(6\)</span> days late, your mark will be <span class="math inline">\(81 \times 0.9^6 = 43\)</span>.</p>
+<p>These models are available through <code>torchvision</code>, <code>timm</code> (PyTorch Image Models), or HuggingFace <code>transformers</code>. Note that <code>torchvision</code> includes ViT, Swin, ResNet, EfficientNet, and ConvNeXt, but <strong>DeiT requires <code>timm</code> or HuggingFace</strong> (torchvision’s ViT uses DeiT’s training recipe but does not expose the DeiT distillation architecture as a separate model). You are free to use any of these libraries.</p>
+<p><strong>Inference benchmarking.</strong> Beyond accuracy, report the following for each architecture: number of parameters, model size in MB, and inference latency (ms per image on GPU). Present these in a single comparison table alongside accuracy. In practice, model selection is driven by efficiency constraints as much as by raw performance.</p>
+<hr>
+</section>
+<section id="fine-tuning-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="fine-tuning-strategies">Fine-Tuning Strategies</h3>
+<p>You should explore and compare <strong>at least three</strong> of the following strategies:</p>
+<ul>
+<li><strong>Feature extraction</strong>: freeze the pretrained backbone entirely, train only the classification head (typically one or two linear layers; the choice of head architecture can matter, so document what you use)</li>
+<li><strong>Full fine-tuning</strong>: unfreeze all layers and train end-to-end with a small learning rate</li>
+<li><strong>Gradual unfreezing</strong>: progressively unfreeze layers from top to bottom during training</li>
+<li><strong>Discriminative learning rates</strong>: use smaller learning rates for early layers and larger ones for later layers</li>
+<li><strong>Data augmentation</strong>: compare performance with and without augmentation (random crops, flips, color jitter, mixup, etc.)</li>
+</ul>
+<p>For each strategy, report training curves, final accuracy, and any signs of overfitting.</p>
+<p><strong>Hyperparameter reporting.</strong> Include a table listing all hyperparameters for each experiment: optimizer, learning rate, learning rate schedule (e.g., cosine annealing, step decay), batch size, number of epochs, early stopping patience, and augmentation details. Without this, your results are not reproducible.</p>
+<hr>
+</section>
+<section id="datasets" class="level3">
+<h3 class="anchored" data-anchor-id="datasets">Datasets</h3>
+<p>Choose <strong>one primary dataset</strong> for your main experiments, and optionally a second dataset to test generalization of your findings. Your dataset should be domain-specific (not ImageNet or CIFAR), with a reasonable number of classes and enough images to be interesting. Suggested options:</p>
+<ul>
+<li><strong>Medical imaging</strong>: MedMNIST variants (PathMNIST, DermaMNIST, BloodMNIST) are standardized, well-documented, and sized for Colab. Skin lesion classification (ISIC) and retinal disease (OCT) are also good choices. Note: CheXpert-full is 439 GB and requires a data use agreement; if you want chest X-rays, use CheXpert-small or a MedMNIST variant instead.</li>
+<li><strong>Satellite/aerial</strong>: EuroSAT (land use), UC Merced Land Use</li>
+<li><strong>Food</strong>: Food-101</li>
+<li><strong>Fine-grained recognition</strong>: FGVC-Aircraft, Oxford Flowers, CUB-200 Birds</li>
+</ul>
+<p>All of these are publicly available and run comfortably on Google Colab.</p>
+<hr>
+</section>
+<section id="data-efficiency-experiment" class="level3">
+<h3 class="anchored" data-anchor-id="data-efficiency-experiment">Data Efficiency Experiment</h3>
+<p>A key part of this assignment is to study how transfer learning performs <strong>as labeled data decreases</strong>. For your primary dataset:</p>
+<ol type="1">
+<li>Select your best-performing architecture for this experiment. Train it using 100%, 50%, 25%, 10%, and 5% of the training data.</li>
+<li>Compare against the same architecture trained <strong>from scratch</strong> (randomly initialized) at each data level. You only need to run the from-scratch baseline for this one architecture; running all three from scratch at all data fractions is unnecessary.</li>
+<li>Plot accuracy vs.&nbsp;training set size for both pretrained and from-scratch models.</li>
+<li><strong>Run each configuration with at least 3 random seeds.</strong> Report mean and standard deviation. Results at low data fractions (5%, 10%) are noisy from a single run, so multiple seeds are needed to draw reliable conclusions.</li>
+</ol>
+<p>This experiment should clearly demonstrate the practical value of transfer learning in low-data regimes.</p>
+<hr>
+</section>
+<section id="validation-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="validation-strategy">Validation Strategy</h3>
+<p>Use a proper <strong>train/validation/test split</strong>. The test set is held out for final evaluation only; use the validation set for model selection and early stopping.</p>
+<p>When subsampling training data (e.g., to 5%), keep the validation and test sets fixed at their original size. Subsample only the training portion. Use stratified sampling to preserve class proportions. If your dataset does not come with a predefined split, use a 70/15/15 or 80/10/10 split and document your choice.</p>
+<hr>
+</section>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics">Evaluation Metrics</h3>
+<p>Report the following metrics on a held-out test set:</p>
+<ul>
+<li><strong>Overall accuracy</strong></li>
+<li><strong>Macro-averaged F1 score</strong> (important if classes are imbalanced)</li>
+<li><strong>Per-class precision and recall</strong> for at least the best and worst performing classes</li>
+<li><strong>Confusion matrix</strong> for your best model</li>
+</ul>
+<hr>
+</section>
+<section id="error-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="error-analysis">Error Analysis</h3>
+<p>For your best model, go beyond aggregate metrics. Select 10–20 misclassified examples and inspect them. Group failures by category: ambiguous or visually similar classes, poor image quality, possible labeling errors, or cases that reflect genuine domain difficulty. Include representative examples in your report with brief commentary.</p>
+<p>This kind of qualitative analysis is where real debugging intuition comes from. Confusion matrices tell you <em>which</em> classes are confused; looking at individual failures tells you <em>why</em>.</p>
+<hr>
+</section>
+<section id="key-questions-to-address" class="level3">
+<h3 class="anchored" data-anchor-id="key-questions-to-address">Key Questions to Address</h3>
+<ol type="1">
+<li><strong>Architecture comparison</strong>: which pretrained model performs best on your task? Does model size always help? How do architectures compare on inference efficiency?</li>
+<li><strong>Fine-tuning strategy</strong>: does full fine-tuning always beat feature extraction? When is freezing the backbone sufficient?</li>
+<li><strong>Data efficiency</strong>: how much labeled data is needed for transfer learning to match training from scratch with the full dataset?</li>
+<li><strong>Domain gap</strong>: how different is your target domain from ImageNet? Does this affect which strategies work best?</li>
+<li><strong>Practical recommendations</strong>: given your results, what advice would you give to a practitioner starting a new image classification project?</li>
+</ol>
+<hr>
+</section>
+<section id="deliverables" class="level3">
+<h3 class="anchored" data-anchor-id="deliverables">Deliverables</h3>
+<p>You must submit:</p>
+<ol type="1">
+<li><strong>A written report (PDF)</strong>
+<ul>
+<li>Maximum length: 10 pages (this is tight given the number of experiments; be selective about which results you present in detail)</li>
+<li>No code in the report</li>
+<li>Clear explanation of your dataset, methodology, experiments, and findings</li>
+<li>Include relevant figures (training curves, accuracy vs.&nbsp;data size plots, confusion matrices, misclassified examples)</li>
+<li>Include the hyperparameter table and inference benchmarking table described above</li>
+</ul></li>
+<li><strong>Your code</strong>
+<ul>
+<li>Create a <strong>GitHub repository</strong> containing all your code. Include the repository link in your report. Do not submit code on CANVAS.</li>
+<li>All results reported in the PDF must be reproducible from the repository. Include a README with clear instructions to run your experiments.</li>
+<li>Well organized, with a <code>requirements.txt</code> or <code>environment.yml</code></li>
+</ul></li>
+</ol>
+<hr>
+</section>
+<section id="practical-tips" class="level3">
+<h3 class="anchored" data-anchor-id="practical-tips">Practical Tips</h3>
+<p><strong>Preprocessing.</strong> Pretrained models expect inputs normalized with ImageNet statistics (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]). Use the same normalization even for non-ImageNet datasets. Getting this wrong is a common source of silently degraded performance.</p>
+<p><strong>Mixed precision training.</strong> If you are training on Colab, consider using <code>torch.cuda.amp</code> (automatic mixed precision). It roughly halves GPU memory usage and speeds up training, which helps when working within Colab’s resource limits.</p>
+<p><strong>Compute planning.</strong> The full set of experiments (3 architectures, 3 strategies, data efficiency curves with multiple seeds) adds up. Plan your GPU time. The data efficiency experiment with the from-scratch baseline is the most expensive part; limit it to one architecture as described above. Run your other architecture and strategy comparisons at 100% data.</p>
+<hr>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h3>
+<p>Transfer learning is not a research curiosity; it is the standard approach for computer vision in production. Most companies do not have millions of labeled images for their specific task. They have hundreds or thousands. Understanding how to select a pretrained model, choose a fine-tuning strategy, and evaluate whether you have enough data is a core skill for any ML engineer working with images. This assignment gives you hands-on practice with exactly that workflow.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

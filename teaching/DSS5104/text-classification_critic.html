@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DSS5104 Assignment Topics – Alexandre Thiéry</title>
+<title>text-classification_critic – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,42 +61,11 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
-<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:title" content="Alexandre Thiéry">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="DSS5104 Assignment Topics – Alexandre Thiéry">
-<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:title" content="Alexandre Thiéry">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
 </head>
@@ -155,56 +124,98 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#critique-text-classification-assignment" id="toc-critique-text-classification-assignment" class="nav-link active" data-scroll-target="#critique-text-classification-assignment">Critique: Text Classification Assignment</a>
+  <ul class="collapse">
+  <li><a href="#strengths" id="toc-strengths" class="nav-link" data-scroll-target="#strengths">Strengths</a></li>
+  <li><a href="#gaps-for-career-relevance" id="toc-gaps-for-career-relevance" class="nav-link" data-scroll-target="#gaps-for-career-relevance">Gaps for Career Relevance</a></li>
+  <li><a href="#scope-concerns" id="toc-scope-concerns" class="nav-link" data-scroll-target="#scope-concerns">Scope Concerns</a></li>
+  <li><a href="#technical-accuracy" id="toc-technical-accuracy" class="nav-link" data-scroll-target="#technical-accuracy">Technical Accuracy</a></li>
+  <li><a href="#missing-practical-considerations" id="toc-missing-practical-considerations" class="nav-link" data-scroll-target="#missing-practical-considerations">Missing Practical Considerations</a></li>
+  <li><a href="#dataset-suggestions" id="toc-dataset-suggestions" class="nav-link" data-scroll-target="#dataset-suggestions">Dataset Suggestions</a></li>
+  <li><a href="#suggested-improvements" id="toc-suggested-improvements" class="nav-link" data-scroll-target="#suggested-improvements">Suggested Improvements</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">DSS5104 Assignment Topics</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">DSS5104</div>
-  </div>
-  </div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
+<section id="critique-text-classification-assignment" class="level1">
+<h1>Critique: Text Classification Assignment</h1>
+<section id="strengths" class="level2">
+<h2 class="anchored" data-anchor-id="strengths">Strengths</h2>
+<p>The assignment gets several things right.</p>
+<p>The framing around “when is a Transformer worth it?” is the single most valuable question an ML practitioner can ask, and building the entire project around it is a strong pedagogical choice. Most courses either skip classical methods entirely or treat them as afterthoughts; this one forces students to take TF-IDF seriously, which matches real industry practice.</p>
+<p>The data efficiency experiment (training on 1%–100% of data) is well designed. It forces students to confront the reality that labeled data is expensive and that fancy models don’t always win in low-data regimes. This is a lesson many junior ML engineers learn painfully on the job.</p>
+<p>Requiring training time and inference time alongside accuracy is good. Too many academic projects optimize for accuracy alone. The “Why This Matters” section is honest and grounded, not selling hype.</p>
+<p>The tiered structure (classical, neural, Transformer) gives a clear scaffold and makes grading criteria transparent.</p>
+</section>
+<section id="gaps-for-career-relevance" class="level2">
+<h2 class="anchored" data-anchor-id="gaps-for-career-relevance">Gaps for Career Relevance</h2>
+<p>Several things that matter in industry are absent.</p>
+<p><strong>No error analysis requirement.</strong> The assignment asks students to report metrics but never asks them to look at misclassified examples, build a confusion matrix, or ask “why did this fail?” In industry, error analysis drives 80% of model improvement decisions. Add a mandatory section: “For your best model, examine 20–50 misclassified examples. Categorize the failure modes. What would you fix first?”</p>
+<p><strong>No data preprocessing discussion.</strong> Real text data is messy: HTML artifacts, encoding issues, mixed languages, class label noise, duplicate entries. The assignment assumes clean HuggingFace datasets. Consider requiring students to document their preprocessing pipeline and justify decisions (lowercasing? removing stopwords? handling URLs and @-mentions?).</p>
+<p><strong>No model deployment or serving considerations.</strong> Model size, memory footprint, and latency under load are absent. Even a brief requirement to report model parameter count and single-example inference latency on CPU would add value.</p>
+<p><strong>No experiment tracking.</strong> Students should learn to log experiments systematically. Requiring Weights &amp; Biases, MLflow, or even a structured CSV of all runs would teach a habit that every industry team expects.</p>
+<p><strong>No discussion of text length distribution.</strong> Transformers have token limits. TF-IDF handles arbitrary length. This is a real constraint that affects model choice, and the assignment should ask students to report and discuss text length statistics for their datasets.</p>
+<p><strong>No confidence calibration.</strong> In production, you rarely just want a label; you want to know how confident the model is. Asking students to plot reliability diagrams or compute expected calibration error (ECE) for at least one model would be a useful addition.</p>
+</section>
+<section id="scope-concerns" class="level2">
+<h2 class="anchored" data-anchor-id="scope-concerns">Scope Concerns</h2>
+<p>For a group of up to 5 students, the scope is <strong>reasonable but risks being shallow</strong>.</p>
+<p>The requirement is: 2 classical models, at least 1 neural model, at least 2 Transformers, across at least 3 datasets, with a data efficiency experiment on at least one dataset. That is roughly 5 models x 3 datasets = 15 training runs at full data, plus ~30 more for the efficiency curve. On Colab with free GPUs, fine-tuning BERT-base on 3 datasets is feasible but tight. Students may spend most of their time on engineering plumbing rather than analysis.</p>
+<p><strong>Risk:</strong> the breadth encourages “run everything, analyze nothing.” Consider reducing to 2 datasets (one easy, one hard) and requiring deeper analysis, or explicitly stating that depth of analysis matters more than number of models.</p>
+<p>For 5 students, there is also the coordination problem. The assignment does not suggest how to divide work. Adding a note like “we recommend one person owns the classical pipeline, one owns the neural model, one owns Transformer fine-tuning, one owns the data efficiency experiment, and one owns the final report and analysis” would help.</p>
+</section>
+<section id="technical-accuracy" class="level2">
+<h2 class="anchored" data-anchor-id="technical-accuracy">Technical Accuracy</h2>
+<p>A few claims need correction or nuance.</p>
+<p><strong>“DistilBERT… runs well on Colab”</strong>: this is true for fine-tuning on small datasets with a free T4 GPU, but students should be warned about Colab session timeouts and the need to checkpoint. If a dataset has 500K+ examples, fine-tuning even DistilBERT on free Colab may be painful.</p>
+<p><strong>SetFit framing</strong>: SetFit is described as “a few-shot learning framework,” which is correct, but the assignment then asks students to train it with 100% of data in the efficiency experiment. SetFit is not designed for that regime and will be slow (it generates contrastive pairs). Clarify that SetFit should only be evaluated at low data fractions (1%, 5%, maybe 10%), not at full scale.</p>
+<p><strong>“TF-IDF + Logistic Regression” as “the standard baseline”</strong>: this is accurate, but the assignment should note that the choice of regularization strength (C parameter) and max features matters a lot. Without tuning, students may get misleadingly bad results for the classical baseline and draw wrong conclusions. A note about hyperparameter tuning being necessary for fair comparison across all tiers would help.</p>
+<p><strong>Missing: tokenizer choices matter.</strong> For Transformer models, the tokenizer is fixed. For classical models, choices like word-level vs.&nbsp;character n-grams, vocabulary size, and subword handling affect results significantly. The assignment does not mention this.</p>
+</section>
+<section id="missing-practical-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="missing-practical-considerations">Missing Practical Considerations</h2>
+<p><strong>Class imbalance.</strong> Several suggested datasets (Jigsaw, GoEmotions) have severe class imbalance. The assignment mentions macro F1 but does not discuss strategies for handling imbalance (oversampling, class weights, stratified splitting). Students who pick Jigsaw without addressing imbalance will get misleading results.</p>
+<p><strong>Hyperparameter tuning.</strong> The assignment does not mention it at all. In a fair comparison, you need to tune each model. Learning rate for Transformers, C for logistic regression, number of epochs, batch size: these all matter. State explicitly whether students should do hyperparameter search, and if so, how (grid search? a few manual runs?). Without this, results are not comparable.</p>
+<p><strong>Validation strategy.</strong> No mention of train/validation/test splits or cross-validation. Students should hold out a validation set for model selection and report final numbers on a test set they never tuned on. This is fundamental and should be stated explicitly.</p>
+<p><strong>Reproducibility.</strong> “Fully reproducible” is listed as a requirement but no guidance is given. Require: random seeds, environment files (requirements.txt or conda env), and clear instructions to run.</p>
+<p><strong>Statistical significance.</strong> When comparing models, a 0.5% difference in F1 is often noise. Consider requiring students to run at least 3 seeds and report mean and standard deviation, or at minimum to discuss whether observed differences are meaningful.</p>
+</section>
+<section id="dataset-suggestions" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-suggestions">Dataset Suggestions</h2>
+<p>The suggested datasets are mostly fine but a few notes.</p>
+<p><strong>Good choices:</strong> AG News (clean, balanced, 4 classes, fast to train on), SST-2 (standard binary sentiment, small), IMDb (binary sentiment, longer texts).</p>
+<p><strong>Problematic choices:</strong> - <strong>CLINC150</strong> has 150 classes. This is a very different problem from 2–4 class classification and will make cross-dataset comparisons harder. Fine for one of three datasets, but warn students it changes the game. - <strong>Jigsaw</strong> is multi-label, not multi-class. The assignment frames everything as single-label classification. Either exclude it or add a note about multi-label handling. - <strong>20 Newsgroups</strong> is old and has known header-leakage issues (the “from:” field predicts the class). If used, students must strip headers, which is a known gotcha.</p>
+<p><strong>Better alternatives to consider:</strong> - <strong>MASSIVE</strong> (Amazon’s multilingual intent dataset): 60 intents, realistic enterprise use case, available on HuggingFace. - <strong>Banking77</strong>: 77 banking intents, realistic customer service scenario, moderate difficulty. - <strong>Tweet Eval</strong> (sentiment, emotion, hate speech, irony): short noisy text, closer to real-world messy data than IMDb reviews. - <strong>Financial PhraseBank</strong>: sentiment on financial news, domain-specific, shows that domain matters.</p>
+</section>
+<section id="suggested-improvements" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-improvements">Suggested Improvements</h2>
+<ol type="1">
+<li><p><strong>Add mandatory error analysis.</strong> Require students to inspect 30+ misclassified examples for their best and worst models and categorize failure modes. This is the single highest-value addition.</p></li>
+<li><p><strong>Require a validation protocol section.</strong> Students must describe their train/val/test split strategy and confirm that test data was not used for any model selection.</p></li>
+<li><p><strong>State hyperparameter tuning expectations.</strong> Either provide a minimal tuning budget (e.g., “tune learning rate from {1e-5, 2e-5, 5e-5} for Transformers, C from {0.1, 1, 10} for logistic regression”) or require students to justify their choices.</p></li>
+<li><p><strong>Reduce breadth, increase depth.</strong> Change “at least three datasets” to “exactly two datasets: one where you expect classical methods to be competitive and one where you expect Transformers to shine.” This frees time for deeper analysis.</p></li>
+<li><p><strong>Clarify SetFit scope.</strong> State that SetFit should only be evaluated at low data fractions (1%–10%), not at full dataset scale.</p></li>
+<li><p><strong>Add a “production readiness” section to the report.</strong> Ask: “For each model, estimate memory usage, inference latency on CPU for a single example, and what infrastructure you would need to serve it at 100 requests/second.” Even rough estimates build the right thinking habits.</p></li>
+<li><p><strong>Warn about 20 Newsgroups header leakage and Jigsaw multi-label.</strong> Add footnotes or a “dataset notes” section so students do not fall into known traps.</p></li>
+<li><p><strong>Require reproducibility artifacts.</strong> Mandate a <code>requirements.txt</code>, fixed random seeds, and a README that lets a TA reproduce results with one command.</p></li>
+<li><p><strong>Add a team roles suggestion.</strong> For groups of 3–5, suggest a division of labor so coordination overhead does not eat into analysis time.</p></li>
+<li><p><strong>Include a one-page “executive summary” in the report.</strong> Ask students to write a recommendation memo as if they were advising a product team. This exercises a communication skill that is as important as the technical work.</p></li>
+</ol>
 
 
-</header>
-
-
-<hr>
-<p>Here is a list of possible topics for your assignment.</p>
-<ul>
-<li><a href="../../teaching/DSS5104/molecular-prediction.html"><strong>Molecular Properties Prediction</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-time-series.html"><strong>Deep Learning for Time-Series Forecasting</strong></a></li>
-<li><a href="../../teaching/DSS5104/DL-for-tabular-data.html"><strong>Deep Learning for Tabular Data</strong></a></li>
-<li><a href="../../teaching/DSS5104/CV-transfer-learning.html"><strong>Transfer Learning for Computer Vision</strong></a></li>
-<li><a href="../../teaching/DSS5104/recommender-systems.html"><strong>Deep Learning for Recommender Systems</strong></a></li>
-<li><a href="../../teaching/DSS5104/fraud-detection.html"><strong>Fraud and Anomaly Detection with Deep Learning</strong></a></li>
-<li><a href="../../teaching/DSS5104/text-classification.html"><strong>Text Classification: From Classical NLP to Transformers</strong></a></li>
-<li><a href="../../teaching/DSS5104/image-segmentation.html"><strong>Deep Learning for Image Segmentation</strong></a></li>
-<li><a href="../../teaching/DSS5104/open_topic.html"><strong>Open Topic</strong></a></li>
-</ul>
-<p><strong>Assignment group</strong>: You are reminded that assignments are to be done in groups of <strong>at most 5 students</strong>: each student in a group will be receiving the same mark. In all your reports, do include the list of all students, as well as their student numbers.</p>
-<p><strong>Submission instructions</strong>:</p>
-<ul>
-<li>Submit your <strong>report as a PDF file</strong> on CANVAS. Only PDF files are accepted; no other formats will be graded.</li>
-<li>Your <strong>code must be in a GitHub repository</strong>. Include the link to your repository in your report. Do not submit code on CANVAS. All results stated in your report must be reproducible from the repository.</li>
-</ul>
-<p><strong>Late submissions</strong> will incur a penalty of <strong><span class="math inline">\(10\%\)</span> per day late</strong>: if you original mark is, say, <span class="math inline">\(81/100\)</span>, and you are <span class="math inline">\(6\)</span> days late, your mark will be <span class="math inline">\(81 \times 0.9^6 = 43\)</span>.</p>
-
-
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
