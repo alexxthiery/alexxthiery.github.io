@@ -199,7 +199,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">23 05 2024</p>
+        <p class="date-modified">09 03 2025</p>
       </div>
     </div>
       
@@ -215,7 +215,10 @@ window.Quarto = {
    
   <ul>
   <li><a href="#reversing-a-diffusion" id="toc-reversing-a-diffusion" class="nav-link active" data-scroll-target="#reversing-a-diffusion">Reversing a diffusion</a></li>
-  <li><a href="#denoising-score-matching-tweedie-formula" id="toc-denoising-score-matching-tweedie-formula" class="nav-link" data-scroll-target="#denoising-score-matching-tweedie-formula">Denoising Score Matching &amp; Tweedie formula</a></li>
+  <li><a href="#denoising-score-matching-tweedie-formula" id="toc-denoising-score-matching-tweedie-formula" class="nav-link" data-scroll-target="#denoising-score-matching-tweedie-formula">Denoising Score Matching &amp; Tweedie formula</a>
+  <ul class="collapse">
+  <li><a href="#generalizations-of-tweedies-formula" id="toc-generalizations-of-tweedies-formula" class="nav-link" data-scroll-target="#generalizations-of-tweedies-formula">Generalizations of Tweedie’s formula</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -315,14 +318,41 @@ p_Y(dy) = \int p_0(x) \, \rho_{\Gamma}(y-x) \, dx
 \mathbb{E}[X \, | Y = y] \; {\color{red} =} \; y + \Gamma^2 \, \nabla \log p_Y(y),
 \]</span></p>
 <p>which is exactly the same as <a href="#eq-rev-tweedie" class="quarto-xref">Equation&nbsp;4</a> but with an equality sign: no approximation needed! Interestingly, this is what Machine-Learners often refer to as “denoising score matching” <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref">Vincent 2011</a>)</span>: if we have access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, where <span class="math inline">\(X_i \sim p_0(dx)\)</span> and <span class="math inline">\(Y_i = X_i + \mathcal{N}(0, \Gamma^2)\)</span>, and fit a regression model <span class="math inline">\(F_{\theta}\)</span> by minimizing the mean-squared error <span class="math inline">\(\theta \mapsto \mathbb{E} \|X - F_{\theta}(Y)\|^2\)</span>, then Tweedie formula shows that in the limit of infinite samples and with sufficient flexibility in the regression model <span class="math inline">\(F_{\theta_\star}(y) = y + \Gamma^2 \nabla \log p_Y(y)\)</span>. This allows one to estimate <span class="math inline">\(\nabla \log p_Y\)</span> from data, which is often a good approximation of <span class="math inline">\(\nabla \log p_0\)</span> if the variance <span class="math inline">\(\Gamma^2\)</span> of the added noise is not too large. Indeed, things can go bad if <span class="math inline">\(\Gamma^2 \ll 1\)</span> and the number of training data is not large enough, no free lunch!</p>
+<section id="generalizations-of-tweedies-formula" class="level3">
+<h3 class="anchored" data-anchor-id="generalizations-of-tweedies-formula">Generalizations of Tweedie’s formula</h3>
+<p>Tweedie’s formula can be slightly generalized, which can be useful in practice. Suppose one would like to estimate the score <span class="math inline">\(\nabla_y \log p_Y(y)\)</span> of the marginal distribution <span class="math inline">\(p_y(y) = \int_{\mathcal{X}} p_{(X,Y)}(x,y) \, dx\)</span>. Since <span class="math inline">\(\mathbb{E}[\nabla_y \log p_{X|Y}(X) | Y=y] = 0\)</span>, we have that</p>
+<p><span class="math display">\[
+\begin{align*}
+\nabla_y \log p_Y(y) &amp;= \nabla_y \log p_Y(y) + \mathbb{E}[\nabla_y \log p_{X|Y}(X \mid y) | Y=y] \\
+&amp;= \mathbb{E}[\nabla_y \log p_{(X,Y)}(X,Y) | Y=y]\\
+&amp;= \mathbb{E}[\nabla_y \log [p_{X}(X) \, p_{Y|X}(Y|X)] | Y=y]\\
+&amp;= \mathbb{E}[\nabla_y \log p_{Y|X}(Y|X) | Y=y].
+\end{align*}
+\]</span></p>
+<p>This means that if we can simulate from <span class="math inline">\(X|Y=y\)</span> and evaluate <span class="math inline">\(\nabla_y \log p_{Y|X}(Y|X)\)</span>, then we can estimate <span class="math inline">\(\nabla_y \log p_Y(y)\)</span> by Monte-Carlo. If one has access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, one can also set up a regression problem as done in the previous section. In the setting when the marginal <span class="math inline">\(p_X(X)\)</span> is available and <span class="math inline">\(Y\)</span> is only a small perturbation of <span class="math inline">\(X\)</span> it may be beneficial to exploit the knowledge of <span class="math inline">\(p_X(X)\)</span> to reduce the variance of the estimator of <span class="math inline">\(\nabla_y \log p_Y(y)\)</span>. Suppose for example that:</p>
+<p><span class="math display">\[
+Y = \alpha X + Z
+\]</span></p>
+<p>for additive noise <span class="math inline">\(Z \sim p_Z(dz)\)</span> independent of <span class="math inline">\(X\)</span>. Then, <span class="citation" data-cites="de2024target">(<a href="#ref-de2024target" role="doc-biblioref">De Bortoli et al. 2024</a>)</span> shows that</p>
+<p><span class="math display">\[
+\nabla_y \log p_Y(y) = \alpha^{-1} \, \times \, \mathbb{E}[\nabla_x \log p_X(X) | Y=y].
+\]</span></p>
+<p>In the Gaussian case <span class="math inline">\(p_Z \sim \mathcal{N}(0, \sigma^2)\)</span>, the AR(1) model <span class="math inline">\(X \mapsto \alpha X + Z\)</span> is reversible with respect to the distribution <span class="math inline">\(\rho \equiv \mathcal{N}(0, \sigma^2/(1-\alpha^2))\)</span>. If one defines <span class="math inline">\(\widetilde{p}_X(x) = p_X(x)/\rho(x)\)</span> and <span class="math inline">\(\widetilde{p}_Y(y) = p_Y(y)/\rho(y)\)</span>, then one obtains a slightly different formula:</p>
+<p><span class="math display">\[
+\nabla_y \log \widetilde{p}_Y(y) = \alpha \, \times \, \mathbb{E}[\nabla_x \log \widetilde{p}_X(X) | Y=y]
+\]</span></p>
 
 
 
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-anderson1982reverse" class="csl-entry" role="listitem">
 Anderson, Brian DO. 1982. <span>“Reverse-Time Diffusion Equation Models.”</span> <em>Stochastic Processes and Their Applications</em> 12 (3): 313–26.
+</div>
+<div id="ref-de2024target" class="csl-entry" role="listitem">
+De Bortoli, Valentin, Michael Hutchinson, Peter Wirnsberger, and Arnaud Doucet. 2024. <span>“Target Score Matching.”</span> <em>arXiv Preprint arXiv:2402.08667</em>.
 </div>
 <div id="ref-efron2011tweedie" class="csl-entry" role="listitem">
 Efron, Bradley. 2011. <span>“Tweedie’s Formula and Selection Bias.”</span> <em>Journal of the American Statistical Association</em> 106 (496): 1602–14.
