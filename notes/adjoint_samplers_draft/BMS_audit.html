@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>bms_audit – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#tightness-audit-bms.qmd" id="toc-tightness-audit-bms.qmd" class="nav-link active" data-scroll-target="#tightness-audit-bms.qmd">Tightness Audit: BMS.qmd</a>
+  <ul class="collapse">
+  <li><a href="#verdict" id="toc-verdict" class="nav-link" data-scroll-target="#verdict">Verdict</a></li>
+  <li><a href="#derivation-gaps" id="toc-derivation-gaps" class="nav-link" data-scroll-target="#derivation-gaps">Derivation Gaps</a>
+  <ul class="collapse">
+  <li><a href="#nelsons-relation-linearization-of-p_tx-around-y-lines-4245" id="toc-nelsons-relation-linearization-of-p_tx-around-y-lines-4245" class="nav-link" data-scroll-target="#nelsons-relation-linearization-of-p_tx-around-y-lines-4245">1. Nelson’s relation: linearization of <span class="math inline">\(p_t(x)\)</span> around <span class="math inline">\(y\)</span> (lines 42–45)</a></li>
+  <li><a href="#backward-drift-description-for-a-reciprocal-process-line-176182" id="toc-backward-drift-description-for-a-reciprocal-process-line-176182" class="nav-link" data-scroll-target="#backward-drift-description-for-a-reciprocal-process-line-176182">2. Backward drift description for a reciprocal process (line 176–182)</a></li>
+  <li><a href="#tsi-integration-by-parts-sign-and-direction-lines-140165" id="toc-tsi-integration-by-parts-sign-and-direction-lines-140165" class="nav-link" data-scroll-target="#tsi-integration-by-parts-sign-and-direction-lines-140165">3. TSI integration by parts: sign and direction (lines 140–165)</a></li>
+  <li><a href="#general-regression-target-missing-negative-sign-verification-lines-184192" id="toc-general-regression-target-missing-negative-sign-verification-lines-184192" class="nav-link" data-scroll-target="#general-regression-target-missing-negative-sign-verification-lines-184192">4. General regression target: missing negative sign verification (lines 184–192)</a></li>
+  <li><a href="#as-reduction-the-nabla_x_0-term-for-a-dirac-coupling-lines-199226" id="toc-as-reduction-the-nabla_x_0-term-for-a-dirac-coupling-lines-199226" class="nav-link" data-scroll-target="#as-reduction-the-nabla_x_0-term-for-a-dirac-coupling-lines-199226">5. AS reduction: the <span class="math inline">\(\nabla_{X_0}\)</span> term for a Dirac coupling (lines 199–226)</a></li>
+  <li><a href="#damped-iteration-the-pythagorean-identity-lines-288305" id="toc-damped-iteration-the-pythagorean-identity-lines-288305" class="nav-link" data-scroll-target="#damped-iteration-the-pythagorean-identity-lines-288305">6. Damped iteration: the Pythagorean identity (lines 288–305)</a></li>
+  </ul></li>
+  <li><a href="#hidden-assumptions" id="toc-hidden-assumptions" class="nav-link" data-scroll-target="#hidden-assumptions">Hidden Assumptions</a>
+  <ul class="collapse">
+  <li><a href="#h1.-interchange-of-gradient-and-expectation" id="toc-h1.-interchange-of-gradient-and-expectation" class="nav-link" data-scroll-target="#h1.-interchange-of-gradient-and-expectation">H1. Interchange of gradient and expectation</a></li>
+  <li><a href="#h2.-boundary-terms-in-integration-by-parts" id="toc-h2.-boundary-terms-in-integration-by-parts" class="nav-link" data-scroll-target="#h2.-boundary-terms-in-integration-by-parts">H2. Boundary terms in integration by parts</a></li>
+  <li><a href="#h3.-existence-and-uniqueness-of-the-markovian-projection" id="toc-h3.-existence-and-uniqueness-of-the-markovian-projection" class="nav-link" data-scroll-target="#h3.-existence-and-uniqueness-of-the-markovian-projection">H3. Existence and uniqueness of the Markovian projection</a></li>
+  <li><a href="#h4.-existence-and-uniqueness-of-the-fixed-point" id="toc-h4.-existence-and-uniqueness-of-the-fixed-point" class="nav-link" data-scroll-target="#h4.-existence-and-uniqueness-of-the-fixed-point">H4. Existence and uniqueness of the fixed point</a></li>
+  <li><a href="#h5.-the-ct-in-01-restriction" id="toc-h5.-the-ct-in-01-restriction" class="nav-link" data-scroll-target="#h5.-the-ct-in-01-restriction">H5. The <span class="math inline">\(c(t) \in (0,1]\)</span> restriction</a></li>
+  </ul></li>
+  <li><a href="#carpet-sweeping" id="toc-carpet-sweeping" class="nav-link" data-scroll-target="#carpet-sweeping">Carpet Sweeping</a>
+  <ul class="collapse">
+  <li><a href="#c1.-the-matching-loss-is-a-forward-kl-objective-line-318" id="toc-c1.-the-matching-loss-is-a-forward-kl-objective-line-318" class="nav-link" data-scroll-target="#c1.-the-matching-loss-is-a-forward-kl-objective-line-318">C1. “The matching loss is a forward KL objective” (line 318)</a></li>
+  <li><a href="#c2.-forward-kl-is-mode-covering-line-318" id="toc-c2.-forward-kl-is-mode-covering-line-318" class="nav-link" data-scroll-target="#c2.-forward-kl-is-mode-covering-line-318">C2. “Forward KL is mode-covering” (line 318)</a></li>
+  <li><a href="#c3.-the-schrodinger-bridge-coupling-minimizes-path-space-kl-line-267" id="toc-c3.-the-schrodinger-bridge-coupling-minimizes-path-space-kl-line-267" class="nav-link" data-scroll-target="#c3.-the-schrodinger-bridge-coupling-minimizes-path-space-kl-line-267">C3. “The Schrodinger bridge coupling minimizes path-space KL” (line 267)</a></li>
+  </ul></li>
+  <li><a href="#cross-reference-verification" id="toc-cross-reference-verification" class="nav-link" data-scroll-target="#cross-reference-verification">Cross-Reference Verification</a>
+  <ul class="collapse">
+  <li><a href="#xr1.-reverse-diffusions-note-lines-36-61" id="toc-xr1.-reverse-diffusions-note-lines-36-61" class="nav-link" data-scroll-target="#xr1.-reverse-diffusions-note-lines-36-61">XR1. Reverse diffusions note (lines 36, 61)</a></li>
+  <li><a href="#xr2.-doob-h-transforms-note-for-brownian-bridge-line-82" id="toc-xr2.-doob-h-transforms-note-for-brownian-bridge-line-82" class="nav-link" data-scroll-target="#xr2.-doob-h-transforms-note-for-brownian-bridge-line-82">XR2. Doob h-transforms note for Brownian bridge (line 82)</a></li>
+  <li><a href="#xr3.-girsanov-note-line-318" id="toc-xr3.-girsanov-note-line-318" class="nav-link" data-scroll-target="#xr3.-girsanov-note-line-318">XR3. Girsanov note (line 318)</a></li>
+  <li><a href="#xr4.-adjoint-sampling-note-lines-25-199-234" id="toc-xr4.-adjoint-sampling-note-lines-25-199-234" class="nav-link" data-scroll-target="#xr4.-adjoint-sampling-note-lines-25-199-234">XR4. Adjoint sampling note (lines 25, 199, 234)</a></li>
+  <li><a href="#xr5.-schrodinger-bridges-note-line-82-234-267" id="toc-xr5.-schrodinger-bridges-note-line-82-234-267" class="nav-link" data-scroll-target="#xr5.-schrodinger-bridges-note-line-82-234-267">XR5. Schrodinger bridges note (line 82, 234, 267)</a></li>
+  </ul></li>
+  <li><a href="#grad-student-sticking-points" id="toc-grad-student-sticking-points" class="nav-link" data-scroll-target="#grad-student-sticking-points">Grad Student Sticking Points</a>
+  <ul class="collapse">
+  <li><a href="#g1.-why-nelsons-relation-involves-p_t-and-not-pistar_t" id="toc-g1.-why-nelsons-relation-involves-p_t-and-not-pistar_t" class="nav-link" data-scroll-target="#g1.-why-nelsons-relation-involves-p_t-and-not-pistar_t">G1. Why Nelson’s relation involves <span class="math inline">\(p_t\)</span> and not <span class="math inline">\(\Pi^\star_t\)</span></a></li>
+  <li><a href="#g2.-the-backward-drift-vstar-computation" id="toc-g2.-the-backward-drift-vstar-computation" class="nav-link" data-scroll-target="#g2.-the-backward-drift-vstar-computation">G2. The backward drift <span class="math inline">\(v^\star\)</span> computation</a></li>
+  <li><a href="#g3.-why-does-independent-coupling-give-mathbbpustar_t-pi" id="toc-g3.-why-does-independent-coupling-give-mathbbpustar_t-pi" class="nav-link" data-scroll-target="#g3.-why-does-independent-coupling-give-mathbbpustar_t-pi">G3. Why does independent coupling give <span class="math inline">\(\mathbb{P}^{u^\star}_T = \pi\)</span>?</a></li>
+  <li><a href="#g4.-evaluating-eq-xi-bms-in-practice" id="toc-g4.-evaluating-eq-xi-bms-in-practice" class="nav-link" data-scroll-target="#g4.-evaluating-eq-xi-bms-in-practice">G4. Evaluating <strong>?@eq-xi-bms</strong> in practice</a></li>
+  </ul></li>
+  <li><a href="#papers-sins-reproduced" id="toc-papers-sins-reproduced" class="nav-link" data-scroll-target="#papers-sins-reproduced">Papers’ Sins Reproduced</a>
+  <ul class="collapse">
+  <li><a href="#p1.-nelsons-relation-derivation-is-self-consistent-yes" id="toc-p1.-nelsons-relation-derivation-is-self-consistent-yes" class="nav-link" data-scroll-target="#p1.-nelsons-relation-derivation-is-self-consistent-yes">P1. Nelson’s relation derivation is self-consistent: YES</a></li>
+  <li><a href="#p2.-the-tsi-integration-by-parts-is-it-correct-yes-but-terse" id="toc-p2.-the-tsi-integration-by-parts-is-it-correct-yes-but-terse" class="nav-link" data-scroll-target="#p2.-the-tsi-integration-by-parts-is-it-correct-yes-but-terse">P2. The TSI integration by parts: is it correct? YES, but terse</a></li>
+  <li><a href="#p3.-the-general-regression-target-are-the-signs-right-yes" id="toc-p3.-the-general-regression-target-are-the-signs-right-yes" class="nav-link" data-scroll-target="#p3.-the-general-regression-target-are-the-signs-right-yes">P3. The general regression target: are the signs right? YES</a></li>
+  <li><a href="#p4.-the-as-specialization-is-the-algebra-shown-partially" id="toc-p4.-the-as-specialization-is-the-algebra-shown-partially" class="nav-link" data-scroll-target="#p4.-the-as-specialization-is-the-algebra-shown-partially">P4. The AS specialization: is the algebra shown? PARTIALLY</a></li>
+  <li><a href="#p5.-the-independent-coupling-fixed-point-is-it-justified-partially" id="toc-p5.-the-independent-coupling-fixed-point-is-it-justified-partially" class="nav-link" data-scroll-target="#p5.-the-independent-coupling-fixed-point-is-it-justified-partially">P5. The independent coupling fixed point: is it justified? PARTIALLY</a></li>
+  <li><a href="#p6.-the-damped-iteration-is-it-verified-yes" id="toc-p6.-the-damped-iteration-is-it-verified-yes" class="nav-link" data-scroll-target="#p6.-the-damped-iteration-is-it-verified-yes">P6. The damped iteration: is it verified? YES</a></li>
+  </ul></li>
+  <li><a href="#what-the-note-gets-right" id="toc-what-the-note-gets-right" class="nav-link" data-scroll-target="#what-the-note-gets-right">What the Note Gets Right</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="tightness-audit-bms.qmd" class="level1">
+<h1>Tightness Audit: BMS.qmd</h1>
+<section id="verdict" class="level2">
+<h2 class="anchored" data-anchor-id="verdict">Verdict</h2>
+<p>Solid expository note with correct high-level structure; the main derivations are right at the heuristic level adopted. There are three genuine gaps (backward drift description, the TSI integration-by-parts sign chain, and a missing sign in the general regression target), several hidden assumptions, and one place where a fixed-point claim is stated without justification. No fatal errors, but a careful reader will get stuck at 4–5 points.</p>
+</section>
+<section id="derivation-gaps" class="level2">
+<h2 class="anchored" data-anchor-id="derivation-gaps">Derivation Gaps</h2>
+<section id="nelsons-relation-linearization-of-p_tx-around-y-lines-4245" class="level3">
+<h3 class="anchored" data-anchor-id="nelsons-relation-linearization-of-p_tx-around-y-lines-4245">1. Nelson’s relation: linearization of <span class="math inline">\(p_t(x)\)</span> around <span class="math inline">\(y\)</span> (lines 42–45)</h3>
+<p><strong>Claim:</strong> Expanding <span class="math inline">\(p_t(x) \approx p_t(y) \exp(\langle \nabla \log p_t(y), x - y \rangle)\)</span> and completing the square yields the backward conditional mean <span class="math inline">\(\E[X_t \mid X_{t+\delta} = y] = y - \sigma_t u \delta + \sigma_t^2 \nabla \log p_t(y) \delta\)</span>.</p>
+<p><strong>Issue:</strong> The expansion is first-order in <span class="math inline">\((x-y)\)</span>, but <span class="math inline">\(x - y = O(\sqrt{\delta})\)</span> (Brownian scaling), so <span class="math inline">\((x-y)^2 = O(\delta)\)</span>. The second-order term of <span class="math inline">\(\log p_t(x)\)</span> around <span class="math inline">\(y\)</span> contributes at the same <span class="math inline">\(O(\delta)\)</span> order as the linear term squared in the Gaussian exponent. The derivation implicitly assumes the Hessian <span class="math inline">\(\nabla^2 \log p_t\)</span> contribution is absorbed into the <span class="math inline">\(O(\delta^2)\)</span> remainder, which is correct only after averaging (the Hessian term shifts the variance, not the mean, to leading order). This is standard Euler-level heuristics, but the note does not flag that the first-order expansion of <span class="math inline">\(\log p_t\)</span> is actually sufficient for the <em>mean</em> but not for higher moments. A one-line parenthetical would help.</p>
+<p><strong>Fix:</strong> Add a remark that the second-order correction to <span class="math inline">\(\log p_t\)</span> affects the conditional variance at <span class="math inline">\(O(\delta)\)</span> but not the conditional mean.</p>
+</section>
+<section id="backward-drift-description-for-a-reciprocal-process-line-176182" class="level3">
+<h3 class="anchored" data-anchor-id="backward-drift-description-for-a-reciprocal-process-line-176182">2. Backward drift description for a reciprocal process (line 176–182)</h3>
+<p><strong>Claim (line 176):</strong> “the bridge from <span class="math inline">\(X_0\)</span> to <span class="math inline">\(X_T\)</span> has backward drift <span class="math inline">\(\sigma_t \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0)\)</span> (the score of the forward transition kernel, pointing back toward <span class="math inline">\(X_0\)</span>).”</p>
+<p><strong>Issue:</strong> This statement is not quite right. The drift of the <em>bridge</em> <span class="math inline">\(\mathbb{P}_{|0,T}\)</span> is <span class="math inline">\(\sigma_t \nabla_{X_t} \log \mathbb{P}_{t|0,T}(X_t | X_0, X_T)\)</span>, not <span class="math inline">\(\sigma_t \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0)\)</span>. The bridge drift involves conditioning on <em>both</em> endpoints. What the note means is the Markovian <em>backward</em> drift <span class="math inline">\(v^\star\)</span> for the process <span class="math inline">\(\Pi^\star\)</span>, obtained by averaging the bridge’s backward score <span class="math inline">\(\nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0)\)</span> over <span class="math inline">\(X_0 \mid X_t\)</span>. But the bridge kernel <span class="math inline">\(\mathbb{P}_{t|0,T}\)</span> decomposes as <span class="math inline">\(\mathbb{P}_{t|0} \cdot \mathbb{P}_{T|t} / \mathbb{P}_{T|0}\)</span>, and the forward score <span class="math inline">\(\nabla_{X_t} \log \mathbb{P}_{t|0}\)</span> is only <em>one piece</em> of the bridge drift (the other piece is <span class="math inline">\(\nabla_{X_t} \log \mathbb{P}_{T|t}\)</span>, which points toward <span class="math inline">\(X_T\)</span>). The note then correctly uses only the <span class="math inline">\(\nabla_{X_t} \log \mathbb{P}_{t|0}\)</span> piece in the formula for <span class="math inline">\(v^\star\)</span>, which is right (this is Proposition “uv general coupling” in the paper). But the English description on line 176 conflates “bridge drift” with “backward Markovian drift piece”.</p>
+<p><strong>Fix:</strong> Replace “the bridge from <span class="math inline">\(X_0\)</span> to <span class="math inline">\(X_T\)</span> has backward drift <span class="math inline">\(\sigma_t \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0)\)</span>” with something like: “From the decomposition of the bridge score into forward and backward pieces (the bridge drift at <span class="math inline">\(X_t\)</span> is <span class="math inline">\(\nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0) + \nabla_{X_t} \log \mathbb{P}_{T|t}(X_T | X_t)\)</span>), the backward Markovian drift <span class="math inline">\(v^\star\)</span> extracts the forward-transition piece <span class="math inline">\(\sigma_t \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0)\)</span> and averages it over <span class="math inline">\(X_0 \mid X_t\)</span>.”</p>
+</section>
+<section id="tsi-integration-by-parts-sign-and-direction-lines-140165" class="level3">
+<h3 class="anchored" data-anchor-id="tsi-integration-by-parts-sign-and-direction-lines-140165">3. TSI integration by parts: sign and direction (lines 140–165)</h3>
+<p><strong>Claim (line 143):</strong> <span class="math inline">\(\nabla_x \mathbb{P}_{t|0,T} = -\frac{1}{1-\gamma_t} \nabla_{x_0} \mathbb{P}_{t|0,T}\)</span>.</p>
+<p><strong>Verification:</strong> The bridge mean is <span class="math inline">\((1-\gamma_t)x_0 + \gamma_t x_T\)</span>. The score w.r.t. <span class="math inline">\(x\)</span> is <span class="math inline">\(-(x - (1-\gamma_t)x_0 - \gamma_t x_T) / [\nu_T \gamma_t(1-\gamma_t)]\)</span>. The score w.r.t. <span class="math inline">\(x_0\)</span> is <span class="math inline">\(+(1-\gamma_t)(x - (1-\gamma_t)x_0 - \gamma_t x_T) / [\nu_T \gamma_t(1-\gamma_t)]\)</span>. So indeed <span class="math inline">\(\nabla_x \log \mathbb{P}_{t|0,T} = -\frac{1}{1-\gamma_t} \nabla_{x_0} \log \mathbb{P}_{t|0,T}\)</span>, and at the density level <span class="math inline">\(\nabla_x \mathbb{P}_{t|0,T} = -\frac{1}{1-\gamma_t} \nabla_{x_0} \mathbb{P}_{t|0,T}\)</span>. <strong>Correct.</strong></p>
+<p>After integration by parts (moving <span class="math inline">\(\nabla_{x_0}\)</span> from <span class="math inline">\(\mathbb{P}_{t|0,T}\)</span> onto <span class="math inline">\(\Pi^\star_{0,T}\)</span>), the result on line 148 picks up a factor <span class="math inline">\(+1/(1-\gamma_t)\)</span> in front of <span class="math inline">\(\nabla_{x_0} \log \Pi^\star_{0,T}\)</span>. Let me verify. Starting from:</p>
+<p><span class="math display">\[\nabla_x \Pi^\star_t(x) = \int \nabla_x \mathbb{P}_{t|0,T}(x|x_0,x_T) \Pi^\star_{0,T}(x_0,x_T) dx_0 dx_T\]</span></p>
+<p>Substituting <span class="math inline">\(\nabla_x \mathbb{P} = -\frac{1}{1-\gamma_t} \nabla_{x_0} \mathbb{P}\)</span>:</p>
+<p><span class="math display">\[= -\frac{1}{1-\gamma_t} \int \nabla_{x_0} \mathbb{P}_{t|0,T} \cdot \Pi^\star_{0,T} \, dx_0 dx_T\]</span></p>
+<p>Integration by parts in <span class="math inline">\(x_0\)</span> (boundary terms vanish):</p>
+<p><span class="math display">\[= +\frac{1}{1-\gamma_t} \int \mathbb{P}_{t|0,T} \cdot \nabla_{x_0} \Pi^\star_{0,T} \, dx_0 dx_T\]</span></p>
+<p>Dividing by <span class="math inline">\(\Pi^\star_t(x)\)</span> and recognizing the conditional expectation:</p>
+<p><span class="math display">\[\nabla_x \log \Pi^\star_t(x) = \frac{1}{1-\gamma_t} \E_{\Pi^\star_{0,T|t}}[\nabla_{X_0} \log \Pi^\star_{0,T}(X_0,X_T) \mid X_t = x]\]</span></p>
+<p><strong>This matches line 154.</strong> The derivation is correct. However, the details block could be clearer about the sign flip from integration by parts. The note says “we moved <span class="math inline">\(\nabla_{x_0}\)</span> from <span class="math inline">\(\mathbb{P}_{t|0,T}\)</span> onto <span class="math inline">\(\Pi^\star_{0,T}\)</span>” without explicitly showing the sign change from integration by parts (minus times minus = plus). A reader following with pen and paper might stumble.</p>
+<p><strong>Fix:</strong> Minor. Add explicit mention of the sign change from integration by parts.</p>
+</section>
+<section id="general-regression-target-missing-negative-sign-verification-lines-184192" class="level3">
+<h3 class="anchored" data-anchor-id="general-regression-target-missing-negative-sign-verification-lines-184192">4. General regression target: missing negative sign verification (lines 184–192)</h3>
+<p><strong>Claim (line 187):</strong> The regression target is</p>
+<p><span class="math display">\[\sigma_t^{-1} \xi = \frac{1-c(t)}{1-\gamma_t} \nabla_{X_0} \log \Pi^\star_{0,T} + \frac{c(t)}{\gamma_t} \nabla_{X_T} \log \Pi^\star_{0,T} - \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0).\]</span></p>
+<p><strong>Verification:</strong> Nelson gives <span class="math inline">\(u^\star = \sigma_t \nabla \log \Pi^\star_t - v^\star\)</span>. The TSI gives <span class="math inline">\(\sigma_t \nabla \log \Pi^\star_t = \sigma_t \E[\text{TSI integrand} | X_t]\)</span>. Proposition “uv general coupling” gives <span class="math inline">\(v^\star = \sigma_t \E[\nabla_{X_t} \log \mathbb{P}_{t|0}(X_t|X_0) | X_t]\)</span>. Combining: <span class="math inline">\(u^\star = \sigma_t \E[\text{TSI integrand} - \nabla_{X_t} \log \mathbb{P}_{t|0} | X_t]\)</span>. The <span class="math inline">\(\xi\)</span> integrand is the quantity inside the expectation, rescaled by <span class="math inline">\(\sigma_t\)</span>.</p>
+<p>The note writes <span class="math inline">\(\sigma_t^{-1} \xi = \text{TSI integrand} - \nabla_{X_t} \log \mathbb{P}_{t|0}\)</span>. This is <span class="math inline">\(u^\star / \sigma_t = \nabla \log \Pi^\star_t - v^\star / \sigma_t\)</span>, with <span class="math inline">\(v^\star / \sigma_t = \E[\nabla_{X_t} \log \mathbb{P}_{t|0} | X_t]\)</span>. Before conditioning, the integrand for <span class="math inline">\(v^\star/\sigma_t\)</span> is <span class="math inline">\(\nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0)\)</span>. So <span class="math inline">\(\xi / \sigma_t = \text{TSI integrand} - \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0)\)</span>, and <span class="math inline">\(\E[\xi | X_t] = u^\star\)</span>. <strong>Correct.</strong></p>
+<p>But: the note does not verify that the conditional expectation of this <span class="math inline">\(\xi\)</span> actually equals <span class="math inline">\(u^\star\)</span> (it just says “their combination, before conditioning, is a valid <span class="math inline">\(\xi\)</span>”). The step of combining two separate conditional expectations into one by taking integrands before conditioning requires that both expectations are taken over the <em>same</em> conditional distribution <span class="math inline">\(\Pi^\star_{0,T|t}\)</span>. The TSI integrand is conditioned on <span class="math inline">\((X_0, X_T) | X_t\)</span> while the backward drift integrand is conditioned on <span class="math inline">\(X_0 | X_t\)</span>. These are compatible: both are expectations under <span class="math inline">\(\Pi^\star\)</span> conditioned on <span class="math inline">\(X_t\)</span>, and the first depends on <span class="math inline">\((X_0, X_T)\)</span> while the second depends on <span class="math inline">\(X_0\)</span> alone. Since <span class="math inline">\((X_0, X_T) | X_t\)</span> marginalizes to <span class="math inline">\(X_0 | X_t\)</span> by dropping <span class="math inline">\(X_T\)</span>, the subtraction is valid. The note should mention this compatibility.</p>
+<p><strong>Fix:</strong> Add one sentence: “Both conditional expectations are with respect to <span class="math inline">\(\Pi^\star\)</span> conditioned on <span class="math inline">\(X_t = x\)</span>; the TSI integrand depends on <span class="math inline">\((X_0, X_T)\)</span> and the backward drift integrand on <span class="math inline">\(X_0\)</span> alone, but both live in the same conditional probability space, so the subtraction of integrands before conditioning is valid.”</p>
+</section>
+<section id="as-reduction-the-nabla_x_0-term-for-a-dirac-coupling-lines-199226" class="level3">
+<h3 class="anchored" data-anchor-id="as-reduction-the-nabla_x_0-term-for-a-dirac-coupling-lines-199226">5. AS reduction: the <span class="math inline">\(\nabla_{X_0}\)</span> term for a Dirac coupling (lines 199–226)</h3>
+<p><strong>Claim (line 204):</strong> “The <span class="math inline">\(\nabla_{X_0}\)</span> term drops (Dirac at <span class="math inline">\(0\)</span>).”</p>
+<p><strong>Issue:</strong> This is a distributional statement. For <span class="math inline">\(\Pi^\star_{0,T} = \delta_0 \otimes \pi\)</span>, we have <span class="math inline">\(\nabla_{X_0} \log \Pi^\star_{0,T} = \nabla_{X_0} \log \delta_0(X_0) + \nabla_{X_0} \log \pi(X_T)\)</span>. The second term is zero (no <span class="math inline">\(X_0\)</span> dependence). The first term is <span class="math inline">\(\nabla \log \delta_0\)</span>, which is not well-defined in the classical sense. The note handwaves this as “Dirac has no gradient to speak of.” In reality, what happens is that <span class="math inline">\(X_0 = 0\)</span> a.s. under the coupling, so the term involving <span class="math inline">\(\nabla_{X_0}\)</span> has no variance; it is a constant integrated against a Dirac, and the whole term vanishes after expectation. The note’s explanation is correct in spirit but sloppy in detail.</p>
+<p>More precisely: with <span class="math inline">\(c(t) = \gamma_t\)</span>, the coefficient <span class="math inline">\((1-c(t))/(1-\gamma_t) = (1-\gamma_t)/(1-\gamma_t) = 1\)</span>. The term is <span class="math inline">\(\nabla_{X_0} \log \delta_0(X_0)\)</span>, which is ill-defined. The correct argument (as in the paper’s Appendix C.2) proceeds differently: one does not use the general formula with <span class="math inline">\(\nabla_{X_0} \log \Pi^\star_{0,T}\)</span> at all, but instead directly computes the score <span class="math inline">\(\nabla \log \Pi^\star_t\)</span> for the half-bridge coupling using the TSI with <span class="math inline">\(c(t) = \gamma_t\)</span>, which kills the <span class="math inline">\(\nabla_{X_0}\)</span> integration-by-parts term entirely (not just the integrand). The note’s details block (lines 204–225) actually does the correct computation: it goes back to the concrete expressions and shows the cancellation. The surrounding text (line 204) is just misleading.</p>
+<p><strong>Fix:</strong> Replace “The <span class="math inline">\(\nabla_{X_0}\)</span> term drops (Dirac at <span class="math inline">\(0\)</span>)” with “The TSI is used with <span class="math inline">\(c(t) = \gamma_t\)</span>, and since <span class="math inline">\(\Pi^\star_0 = \delta_0\)</span>, the integration-by-parts in <span class="math inline">\(X_0\)</span> that generates the <span class="math inline">\(\nabla_{X_0} \log \Pi^\star_{0,T}\)</span> term is not needed; we use only the <span class="math inline">\(X_T\)</span> branch of the TSI.”</p>
+</section>
+<section id="damped-iteration-the-pythagorean-identity-lines-288305" class="level3">
+<h3 class="anchored" data-anchor-id="damped-iteration-the-pythagorean-identity-lines-288305">6. Damped iteration: the Pythagorean identity (lines 288–305)</h3>
+<p><strong>Claim (line 291):</strong> “Apply the bias-variance decomposition (Pythagorean identity from the Markovian projection) to the first term.”</p>
+<p><strong>Verification:</strong> This is the standard <span class="math inline">\(L^2\)</span> decomposition: for <span class="math inline">\(\Phi(u_i) = \E_{\Pi^i}[\xi | X_t]\)</span>, we have <span class="math inline">\(\E[\|\xi - u\|^2] = \E[\|\xi - \Phi\|^2] + \E[\|\Phi - u\|^2]\)</span>. The cross-term vanishes by the tower property. <strong>Correct.</strong></p>
+<p>The rest of the derivation (pointwise FOC, substitution of <span class="math inline">\(\eta = (1-\alpha)/\alpha\)</span>) is algebra that checks out. <strong>No issues.</strong></p>
+</section>
+</section>
+<section id="hidden-assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="hidden-assumptions">Hidden Assumptions</h2>
+<section id="h1.-interchange-of-gradient-and-expectation" class="level3">
+<h3 class="anchored" data-anchor-id="h1.-interchange-of-gradient-and-expectation">H1. Interchange of gradient and expectation</h3>
+<p>The TSI derivation (lines 128–165) and the general regression target (line 184) both require <span class="math inline">\(\nabla_x \int f(x, \cdot) d\mu = \int \nabla_x f(x, \cdot) d\mu\)</span>. This needs dominated convergence or uniform integrability conditions on <span class="math inline">\(\Pi^\star_{0,T} \cdot \mathbb{P}_{t|0,T}\)</span> and its derivatives. The paper states this explicitly as Assumption (iii)/(iv). The note never mentions it.</p>
+</section>
+<section id="h2.-boundary-terms-in-integration-by-parts" class="level3">
+<h3 class="anchored" data-anchor-id="h2.-boundary-terms-in-integration-by-parts">H2. Boundary terms in integration by parts</h3>
+<p>Lines 147–151 perform integration by parts in <span class="math inline">\(x_0\)</span> (and implicitly in <span class="math inline">\(x_T\)</span>). Boundary terms vanish “by decay of <span class="math inline">\(\Pi^\star_{0,T} \cdot \mathbb{P}_{t|0,T}\)</span> at infinity.” For Gaussian <span class="math inline">\(\mathbb{P}_{t|0,T}\)</span> this is fine if <span class="math inline">\(\Pi^\star_{0,T}\)</span> has sub-Gaussian tails, but the note does not state any tail condition on the coupling.</p>
+</section>
+<section id="h3.-existence-and-uniqueness-of-the-markovian-projection" class="level3">
+<h3 class="anchored" data-anchor-id="h3.-existence-and-uniqueness-of-the-markovian-projection">H3. Existence and uniqueness of the Markovian projection</h3>
+<p>Line 84 cites Brunick (2013) for existence/uniqueness of the Markovian projection. The actual result requires that the path-dependent drift satisfies a linear growth condition. The note does not state this assumption.</p>
+</section>
+<section id="h4.-existence-and-uniqueness-of-the-fixed-point" class="level3">
+<h3 class="anchored" data-anchor-id="h4.-existence-and-uniqueness-of-the-fixed-point">H4. Existence and uniqueness of the fixed point</h3>
+<p>Lines 103–111 describe the fixed-point iteration and state “<span class="math inline">\(u^\star\)</span> is a fixed point.” The note does not discuss existence, uniqueness, or convergence of this iteration. The BMS paper itself acknowledges this as an open problem (Conclusion section). The note should at least flag that convergence is not guaranteed.</p>
+</section>
+<section id="h5.-the-ct-in-01-restriction" class="level3">
+<h3 class="anchored" data-anchor-id="h5.-the-ct-in-01-restriction">H5. The <span class="math inline">\(c(t) \in (0,1]\)</span> restriction</h3>
+<p>The TSI (line 167) states “for any <span class="math inline">\(c(t) \in (0,1]\)</span>.” The exclusion of <span class="math inline">\(c(t) = 0\)</span> is because the <span class="math inline">\(X_T\)</span>-branch IBP would divide by <span class="math inline">\(\gamma_t\)</span>, which vanishes at <span class="math inline">\(t = 0\)</span>. For the <span class="math inline">\(X_0\)</span>-branch, the factor <span class="math inline">\(1/(1-\gamma_t)\)</span> blows up at <span class="math inline">\(t = T\)</span>. The note states the range but does not explain why the endpoints are excluded or what goes wrong there.</p>
+</section>
+</section>
+<section id="carpet-sweeping" class="level2">
+<h2 class="anchored" data-anchor-id="carpet-sweeping">Carpet Sweeping</h2>
+<section id="c1.-the-matching-loss-is-a-forward-kl-objective-line-318" class="level3">
+<h3 class="anchored" data-anchor-id="c1.-the-matching-loss-is-a-forward-kl-objective-line-318">C1. “The matching loss is a forward KL objective” (line 318)</h3>
+<p>The note claims: “The matching loss <strong>?@eq-matching-loss</strong> is a forward KL objective: <span class="math inline">\(u^\star = \argmin_u \text{KL}(\Pi^\star | \mathbb{P}^u)\)</span>. This follows because the Girsanov KL between <span class="math inline">\(\Pi^\star\)</span> and <span class="math inline">\(\mathbb{P}^u\)</span> decomposes as an irreducible term plus the matching loss (see Lemma 1 of Brunick 2013).”</p>
+<p>This is the right idea but the attribution is wrong. Brunick (2013) proves the Markovian projection preserves marginals; the KL decomposition is a separate (though standard) result. More importantly, the decomposition requires <span class="math inline">\(\Pi^\star \ll \mathbb{P}^u\)</span> for the KL to be finite, which holds when <span class="math inline">\(\Pi^\star\)</span> is in the reciprocal class of <span class="math inline">\(\mathbb{P}\)</span> and <span class="math inline">\(u\)</span> is admissible, but the note does not verify this.</p>
+</section>
+<section id="c2.-forward-kl-is-mode-covering-line-318" class="level3">
+<h3 class="anchored" data-anchor-id="c2.-forward-kl-is-mode-covering-line-318">C2. “Forward KL is mode-covering” (line 318)</h3>
+<p>The claim that forward KL <span class="math inline">\(\text{KL}(\Pi^\star | \mathbb{P}^u)\)</span> is mode-covering is stated without qualification. This is the standard intuition (minimizing forward KL penalizes placing zero mass where <span class="math inline">\(\Pi^\star\)</span> has mass), but it applies to the path-space KL, not directly to the terminal marginal. The mode-covering property for the <em>terminal distribution</em> requires additional argument (that the Markovian projection preserves marginals, hence mode coverage at the path level implies mode coverage at the marginal level). The note waves at this but does not spell it out.</p>
+</section>
+<section id="c3.-the-schrodinger-bridge-coupling-minimizes-path-space-kl-line-267" class="level3">
+<h3 class="anchored" data-anchor-id="c3.-the-schrodinger-bridge-coupling-minimizes-path-space-kl-line-267">C3. “The Schrodinger bridge coupling minimizes path-space KL” (line 267)</h3>
+<p>Stated as a fact without derivation or citation. The note should cross-reference the SB note or at minimum say “as shown in the SB note.”</p>
+</section>
+</section>
+<section id="cross-reference-verification" class="level2">
+<h2 class="anchored" data-anchor-id="cross-reference-verification">Cross-Reference Verification</h2>
+<section id="xr1.-reverse-diffusions-note-lines-36-61" class="level3">
+<h3 class="anchored" data-anchor-id="xr1.-reverse-diffusions-note-lines-36-61">XR1. Reverse diffusions note (lines 36, 61)</h3>
+<p><strong>Claim:</strong> The backward conditional mean computation “exactly as in the reverse diffusions note.”</p>
+<p><strong>Verification:</strong> The reverse_and_tweedie.qmd note (lines 39–58) performs the same Bayes’ rule + Gaussian completion-of-the-square argument for a general drift <span class="math inline">\(\mu(X)\)</span> and derives the time-reversal formula. The BMS note adapts this to the <span class="math inline">\(\sigma_t u\)</span> drift form. <strong>Valid cross-reference.</strong></p>
+</section>
+<section id="xr2.-doob-h-transforms-note-for-brownian-bridge-line-82" class="level3">
+<h3 class="anchored" data-anchor-id="xr2.-doob-h-transforms-note-for-brownian-bridge-line-82">XR2. Doob h-transforms note for Brownian bridge (line 82)</h3>
+<p><strong>Claim:</strong> “see the Schrodinger bridges note” for the reciprocal class definition.</p>
+<p><strong>Verification:</strong> The shrodinger.qmd note (lines 86–99) defines the dynamic SB problem as finding <span class="math inline">\(\mathbb{Q}\)</span> with given marginals minimizing KL to the reference, and describes the reference bridge process. The reciprocal class concept is not explicitly defined by name in that note, but the construction <span class="math inline">\(\Pi = \Pi_{0,T} \mathbb{P}_{|0,T}\)</span> is implicit. <strong>Adequate but imprecise cross-reference.</strong></p>
+</section>
+<section id="xr3.-girsanov-note-line-318" class="level3">
+<h3 class="anchored" data-anchor-id="xr3.-girsanov-note-line-318">XR3. Girsanov note (line 318)</h3>
+<p><strong>Claim:</strong> “the Girsanov KL between <span class="math inline">\(\Pi^\star\)</span> and <span class="math inline">\(\mathbb{P}^u\)</span> decomposes…”</p>
+<p><strong>Verification:</strong> The girsanov.qmd note (lines 106–110) derives <span class="math inline">\(\text{KL}(\mathbb{P}, \mathbb{P}^u) = \frac{1}{2} \E \int \|u\|^2 dt\)</span>, which is the special case of KL between the reference and a controlled process. The general KL between two path measures with different drifts is also given (lines 98–104). The decomposition claimed in BMS.qmd (matching loss = KL minus irreducible noise) is not explicitly stated in the Girsanov note. <strong>Overclaimed cross-reference.</strong></p>
+</section>
+<section id="xr4.-adjoint-sampling-note-lines-25-199-234" class="level3">
+<h3 class="anchored" data-anchor-id="xr4.-adjoint-sampling-note-lines-25-199-234">XR4. Adjoint sampling note (lines 25, 199, 234)</h3>
+<p><strong>Claim:</strong> Links to adjoint_sampling.qmd for the AS algorithm.</p>
+<p><strong>Verification:</strong> The adjoint_sampling.qmd note contains the AS algorithm, the corrector matching loss, and the IPFP alternation. The BMS note’s description of AS as “Dirac prior, memoryless condition” matches. The corrector/ASBS description on line 234 matches the adjoint_sampling.qmd content. <strong>Valid cross-references.</strong></p>
+</section>
+<section id="xr5.-schrodinger-bridges-note-line-82-234-267" class="level3">
+<h3 class="anchored" data-anchor-id="xr5.-schrodinger-bridges-note-line-82-234-267">XR5. Schrodinger bridges note (line 82, 234, 267)</h3>
+<p><strong>Claim:</strong> References to the SB coupling <span class="math inline">\(\hat\varphi_0 \cdot \mathbb{P}_{T|0} \cdot \varphi_T\)</span>.</p>
+<p><strong>Verification:</strong> The shrodinger.qmd note (lines 109–116) describes the SB solution as <span class="math inline">\(d\mathbb{Q}^\star / d\mathbb{P}^{\text{ref}} \propto f(X_0) g(X_1)\)</span> with potentials <span class="math inline">\(\varphi_t\)</span> and <span class="math inline">\(\hat\varphi_t\)</span> satisfying the Sinkhorn equations. The BMS note’s formulation on line 234 uses <span class="math inline">\(\hat\varphi_0, \varphi_T\)</span>, which matches (with the understanding that <span class="math inline">\(\hat\varphi\)</span> is the backward potential). <strong>Valid cross-reference.</strong></p>
+</section>
+</section>
+<section id="grad-student-sticking-points" class="level2">
+<h2 class="anchored" data-anchor-id="grad-student-sticking-points">Grad Student Sticking Points</h2>
+<section id="g1.-why-nelsons-relation-involves-p_t-and-not-pistar_t" class="level3">
+<h3 class="anchored" data-anchor-id="g1.-why-nelsons-relation-involves-p_t-and-not-pistar_t">G1. Why Nelson’s relation involves <span class="math inline">\(p_t\)</span> and not <span class="math inline">\(\Pi^\star_t\)</span></h3>
+<p>The note derives Nelson’s relation for <span class="math inline">\(\mathbb{P}^u\)</span> with marginals <span class="math inline">\(p_t\)</span> (line 72), then later applies it with <span class="math inline">\(\Pi^\star_t\)</span> (line 184). The connection is: <span class="math inline">\(u^\star\)</span> is the Markovian projection of <span class="math inline">\(\Pi^\star\)</span>, so <span class="math inline">\(\mathbb{P}^{u^\star}\)</span> has the same marginals as <span class="math inline">\(\Pi^\star\)</span>, hence Nelson applies with <span class="math inline">\(p_t = \Pi^\star_t\)</span>. This is not stated.</p>
+</section>
+<section id="g2.-the-backward-drift-vstar-computation" class="level3">
+<h3 class="anchored" data-anchor-id="g2.-the-backward-drift-vstar-computation">G2. The backward drift <span class="math inline">\(v^\star\)</span> computation</h3>
+<p>Line 179 states a formula for <span class="math inline">\(v^\star\)</span> as a conditional expectation of <span class="math inline">\(\sigma_t \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t | X_0)\)</span>. A grad student would wonder: where does this come from? The note says “the bridge from <span class="math inline">\(X_0\)</span> to <span class="math inline">\(X_T\)</span> has backward drift…” (line 176), but this requires decomposing the bridge score <span class="math inline">\(\nabla \log \mathbb{P}_{t|0,T}\)</span> into <span class="math inline">\(\nabla \log \mathbb{P}_{t|0} + \nabla \log \mathbb{P}_{T|t}\)</span> and then recognizing that the <span class="math inline">\(\nabla \log \mathbb{P}_{T|t}\)</span> piece, when averaged over <span class="math inline">\(X_T | X_t\)</span>, gives <span class="math inline">\(u^\star\)</span>, so by Nelson, <span class="math inline">\(v^\star\)</span> is the remaining piece averaged over <span class="math inline">\(X_0 | X_t\)</span>. This chain of reasoning is not shown.</p>
+</section>
+<section id="g3.-why-does-independent-coupling-give-mathbbpustar_t-pi" class="level3">
+<h3 class="anchored" data-anchor-id="g3.-why-does-independent-coupling-give-mathbbpustar_t-pi">G3. Why does independent coupling give <span class="math inline">\(\mathbb{P}^{u^\star}_T = \pi\)</span>?</h3>
+<p>Lines 257–265 argue that the independent coupling has terminal marginal <span class="math inline">\(\pi\)</span> (by direct computation, which is clear), and then say “the Markovian projection preserves time marginals, so <span class="math inline">\(\mathbb{P}^{u^\star}_T = \pi\)</span>.” This is the key property of Markovian projections (Brunick 2013), but a student unfamiliar with this result would want to know why. A pointer to the relevant theorem would help.</p>
+</section>
+<section id="g4.-evaluating-eq-xi-bms-in-practice" class="level3">
+<h3 class="anchored" data-anchor-id="g4.-evaluating-eq-xi-bms-in-practice">G4. Evaluating <strong>?@eq-xi-bms</strong> in practice</h3>
+<p>Line 252 gives the BMS regression target with three terms: <span class="math inline">\(\nabla \log p_0(X_0)\)</span>, <span class="math inline">\(\nabla \log \pi(X_T)\)</span>, and <span class="math inline">\((X_t - X_0)/\nu_t\)</span>. A student implementing this would ask: where do <span class="math inline">\((X_0, X_t, X_T)\)</span> come from? The answer (line 269–271) is: simulate the SDE to get <span class="math inline">\(X_0, X_T\)</span> pairs, independently resample them, then draw <span class="math inline">\(X_t\)</span> from the bridge <strong>?@eq-bridge-marginal</strong>. This workflow is described but could be made more concrete (e.g., pseudocode or a numbered algorithm).</p>
+</section>
+</section>
+<section id="papers-sins-reproduced" class="level2">
+<h2 class="anchored" data-anchor-id="papers-sins-reproduced">Papers’ Sins Reproduced</h2>
+<section id="p1.-nelsons-relation-derivation-is-self-consistent-yes" class="level3">
+<h3 class="anchored" data-anchor-id="p1.-nelsons-relation-derivation-is-self-consistent-yes">P1. Nelson’s relation derivation is self-consistent: YES</h3>
+<p>The note derives Nelson’s relation from Euler discretization + Bayes’ rule (lines 30–73), then verifies it against the time-reversal formula (lines 61–77). The two routes agree. No sin here.</p>
+</section>
+<section id="p2.-the-tsi-integration-by-parts-is-it-correct-yes-but-terse" class="level3">
+<h3 class="anchored" data-anchor-id="p2.-the-tsi-integration-by-parts-is-it-correct-yes-but-terse">P2. The TSI integration by parts: is it correct? YES, but terse</h3>
+<p>The integration by parts in the details block (lines 140–165) is correct. The paper’s proof (Appendix B, proof of TSI general coupling) goes through the same steps. The note’s treatment is more compressed but does not introduce errors. The sign is right: the gradient swap <span class="math inline">\(\nabla_x \to -\frac{1}{1-\gamma_t}\nabla_{x_0}\)</span> combined with IBP sign flip gives <span class="math inline">\(+\frac{1}{1-\gamma_t}\)</span>.</p>
+</section>
+<section id="p3.-the-general-regression-target-are-the-signs-right-yes" class="level3">
+<h3 class="anchored" data-anchor-id="p3.-the-general-regression-target-are-the-signs-right-yes">P3. The general regression target: are the signs right? YES</h3>
+<p>Verified above (Derivation Gap 4). The signs in <strong>?@eq-xi-general</strong> are correct.</p>
+</section>
+<section id="p4.-the-as-specialization-is-the-algebra-shown-partially" class="level3">
+<h3 class="anchored" data-anchor-id="p4.-the-as-specialization-is-the-algebra-shown-partially">P4. The AS specialization: is the algebra shown? PARTIALLY</h3>
+<p>The details block (lines 202–225) shows the reduction, but the argument that <span class="math inline">\(X_t/\nu_t\)</span> cancels to give <span class="math inline">\(X_T/\nu_T\)</span> after Markovianization involves computing <span class="math inline">\(\E[X_t | X_T]\)</span> under the half-bridge, which is shown. The final step “<span class="math inline">\(\nabla \log \mathbb{P}_T(X_T) = -X_T/\nu_T\)</span>” is stated without derivation (it follows from <span class="math inline">\(\mathbb{P}_T = \mathcal{N}(0, \nu_T I)\)</span>, which is a one-liner, but should be stated explicitly).</p>
+</section>
+<section id="p5.-the-independent-coupling-fixed-point-is-it-justified-partially" class="level3">
+<h3 class="anchored" data-anchor-id="p5.-the-independent-coupling-fixed-point-is-it-justified-partially">P5. The independent coupling fixed point: is it justified? PARTIALLY</h3>
+<p>Lines 257–265 verify that the terminal marginal is <span class="math inline">\(\pi\)</span> and invoke marginal preservation. The note does not verify that <span class="math inline">\(u^\star\)</span> is the <em>unique</em> fixed point, nor that the iteration converges. The BMS paper itself notes convergence as an open problem. The note is honest about this by omission rather than by explicit statement.</p>
+</section>
+<section id="p6.-the-damped-iteration-is-it-verified-yes" class="level3">
+<h3 class="anchored" data-anchor-id="p6.-the-damped-iteration-is-it-verified-yes">P6. The damped iteration: is it verified? YES</h3>
+<p>Lines 288–305 derive <strong>?@eq-damped</strong> from <strong>?@eq-damped-var</strong> via the Pythagorean identity and pointwise FOC. The algebra is correct and complete.</p>
+</section>
+</section>
+<section id="what-the-note-gets-right" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-note-gets-right">What the Note Gets Right</h2>
+<ol type="1">
+<li><p><strong>Nelson’s relation derivation.</strong> Clean, self-contained, with a good sanity check against the time-reversal formula. The Euler discretization approach matches the style of the existing notes.</p></li>
+<li><p><strong>Unified perspective across three algorithms.</strong> The table on line 312 and the systematic progression from AS to AS+corrector to BMS, all through the lens of different couplings, is pedagogically effective.</p></li>
+<li><p><strong>The completing-the-square details block</strong> (lines 48–59) is well done and gives the reader a concrete computation to follow.</p></li>
+<li><p><strong>The damped iteration derivation</strong> (lines 288–305) is the cleanest part of the note: every step follows, the Pythagorean identity is correctly invoked, and the substitution <span class="math inline">\(\eta = (1-\alpha)/\alpha\)</span> is verified.</p></li>
+<li><p><strong>The “why it works” section</strong> (lines 257–271) for the independent coupling gives an honest, direct argument for why <span class="math inline">\(\Pi^\star_T = \pi\)</span> without hiding anything.</p></li>
+<li><p><strong>The general <span class="math inline">\(\xi\)</span> formula</strong> (line 187) correctly combines TSI and backward drift integrands. The note is explicit that this is “before conditioning” and that Markovianization recovers <span class="math inline">\(u^\star\)</span> via regression.</p></li>
+<li><p><strong>Cross-references to the series</strong> are well-placed and mostly accurate, giving the reader a clear map of which results come from which note.</p></li>
+<li><p><strong>The note is honest about what the independent coupling sacrifices.</strong> Line 267: “The Schrodinger bridge coupling minimizes path-space KL. The independent coupling sacrifices this optimality for a fully tractable regression target.” This is a fair summary.</p></li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

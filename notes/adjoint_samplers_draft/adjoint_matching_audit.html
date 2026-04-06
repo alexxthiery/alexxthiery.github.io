@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>adjoint_matching_audit – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#tightness-audit-adjoint_matching.qmd" id="toc-tightness-audit-adjoint_matching.qmd" class="nav-link active" data-scroll-target="#tightness-audit-adjoint_matching.qmd">Tightness Audit: adjoint_matching.qmd</a>
+  <ul class="collapse">
+  <li><a href="#verdict" id="toc-verdict" class="nav-link" data-scroll-target="#verdict">Verdict</a></li>
+  <li><a href="#derivation-gaps" id="toc-derivation-gaps" class="nav-link" data-scroll-target="#derivation-gaps">Derivation Gaps</a></li>
+  <li><a href="#hidden-assumptions" id="toc-hidden-assumptions" class="nav-link" data-scroll-target="#hidden-assumptions">Hidden Assumptions</a></li>
+  <li><a href="#carpet-sweeping" id="toc-carpet-sweeping" class="nav-link" data-scroll-target="#carpet-sweeping">Carpet Sweeping</a></li>
+  <li><a href="#cross-reference-verification" id="toc-cross-reference-verification" class="nav-link" data-scroll-target="#cross-reference-verification">Cross-Reference Verification</a></li>
+  <li><a href="#grad-student-sticking-points" id="toc-grad-student-sticking-points" class="nav-link" data-scroll-target="#grad-student-sticking-points">Grad Student Sticking Points</a></li>
+  <li><a href="#what-the-note-gets-right" id="toc-what-the-note-gets-right" class="nav-link" data-scroll-target="#what-the-note-gets-right">What the Note Gets Right</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="tightness-audit-adjoint_matching.qmd" class="level1">
+<h1>Tightness Audit: adjoint_matching.qmd</h1>
+<section id="verdict" class="level2">
+<h2 class="anchored" data-anchor-id="verdict">Verdict</h2>
+<p>Mostly tight with 7 substantive issues: 2 sign convention inconsistencies with the cross-referenced notes, 1 algebraically incomplete derivation, 2 claims that are stated more strongly than what is shown, and 2 hidden assumptions that should be flagged.</p>
+</section>
+<section id="derivation-gaps" class="level2">
+<h2 class="anchored" data-anchor-id="derivation-gaps">Derivation Gaps</h2>
+<ol type="1">
+<li><p><strong>Line 50–53: Sign mismatch between the note’s value function and the HJB notes.</strong> The note says <span class="math inline">\(u^\star(t,x) = \sigma_t^\top \nabla V(t,x)\)</span> with <span class="math inline">\(V = \log h\)</span> and <span class="math inline">\(h(t,x) = E[\exp(r(X_1)) \mid X_t = x]\)</span>. This is consistent with the HJB notes (eq-u-star-V), where the SOC is a <em>maximization</em> and <span class="math inline">\(V = \log h\)</span>. But the paper defines <span class="math inline">\(V(x,t) = \min_u J(u;x,t)\)</span> (a cost to minimize, with <span class="math inline">\(g = -r\)</span>), giving <span class="math inline">\(V_{\text{paper}} = -\log h\)</span> and <span class="math inline">\(u^\star = -\sigma^\top \nabla V_{\text{paper}}\)</span>. The note then on line 141 writes <span class="math inline">\(V(t,x) = -J(u^\star; x, t)\)</span>, mixing the paper’s cost-functional <span class="math inline">\(J\)</span> with the HJB notes’ reward-based <span class="math inline">\(V\)</span>. This works out (<span class="math inline">\(-J = \log h\)</span> when <span class="math inline">\(f=0, g=-r\)</span> in the paper’s convention), but the reader sees “<span class="math inline">\(V(t,x) = -J(u^\star; x, t)\)</span>” and needs to mentally reconcile the paper’s <span class="math inline">\(J\)</span> (which includes <span class="math inline">\(+g = -r\)</span>) with the note’s <span class="math inline">\(V = \log h\)</span>. <strong>Fix</strong>: Add one sentence: “The paper defines <span class="math inline">\(V\)</span> as cost-to-go (minimization); we use the HJB notes’ convention <span class="math inline">\(V = \log h\)</span> (reward-to-go, maximization). The two are negatives of each other: <span class="math inline">\(V_{\text{here}} = -V_{\text{paper}}\)</span>.”</p></li>
+<li><p><strong>Line 56–62: The bivariate marginal formula <strong>?@eq-radon-nikodym</strong> is asserted, not derived.</strong> The note says “Combining Ito’s formula on <span class="math inline">\(V(t,X_t)\)</span> with the HJB equation and Girsanov” gives <span class="math inline">\(p^\star(X_0, X_1) \propto p^{\text{base}}(X_0, X_1) \exp(r(X_1) - V(0,X_0))\)</span>, and then in the following paragraph says “the path-level Radon-Nikodym derivative from Girsanov involves additional path-dependent terms (<span class="math inline">\(\int \|u^\star\|^2 ds\)</span>), but after marginalizing over intermediate times, these reduce to a function of the endpoints only, via Ito’s formula and the HJB equation.” This is the right idea, but the actual calculation is not shown. A grad student would want to see: (a) write the Girsanov RN derivative <span class="math inline">\(d\bbP^{u^\star}/d\bbP\)</span> along the full path, (b) apply Ito to <span class="math inline">\(V(t,X_t^{u^\star})\)</span> using the HJB equation to simplify <span class="math inline">\(\int_0^1 \frac{1}{2}\|u^\star\|^2 ds\)</span> into endpoint terms, (c) marginalize. The HJB notes <em>do</em> carry out a closely related calculation (the Ito + HJB step leading to eq-logZ-pathwise), so the cross-reference is legitimate. But the note should either show this 3-line calculation or say explicitly: “The HJB notes derive <span class="math inline">\(V(t_2, X_{t_2}) - V(t_1, X_{t_1}) = \int \frac{1}{2}\|u^\star\|^2 ds + \text{martingale}\)</span> (final displayed equation). Plugging this into the Girsanov RN derivative and taking expectations kills the martingale, yielding <strong>?@eq-radon-nikodym</strong>.” <strong>Fix</strong>: Replace the hand-wave paragraph (lines 62) with the explicit 3-step argument referencing the specific equation in HJB.qmd.</p></li>
+<li><p><strong>Line 77: The example <span class="math inline">\(\sigma_t = 0\)</span> is slightly misleading.</strong> The note says “Adding a control <span class="math inline">\(u\)</span> in <strong>?@eq-controlled-sde</strong> has zero effect since <span class="math inline">\(\sigma = 0\)</span> kills both the noise and the control term (the control enters as <span class="math inline">\(\sigma_t u\)</span>, so it vanishes with <span class="math inline">\(\sigma_t\)</span>).” Careful: the controlled drift is <span class="math inline">\(b + \sigma_t u\)</span>, so the control term is <span class="math inline">\(\sigma_t u \, dt\)</span>. When <span class="math inline">\(\sigma_t = 0\)</span>, this is zero. But the cost functional <span class="math inline">\(J(u) = E[\frac{1}{2}\|u\|^2 - r(X_1)]\)</span> is still well-defined; any nonzero <span class="math inline">\(u\)</span> increases cost without affecting the trajectory. So the minimizer is <span class="math inline">\(u = 0\)</span> and nothing changes. The logic is correct, but “there is nothing to optimize” is misleading: there is an optimization problem, it just has a trivial solution. <strong>Fix</strong>: Minor wording; say “the optimal control is trivially <span class="math inline">\(u=0\)</span> since any nonzero <span class="math inline">\(u\)</span> adds cost without affecting the trajectory.”</p></li>
+<li><p><strong>Line 101: The memoryless schedule derivation defers too much.</strong> The note says the paper “proves this by analyzing the time-reversed SDE and showing that the coefficient of <span class="math inline">\(X_0\)</span> in the explicit solution vanishes if and only if <span class="math inline">\(\sigma_t^2 \geq 2\eta_t\)</span>.” This is accurate but the reader has no way to verify the claim <span class="math inline">\(\sigma_t = \sqrt{2\eta_t}\)</span> without reading 150 lines of the paper’s Appendix 12.1. Since the note derives everything else from scratch, this is a conspicuous gap. The note could at least sketch the idea: the time-reversed SDE for <span class="math inline">\(\vec{X}_t := X_{1-t}\)</span> has an explicit solution (linear SDE in disguise). The coefficient of <span class="math inline">\(\vec{X}_0 = X_1\)</span> in <span class="math inline">\(\vec{X}_1 = X_0\)</span> involves <span class="math inline">\(\exp(-\int \sigma^2/(2\beta^2) ds)\)</span>. For this to vanish (making <span class="math inline">\(X_0\)</span> independent of <span class="math inline">\(X_1\)</span>), one needs <span class="math inline">\(\int \sigma^2/(2\beta^2) ds = \infty\)</span> near <span class="math inline">\(t=0\)</span>, which is satisfied iff <span class="math inline">\(\sigma^2 \geq 2\eta_t\)</span>. <strong>Fix</strong>: Add a 3–4 line sketch of the mechanism inside a <code>&lt;details&gt;</code> block, similar to the flow matching check already present.</p></li>
+<li><p><strong>Line 141: “<span class="math inline">\(\E[a(t) \mid X_t = x] = \nabla_x J(u; x, t)\)</span>” needs more care.</strong> The note says this interchange of gradient and conditional expectation “holds under standard regularity conditions on <span class="math inline">\(r\)</span>.” This is an important step and the conditions are not standard; they require: (i) the adjoint ODE has a unique solution along the SDE trajectory (pathwise, with probability one), (ii) the gradient <span class="math inline">\(\nabla_{X_t}\)</span> of the future cost exists and equals <span class="math inline">\(a(t)\)</span> (this is the content of the adjoint method, which is derived for ODEs in adjoint.qmd but only heuristically extended to SDEs), and (iii) the conditional expectation of the pathwise gradient equals the gradient of the conditional expectation. The adjoint notes (line 200–210) explicitly say “informally, one can apply the same reasoning” for SDEs with additive noise. The note should acknowledge this is the heuristic SDE extension, not a rigorous result. <strong>Fix</strong>: Replace “which holds under standard regularity conditions on <span class="math inline">\(r\)</span>” with “heuristically, following the SDE extension described in the adjoint notes.”</p></li>
+<li><p><strong>Lines 159–183: The “removing <span class="math inline">\(u\)</span>-dependent terms” argument has a gap in the logic.</strong> The argument goes: at optimality, <span class="math inline">\(u^\star = -\sigma_t^\top E[a(t) \mid X_t]\)</span>. Right-multiply both sides by <span class="math inline">\(\nabla_x u^\star\)</span>. Rearrange to get <strong>?@eq-zero-terms</strong>. The issue: the right-multiplication step (line 170–173) is done <em>before</em> taking conditional expectations. Both sides are evaluated at a fixed <span class="math inline">\(x\)</span>, so <span class="math inline">\(u^\star(t,x)\)</span> and <span class="math inline">\(\nabla_x u^\star(t,x)\)</span> are deterministic given <span class="math inline">\(X_t = x\)</span>. The step from line 173 to line 179 wraps everything in <span class="math inline">\(E[\cdot \mid X_t = x]\)</span>. Since <span class="math inline">\(u^\star(t,x)\)</span> and <span class="math inline">\(\nabla_x u^\star(t,x)\)</span> are deterministic functions of <span class="math inline">\(x\)</span>, they can be pulled out of the conditional expectation, and the conclusion follows. This is correct but the presentation makes it look like you are taking a conditional expectation of something that was derived without conditioning. A grad student will pause here. <strong>Fix</strong>: Add one clarifying sentence: “Since <span class="math inline">\(u^\star(t,x)\)</span> and <span class="math inline">\(\nabla_x u^\star(t,x)\)</span> are deterministic functions of <span class="math inline">\((t,x)\)</span>, they can be pulled inside or outside <span class="math inline">\(E[\cdot \mid X_t = x]\)</span> freely.”</p></li>
+<li><p><strong>Line 201: The uniqueness argument for the critical point of <span class="math inline">\(E[L_{\text{AM}}]\)</span> is compressed to the point of being hard to verify.</strong> The note claims: (a) the gradient of <span class="math inline">\(L_{\text{AM}}\)</span> at <span class="math inline">\(u = u^\star\)</span> equals zero because the removed terms have zero conditional expectation, and (b) uniqueness of the critical point follows from the uniqueness of the critical point of <span class="math inline">\(L_{\text{basic}}\)</span>, proven in Appendix 13.3 of the paper. Step (a) is shown. Step (b) is the non-trivial part. The actual argument (from the paper’s Appendix 13.3) is: if <span class="math inline">\(\hat{u}\)</span> is a critical point of <span class="math inline">\(E[L_{\text{AM}}]\)</span>, then <span class="math inline">\(\hat{u} = -\sigma^\top E[\tilde{a} \mid X_t]\)</span>. At a critical point, the canceled terms (<strong>?@eq-zero-terms</strong> applied to <span class="math inline">\(\hat{u}\)</span>) are zero, which means <span class="math inline">\(E[\tilde{a} \mid X_t] = E[a(\cdot, \hat{u}) \mid X_t]\)</span> (they satisfy the same integral equation, which has a unique solution). So <span class="math inline">\(\hat{u}\)</span> is also a critical point of <span class="math inline">\(E[L_{\text{basic}}]\)</span>, which has a unique critical point <span class="math inline">\(u^\star\)</span>. The note says “by the uniqueness of the critical point of <span class="math inline">\(E[L_{\text{basic}}]\)</span> (proven in the adjoint notes and Appendix 13.3).” But the adjoint notes do NOT prove uniqueness of the critical point of <span class="math inline">\(L_{\text{basic}}\)</span>; they derive the adjoint ODE. Uniqueness of the critical point requires showing that <span class="math inline">\(u = -\sigma^\top E[a(\cdot, u) \mid X_t]\)</span> has a unique fixed point, which is proven in Appendix 13.3 of the paper, not in the adjoint notes. <strong>Fix</strong>: Remove the reference to “the adjoint notes” for the uniqueness claim. Keep only the paper reference.</p></li>
+</ol>
+</section>
+<section id="hidden-assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="hidden-assumptions">Hidden Assumptions</h2>
+<ol type="1">
+<li><p><strong>Scalar <span class="math inline">\(\sigma_t\)</span></strong>: The note writes <span class="math inline">\(\sigma_t\)</span> as a scalar throughout (e.g., <span class="math inline">\(\sigma_t u\)</span> instead of <span class="math inline">\(\sigma(t) u\)</span>). The Girsanov notes and HJB notes use matrix-valued <span class="math inline">\(\sigma(x)\)</span>. The restriction to scalar, state-independent diffusion is never stated. Add a remark: “We restrict to scalar, state-independent <span class="math inline">\(\sigma_t &gt; 0\)</span> throughout, matching the generative model setting.”</p></li>
+<li><p><strong>Regularity of <span class="math inline">\(r\)</span></strong>: The terminal reward <span class="math inline">\(r\)</span> needs to be at least <span class="math inline">\(C^1\)</span> for <span class="math inline">\(\nabla r\)</span> to exist (used in <strong>?@eq-adjoint-ode</strong>). For the value function argument, <span class="math inline">\(\exp(r)\)</span> needs to be integrable. For the adjoint ODE to have a unique solution, <span class="math inline">\(\nabla_x b\)</span> needs to be continuous. None of these are stated. One sentence would suffice: “We assume <span class="math inline">\(r\)</span> is smooth and that all expectations below are well-defined.”</p></li>
+<li><p><strong>The flow matching schedule check (lines 112–117)</strong>: The computation gives <span class="math inline">\(\eta_t = (1-t)/t\)</span>, so <span class="math inline">\(\sigma_t = \sqrt{2(1-t)/t}\)</span>. This blows up as <span class="math inline">\(t \to 0\)</span>. In practice, one truncates the time interval to <span class="math inline">\([\epsilon, 1]\)</span>. This practical issue is not mentioned and could confuse a reader who tries to implement this.</p></li>
+</ol>
+</section>
+<section id="carpet-sweeping" class="level2">
+<h2 class="anchored" data-anchor-id="carpet-sweeping">Carpet Sweeping</h2>
+<ol type="1">
+<li><p><strong>Lines 95–101: The unified drift formula <strong>?@eq-unified-drift</strong> appears from nowhere.</strong> The note says “The unified drift from [paper]” and writes down <span class="math inline">\(b(x,t) = \kappa_t x + (\sigma_t^2/2 + \eta_t) \nabla \log p_t(x)\)</span> without any derivation or intuition. The existing notes (HJB, Girsanov) work with generic drift <span class="math inline">\(b(x)\)</span>, not this specific form. A reader encountering this for the first time has no basis to trust it. Consider adding one sentence of context: “This drift is constructed so that the SDE has the same time marginals as the reference interpolation; the <span class="math inline">\(\kappa_t x\)</span> term handles the deterministic scaling and the score term corrects for the noise.”</p></li>
+<li><p><strong>Line 122: “The memoryless schedule is the unique choice that preserves the velocity-score relationship.”</strong> This is a claim from Theorem 2 of the paper (the “fine-tuning recipe” theorem). The note states it as fact without indicating it requires a separate proof. This is carpet-sweeping: the necessity direction of the memoryless condition is harder than the sufficiency direction and involves HJB-based arguments about the score-velocity conversion (Appendix 12.2 of the paper). <strong>Fix</strong>: Flag that this is a deeper result: “The paper proves (Theorem 2) that within the family of SDEs sharing marginals with the reference flow, the memoryless schedule is not just sufficient but <em>necessary</em> for the fine-tuned velocity to be convertible to arbitrary noise schedules.”</p></li>
+</ol>
+</section>
+<section id="cross-reference-verification" class="level2">
+<h2 class="anchored" data-anchor-id="cross-reference-verification">Cross-Reference Verification</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Ref in note</th>
+<th>Target</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../notes/girsanov/girsanov.html">Girsanov theorem</a> for <span class="math inline">\(\kl(\bbP^u \| \bbP)\)</span> formula (line 39)</td>
+<td>girsanov.qmd derives <span class="math inline">\(\kl(\bbP, \bbP^u) = \frac{1}{2} E[\int \|u\|^2 dt]\)</span></td>
+<td><strong>Direction mismatch</strong>: the note writes <span class="math inline">\(\kl(\bbP^u \| \bbP)\)</span> but the Girsanov notes derive <span class="math inline">\(\kl(\bbP, \bbP^u)\)</span>. The note acknowledges this parenthetically (“the Girsanov notes derive the analogous formula in the other direction”). For the control-affine case with same initial condition, the two are actually equal by a symmetry argument (the cross-term <span class="math inline">\(\int u^\top dW\)</span> has zero expectation under either measure). But this equality is non-obvious and should be stated or the note should just cite the direction that matches.</td>
+</tr>
+<tr class="even">
+<td><a href="../../notes/HJB/HJB.html">HJB notes</a> for <span class="math inline">\(u^\star = \sigma_t^\top \nabla V\)</span> (line 50)</td>
+<td>HJB.qmd eq-u-star-V: <span class="math inline">\(u^\star = \sigma^\top \nabla V\)</span></td>
+<td><strong>Correct</strong></td>
+</tr>
+<tr class="odd">
+<td><a href="../../notes/HJB/HJB.html">HJB notes</a> for SOC with <span class="math inline">\(f=0\)</span>, <span class="math inline">\(g=r\)</span> (line 45)</td>
+<td>HJB.qmd variational formulation section</td>
+<td><strong>Correct</strong>, though HJB notes use general <span class="math inline">\(f,g\)</span>; specializing to <span class="math inline">\(f=0\)</span>, <span class="math inline">\(g=r\)</span> is immediate</td>
+</tr>
+<tr class="even">
+<td><a href="../adjoint/adjoint.qmd">Adjoint notes</a> for adjoint ODE (lines 129, 135)</td>
+<td>adjoint.qmd eq-adjoint-ode: <span class="math inline">\(\dot{\lambda} = -\nabla_x f - b_x^\top \lambda\)</span>, <span class="math inline">\(\lambda(T) = \nabla_x g\)</span></td>
+<td><strong>Consistent but requires translation</strong>: adjoint.qmd uses <span class="math inline">\(\lambda\)</span> where the note uses <span class="math inline">\(a\)</span>, and adjoint.qmd’s ODE is for the base drift <span class="math inline">\(b(t,\theta,x)\)</span> only. The note’s full adjoint <strong>?@eq-adjoint-ode</strong> adds terms for the controlled drift <span class="math inline">\(b + \sigma_t u\)</span> and controlled running cost <span class="math inline">\(\frac{1}{2}\|u\|^2\)</span>. This is a standard extension but it is not derived in adjoint.qmd. The note should say “applying the adjoint ODE from the adjoint notes to the <em>controlled</em> system.”</td>
+</tr>
+<tr class="odd">
+<td><a href="../adjoint/adjoint.qmd">Adjoint notes</a> for lean adjoint (line 193)</td>
+<td>adjoint.qmd eq-adjoint-ode with <span class="math inline">\(f = 0\)</span> and only base drift</td>
+<td><strong>Correct</strong>: setting <span class="math inline">\(\nabla_x f = 0\)</span> and using base drift <span class="math inline">\(b\)</span> in adjoint.qmd’s formula gives <span class="math inline">\(\dot{\lambda} = -b_x^\top \lambda\)</span>, <span class="math inline">\(\lambda(T) = \nabla_x g\)</span>, which matches <strong>?@eq-lean-adjoint</strong> with <span class="math inline">\(g = -r\)</span>.</td>
+</tr>
+<tr class="even">
+<td><a href="../adjoint/adjoint.qmd">Adjoint notes</a> for uniqueness of critical point (line 201)</td>
+<td>adjoint.qmd does <strong>not</strong> prove any uniqueness result</td>
+<td><strong>Broken reference</strong>: See Derivation Gap #7.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="grad-student-sticking-points" class="level2">
+<h2 class="anchored" data-anchor-id="grad-student-sticking-points">Grad Student Sticking Points</h2>
+<ol type="1">
+<li><p><strong>Line 39: KL direction</strong>. The note writes <span class="math inline">\(\kl(\bbP^u \| \bbP)\)</span> but the Girsanov notes derive <span class="math inline">\(\kl(\bbP, \bbP^u)\)</span>. A student would spend 20 minutes figuring out if these are the same (they are, for this specific form, because <span class="math inline">\(\int u^\top dW\)</span> has zero expectation under either measure by the martingale property).</p></li>
+<li><p><strong>Lines 56–62: The bivariate marginal</strong>. The key equation of the “value function bias” section appears without derivation. A student who wants to verify it needs to combine Girsanov’s formula with Ito applied to <span class="math inline">\(V(t, X_t)\)</span> along the optimal path, use the HJB equation to simplify, then marginalize. The note says to combine three things but does not show the combination.</p></li>
+<li><p><strong>Lines 95–101: The unified drift and the memoryless condition</strong>. A student encountering <span class="math inline">\(\kappa_t\)</span>, <span class="math inline">\(\eta_t\)</span>, and the unified drift for the first time has no intuition for why these quantities arise or what they mean geometrically. The note provides the formula but not the “why.”</p></li>
+<li><p><strong>Line 141: <span class="math inline">\(E[a(t) \mid X_t] = \nabla_x J\)</span></strong>. This is the central identity connecting the pathwise adjoint to the value function gradient. A student would want to see: (a) <span class="math inline">\(a(t)\)</span> is the pathwise gradient of future cost w.r.t. <span class="math inline">\(X_t\)</span>, (b) taking conditional expectation averages over future randomness, giving the gradient of the expected future cost, which is <span class="math inline">\(\nabla_x J\)</span>. The note states this but the justification (“assuming the interchange is valid”) is thin.</p></li>
+<li><p><strong>Line 201: The uniqueness argument</strong>. The compressed paragraph starting “To see why:” is dense. A student would need to unpack: (a) the gradient of the lean loss at <span class="math inline">\(u^\star\)</span>, (b) why adding zero-expectation terms does not change the gradient, (c) why the critical point is unique. Three non-trivial facts in one paragraph.</p></li>
+</ol>
+</section>
+<section id="what-the-note-gets-right" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-note-gets-right">What the Note Gets Right</h2>
+<ol type="1">
+<li><p><strong>The value function bias section (lines 48–77) is pedagogically excellent.</strong> The core insight – that the SOC solution tilts the joint <span class="math inline">\((X_0, X_1)\)</span> distribution, not just the marginal – is explained clearly. The deterministic flow example (<span class="math inline">\(\sigma = 0\)</span>) is a perfect illustration.</p></li>
+<li><p><strong>The memoryless schedule section (lines 80–124) is well-structured.</strong> The logic “if <span class="math inline">\(X_0 \perp X_1\)</span> then the bias disappears” into “what makes them independent?” into “the memoryless schedule” flows naturally. The explicit flow matching check in the <code>&lt;details&gt;</code> block is a nice touch.</p></li>
+<li><p><strong>The lean adjoint motivation (lines 157–203) correctly captures the key idea.</strong> The argument “the <span class="math inline">\(u\)</span>-dependent terms cancel in conditional expectation at optimality, so remove them” is the core insight of the paper, and the note presents it cleanly.</p></li>
+<li><p><strong>Notation is unified and consistent with the existing notes.</strong> The note uses <span class="math inline">\(\bbP^u\)</span>, <span class="math inline">\(\kl\)</span>, <span class="math inline">\(\sigma_t\)</span>, colored annotations, and equation labeling consistently.</p></li>
+<li><p><strong>The note is honest about what it does not prove.</strong> It defers the memoryless proof to the paper, flags the SDE extension as heuristic (partially), and correctly identifies the lean adjoint as producing different gradients away from optimality. This is better than many expositions that would just say “it can be shown.”</p></li>
+<li><p><strong>The distinction between basic and lean Adjoint Matching is clear.</strong> The note correctly explains that the basic version gives the same gradients as the continuous adjoint method, while the lean version is genuinely different (and better in practice).</p></li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

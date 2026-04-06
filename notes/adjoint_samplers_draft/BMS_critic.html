@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>bms_critic – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#critique-bms.qmd" id="toc-critique-bms.qmd" class="nav-link active" data-scroll-target="#critique-bms.qmd">Critique: BMS.qmd</a>
+  <ul class="collapse">
+  <li><a href="#overall-assessment" id="toc-overall-assessment" class="nav-link" data-scroll-target="#overall-assessment">Overall Assessment</a></li>
+  <li><a href="#major-issues" id="toc-major-issues" class="nav-link" data-scroll-target="#major-issues">Major Issues</a></li>
+  <li><a href="#style-issues" id="toc-style-issues" class="nav-link" data-scroll-target="#style-issues">Style Issues</a></li>
+  <li><a href="#missing-content" id="toc-missing-content" class="nav-link" data-scroll-target="#missing-content">Missing Content</a></li>
+  <li><a href="#unnecessary-content" id="toc-unnecessary-content" class="nav-link" data-scroll-target="#unnecessary-content">Unnecessary Content</a></li>
+  <li><a href="#line-by-line-notes" id="toc-line-by-line-notes" class="nav-link" data-scroll-target="#line-by-line-notes">Line-by-Line Notes</a></li>
+  <li><a href="#suggested-structure-for-v2" id="toc-suggested-structure-for-v2" class="nav-link" data-scroll-target="#suggested-structure-for-v2">Suggested Structure for v2</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="critique-bms.qmd" class="level1">
+<h1>Critique: BMS.qmd</h1>
+<section id="overall-assessment" class="level2">
+<h2 class="anchored" data-anchor-id="overall-assessment">Overall Assessment</h2>
+<p>The note covers the right material and the table at the end is a useful summary. However, it reads more like a compressed survey than a worked-through derivation in the style of the existing notes (HJB.qmd, doob.qmd). The key problem: Nelson’s relation, the central idea of the paper, is stated but never derived or made intuitive. The note tells the reader what things are rather than computing them from scratch.</p>
+</section>
+<section id="major-issues" class="level2">
+<h2 class="anchored" data-anchor-id="major-issues">Major Issues</h2>
+<ol type="1">
+<li><p><strong>Nelson’s relation is stated, not derived.</strong> This is the single most important equation in the note. In doob.qmd and HJB.qmd, every key formula is derived from Euler discretization or Bayes’ rule arguments. Nelson’s relation should get the same treatment: start from the Fokker-Planck equation for <span class="math inline">\(\Pi^*_t\)</span>, write the forward and backward drifts, sum them, and show that the score pops out. The current note just says “Nelson’s relation states that” (line 76) and moves on. This is the pedagogical core of the paper and it is missing entirely.</p></li>
+<li><p><strong>The TSI (target score identity) derivation is too compressed.</strong> The <code>&lt;details&gt;</code> block (lines 104-113) sketches the derivation in 5 lines. The key step, integration by parts to swap the gradient from <span class="math inline">\(\bbP_{t|0,T}\)</span> onto <span class="math inline">\(\Pi^*_{0,T}\)</span>, deserves a full worked-out computation. This is where the independent coupling becomes tractable, and the reader needs to see why. Currently the sketch says “one can differentiate under the integral and integrate by parts” without showing it.</p></li>
+<li><p><strong>The backward drift formula (<strong>?@eq-backward-drift</strong>) appears from nowhere.</strong> Line 83 says “By applying a Doob h-transform, the backward drift has the form…” but never shows the computation. In the existing notes, Doob h-transforms are always derived by computing the conditional expectation explicitly. At minimum, cross-reference the specific result from doob.qmd that gives this formula; ideally, show the one-line computation.</p></li>
+<li><p><strong>No Euler discretization arguments anywhere.</strong> The signature move of these notes is to derive continuous-time results by first writing the Euler discretization, applying Bayes’ rule, and taking the limit. The reverse_and_tweedie.qmd note does exactly this for time reversal. BMS.qmd uses none of this machinery. Nelson’s relation, the bridge marginal formula, and the TSI should all be motivated or at least sanity-checked via discrete-time arguments.</p></li>
+<li><p><strong>The connection between <strong>?@eq-xi-general</strong> and the individual algorithm drifts is hand-waved.</strong> Lines 128-163 specialize the general drift to three couplings, but the algebra is skipped. For the independent coupling especially, show the substitution step by step: plug <span class="math inline">\(\Pi^*_{0,T} = p_0 \otimes \pi\)</span> into <strong>?@eq-xi-general</strong>, observe that <span class="math inline">\(\nabla_{X_0} \log(p_0 \otimes \pi) = \nabla \log p_0(X_0)\)</span>, etc.</p></li>
+<li><p><strong>Missing: why the independent coupling is a valid fixed point.</strong> The note says “by construction, the target control <span class="math inline">\(u^*\)</span> is a fixed point” (line 67) but never explains why the independent coupling <span class="math inline">\(p_0 \otimes \pi\)</span> actually yields marginals matching the converged process. This is non-obvious; the Schrodinger bridge coupling is the KL-optimal one, so why does the independent coupling also work? The paper discusses this (the boundary constraints are satisfied by construction), and this needs explanation.</p></li>
+</ol>
+</section>
+<section id="style-issues" class="level2">
+<h2 class="anchored" data-anchor-id="style-issues">Style Issues</h2>
+<ol type="1">
+<li><p><strong>Opening paragraph (lines 19-27) is a summary, not a computation.</strong> Compare with HJB.qmd which opens with “Consider a diffusion in <span class="math inline">\(\bbR^D\)</span>…” and immediately starts computing. The BMS note opens with two paragraphs describing what the paper does. Rewrite to start with the mathematical setup.</p></li>
+<li><p><strong>“The key mathematical ingredient is Nelson’s relation, which connects…” (line 27).</strong> This is “In this note, we will…” phrasing that the style guide explicitly forbids. Don’t announce what you’ll do; do it.</p></li>
+<li><p><strong>“Recall the setup from the Schrodinger bridges note.” (line 32).</strong> This is fine for a brief callback but should not be the opening move of the first real section. The existing notes set up their own notation and derive what they need, cross-referencing for proofs but not for definitions.</p></li>
+<li><p><strong>“By a classical result (Gyongy, 1986)” (line 44).</strong> The existing notes don’t appeal to authority this way. Either derive the Markovian projection result (it is a standard <span class="math inline">\(L^2\)</span> projection argument, 3-4 lines) or just state it as obvious from the tower property, which is what the note already half-does on line 56.</p></li>
+<li><p><strong>“The connection to Girsanov is also natural:” (line 204).</strong> The word “natural” is filler. Either make the connection explicit (write the formula) or cut it.</p></li>
+<li><p><strong>“This has a clean variational interpretation.” (line 194).</strong> “Clean” is an empty adjective. Show the interpretation; don’t describe it.</p></li>
+<li><p><strong>Lines 220-228 (“Connection to score matching and IPFP”).</strong> This entire section reads like a literature review paragraph, not a computation. It states connections without showing them. Either derive the IPFP connection explicitly (showing the two half-steps) or cut this section and put a one-line cross-reference to shrodinger.qmd.</p></li>
+<li><p><strong>“The paper demonstrates sampling from multimodal densities in <span class="math inline">\(d=2500\)</span> dimensions.” (line 217).</strong> The existing notes never summarize experimental results from papers. This line should be cut.</p></li>
+<li><p><strong>Passive constructions throughout.</strong> “It is simply the score…” (line 88), “This is what makes the reciprocal projection computationally cheap” (line 175). The existing notes prefer active voice: “The score of the forward transition gives…” or “Sampling from the bridge is cheap because…”</p></li>
+<li><p><strong>“The practical algorithm stores endpoint pairs…” (line 217).</strong> This reads like a methods section of a paper, not the mathematical blog note style. The existing notes describe algorithms through their mathematical content, not their implementation.</p></li>
+</ol>
+</section>
+<section id="missing-content" class="level2">
+<h2 class="anchored" data-anchor-id="missing-content">Missing Content</h2>
+<ol type="1">
+<li><p><strong>Derivation of Nelson’s relation from Fokker-Planck.</strong> This is the heart of the paper. Write the Fokker-Planck equation for the forward process, the backward Fokker-Planck, equate the time derivatives, and extract <span class="math inline">\(u^* + v^* = \sigma \nabla \log p_t\)</span>. This can be done in 5-6 lines of computation. Alternatively, derive it from the discrete-time identity in reverse_and_tweedie.qmd.</p></li>
+<li><p><strong>Why the Brownian bridge has the stated marginals.</strong> The formula <strong>?@eq-bridge-marginal</strong> is stated without derivation. Since the existing notes derive the Brownian bridge drift from first principles (doob.qmd), the marginal formula should at least be shown to follow from the bridge SDE or from Gaussian conditioning.</p></li>
+<li><p><strong>The “why” of the independent coupling.</strong> The paper’s key insight is that independent coupling works despite being suboptimal. The note should explain: the Schrodinger bridge coupling minimizes KL, but any coupling satisfying the boundary constraints yields a valid fixed point. The independent coupling sacrifices optimality of the coupling for tractability of the regression target. Currently this trade-off is mentioned in one sentence (line 215) but not explained.</p></li>
+<li><p><strong>Mode-covering property of forward KL.</strong> Line 228 mentions “mode-covering” in passing. This is actually an important practical consequence. Explain in 2-3 sentences why <span class="math inline">\(\min_u \kl(\Pi^* | \bbP^u)\)</span> (forward KL) is mode-covering, connecting to the standard forward-vs-reverse KL discussion.</p></li>
+<li><p><strong>The free parameter <span class="math inline">\(c(t)\)</span> in the TSI.</strong> The note mentions <span class="math inline">\(c(t) \in (0,1]\)</span> but never discusses what choices are useful or why the freedom exists. The paper discusses choosing <span class="math inline">\(c(t) = \gamma(t)\)</span> to simplify terms. This deserves a sentence or two.</p></li>
+</ol>
+</section>
+<section id="unnecessary-content" class="level2">
+<h2 class="anchored" data-anchor-id="unnecessary-content">Unnecessary Content</h2>
+<ol type="1">
+<li><p><strong>The summary table (lines 207-215) is useful but could be more compact.</strong> The “Requires” column is vague. Replace with the actual regression target formula for each method.</p></li>
+<li><p><strong>Lines 220-228 (Connection to score matching and IPFP).</strong> This section adds no computation and restates things already said. Cut it or replace it with one cross-reference sentence.</p></li>
+<li><p><strong>Lines 231-261 (BibTeX comment block).</strong> Not a content issue per se, but the BibTeX entries should be moved to ref.bib. The comment says “to add to ref.bib” but this should be done, not left as a TODO.</p></li>
+<li><p><strong>“This is a proximal point method: each step takes a conservative update…” (line 200).</strong> Naming the method adds nothing. The variational formula <strong>?@eq-damped-var</strong> already shows what is happening.</p></li>
+</ol>
+</section>
+<section id="line-by-line-notes" class="level2">
+<h2 class="anchored" data-anchor-id="line-by-line-notes">Line-by-Line Notes</h2>
+<ul>
+<li><strong>Line 22</strong>: The SDE has <span class="math inline">\(\sigma_t u(X_t, t) dt + \sigma_t dW_t\)</span>. In the existing notes (HJB.qmd line 81), the convention is <span class="math inline">\(b(X^u)dt + \sigma(X^u)(dW_t + u dt)\)</span>. Decide which convention to use and be consistent across all 4 new notes.</li>
+<li><strong>Line 32</strong>: Cross-reference path <code>../shrodinger/shrodinger.qmd</code> but the file is in the same directory. Should be <code>shrodinger.qmd</code> or <code>../shrodinger/shrodinger.qmd</code> depending on the actual file location. Check all cross-reference paths.</li>
+<li><strong>Line 44</strong>: <span class="math inline">\(\xi(X,t)\)</span> is introduced for the path-dependent drift, but line 47 writes <span class="math inline">\(\xi(X,t)\)</span> as the bridge drift of <span class="math inline">\(\Pi^*\)</span>. Clarify: <span class="math inline">\(\xi\)</span> is the non-Markovian drift of the process whose law is <span class="math inline">\(\Pi^*\)</span>, not the “bridge drift” generically.</li>
+<li><strong>Line 77</strong>: <span class="math inline">\(\sigma_t \nabla \log \Pi^*_t(x)\)</span> on the RHS. The notation mixes <span class="math inline">\(\sigma_t\)</span> (scalar schedule) with <span class="math inline">\(\sigma(t)\)</span> used elsewhere. Pick one.</li>
+<li><strong>Line 85</strong>: <span class="math inline">\(\Pi^*_{0|t}\)</span> notation is used without definition. This is the conditional law of <span class="math inline">\(X_0\)</span> given <span class="math inline">\(X_t\)</span> under <span class="math inline">\(\Pi^*\)</span>. Define it.</li>
+<li><strong>Line 96</strong>: <span class="math inline">\(\gamma(t) = \kappa(t)/\kappa(T)\)</span> is defined but <span class="math inline">\(\kappa(T)\)</span> depends on <span class="math inline">\(T\)</span> which is the terminal time. Check consistency: is <span class="math inline">\(T\)</span> always fixed?</li>
+<li><strong>Line 118</strong>: <strong>?@eq-xi-general</strong> has <span class="math inline">\(\sigma_t^{-1} \xi(X,t)\)</span> on the LHS but the three terms on the RHS involve gradients w.r.t. different variables (<span class="math inline">\(X_0\)</span>, <span class="math inline">\(X_T\)</span>, <span class="math inline">\(X_t\)</span>). This is correct but confusing without explicit statement that <span class="math inline">\(X_0, X_t, X_T\)</span> are all determined by the path <span class="math inline">\(X\)</span>.</li>
+<li><strong>Lines 128-136</strong>: The adjoint sampling coupling is written as <span class="math inline">\(p_0 \otimes \Pi^*_T\)</span> where <span class="math inline">\(\Pi^*_T = \pi\)</span>, then the drift is <span class="math inline">\(\nabla_{X_T} \log[\pi(X_T)/\bbP_T(X_T)]\)</span>. This <span class="math inline">\(\bbP_T\)</span> comes from the forward transition marginal under the reference, but it is not defined in the BMS note. Define it or cross-reference.</li>
+<li><strong>Line 141</strong>: <span class="math inline">\(\hat\varphi_T(X_T)\)</span> appears for the ASBS drift. The notation <span class="math inline">\(\hat\varphi\)</span> is used in shrodinger.qmd but with different subscript conventions. Unify.</li>
+<li><strong>Line 177</strong>: The formula for <span class="math inline">\(\nabla_{X_t} \log \bbP_{t|0}\)</span> uses <span class="math inline">\(\kappa(t)\)</span>, but <span class="math inline">\(\bbP_{t|0}\)</span> was not explicitly defined as a Gaussian with variance <span class="math inline">\(\kappa(t)\)</span>. State this.</li>
+<li><strong>Line 192</strong>: <span class="math inline">\(\alpha \in (0,1]\)</span> is introduced for damping. The macro file doesn’t have <span class="math inline">\(\alpha\)</span> as a special symbol, which is fine, but make sure it doesn’t clash with any other use in the note.</li>
+</ul>
+</section>
+<section id="suggested-structure-for-v2" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-structure-for-v2">Suggested Structure for v2</h2>
+<ol type="1">
+<li><p><strong>Opening</strong>: Start with the mathematical setup directly. “Consider a controlled SDE <span class="math inline">\(dX_t = \sigma_t u(X_t,t) dt + \sigma_t dW_t\)</span> with <span class="math inline">\(X_0 \sim p_0\)</span>. The goal is to find <span class="math inline">\(u\)</span> such that <span class="math inline">\(X_T \sim \pi\)</span>.” One sentence mentioning that adjoint sampling and ASBS address this with different couplings, and BMS unifies them.</p></li>
+<li><p><strong>Nelson’s relation (the main idea)</strong>: Derive Nelson’s relation from scratch using Fokker-Planck or Euler discretization. Show <span class="math inline">\(u^* + v^* = \sigma_t \nabla \log p_t\)</span>. Give the one-line intuition: forward drift pushes toward target, backward drift pushes toward prior, their sum is the score.</p></li>
+<li><p><strong>Reciprocal class and Markovian projection</strong>: Brief setup (2-3 equations), cross-referencing shrodinger.qmd for the reciprocal class. Derive the Markovian projection as <span class="math inline">\(L^2\)</span> conditional expectation (show the tower property argument in 3 lines). State the matching loss.</p></li>
+<li><p><strong>The fixed-point iteration</strong>: State the three steps (simulate, reciprocal project, regress). Explain why <span class="math inline">\(u^*\)</span> is a fixed point.</p></li>
+<li><p><strong>Target score identity</strong>: Derive the TSI properly. Start from <span class="math inline">\(\Pi^*_t(x) = \int \bbP_{t|0,T}(x|x_0,x_T) \Pi^*_{0,T}(x_0,x_T) dx_0 dx_T\)</span>. Differentiate, integrate by parts, show both forms. Then combine with Nelson’s relation and the backward drift to get the general <span class="math inline">\(\xi\)</span> formula.</p></li>
+<li><p><strong>Three couplings</strong>: For each coupling (AS, ASBS, BMS), show the substitution into the general formula explicitly. Keep it compact (3-5 lines each). Highlight what is tractable and what is not.</p></li>
+<li><p><strong>The independent coupling</strong>: This is the punchline. Emphasize that everything in the regression target is known. Show the bridge sampling formula. Explain the trade-off: KL-suboptimal coupling but single objective, no alternation.</p></li>
+<li><p><strong>Damped iteration</strong>: State the formula. Show the variational characterization in 2 lines. Give the proximal-point intuition in one sentence. Connect to mode preservation.</p></li>
+<li><p><strong>Summary table</strong>: Keep it, but make it more informative.</p></li>
+</ol>
+<p>Cut: the “Connection to score matching and IPFP” section, the experimental results mention, and the implementation details paragraph.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
