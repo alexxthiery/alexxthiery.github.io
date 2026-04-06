@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Masked Discrete Diffusion – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Masked Discrete Diffusion – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Masked Discrete Diffusion – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Masked Discrete Diffusion</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">DDPM</div>
+                <div class="quarto-category">score</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">21 10 2025</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">21 10 2025</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#masked-discrete-diffusion" id="toc-masked-discrete-diffusion" class="nav-link active" data-scroll-target="#masked-discrete-diffusion">Masked Discrete Diffusion</a></li>
+  <li><a href="#extension-to-sequences" id="toc-extension-to-sequences" class="nav-link" data-scroll-target="#extension-to-sequences">Extension to Sequences</a></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">Training</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<!-- 
+Consider a finite state space $\{M, 1,2, \ldots, V\}$ where $M$ is a special state corresponding to a masked value and $1, \ldots, V$ correspond to the possible values of a token (e.g., a word in a vocabulary of size $V$). On the time interval $[0,T]$, we consider a continuous Markov chain with initial distribution $p_0$ and infinitesimal rate matrix $Q_t \in \bbR^{(V+1) \times (V+1)}$,
+
+$$
+\P(X_{t+h} = j \mid X_t = i) = Q_t(i,j) \, h + o(h).
+$$
+
+Bayes' rule immediately shows that the time-reversal of this Markov chain is also a Markov chain with infinitesimal rate matrix $Q^{\star}_t$ satisfying:
+
+$$
+Q^{\star}_t(i,j) = \frac{p_t(j)}{p_t(i)} \, Q_t(j,i),
+$$
+
+where $p_t$ is the marginal distribution of $X_t$. We have 
+
+$$\P(X_{t-h} = j \mid X_t = i) = Q^{\star}_t(i,j) \, h + o(h).$$
+
+We are interested in modeling a Markov chain that progressively masks the initial value into the masked state $M$ as time $t$ goes from $0$ to $T$. Furthermore, only transitions towards the masked state $M$ are allowed, and once the process has jumped to the masked state $M$, it stays there forever. This means that outside the diagonal, the only non-zero entries of the infinitesimal rate matrix $Q_t$ are of the form $Q_t(i,M)$ for $i \in \{1, \ldots, V\}$. For convenience, we denote by $\tau$ the (almost surely unique) jump time of this Markov chain. We assume that $\tau < T$ almost surely, so that the process ends up at time $T$ at the masked state $M$ with probability one.
+
+Now, to model text sequences of length $L$ for example, we consider $L$ independent copies of this Markov chain, i.e., $\overline{X}_t = (X_t^1, \ldots, X_t^L)$ where each $X_t^i$ is an independent Markov chain with infinitesimal rate matrix $Q_t$. This Markov process ends up at time $T$ at a fully masked sequence $\overline{X}_T = (M, \ldots, M)$ with probability one. If one can accurately model the time-reversal of this process, one can use this time-reversal to progressively unmask a fully masked sequence into a realistic sequence. That is the basic idea behind the (discrete) diffusion models. In our case, since jump times are almost surely distinct, the rate matrix of the joint process $\overline{X}_t$ is only non-zero when a single coordinate jumps. This means that, if $x,y \in \{M,1,\ldots,V\}^L$ differ by a single coordinate, say the $i$-th coordinate, then the infinitesimal rate matrix $\overline{Q}_t$ of the joint process satisfies:
+
+$$
+\overline{Q}_t(x,y) = Q_t(x^i,y_i).
+$$
+
+Similarly, the time-reversal of this joint process has infinitesimal rate matrix $\overleftarrow{\overline{Q}}_t$ satisfying:
+
+$$
+\overline{Q}^{\star}_t(x,y) = \frac{\overline{p}_t(y)}{\overline{p}_t(x)} \, Q_t(y_i,x^i),
+$$
+
+where $\overline{p}_t$ is the marginal distribution of $\overline{X}_t$. Now, $x$ and $y$ differ by a single coordinate $i$ so that, necessarily, $x^i = M$ and $y_i \in \{1, \ldots, V\}$. Let us denote by $S$ the set of indices $j$ such that $x^j \neq M$ (i.e., the set of unmasked coordinates in $x$). To observe that $x$ at time $t$, this means that the jump time of the $(L - |S|)$ masked coordinates must be smaller than $t$, while the jump time of the $|S|$ unmasked coordinates must be larger than $t$:
+
+$$
+\overline{p}_t(x) = \P(\tau < t)^{L-|S|} \, \P(\tau \geq t)^{|S|} \, \blue{ \overline{p}_0(x^{S}) }.
+$$
+
+Similarly, to observe $y$ at time $t$, the jump time of the $(L - |S| - 1)$ masked coordinates must be smaller than $t$, the jump time of the $|S|+1$ unmasked coordinates must be larger than $t$:
+
+$$
+\overline{p}_t(y) = \P(\tau < t)^{L-|S|-1} \, \P(\tau \geq t)^{|S|+1} \, \blue{ \overline{p}_0(x^{S}) \, \overline{p}_0(x^i \mid x^{S}) }.
+$$
+
+This means that the time-reversal rate matrix satisfies:
+
+$$
+\overline{Q}^{\star}_t(x,y) = R(t) \, \blue{\overline{p}_0(x^i \mid x^{S}) } \, Q_t(M, x^i),
+$$
+
+with time-dependent scalar $R(t) = \frac{\P(\tau \geq t)}{\P(\tau < t)}$. This means that, in practice, in order to model the time-reversal of this masked discrete diffusion process, one only needs to model the conditional distribution $\blue{\overline{p}_0(x^i \mid x^{S}) }$ of the data distribution $\overline{p}_0$. Standard BERT-like, masked language models, and transformers are perfectly suited to model such conditional distributions. This also shows that these discrete diffusion processes are in fact almost identical to masked language models, so one should not be surprised that they achieve similar performance on text generation tasks.
+
+--- -->
+<section id="masked-discrete-diffusion" class="level3">
+<h3 class="anchored" data-anchor-id="masked-discrete-diffusion">Masked Discrete Diffusion</h3>
+<p>We consider a finite state space <span class="math display">\[
+\mathcal{X} = \{M, 1,2, \ldots, V\},
+\]</span> where <span class="math inline">\(M\)</span> is a special <strong>masked</strong> state and <span class="math inline">\(1, \ldots, V\)</span> correspond to token values in a vocabulary of size <span class="math inline">\(V\)</span>. On the time interval <span class="math inline">\([0,T]\)</span>, we define a continuous-time Markov chain with initial distribution <span class="math inline">\(p_0\)</span> and time-dependent infinitesimal rate matrix <span class="math inline">\(Q_t \in \mathbb{R}^{(V+1)\times(V+1)}\)</span> so that for any <span class="math inline">\(x \ne y\)</span>, <span class="math display">\[
+\mathbb{P}(X_{t+h} = y \mid X_t = x) = Q_t(x,y) \, h + o(h).
+\]</span></p>
+<p>If the <strong>total jump rate</strong> out of state <span class="math inline">\(x\)</span> is <span class="math inline">\(J_t(x) = \sum_{y \ne x} Q_t(x,y)\)</span> , then</p>
+<p><span class="math display">\[\mathbb{P}(X_{t+h} = x \mid X_t = x) = 1 - J_t(x) \, h + o(h).\]</span></p>
+<p>Bayes’ rule implies that the time-reversal of this Markov chain is itself Markov, with infinitesimal rate matrix <span class="math inline">\(Q_t^{\star}\)</span> satisfying <span class="math display">\[
+Q_t^{\star}(x,y) = \frac{p_t(y)}{p_t(x)} \, Q_t(y,x),
+\]</span> where <span class="math inline">\(p_t\)</span> is the marginal distribution of <span class="math inline">\(X_t\)</span> at time <span class="math inline">\(t\)</span>. We have: <span class="math display">\[
+\mathbb{P}(X_{t-h} = y \mid X_t = x) = Q_t^{\star}(x,y) \, h + o(h).
+\]</span></p>
+<p>We are interested in modeling a Markov chain that progressively masks the initial value into the masked state <span class="math inline">\(M\)</span> as time <span class="math inline">\(t\)</span> goes from <span class="math inline">\(0\)</span> to <span class="math inline">\(T\)</span>. Transitions are only allowed from any token <span class="math inline">\(i \in \{1,\dots,V\}\)</span> to the masked state <span class="math inline">\(M\)</span>, and once in <span class="math inline">\(M\)</span> the process remains there. Thus, outside the diagonal, the only nonzero entries of <span class="math inline">\(Q_t\)</span> are <span class="math inline">\(Q_t(x,M)\)</span>. As it will be useful later, we denote by <span class="math inline">\(\tau\)</span> the jump time to <span class="math inline">\(M\)</span> and we assume <span class="math inline">\(\tau &lt; T\)</span> almost surely, so that <span class="math inline">\(X_T = M\)</span> with probability one, and that <span class="math inline">\(\tau\)</span> has a continuous distribution. In words: the process starts at some token value and at a random time <span class="math inline">\(\tau\)</span> jumps to the masked state <span class="math inline">\(M\)</span>, where it remains until time <span class="math inline">\(T\)</span>.</p>
+</section>
+<section id="extension-to-sequences" class="level3">
+<h3 class="anchored" data-anchor-id="extension-to-sequences">Extension to Sequences</h3>
+<p>We are interested in modeling sequences comprised of <span class="math inline">\(L\)</span> discrete tokens, eg: binary images, genomic sequences, chemical compounds, protein sequences, etc… Each token takes value in <span class="math inline">\(\{1,2,\ldots,V\}\)</span>. We denote by <span class="math inline">\(\overline{p}_0\)</span> the data distribution over such sequences. For this purpose, we consider <span class="math inline">\(L\)</span> independent copies of the above Markov chain, one per coordinate: <span class="math display">\[
+X_t = (X_t^1, \ldots, X_t^L),
+\]</span> each with rate matrix <span class="math inline">\(Q_t\)</span> as defined previously. At time <span class="math inline">\(T\)</span>, the process reaches the fully masked sequence <span class="math inline">\(\overline{X}_T = (M, \ldots, M)\)</span> with probability one. Denote by <span class="math inline">\(\tau_i\)</span> the jump time of coordinate <span class="math inline">\(i\)</span>. Since the jump times <span class="math inline">\(\tau_i\)</span> are almost surely distinct, the infinitesimal rate matrix <span class="math inline">\(\overline{Q}_t\)</span> of the joint process is nonzero only when a single coordinate changes. If <span class="math inline">\(x,\widehat{x} \in \mathcal{X}^L\)</span> differ by a single coordinate <span class="math inline">\(i\)</span>, we have <span class="math display">\[
+\overline{Q}_t(x,\widehat{x}) = Q_t(x^i, \widehat{x}^i).
+\]</span></p>
+<p>As before, the time-reversal has infinitesimal rate matrix <span class="math inline">\(\overline{Q}_t^{\star}\)</span> satisfying <span class="math display">\[
+\overline{Q}_t^{\star}(\widehat{x}, x) = \frac{\overline{p}_t(x)}{\overline{p}_t(\widehat{x})} \, Q_t(x^i, \widehat{x}^i),
+\]</span></p>
+<p>where <span class="math inline">\(\overline{p}_t\)</span> is the marginal distribution of <span class="math inline">\(\overline{X}_t\)</span>. Since <span class="math inline">\(x\)</span> and <span class="math inline">\(\widehat{x}\)</span> differ at coordinate <span class="math inline">\(i\)</span> only, for <span class="math inline">\(\overline{Q}_t^{\star}(\widehat{x}, x)\)</span> to be non-zero, necessarily <span class="math inline">\(\widehat{x}^i = M\)</span> and <span class="math inline">\(x^i \in \{1,\ldots,V\}\)</span>. Let <span class="math inline">\(S = \{j : x^j \neq M\}\)</span> be the set of unmasked coordinates in <span class="math inline">\(\widehat{x}\)</span>. To observe configuration <span class="math inline">\(\widehat{x}\)</span> at time <span class="math inline">\(t\)</span>, the <span class="math inline">\((L - |S|)\)</span> masked coordinates must have <span class="math inline">\(\tau &lt; t\)</span> and the <span class="math inline">\(|S|\)</span> unmasked ones <span class="math inline">\(\tau \ge t\)</span>: <span class="math display">\[
+\overline{p}_t(\widehat{x}) = \mathbb{P}(\tau &lt; t)^{L-|S|} \, \mathbb{P}(\tau \ge t)^{|S|} \, \overline{p}_0(\widehat{x}^{S}).
+\]</span></p>
+<p>Similarly, and since <span class="math inline">\(x\)</span> differs from <span class="math inline">\(\widehat{x}\)</span> only at coordinate <span class="math inline">\(i\)</span>: <span class="math display">\[
+\begin{align*}
+\overline{p}_t(x)
+&amp;= \mathbb{P}(\tau &lt; t)^{L-|S|-1} \, \mathbb{P}(\tau \ge t)^{|S|+1} \,
+\overline{p}_0(x^{S \cup \{i\}})\\
+&amp;= \mathbb{P}(\tau &lt; t)^{L-|S|-1} \, \mathbb{P}(\tau \ge t)^{|S|+1} \,
+\overline{p}_0(\widehat{x}^{S})\, \overline{p}_0(x^i \mid \widehat{x}^{S}).
+\end{align*}
+\]</span></p>
+<p>This shows that the time-reversal rate matrix becomes <span id="eq-reverse-rate-matrix"><span class="math display">\[
+\overline{Q}_t^{\star}(\widehat{x}, x) = R(t) \, \overline{p}_0(x^i \mid \widehat{x}^{S})\, Q_t(x^i, M),
+\tag{1}\]</span></span></p>
+<p>with time dependent scalar <span class="math inline">\(R(t) = \frac{\mathbb{P}(\tau \ge t)}{\mathbb{P}(\tau &lt; t)}\)</span>. To simulate the reverse process that progressively unmasks a fully masked sequence, one only needs to model the conditional distribution <span class="math inline">\(\overline{p}_0(\widehat{x}^i \mid x^{S})\)</span> of the data distribution <span class="math inline">\(\overline{p}_0\)</span>. This is precisely the prediction task of masked language models such as BERT, which estimate token probabilities conditioned on visible context.</p>
+</section>
+<section id="training" class="level3">
+<h3 class="anchored" data-anchor-id="training">Training</h3>
+<p>To train the denoising model, <a href="#eq-reverse-rate-matrix" class="quarto-xref">Equation&nbsp;1</a> shows that it is natural to parametrize the conditional distribution</p>
+<p><span class="math display">\[f_\theta(x^i \mid \widehat{x}^{S}) \approx \overline{p}_0(x^i \mid \widehat{x}^{S})\]</span></p>
+<p>for all sets <span class="math inline">\(S \subset \{1,\ldots,L\}\)</span> with <span class="math inline">\(i \notin S\)</span>. Once done, one can define the rate matrix of the time-reversal process as:</p>
+<p><span class="math display">\[
+\overline{Q}_{t,\theta}^{\star}(\widehat{x}, x) = R(t) \, f_\theta(x^i \mid \widehat{x}^{S}) \, Q_t(x^i, M).
+\]</span></p>
+<p>If one denotes by <span class="math inline">\(\mathbb{P}\)</span> the law of the forward noising process started from <span class="math inline">\(\overline{p}_0\)</span>, and by <span class="math inline">\(\mathbb{P}_{\theta}\)</span> the law of the time-reversal process started from the fully masked sequence <span class="math inline">\((M,M, \ldots, M)\)</span> at time <span class="math inline">\(T\)</span> and with learned denoising model <span class="math inline">\(f_\theta\)</span>, one can train the model by minimizing</p>
+<p><span class="math display">\[
+D_{\text{KL}} {\left(  \mathbb{P}\; || \; \mathbb{P}_{\theta}  \right)}  = \mathbb{E}_{\mathbb{P}}  {\left(  \log \frac{\mathbb{P}}{\mathbb{P}_{\theta}}  \right)} .
+\]</span></p>
+<p>Consider a trajectory <span class="math inline">\(x_{[0,T]}\)</span> of the forward noising process. The jump at time <span class="math inline">\(\tau_i\)</span> of the <span class="math inline">\(i\)</span>-th coordinate is denoted by <span class="math inline">\(\Delta_i: = (x_{\tau_i^-}^i, x_{\tau_i^+}^i) = (x_0^i, M)\)</span>. For simplifying the notations, we denote the reverse jump by <span class="math inline">\(\Delta_i^{\star}\)</span>. The log-likelihood ratio between the two processes is easily shown to be:</p>
+<p><span class="math display">\[
+\log \frac{\mathbb{P}}{\mathbb{P}_{\theta}}(x_{[0,T]}) = \log \overline{p}_0(x_0) + \sum_i \log \frac{\overline{Q}_{\tau_i}(\Delta_i)}{\overline{Q}^{\star}_{\tau_i, \theta}(\Delta_i^{\star})} - \int_0^T  {\left\{  \overline{J}_t(x_t) - \overline{J}^{\star}_{t,\theta}(x_t)  \right\}}  \, dt,
+\]</span></p>
+<p>where <span class="math inline">\(\overline{J}_t\)</span> and <span class="math inline">\(\overline{J}^{\star}_{t,\theta}\)</span> are the total jump rates of the forward and reverse processes respectively. Since <span class="math inline">\(\overline{J}^{\star}_{t,\theta}(x_t)\)</span> in fact does not depend on <span class="math inline">\(\theta\)</span>, minimizing the KL divergence is equivalent to minimizing:</p>
+<p><span class="math display">\[
+-\mathbb{E}_{\mathbb{P}}  {\left(  \sum_{i=1}^L \log f_\theta(X_0^i \mid X_{\tau_i}^{S_{{\tau_i}}})  \right)}
+\]</span></p>
+<p>where <span class="math inline">\(S_t\)</span> is the set of unmasked coordinates at time <span class="math inline">\(t\)</span>. It is more convenient to rewrite this quantity as an integral over time so that one can sample a time <span class="math inline">\(t\)</span> uniformly in <span class="math inline">\([0,T]\)</span> during training. With the Dirac delta function <span class="math inline">\(\delta[\tau_i = t]\)</span>, we can rewrite this expectation as:</p>
+<p><span class="math display">\[
+\begin{align*}
+-\mathbb{E}_{\mathbb{P}}  {\left(  \sum_{i=1}^L \log f_\theta(X_0^i \mid X_{\tau_i}^{S_{i}})  \right)}
+&amp;=
+-\mathbb{E}_{\mathbb{P}} \int_{t=0}^{T} \sum_{i=1}^L \delta[\tau_i = t] \, \log f_\theta(X_0^i \mid X_{t}^{S_{t}}) \, dt\\
+&amp;=
+-\int_{t=0}^{T} \frac{\dot{\beta_t}}{\beta_t} \sum_{i: \, x_t^i=M} \log f_\theta(X_0^i \mid X_{t}^{S_{t}}) \, dt
+\end{align*}
+\]</span></p>
+<p>where <span class="math inline">\(\beta_t = \mathbb{P}(\tau \le t)\)</span> so that <span class="math inline">\(\mathbb{P}(\tau \in dt | \tau \le t) = \frac{\dot{\beta_t}}{\beta_t} \, dt\)</span>. For training, it suffices to sample <span class="math inline">\(t\)</span> uniformly in <span class="math inline">\([0,T]\)</span>, then choose <span class="math inline">\(X_0 \sim \overline{p}_0\)</span>, then sample the noised configuration <span class="math inline">\(X_t\)</span> according to the forward process, and finally obtain an unbiased estimate of the loss. The term <span class="math inline">\(\dot{\beta_t}/\beta_t\)</span> is large for small <span class="math inline">\(t\)</span>, counter-balancing the fact that the reconstruction task is much easier when only a few tokens are masked. For standard denoising <a href="../../notes/DDPM/DDPM.html">diffusion model</a>, there is a similar “signal-to-noise” weighting term that balances the easy and hard denoising tasks.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>Discrete diffusion models with one-way masking are mathematically almost identical to masked language models. Hence their similar behavior and performance on text generation tasks are not coincidental. The ideas summarized in these notes were developed in a very interesting stream of papers, including <span class="citation" data-cites="ou2024your">(<a href="#ref-ou2024your" role="doc-biblioref"><strong>ou2024your?</strong></a>)</span>, <span class="citation" data-cites="sahoo2024simple">(<a href="#ref-sahoo2024simple" role="doc-biblioref"><strong>sahoo2024simple?</strong></a>)</span>, <span class="citation" data-cites="shi2024simplified">(<a href="#ref-shi2024simplified" role="doc-biblioref"><strong>shi2024simplified?</strong></a>)</span> and a number of more recent works. One of the potential drawbacks of such masked discrete diffusion models is that the support of the noising distribution is typically strictly smaller, and indeed often much smaller, than the whole state space. This means that when the denoising model is not perfect and wanders outside the support of the noising distribution, one can quickly end up in regions never seen during training. This can leads to poor sample quality and unstable behavior. Other discrete diffusion models such as the ones reaching the uniform distribution over all tokens at time <span class="math inline">\(T\)</span> are not as badly affected by this issue, although they do suffer from other important computational and modeling challenges. Exciting research directions remain to be explored in this area!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

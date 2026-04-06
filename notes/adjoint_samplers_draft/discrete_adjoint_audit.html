@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>discrete_adjoint_audit – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#audit-discrete_adjoint.qmd" id="toc-audit-discrete_adjoint.qmd" class="nav-link active" data-scroll-target="#audit-discrete_adjoint.qmd">Audit: discrete_adjoint.qmd</a>
+  <ul class="collapse">
+  <li><a href="#critical-issues-must-fix" id="toc-critical-issues-must-fix" class="nav-link" data-scroll-target="#critical-issues-must-fix">Critical Issues (must fix)</a></li>
+  <li><a href="#sign-convention-notation-issues" id="toc-sign-convention-notation-issues" class="nav-link" data-scroll-target="#sign-convention-notation-issues">Sign Convention / Notation Issues</a></li>
+  <li><a href="#redundancy" id="toc-redundancy" class="nav-link" data-scroll-target="#redundancy">Redundancy</a></li>
+  <li><a href="#overselling-complexity" id="toc-overselling-complexity" class="nav-link" data-scroll-target="#overselling-complexity">Overselling / Complexity</a></li>
+  <li><a href="#missing-connections" id="toc-missing-connections" class="nav-link" data-scroll-target="#missing-connections">Missing Connections</a></li>
+  <li><a href="#structural-feedback" id="toc-structural-feedback" class="nav-link" data-scroll-target="#structural-feedback">Structural Feedback</a></li>
+  <li><a href="#minor-stylistic" id="toc-minor-stylistic" class="nav-link" data-scroll-target="#minor-stylistic">Minor / Stylistic</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="audit-discrete_adjoint.qmd" class="level1">
+<h1>Audit: discrete_adjoint.qmd</h1>
+<section id="critical-issues-must-fix" class="level2">
+<h2 class="anchored" data-anchor-id="critical-issues-must-fix">Critical Issues (must fix)</h2>
+<ol type="1">
+<li><p><strong>gKL argument order in the DAM loss may be wrong.</strong> Line 166 writes:</p>
+<pre><code>D_gKL(u_theta(., X_t, t), r_t(., X_t) . a_t(.; X_1))</code></pre>
+<p>With the standard Bregman/gKL convention <span class="math inline">\(D_f(a, b) = a\log(a/b) - a + b\)</span> (which the note uses at line 156), the minimizer of <span class="math inline">\(\mathbb{E}[D_f(c, W)]\)</span> over the first argument <span class="math inline">\(c\)</span> satisfies <span class="math inline">\(f'(c) = \mathbb{E}[f'(W)]\)</span>, which for <span class="math inline">\(f = a\log a - a\)</span> gives <span class="math inline">\(c = \exp(\mathbb{E}[\log W])\)</span> (the geometric mean), not <span class="math inline">\(c = \mathbb{E}[W]\)</span> (the arithmetic mean). To recover <span class="math inline">\(u^\star = r \cdot \mathbb{E}[\tilde{a}]\)</span>, one needs to minimize over the SECOND argument: <span class="math inline">\(\min_c \mathbb{E}[D_f(W, c)]\)</span>, which gives <span class="math inline">\(c = \mathbb{E}[W]\)</span>. The DAM paper (eq. dam) places <span class="math inline">\(u_\theta\)</span> in the first argument too, but their stated property “<span class="math inline">\(\mathbb{E}\xi = \arg\min_c \mathbb{E} D_f(\xi \| c)\)</span>” is about optimizing the second argument.</p>
+<p><strong>Fix</strong>: Either swap the argument order to <span class="math inline">\(D_\text{gKL}(r_t \cdot \tilde{a}_t, u_\theta)\)</span>, or add a sentence explaining that the fixed-point argument does not rely on the Bregman mean property but rather on a direct verification that <span class="math inline">\(u^\star\)</span> is a critical point (which it is, since <span class="math inline">\(\tilde{a}_t\)</span> becomes deterministic when conditioned on <span class="math inline">\(X_t\)</span> at optimality… but it doesn’t become deterministic, <span class="math inline">\(X_1\)</span> is still random). This needs careful thought. The DASBS paper avoids this issue by stating the result as a variational characterization with the correct Bregman convention. Cross-check with DASBS eq. (varphi_star_tsm) which optimizes the second argument of <span class="math inline">\(D_f\)</span>.</p></li>
+<li><p><strong>Notation clash: <span class="math inline">\(\phi_t\)</span> vs <span class="math inline">\(\varphi_t\)</span>.</strong> The note uses <span class="math inline">\(\phi_t\)</span> for the SB potential (lines 35, 38, 136, 192), while the continuous notes (<code>adjoint_sampling.qmd</code>, <code>BMS.qmd</code>) consistently use <span class="math inline">\(\varphi_t\)</span> and <span class="math inline">\(\widehat{\varphi}_t\)</span>. Both source papers (DASBS and DAM) also use <span class="math inline">\(\varphi_t\)</span>. Using <span class="math inline">\(\phi_t\)</span> in the discrete note breaks the unified notation promise from the project CLAUDE.md. Worse, <span class="math inline">\(\phi\)</span> already appears as the convex function generating the Bregman divergence (line 159: “the convex function <span class="math inline">\(\phi(a) = a \log a - a\)</span>”), creating ambiguity.</p>
+<p><strong>Fix</strong>: Replace all instances of <span class="math inline">\(\phi_t\)</span> / <span class="math inline">\(\widehat{\phi}_t\)</span> with <span class="math inline">\(\varphi_t\)</span> / <span class="math inline">\(\widehat{\varphi}_t\)</span> throughout the note.</p></li>
+<li><p><strong>Missing normalization in the Doob h-transform transition kernel (line 136).</strong> The note writes:</p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(p^{u^\star}_{1|t}(z \mid x) = p^r_{1|t}(z \mid x) \cdot e^{-g(z)}/\phi_t(x)\)</span></p>
+</blockquote>
+<p>This is correct IF <span class="math inline">\(\phi_t(x) = \sum_z p^r_{1|t}(z \mid x) e^{-g(z)}\)</span>, which the note defines at line 38. But the note defines <span class="math inline">\(\phi_t(x) = \mathbb{E}_\mathbb{P}[e^{-g(X_1)} \mid X_t = x]\)</span>, which is the same thing. So this is consistent, but the note should clarify that this is the <span class="math inline">\(\phi_t\)</span> from line 38 to avoid confusion (currently the connection is implicit and the reader must verify it).</p></li>
+</ol>
+</section>
+<section id="sign-convention-notation-issues" class="level2">
+<h2 class="anchored" data-anchor-id="sign-convention-notation-issues">Sign Convention / Notation Issues</h2>
+<ol start="4" type="1">
+<li><p><strong>Sign of <span class="math inline">\(g\)</span> is context-dependent and potentially confusing across notes.</strong> In <code>adjoint_sampling.qmd</code>, <span class="math inline">\(g(x) = \log p_1^{\text{base}}(x) - \log \pi(x)\)</span> (a cost, minimized). In <code>adjoint_matching.qmd</code>, <span class="math inline">\(g\)</span> plays the role of <span class="math inline">\(-r\)</span> (negative reward). In <code>discrete_adjoint.qmd</code>, <span class="math inline">\(g\)</span> is introduced generically as “terminal cost” (line 32) with no explicit formula relating it to <span class="math inline">\(\pi\)</span>. Later (line 192), the modified cost <span class="math inline">\(g(x) = \log(\widehat{\phi}_1(x)/\pi(x))\)</span> appears, matching the ASBS formulation. But the relationship between <span class="math inline">\(g\)</span> and the sampling target <span class="math inline">\(\pi\)</span> is never stated for the pure SOC case (lines 28–44). A reader coming from the adjoint sampling note expects <span class="math inline">\(g = \log(p_1^{\text{base}}/\pi)\)</span>; a reader coming from the adjoint matching note expects <span class="math inline">\(g = -r\)</span>. The note should state which convention it uses.</p>
+<p><strong>Fix</strong>: Add one sentence after line 32 linking <span class="math inline">\(g\)</span> to the sampling problem, e.g., “For sampling from <span class="math inline">\(\pi\)</span>, the terminal cost is <span class="math inline">\(g(x) = -\log \pi(x) + \text{const}\)</span> when the reference stationary distribution is uniform.”</p></li>
+<li><p><strong><span class="math inline">\(V_t\)</span> sign is internally consistent but opposite to the DAM paper.</strong> The note defines <span class="math inline">\(V_t = \log \phi_t\)</span> (line 38), a “reward-to-go” convention matching the HJB notes. The DAM paper defines <span class="math inline">\(V_t(x) = -\log \sum_z p^{\text{base}}_{1|t}(z|x) e^{-g(z)}\)</span>, which is <span class="math inline">\(-\log \phi_t\)</span>, a “cost-to-go” convention. The resulting formulas are the same (<span class="math inline">\(u^\star = r \cdot e^{V(y)-V(x)}\)</span> in the blog vs <span class="math inline">\(u^\star = r \cdot e^{-V(y)+V(x)}\)</span> in DAM, both giving <span class="math inline">\(r \cdot \phi(y)/\phi(x)\)</span>). This is fine, but a reader cross-checking the DAM paper will be confused by the sign flip. Add a one-line remark noting the sign difference, similar to the remark in <code>adjoint_matching.qmd</code> line 148.</p></li>
+<li><p><strong>Line 79: exponent direction in the discrete adjoint terminal condition.</strong> The note writes <span class="math inline">\(\tilde{a}_1(y; X_1) = e^{g(X_1) - g(y)}\)</span>. Cross-checking: the DAM paper (eq. lean-adj-dyn) gives terminal condition <span class="math inline">\(a_1(y) = e^{-g(y) + g(X_1)}\)</span>, which is the same. The DASBS paper gives <span class="math inline">\(\varphi_1(x_1^{d \gets \triangle})/\varphi_1(x_1)\)</span>, which at <span class="math inline">\(t = 1\)</span> should equal <span class="math inline">\(e^{-g(\text{target}) + g(X_1)}\)</span> via <span class="math inline">\(\varphi_1 \propto e^{-g}\)</span>. Consistent. No issue here.</p></li>
+<li><p><strong>Line 125: sign in the continuous identity.</strong> The note says the continuous analogue is “<span class="math inline">\(\mathbb{E}[\nabla g(X_1) \mid X_t = x] = -\nabla V(t,x)\)</span>”. In <code>adjoint_matching.qmd</code>, the lean adjoint terminal condition is <span class="math inline">\(\tilde{a}(1) = -\nabla r(X_1)\)</span> with <span class="math inline">\(r\)</span> being the reward, so <span class="math inline">\(\tilde{a}(1) = \nabla g(X_1)\)</span> when <span class="math inline">\(g = -r\)</span>. Then <span class="math inline">\(\mathbb{E}[\tilde{a}(t) \mid X_t = x]\)</span> at optimality equals <span class="math inline">\(-\nabla V\)</span> (since <span class="math inline">\(u^\star = \sigma_t \nabla V\)</span> and <span class="math inline">\(u^\star = -\sigma_t \mathbb{E}[\tilde{a} \mid X_t]\)</span>). This is correct. But writing “<span class="math inline">\(-\nabla V\)</span>” may confuse readers since the note uses the reward-to-go convention where <span class="math inline">\(V\)</span> is positive; a reader might expect <span class="math inline">\(+\nabla V\)</span>. Adding the intermediate step <span class="math inline">\(u^\star = \sigma_t \nabla V = -\sigma_t \mathbb{E}[\tilde{a}]\)</span> would clarify.</p></li>
+</ol>
+</section>
+<section id="redundancy" class="level2">
+<h2 class="anchored" data-anchor-id="redundancy">Redundancy</h2>
+<ol start="8" type="1">
+<li><p><strong>The Setup section (lines 16–44) recapitulates material from the HJB notes and Doob notes.</strong> The path-space KL formula, the SOC objective, the Doob h-transform, and the optimal rate <span class="math inline">\(u^\star = r \cdot \phi(y)/\phi(x)\)</span> are all derived in those notes. The note adds “each summand is the generalized KL divergence” (line 24) and the remark about multiplicative vs additive structure (line 44), which are new. Consider trimming: state the path-space KL and optimal rate as results with cross-references, keep only the new observations.</p></li>
+<li><p><strong>The DASBS section (lines 182–204) partially repeats the value function bias discussion from <code>adjoint_matching.qmd</code> (lines 49–77) and the SB decomposition from <code>adjoint_sampling.qmd</code> (lines 151–177).</strong> The bias explanation (line 184), the SB path measure decomposition (line 189), and the boundary conditions (line 192) are all covered in the continuous notes. The new content is the alternating scheme specifics (lines 195–203) and the empirical finding about memoryless schedules (line 204). Consider tightening: one sentence citing the continuous notes for the bias/decomposition, then jump to the alternating scheme.</p></li>
+<li><p><strong>Lines 70–75 restate the continuous adjoint from <code>adjoint_matching.qmd</code> and <code>adjoint_sampling.qmd</code>.</strong> The terminal condition <span class="math inline">\(\tilde{a}(1) = \nabla g(X_1)\)</span> and the zero-base-drift simplification are already derived in <code>adjoint_sampling.qmd</code> (lines 46–58). One cross-reference sentence suffices.</p></li>
+</ol>
+</section>
+<section id="overselling-complexity" class="level2">
+<h2 class="anchored" data-anchor-id="overselling-complexity">Overselling / Complexity</h2>
+<ol start="11" type="1">
+<li><strong>Line 90: “This linearity is a structural bonus” overstates the advantage.</strong> The continuous lean adjoint ODE <span class="math inline">\(\dot{\tilde{a}} = -(\nabla_x b)^\top \tilde{a}\)</span> is also linear in <span class="math inline">\(\tilde{a}\)</span> (it is a linear ODE with time-dependent coefficients). The difference is that in the continuous case the coefficients depend on <span class="math inline">\(X_t\)</span> (through <span class="math inline">\(\nabla_x b(X_t, t)\)</span>), making it a stochastic linear ODE that must be solved along each trajectory. In the discrete case, <span class="math inline">\(r_t(z, y)\)</span> does not depend on the current state <span class="math inline">\(X_t\)</span>, so the ODE is deterministic. The bonus is determinism, not linearity per se.</li>
+</ol>
+<p><strong>Fix</strong>: Replace “This linearity is a structural bonus: in the continuous case, the ODE is generally nonlinear through the drift Jacobian” with something like “Because the reference rates <span class="math inline">\(r_t(z,y)\)</span> do not depend on the current state <span class="math inline">\(X_t\)</span>, this ODE is deterministic and can be solved offline. In the continuous case, <span class="math inline">\(\nabla_x b\)</span> depends on <span class="math inline">\(X_t\)</span>, making the lean adjoint a stochastic ODE that must be integrated along each trajectory.”</p>
+<ol start="12" type="1">
+<li><p><strong>The Dynkin’s formula details block (lines 128–146) is more complex than needed.</strong> The “more directly” derivation (lines 136–145) is clean and self-contained. The Dynkin route (lines 130–134) is vague (“produces telescoping cancellations”) and does not add clarity. Consider dropping the Dynkin paragraph and keeping only the direct computation.</p></li>
+<li><p><strong>Line 159: “the Bregman divergence property” is stated without proof or reference.</strong> The claim that <span class="math inline">\(\min_u \mathbb{E}[D_\text{gKL}(u, W)] = \mathbb{E}[W]\)</span> is presented as if obvious. As noted in Critical Issue 1, this property holds when minimizing over the SECOND argument. The note optimizes the FIRST argument. This needs either a proof or a correction.</p></li>
+</ol>
+</section>
+<section id="missing-connections" class="level2">
+<h2 class="anchored" data-anchor-id="missing-connections">Missing Connections</h2>
+<ol start="14" type="1">
+<li><p><strong>No connection to masked diffusion models.</strong> The <code>DiscreteDiff.qmd</code> note develops CTMCs with a masking structure. The DAM paper’s practical algorithm (Section “Adaptation to masked diffusion models”) shows that the optimal rate inherits the masking structure from the base rate, reducing the modeling complexity from <span class="math inline">\(O(M^N)\)</span> to <span class="math inline">\(O(MN)\)</span>. This is a major practical insight that the blog note omits entirely. Adding even a brief remark would help the reader see how the abstract theory connects to the masked LLM fine-tuning application.</p></li>
+<li><p><strong>No mention of how sampling from <span class="math inline">\(p^r_{1|t}(\cdot \mid y)\)</span> works in practice.</strong> The closed form (line 97) requires the reference transition kernel <span class="math inline">\(p^r_{1|t}(z \mid y)\)</span>. The DASBS paper (Proposition 9) gives the closed form for the uniform rate on <span class="math inline">\(\mathbb{Z}_N^D\)</span>: a product of independent categorical distributions, one per coordinate, with explicit formulas. The note mentions “efficient computation” (line 67) but never gives the explicit kernel or explains why it factorizes across coordinates.</p></li>
+<li><p><strong>No connection to Nelson’s relation in the discrete setting.</strong> The <code>BMS.qmd</code> note develops Nelson’s relation <span class="math inline">\(u + v = \sigma_t \nabla \log p_t\)</span> for the continuous case. The discrete analogue, relating forward and backward rates through the marginal distribution, is: <span class="math inline">\(u^\star_t(y,x)/u^{\star,\text{rev}}_t(x,y) = p^\star_t(y)/p^\star_t(x)\)</span>. This is just detailed balance. Mentioning this connection would unify the discrete and continuous perspectives.</p></li>
+<li><p><strong>The comparison table (lines 209–218) could include the “corrector target” row for the DASBS case.</strong> Currently the corrector row says “<span class="math inline">\(\widehat{\phi}_1(y)/\widehat{\phi}_1(x)\)</span> (ratio)” but does not distinguish between the adjoint matching and denoising matching approaches for learning it. The DASBS paper emphasizes that the denoising matching approach works without the additive property.</p></li>
+<li><p><strong>Missing: why generalized KL is a Bregman divergence.</strong> Line 159 states this but does not show it. The connection is: <span class="math inline">\(D_\text{gKL}(u, w) = \phi(u) - \phi(w) - (u - w)\phi'(w)\)</span> with <span class="math inline">\(\phi(a) = a\log a - a\)</span>, so <span class="math inline">\(\phi'(a) = \log a\)</span>. One line of algebra would make this concrete.</p></li>
+</ol>
+</section>
+<section id="structural-feedback" class="level2">
+<h2 class="anchored" data-anchor-id="structural-feedback">Structural Feedback</h2>
+<ol start="19" type="1">
+<li><p><strong>The note lacks a historical figure portrait at the top.</strong> All other notes in the series have one (or a TODO placeholder for one). Consider adding a portrait of e.g., Andrey Kolmogorov (for the backward equation used in the verification) or Joseph Doob (for the h-transform that drives the whole construction).</p></li>
+<li><p><strong>The “Additive noise on cyclic groups” section could be merged with or placed after the adjoint estimator section.</strong> Currently the flow is: Setup -&gt; Additive noise -&gt; Adjoint estimator -&gt; Matching loss -&gt; DASBS. The additive noise section (lines 47–68) is a technical ingredient used only in the matching loss section (lines 171–179). Moving it there would tighten the narrative: Setup -&gt; Adjoint estimator -&gt; Matching loss (which introduces the additive property when needed) -&gt; DASBS.</p></li>
+<li><p><strong>The DASBS section (lines 182–204) is thin relative to the source paper.</strong> The alternating scheme gets 10 lines. The convergence guarantee (Theorem 4 in the DASBS paper, analogous to IPFP convergence) is mentioned as “convergence follows from the same contraction argument” without stating the result. Either flesh this out or explicitly flag it as “see the DASBS paper for the convergence proof.”</p></li>
+<li><p><strong>No bibliography entries.</strong> Lines 221–233 contain commented-out BibTeX with placeholder arXiv IDs (<code>arXiv:2506.xxxxx</code>). These need to be filled in and added to <code>ref.bib</code> before the note can be published.</p></li>
+</ol>
+</section>
+<section id="minor-stylistic" class="level2">
+<h2 class="anchored" data-anchor-id="minor-stylistic">Minor / Stylistic</h2>
+<ol start="23" type="1">
+<li><p><strong>Line 51: “each state <span class="math inline">\(x = (x^1, \ldots, x^D)\)</span> with <span class="math inline">\(x^d \in \{0, 1, \ldots, N-1\}\)</span>” is a sentence fragment.</strong> Should read “each state is <span class="math inline">\(x = (x^1, \ldots, x^D)\)</span> with <span class="math inline">\(x^d \in \{0, 1, \ldots, N-1\}\)</span>” or similar.</p></li>
+<li><p><strong>Line 56: Hamming distance restriction is introduced without motivation.</strong> Why restrict to <span class="math inline">\(d_H(y,x) = 1\)</span>? This is standard in discrete diffusion (one-coordinate-at-a-time jumps), but a reader unfamiliar with the convention would benefit from a brief justification. Even “restricting to single-coordinate jumps keeps the rate matrix sparse and the computation per step <span class="math inline">\(O(DN)\)</span>” would suffice.</p></li>
+<li><p><strong>Line 159: <span class="math inline">\(\phi\)</span> is overloaded.</strong> The convex function generating the Bregman divergence is called <span class="math inline">\(\phi(a) = a \log a - a\)</span>, while the SB potential is also called <span class="math inline">\(\phi_t\)</span>. Rename one. Since the SB potential should be <span class="math inline">\(\varphi_t\)</span> anyway (Issue 2), fixing Issue 2 resolves this.</p></li>
+<li><p><strong>Line 169: <span class="math inline">\(\bar{u} = \texttt{sg}(u_\theta)\)</span>.</strong> The notation <span class="math inline">\(\texttt{sg}\)</span> appears without definition in this note (it is defined in <code>adjoint_matching.qmd</code> as stop-gradient). Add “(stop-gradient)” on first use, as is done in <code>adjoint_sampling.qmd</code>.</p></li>
+<li><p><strong>Line 87: the sum <span class="math inline">\(\sum_z r_t(z,y)\)</span> should specify <span class="math inline">\(z \neq y\)</span> or clarify that <span class="math inline">\(r_t\)</span> includes the diagonal.</strong> The rate matrix convention matters: if <span class="math inline">\(r_t(z, y)\)</span> for <span class="math inline">\(z \neq y\)</span> is the off-diagonal rate, then the sum should be <span class="math inline">\(\sum_{z \neq y}\)</span>. If <span class="math inline">\(r_t\)</span> is the full generator (with negative diagonal), then <span class="math inline">\(\sum_z\)</span> is correct. The note uses off-diagonal rates at line 16 (“the infinitesimal probability per unit time of jumping from state <span class="math inline">\(x\)</span> to state <span class="math inline">\(y \neq x\)</span>”), so line 87 should sum over <span class="math inline">\(z \neq y\)</span> for consistency, or clarify that the full rate matrix (including diagonal) is used here. The verification block (line 109) uses <span class="math inline">\(\sum_w r_t(w,y)\)</span> with <span class="math inline">\(w\)</span> ranging over all states (including <span class="math inline">\(w = y\)</span>), relying on the full generator convention. This inconsistency in convention should be resolved.</p></li>
+</ol>
+<p><strong>Fix</strong>: Either (a) explicitly state at line 87 that <span class="math inline">\(r_t(z,y)\)</span> here denotes the full generator (with <span class="math inline">\(r_t(y,y) = -\sum_{z \neq y} r_t(z,y)\)</span>), or (b) write <span class="math inline">\(\sum_{z \neq y}\)</span> and add the diagonal term explicitly.</p>
+<ol start="28" type="1">
+<li><p><strong>The comparison table (line 214) writes “Cyclic group: <span class="math inline">\(p_{1|t}(y\mid x) = q_t(y - x \bmod N)\)</span>” but the state space is <span class="math inline">\(\mathbb{Z}_N^D\)</span>, not <span class="math inline">\(\mathbb{Z}_N\)</span>.</strong> The modular arithmetic is component-wise. Minor but worth fixing: “<span class="math inline">\(q_t(y - x)\)</span>” with the understanding that subtraction is in <span class="math inline">\(\mathbb{Z}_N^D\)</span>.</p></li>
+<li><p><strong>Missing cross-reference to <code>DiscreteDiff.qmd</code> in the summary table.</strong> The note mentions the discrete diffusion notes at line 16 but the summary table (lines 207–218) does not link back to it.</p></li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

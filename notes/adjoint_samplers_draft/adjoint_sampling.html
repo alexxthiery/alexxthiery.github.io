@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Adjoint Sampling – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Adjoint Sampling – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Adjoint Sampling – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Adjoint Sampling</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">markov</div>
+                <div class="quarto-category">sampling</div>
+                <div class="quarto-category">Schrodinger bridge</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">22 03 2026</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">22 03 2026</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#can-i-learn-ustar-without-computing-h" id="toc-can-i-learn-ustar-without-computing-h" class="nav-link active" data-scroll-target="#can-i-learn-ustar-without-computing-h">Can I learn <span class="math inline">\(u^\star\)</span> without computing <span class="math inline">\(h\)</span>?</a></li>
+  <li><a href="#can-i-avoid-simulating-the-sde-to-generate-training-data" id="toc-can-i-avoid-simulating-the-sde-to-generate-training-data" class="nav-link" data-scroll-target="#can-i-avoid-simulating-the-sde-to-generate-training-data">Can I avoid simulating the SDE to generate training data?</a></li>
+  <li><a href="#what-if-the-prior-is-not-a-dirac" id="toc-what-if-the-prior-is-not-a-dirac" class="nav-link" data-scroll-target="#what-if-the-prior-is-not-a-dirac">What if the prior is not a Dirac?</a></li>
+  <li><a href="#corrector-matching" id="toc-corrector-matching" class="nav-link" data-scroll-target="#corrector-matching">Corrector matching</a></li>
+  <li><a href="#alternating-am-cm-ipfp" id="toc-alternating-am-cm-ipfp" class="nav-link" data-scroll-target="#alternating-am-cm-ipfp">Alternating AM + CM = IPFP</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<!-- TODO: Add historical figure portrait here.
+::: {style="text-align:center;"}
+![[Name](wiki_link) (dates)](./image.jpg){fig-align="center" width=35%}
+:::
+-->
+<p>The <a href="../../notes/HJB/HJB.html">HJB notes</a> left us with a clean picture and a frustrating bottleneck. To sample from a target <span class="math inline">\(\pi(x) \propto \exp(-E(x))\)</span>, start a Brownian motion at <span class="math inline">\(X_0 = 0\)</span>, add a control drift <span class="math inline">\(u(t,x)\)</span>, and choose <span class="math inline">\(u\)</span> to minimize the stochastic optimal control cost <span id="eq-soc"><span class="math display">\[
+J(u) = \mathbb{E}_{\mathbb{P}^u} {\left[ \int_0^1 \tfrac{1}{2}\|u(t,X_t)\|^2 \, dt + g(X_1) \right]} ,
+\tag{1}\]</span></span> where <span class="math inline">\(g(x) = \log p^\text{base}_1(x) - \log \pi(x)\)</span> is the terminal cost. (Sign convention: the <a href="../../notes/HJB/HJB.html">HJB notes</a> use a maximization convention with reward <span class="math inline">\(g_\text{HJB}\)</span>; here we use minimization with cost <span class="math inline">\(g = -g_\text{HJB}\)</span>, so <span class="math inline">\(V = -J\)</span> and the optimal control takes the same form <span class="math inline">\(u^\star = \sigma_t \nabla V\)</span> in both conventions.) The controlled SDE is <span id="eq-controlled-sde"><span class="math display">\[
+dX_t = \sigma_t \, u(t,X_t) \, dt + \sigma_t \, dW_t, \qquad X_0 = 0,
+\tag{2}\]</span></span> with scalar noise schedule <span class="math inline">\(\sigma_t &gt; 0\)</span> (when <span class="math inline">\(\sigma\)</span> is a matrix, <span class="math inline">\(u^\star = \sigma_t^\top \nabla V\)</span>; the scalar case simplifies this to <span class="math inline">\(\sigma_t \nabla V\)</span>). The base process (<span class="math inline">\(u \equiv 0\)</span>) gives <span class="math inline">\(X_t \sim \mathcal{N}(0, \nu_t I)\)</span> with cumulative variance <span class="math inline">\(\nu_t = \int_0^t \sigma_s^2 \, ds\)</span>. By <a href="../../notes/girsanov/girsanov.html">Girsanov</a>, <span class="math inline">\(D_{\text{KL}}(\mathbb{P}^u \| \mathbb{P}) = \frac{1}{2} \mathbb{E}_{\mathbb{P}^u} \int_0^1 \|u\|^2 \, dt\)</span> (the <a href="../../notes/girsanov/girsanov.html">Girsanov notes</a> derive <span class="math inline">\(D_{\text{KL}}(\mathbb{P}, \mathbb{P}^u) = \frac{1}{2}\mathbb{E}_\mathbb{P}[\int \|u\|^2 dt]\)</span>; the formula with <span class="math inline">\(\mathbb{E}_{\mathbb{P}^u}\)</span> follows from an analogous calculation, or by substituting the Girsanov weight), so the SOC trades terminal cost against control effort. The optimal control is <span class="math inline">\(u^\star(t,x) = \sigma_t \nabla V(t,x)\)</span> where <span class="math inline">\(V = \log h\)</span> and <span id="eq-h-function"><span class="math display">\[
+h(t,x) = \mathbb{E} {\left[ \exp(-g(X_1)) \mid X_t = x \right]}
+\tag{3}\]</span></span> under the base process. This is the <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a>: <span class="math inline">\(h\)</span> tilts the path measure toward low-cost terminal states. The optimal control <span class="math inline">\(u^\star\)</span> points in the direction of <span class="math inline">\(\nabla \log h\)</span>, i.e.&nbsp;toward regions where <span class="math inline">\(h\)</span> is large, where the expected future cost-to-go is small, where the energy <span class="math inline">\(E\)</span> is low. At optimality the controlled path measure equals the <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a>: <span class="math inline">\(\mathbb{P}^{u^\star}(\boldsymbol{X}) = \mathbb{P}(\boldsymbol{X} \mid X_1) \, \pi(X_1)\)</span>. The <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> show that the SB minimizing <span class="math inline">\(D_{\text{KL}}(\mathbb{Q}\| \mathbb{P})\)</span> with <span class="math inline">\(\mathbb{Q}_0 = \delta_0\)</span> and <span class="math inline">\(\mathbb{Q}_1 = \pi\)</span> has <span class="math inline">\(d\mathbb{Q}/d\mathbb{P}\propto \varphi_1(X_1)\)</span> (no initial tilt, since <span class="math inline">\(\delta_0\)</span> is already the base initial distribution). This means <span class="math inline">\(\mathbb{Q}(\boldsymbol{X}) = \mathbb{P}(\boldsymbol{X} | X_1) \pi(X_1)\)</span> after normalizing the terminal potential so that <span class="math inline">\(\int \varphi_1(x) p_1^{\text{base}}(x) dx = 1\)</span>. The optimal cost is <span class="math inline">\(J(u^\star) = -\log h(0,0)\)</span>. The formula <span class="math inline">\(u^\star = \sigma_t \nabla V\)</span> is elegant; computing <span class="math inline">\(V\)</span> is not. The function <span class="math inline">\(h\)</span> in <a href="#eq-h-function" class="quarto-xref">Equation&nbsp;3</a> requires averaging <span class="math inline">\(\exp(-g)\)</span> over all possible futures of a Brownian motion, which is as hard as the original sampling problem.</p>
+<p>Three natural questions arise.</p>
+<section id="can-i-learn-ustar-without-computing-h" class="level3">
+<h3 class="anchored" data-anchor-id="can-i-learn-ustar-without-computing-h">Can I learn <span class="math inline">\(u^\star\)</span> without computing <span class="math inline">\(h\)</span>?</h3>
+<p>The <a href="../../notes/adjoint_method/adjoint.html">adjoint notes</a> provide a tool for exactly this situation. For an ODE <span class="math inline">\(\dot{x} = b(t,x)\)</span> with running cost <span class="math inline">\(f\)</span> and terminal cost <span class="math inline">\(g\)</span>, the adjoint variable <span class="math inline">\(\lambda(t) = \nabla_{X_t}[\text{future cost}]\)</span> satisfies <span class="math display">\[
+\dot{\lambda}(t) = -\nabla_x f - (\nabla_x b)^\top \lambda(t), \qquad \lambda(1) = \nabla g(X_1).
+\]</span> The full adjoint ODE for a controlled SDE with drift <span class="math inline">\(b + \sigma_t u\)</span> also contains terms involving <span class="math inline">\(\nabla_x u\)</span>: <span class="math display">\[
+\dot{a}(t) = - {\left[ \nabla_x b + \sigma_t \nabla_x u \right]} ^\top a(t) - (\nabla_x u)^\top u, \qquad a(1) = \nabla g(X_1).
+\]</span> As described in the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note, the <span class="math inline">\(u\)</span>-dependent terms (<span class="math inline">\(\sigma_t \nabla_x u^\top a\)</span> and <span class="math inline">\((\nabla_x u)^\top u\)</span>) have zero conditional expectation at optimality. Dropping them does not change the fixed point but reduces gradient variance. The resulting <em>lean adjoint</em> <span class="math inline">\(\tilde{a}(t)\)</span> satisfies <span class="math display">\[
+\dot{\tilde{a}}(t) = -(\nabla_x b)^\top \tilde{a}(t), \qquad \tilde{a}(1) = \nabla g(X_1),
+\]</span> which depends only on the base drift <span class="math inline">\(b\)</span>, not on the control <span class="math inline">\(u\)</span>. This is a practical win: no need to compute <span class="math inline">\(\nabla_x u\)</span>, which is expensive for neural network parameterizations.</p>
+<p>Now set <span class="math inline">\( \textcolor{blue}{b = 0}\)</span> and <span class="math inline">\( \textcolor{blue}{f = 0}\)</span>: the base process is pure scaled Brownian motion, and the running cost is just the control penalty (which does not enter the lean adjoint). Both forcing terms vanish. The lean adjoint ODE becomes <span class="math inline">\(\dot{\tilde{a}} = 0\)</span> with terminal condition <span class="math inline">\(\tilde{a}(1) = \nabla g(X_1)\)</span>. So <span id="eq-constant-adjoint"><span class="math display">\[
+\textcolor{blue}{\tilde{a}(t; \boldsymbol{X}) = \nabla g(X_1)}, \qquad \text{for all } t \in [0,1].
+\tag{4}\]</span></span> No backward ODE to solve. The regression target at every time <span class="math inline">\(t\)</span> is just the terminal gradient <span class="math inline">\(\nabla g(X_1)\)</span>.</p>
+<p>The intuition is clean. This decomposition <span class="math inline">\(X_1 = X_t + \int_t^1 \sigma_s \, dW_s\)</span> holds for the <em>base process</em> (<span class="math inline">\(u = 0\)</span>). Under the base process, the two pieces <span class="math inline">\(X_t\)</span> and <span class="math inline">\(\int_t^1 \sigma_s dW_s\)</span> are independent: Brownian increments do not remember the past. Holding the future noise realization fixed and perturbing <span class="math inline">\(X_t\)</span> by a small displacement <span class="math inline">\(\delta X_t\)</span>, the terminal state shifts by the same amount: <span class="math inline">\(X_1 \mapsto X_1 + \delta X_t\)</span>. The sensitivity of the terminal cost to the intermediate state is therefore <span class="math inline">\(\nabla_{X_t} g(X_1) = \nabla g(X_1)\)</span> along each base trajectory, confirming <a href="#eq-constant-adjoint" class="quarto-xref">Equation&nbsp;4</a>. This argument uses the <em>base</em> process decomposition <span class="math inline">\(X_1 = X_t + \int_t^1 \sigma_s dW_s\)</span>, which holds for <span class="math inline">\(u = 0\)</span>. Along <em>controlled</em> trajectories, <span class="math inline">\(X_1\)</span> depends nonlinearly on <span class="math inline">\(X_t\)</span> through <span class="math inline">\(u\)</span>, and the full adjoint <span class="math inline">\(a(t) \neq \nabla g(X_1)\)</span>. The lean adjoint is constant because it is defined using the base dynamics (<span class="math inline">\(b = 0\)</span>), not the controlled dynamics. Its virtue is that it avoids computing <span class="math inline">\(\nabla_x u\)</span> while having the same fixed point as the full adjoint. This is the simplest possible adjoint: the base dynamics offer no resistance to perturbations, so the terminal gradient propagates unchanged backward through time.</p>
+<p>The <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> loss with target <a href="#eq-constant-adjoint" class="quarto-xref">Equation&nbsp;4</a> is <span id="eq-am-loss"><span class="math display">\[
+L_\text{AM}(u) = \mathbb{E}_{\boldsymbol{X} \sim \mathbb{P}^{\bar{u}}}  {\left[  \int_0^1 \tfrac{1}{2}\|u(t,X_t) + \sigma_t \, \nabla g(X_1)\|^2 \, dt \right]} ,
+\tag{5}\]</span></span> where <span class="math inline">\(\bar{u} = \texttt{stopgrad}(u)\)</span>: trajectories are simulated with the current (frozen) parameters, and gradients only flow through the <span class="math inline">\(u_\theta\)</span> term inside the square. Concretely, for each trajectory the computational graph is: simulate <span class="math inline">\(X_0 \to X_1\)</span> using <span class="math inline">\(\bar{u}\)</span> (no gradient), compute <span class="math inline">\(\nabla g(X_1)\)</span> (one energy gradient call), then for each saved <span class="math inline">\((t, X_t)\)</span> along the path, evaluate <span class="math inline">\(\|u_\theta(t, X_t) + \sigma_t \nabla g(X_1)\|^2\)</span> and backpropagate through <span class="math inline">\(u_\theta\)</span> only. This regresses <span class="math inline">\(u(t, X_t)\)</span> onto <span class="math inline">\(-\sigma_t \nabla g(X_1)\)</span> at each <span class="math inline">\((t, X_t)\)</span> pair along the trajectory. The unique fixed point is <span class="math inline">\(u^\star(t,x) = -\sigma_t \, \mathbb{E}_{\mathbb{P}^{u^\star}}[\nabla g(X_1) \mid X_t = x]\)</span> (exchanging <span class="math inline">\(\nabla\)</span> and <span class="math inline">\(\mathbb{E}\)</span>, valid under regularity of <span class="math inline">\(g\)</span>): the conditional expectation, under the optimally controlled process, of the terminal gradient. Comparing with <span class="math inline">\(u^\star = \sigma_t \nabla \log h\)</span>, the adjoint target <span class="math inline">\(\nabla g(X_1)\)</span> is a stochastic estimate of <span class="math inline">\(-\nabla V(t, X_t)\)</span>; the regression averages many noisy terminal gradients to recover the smooth gradient of the value function.</p>
+<p>This is just mean-squared-error regression. No backward ODE, no Hessians, no importance weights. For each trajectory, evaluate <span class="math inline">\(\nabla g\)</span> once at the endpoint, and you have training signal at every intermediate time. But there is still a computational bottleneck: each gradient step on <a href="#eq-am-loss" class="quarto-xref">Equation&nbsp;5</a> requires simulating the controlled SDE forward (to produce trajectories), and evaluating the energy function at <span class="math inline">\(X_1\)</span>. Both operations are expensive. The next section removes the first cost almost entirely.</p>
+</section>
+<section id="can-i-avoid-simulating-the-sde-to-generate-training-data" class="level3">
+<h3 class="anchored" data-anchor-id="can-i-avoid-simulating-the-sde-to-generate-training-data">Can I avoid simulating the SDE to generate training data?</h3>
+<p>The loss <a href="#eq-am-loss" class="quarto-xref">Equation&nbsp;5</a> only depends on the pair <span class="math inline">\((X_t, X_1)\)</span>, not the full trajectory: <span id="eq-am-pairs"><span class="math display">\[
+L_\text{AM}(u) = \int_0^1 \mathbb{E}_{(X_t, X_1) \sim p^{\bar{u}}_{t,1}}  {\left[ \tfrac{1}{2}\|u(t,X_t) + \sigma_t \nabla g(X_1)\|^2 \right]}  \, dt.
+\tag{6}\]</span></span> Sampling these pairs still requires simulating the controlled SDE forward, which is the expensive part. The key practical innovation is to replace the joint <span class="math inline">\(p^{\bar{u}}_{t,1}(x_t, x_1)\)</span> with the product <span id="eq-reciprocal-joint"><span class="math display">\[
+p^\text{base}_{t \mid 1}(x_t \mid x_1) \cdot p^{\bar{u}}_1(x_1).
+\tag{7}\]</span></span> Keep the terminal marginal from the current control, but fill in the interior with the base Brownian bridge. This decouples the expensive step (generating <span class="math inline">\(X_1\)</span>) from the cheap step (sampling <span class="math inline">\(X_t\)</span> given <span class="math inline">\(X_1\)</span>).</p>
+<p><strong>The bridge formula.</strong> Under the base process, <span class="math inline">\(X_t \sim \mathcal{N}(0, \nu_t I)\)</span> and <span class="math inline">\(X_1 = X_t + Z\)</span> where <span class="math inline">\(Z = \int_t^1 \sigma_s \, dW_s \sim \mathcal{N}(0, (\nu_1 - \nu_t)I)\)</span> is independent of <span class="math inline">\(X_t\)</span>. The pair <span class="math inline">\((X_t, X_1)\)</span> is jointly Gaussian with <span class="math inline">\(\mathbb{E}[X_t] = 0\)</span>, <span class="math inline">\(\mathbb{E}[X_1] = 0\)</span>, <span class="math inline">\(\mathop{\mathrm{Var}}(X_t) = \nu_t I\)</span>, <span class="math inline">\(\mathop{\mathrm{Var}}(X_1) = \nu_1 I\)</span>, and <span class="math inline">\(\mathop{\mathrm{Cov}}(X_t, X_1) = \nu_t I\)</span> (since <span class="math inline">\(\mathop{\mathrm{Cov}}(X_t, X_t + Z) = \mathop{\mathrm{Var}}(X_t)\)</span>). Standard Gaussian conditioning (cf.&nbsp;the <a href="../../notes/doob_transforms/doob.html">Brownian bridge</a> in the Doob notes) gives <span id="eq-bridge"><span class="math display">\[
+X_t \mid X_1 = x_1 \;\sim\; \mathcal{N} {\left( \frac{\nu_t}{\nu_1} \, x_1, \;\; \frac{\nu_t(\nu_1 - \nu_t)}{\nu_1} \, I \right)} .
+\tag{8}\]</span></span> Sampling from <a href="#eq-bridge" class="quarto-xref">Equation&nbsp;8</a> is a single Gaussian draw: <span class="math inline">\(X_t = \frac{\nu_t}{\nu_1} x_1 + \sqrt{\frac{\nu_t(\nu_1 - \nu_t)}{\nu_1}} \, \xi\)</span> with <span class="math inline">\(\xi \sim \mathcal{N}(0, I)\)</span>. For constant <span class="math inline">\(\sigma_t = \sigma\)</span>, we have <span class="math inline">\(\nu_t = \sigma^2 t\)</span> and <a href="#eq-bridge" class="quarto-xref">Equation&nbsp;8</a> simplifies to <span class="math inline">\(X_t \mid X_1 \sim \mathcal{N}(t \, x_1, \sigma^2 t(1-t) I)\)</span>, the classical Brownian bridge.</p>
+<details>
+<summary>
+The Gaussian conditioning, spelled out.
+</summary>
+<p style="color: blue;">
+Write <span class="math inline">\(X_1 = X_t + Z\)</span> with <span class="math inline">\(Z \sim \mathcal{N}(0, (\nu_1 - \nu_t)I)\)</span> independent of <span class="math inline">\(X_t\)</span>. The joint <span class="math inline">\((X_t, X_1)\)</span> is Gaussian, and the conditional <span class="math inline">\(X_t \mid X_1 = x_1\)</span> is also Gaussian with <span class="math display">\[
+\mathbb{E}[X_t \mid X_1 = x_1] = \mathop{\mathrm{Cov}}(X_t, X_1) \, \mathop{\mathrm{Var}}(X_1)^{-1} \, x_1 = \frac{\nu_t}{\nu_1} \, x_1,
+\]</span> <span class="math display">\[
+\mathop{\mathrm{Var}}(X_t \mid X_1) = \mathop{\mathrm{Var}}(X_t) - \mathop{\mathrm{Cov}}(X_t, X_1) \, \mathop{\mathrm{Var}}(X_1)^{-1} \, \mathop{\mathrm{Cov}}(X_1, X_t) = \nu_t  {\left( 1 - \frac{\nu_t}{\nu_1} \right)}  I = \frac{\nu_t(\nu_1 - \nu_t)}{\nu_1} \, I.
+\]</span> The conditional mean is a linear interpolation between <span class="math inline">\(0\)</span> and <span class="math inline">\(x_1\)</span>, weighted by <span class="math inline">\(\nu_t / \nu_1\)</span>. The conditional variance peaks at the midpoint and vanishes at <span class="math inline">\(t = 0\)</span> (since <span class="math inline">\(\nu_0 = 0\)</span>, we know <span class="math inline">\(X_0 = 0\)</span> with certainty) and at <span class="math inline">\(t = 1\)</span> (since we conditioned on <span class="math inline">\(X_1 = x_1\)</span>).
+</p>
+</details>
+<p>Substituting <a href="#eq-reciprocal-joint" class="quarto-xref">Equation&nbsp;7</a> into <a href="#eq-am-pairs" class="quarto-xref">Equation&nbsp;6</a> gives the <em>Reciprocal Adjoint Matching</em> (RAM) loss: <span id="eq-ram"><span class="math display">\[
+L_\text{RAM}(u) = \int_0^1 \lambda(t) \, \mathbb{E}_{\substack{X_1 \sim p^{\bar{u}}_1 \\ X_t \sim p^\text{base}_{t \mid 1}(\cdot \mid X_1)}}  {\left[ \tfrac{1}{2}\|u(t,X_t) + \sigma_t \nabla g(X_1)\|^2 \right]}  \, dt,
+\tag{9}\]</span></span> where <span class="math inline">\(\lambda(t) = 1/\sigma_t^2\)</span> is a time-weighting that normalizes the regression target magnitude across time (does not change the optimum). Sampling the training pair <span class="math inline">\((X_t, X_1)\)</span> now proceeds as: (1) generate <span class="math inline">\(X_1\)</span> by running the controlled SDE forward (one expensive simulation), (2) for each <span class="math inline">\(X_1\)</span>, sample <span class="math inline">\(t \sim \text{Uniform}([0,1])\)</span> and draw <span class="math inline">\(X_t\)</span> from <a href="#eq-bridge" class="quarto-xref">Equation&nbsp;8</a> (one Gaussian draw). One energy evaluation of <span class="math inline">\(\nabla g(X_1)\)</span> gives training signal for arbitrarily many <span class="math inline">\((t, X_t)\)</span> pairs.</p>
+<p><strong>Why does this substitution work?</strong> At optimality, <span class="math inline">\(\mathbb{P}^{u^\star} = \mathbb{P}^\star\)</span> is the Schrodinger bridge, which factorizes as <span class="math inline">\(\mathbb{P}(\boldsymbol{X} \mid X_1) \cdot \pi(X_1)\)</span>. Marginalizing over intermediate times, <span class="math inline">\(p^{u^\star}_{t,1}(x_t, x_1) = p^\text{base}_{t \mid 1}(x_t \mid x_1) \cdot \pi(x_1)\)</span>. At the fixed point, the replacement <a href="#eq-reciprocal-joint" class="quarto-xref">Equation&nbsp;7</a> is exact. Away from optimality, the replacement defines a <em>reciprocal projection</em> <span class="math inline">\(\Pi(u)\)</span>: the Schrodinger bridge with the same terminal marginal <span class="math inline">\(p^u_1\)</span> as the current control.</p>
+<details>
+<summary>
+The projection never increases the SOC cost.
+</summary>
+<p style="color: blue;">
+Write <span class="math inline">\(\text{SB}_{p^u_1}\)</span> for the Schrodinger bridge with terminal marginal <span class="math inline">\(p^u_1\)</span>, i.e.&nbsp;the path measure <span class="math inline">\(\mathbb{P}(\boldsymbol{X} \mid X_1) \, p^u_1(X_1)\)</span>. Its Radon-Nikodym derivative against <span class="math inline">\(\mathbb{P}\)</span> is <span class="math display">\[
+\frac{d[\text{SB}_{p^u_1}]}{d\mathbb{P}}(\boldsymbol{X}) = \frac{p^u_1(X_1)}{p^\text{base}_1(X_1)},
+\]</span> since <span class="math inline">\(\mathbb{P}(\boldsymbol{X} \mid X_1) = \mathbb{P}(\boldsymbol{X}) / p^\text{base}_1(X_1)\)</span>. The path-space KL from <span class="math inline">\(\mathbb{P}^u\)</span> to <span class="math inline">\(\text{SB}_{p^u_1}\)</span> is then <span class="math display">\[
+\begin{aligned}
+D_{\text{KL}}(\mathbb{P}^u \| \text{SB}_{p^u_1})
+&amp;= \mathbb{E}_{\mathbb{P}^u} {\left[ \log \frac{d\mathbb{P}^u}{d\mathbb{P}} + \log \frac{d\mathbb{P}}{d[\text{SB}_{p^u_1}]} \right]}  \\
+&amp;= \underbrace{D_{\text{KL}}(\mathbb{P}^u \| \mathbb{P})}_{\frac{1}{2}\mathbb{E}_{\mathbb{P}^u}\int \|u\|^2 \, dt} + \mathbb{E}_{\mathbb{P}^u} {\left[ \log \frac{p^\text{base}_1(X_1)}{p^u_1(X_1)} \right]} .
+\end{aligned}
+\]</span> The first term is the Girsanov KL (<a href="../../notes/girsanov/girsanov.html">Girsanov notes</a>). Now decompose the SOC cost using <span class="math inline">\(g = \log(p^\text{base}_1 / \pi) = \log(p^\text{base}_1 / p^u_1) + \log(p^u_1 / \pi)\)</span>: <span class="math display">\[
+\begin{aligned}
+J(u) &amp;= \mathbb{E}_{\mathbb{P}^u} {\left[ \tfrac{1}{2}\|u\|^2 + g(X_1) \right]}  \\
+&amp;= \underbrace{\mathbb{E}_{\mathbb{P}^u} {\left[ \tfrac{1}{2}\|u\|^2 + \log \frac{p^\text{base}_1(X_1)}{p^u_1(X_1)} \right]} }_{D_{\text{KL}}(\mathbb{P}^u \| \text{SB}_{p^u_1})} + \underbrace{\mathbb{E}_{p^u_1} {\left[ \log \frac{p^u_1(X_1)}{\pi(X_1)} \right]} }_{D_{\text{KL}}(p^u_1 \| \pi)}.
+\end{aligned}
+\]</span> The first term is the path-space KL computed above; the second is the marginal KL. The projection <span class="math inline">\(\Pi(u)\)</span> minimizes the first term over all controls sharing terminal marginal <span class="math inline">\(p^u_1\)</span>, driving the path-space KL to zero (this requires <span class="math inline">\(p^u_1\)</span> to be absolutely continuous with respect to <span class="math inline">\(p_1^{\text{base}}\)</span>, which holds for typical neural network controls). Its minimum is achieved by the SB with terminal marginal <span class="math inline">\(p^u_1\)</span>, which has drift <span class="math inline">\(\sigma_t^2 \nabla \log \varphi_t\)</span> for the appropriate Doob h-transform. Since the terminal marginal is preserved, the marginal KL is unchanged. Hence <span class="math inline">\(J(\Pi(u)) \leq J(u)\)</span>.
+</p>
+</details>
+<p>After projection, RAM and AM coincide: <span class="math inline">\(\Pi(u)\)</span> is a SB with terminal marginal <span class="math inline">\(p^u_1\)</span>, so its path measure factorizes as <span class="math inline">\(\mathbb{P}(\cdot | X_1) p^u_1(X_1)\)</span>, and the reciprocal projection is the identity. The two losses have the same fixed point and the same critical points on the projected space. In other words, we lose nothing by using the cheaper loss, and we gain a monotone improvement guarantee.</p>
+<p><strong>The algorithm.</strong> The full Adjoint Sampling algorithm <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref"><strong>havens2025adjoint?</strong></a>)</span> alternates between two phases. The outer loop (expensive) simulates the controlled SDE forward to produce terminal samples <span class="math inline">\(\{X_1^{(i)}\}\)</span>, evaluates <span class="math inline">\(\nabla g(X_1^{(i)})\)</span>, and stores the pairs in a replay buffer <span class="math inline">\(\cB\)</span>. The inner loop (cheap) draws <span class="math inline">\((X_1, \nabla g)\)</span> from the buffer, samples <span class="math inline">\(t \sim \text{Uniform}([0,1])\)</span> and <span class="math inline">\(X_t\)</span> from the bridge <a href="#eq-bridge" class="quarto-xref">Equation&nbsp;8</a>, and updates <span class="math inline">\(u\)</span> by gradient descent on the RAM loss <a href="#eq-ram" class="quarto-xref">Equation&nbsp;9</a>. Many gradient steps per energy evaluation, since the inner loop never touches <span class="math inline">\(E\)</span>.</p>
+<p>This scheme has a clean fixed-point interpretation. Each outer step implicitly performs the reciprocal projection <span class="math inline">\(\Pi\)</span> (by freezing the terminal samples), and each inner step minimizes the AM loss on the projected control. If <span class="math inline">\(u_i\)</span> denotes the current control and we fully converge the inner loop using <span class="math inline">\(X_1\)</span> samples from <span class="math inline">\(p^{u_i}_1\)</span>, the update satisfies <span class="math display">\[
+u_{i+1} = \Pi(u_i) - \frac{\delta L_\text{AM}}{\delta u}(\Pi(u_i)).
+\]</span> The fixed point <span class="math inline">\(u = \Pi(u)\)</span> with <span class="math inline">\(\frac{\delta L_\text{AM}}{\delta u}(u) = 0\)</span> is exactly the optimal control <span class="math inline">\(u^\star\)</span>. In practice the inner loop is not converged fully: the buffer is refreshed when the control has drifted sufficiently from the stored samples.</p>
+<p>The computational savings are significant. Previous SOC-based samplers require simulating the SDE <em>and</em> backpropagating through it at every gradient step, plus at least one energy evaluation per step. Adjoint Sampling decouples sampling from optimization: the outer loop produces <span class="math inline">\(N\)</span> terminal samples per buffer refresh (each requiring one SDE simulation + one <span class="math inline">\(\nabla g\)</span> evaluation), while the inner loop does <span class="math inline">\(K \gg N\)</span> gradient updates using stored buffer entries (each requiring one Gaussian draw from <a href="#eq-bridge" class="quarto-xref">Equation&nbsp;8</a> + one forward pass of the neural network). No SDE simulation, no energy call during the inner loop. The ratio <span class="math inline">\(K/N\)</span> of gradient updates to energy evaluations can be in the hundreds. For expensive energy functions like molecular force fields, this is the difference between feasibility and infeasibility.</p>
+<p>The replay buffer also provides a form of experience replay: older samples from earlier stages of training remain in the buffer alongside fresh samples, smoothing the optimization. Buffer entries are weighted uniformly; more sophisticated prioritization schemes are possible but have not been explored.</p>
+</section>
+<section id="what-if-the-prior-is-not-a-dirac" class="level3">
+<h3 class="anchored" data-anchor-id="what-if-the-prior-is-not-a-dirac">What if the prior is not a Dirac?</h3>
+<p>The setup <span class="math inline">\(X_0 = 0\)</span> is restrictive. For molecular systems, a harmonic oscillator prior <span class="math inline">\(\mu\)</span> that starts particles near equilibrium bond lengths is a far better starting point: the transport cost is lower and convergence is faster. Even for non-molecular problems, starting from a Gaussian <span class="math inline">\(\mu = \mathcal{N}(0, I)\)</span> and using a moderate noise schedule <span class="math inline">\(\sigma_t\)</span> is more natural than pumping all the stochasticity through the Brownian motion from a single point.</p>
+<p>The base process <span class="math inline">\(\mathbb{P}\)</span> now starts from <span class="math inline">\(X_0 \sim \mu\)</span> (not <span class="math inline">\(\delta_0\)</span>), and <span class="math inline">\(\nu_t\)</span>, <span class="math inline">\(p_t^{\mathbb{P}}\)</span>, and the Brownian bridge all depend on this initial distribution. With a non-trivial prior, <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span> are coupled under the base process, and the initial value function bias from the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note reappears. The SOC optimal terminal marginal is <span class="math inline">\(p^\star(X_1) \propto \int \mathbb{P}(X_0, X_1) \, e^{-g(X_1) + V_0(X_0)} \, dX_0\)</span>, which is not proportional to <span class="math inline">\(\pi(X_1)\)</span> because the <span class="math inline">\(V_0(X_0)\)</span> factor cannot be pulled out of the integral. The memoryless condition (<span class="math inline">\(X_0 \perp X_1\)</span> under <span class="math inline">\(\mathbb{P}\)</span>) eliminates this bias by making the integral over <span class="math inline">\(X_0\)</span> collapse to a constant, but it also forces <span class="math inline">\(X_0 = 0\)</span> (or equivalently, requires a noise schedule <span class="math inline">\(\sigma_t\)</span> that injects enough noise to erase all memory of <span class="math inline">\(X_0\)</span> by time 1, as discussed in the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note).</p>
+<p>The fix comes from the <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> formulation. Instead of solving a plain SOC (which only imposes <span class="math inline">\(\mathbb{Q}_1 \approx \pi\)</span> via a terminal cost), solve the full SB problem that imposes both marginal constraints <span class="math inline">\(\mathbb{Q}_0 = \mu\)</span> and <span class="math inline">\(\mathbb{Q}_1 = \pi\)</span> simultaneously. The SB <span class="math inline">\(\mathbb{Q}^\star\)</span> minimizing <span class="math inline">\(D_{\text{KL}}(\mathbb{Q}\| \mathbb{P})\)</span> subject to these two constraints has path measure <span id="eq-sb-rn"><span class="math display">\[
+\frac{d\mathbb{Q}^\star}{d\mathbb{P}}(\boldsymbol{X}) \;\propto\; \widehat{\varphi}_0(X_0) \, \varphi_1(X_1),
+\tag{10}\]</span></span> with time-dependent SB potentials <span class="math inline">\(\varphi_t(x) = \mathbb{E}_\mathbb{P}[\varphi_1(X_1) \mid X_t = x]\)</span> and <span class="math inline">\(\widehat{\varphi}_t(x) = \mathbb{E}_\mathbb{P}[\widehat{\varphi}_0(X_0) \mid X_t = x]\)</span> (in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a>, these are defined with endpoint potentials <span class="math inline">\(f, g\)</span>; here <span class="math inline">\(\varphi_1\)</span> corresponds to <span class="math inline">\(g\)</span> and <span class="math inline">\(\widehat{\varphi}_0\)</span> to <span class="math inline">\(f\)</span>). The forward potential <span class="math inline">\(\varphi_t\)</span> is the <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a>: the SB process has drift <span class="math inline">\(b_t + \sigma_t^2 \nabla \log \varphi_t\)</span>, steering trajectories toward the target. The backward potential <span class="math inline">\(\widehat{\varphi}_t\)</span> propagates information about the prior <span class="math inline">\(\mu\)</span> forward in time.</p>
+<p>The SB <span class="math inline">\(\mathbb{Q}^\star\)</span> is also a controlled diffusion (its drift is the base drift plus <span class="math inline">\(\sigma_t^2 \nabla \log \varphi_t\)</span>), so it must solve some SOC problem with an appropriate terminal cost. What terminal cost? The SOC optimal joint from the <a href="../../notes/HJB/HJB.html">HJB notes</a> is <span class="math inline">\(p^\star(X_0, X_1) \propto \mathbb{P}(X_0, X_1) \, e^{-g(X_1) + V_0(X_0)}\)</span>, while the SB joint from <a href="#eq-sb-rn" class="quarto-xref">Equation&nbsp;10</a> is <span class="math inline">\(p^\star(X_0, X_1) \propto \mathbb{P}(X_0, X_1) \, \widehat{\varphi}_0(X_0) \, \varphi_1(X_1)\)</span>. The SOC here optimizes both the drift <span class="math inline">\(u\)</span> and the initial distribution (the HJB formulation in <a href="#eq-soc" class="quarto-xref">Equation&nbsp;1</a> jointly optimizes <span class="math inline">\(q_0\)</span> and <span class="math inline">\(u\)</span>). The SB constraint <span class="math inline">\(\mathbb{Q}_0 = \mu\)</span> pins the initial distribution, and <span class="math inline">\(\widehat{\varphi}_0\)</span> enters through this constraint. Matching the terminal tilt requires <span class="math inline">\(e^{-g(X_1)} \propto \varphi_1(X_1)\)</span>. The SB marginal constraint at <span class="math inline">\(t = 1\)</span> requires <span class="math inline">\(\pi(x) = p^\mathbb{P}_1(x) \, \widehat{\varphi}_1(x) \, \varphi_1(x)\)</span>, giving <span class="math inline">\(\varphi_1(x) = \pi(x)/(p^\mathbb{P}_1(x) \, \widehat{\varphi}_1(x))\)</span>. Substituting into <span class="math inline">\(g = -\log \varphi_1 + \text{const}\)</span> identifies the modified terminal cost: <span id="eq-modified-terminal"><span class="math display">\[
+\textcolor{blue}{g(x) = \log \frac{\widehat{\varphi}_1(x)}{\pi(x)}} + \text{const}.
+\tag{11}\]</span></span> Compared to the original <span class="math inline">\(g = \log(p^\mathbb{P}_1 / \pi)\)</span>, the base marginal <span class="math inline">\(p^\mathbb{P}_1\)</span> is replaced by <span class="math inline">\( \textcolor{blue}{\widehat{\varphi}_1}\)</span>: a corrector that accounts for the coupling between <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span>. This is the central insight from <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref"><strong>liu2025adjoint?</strong></a>)</span>: every SB problem can be recast as an SOC problem with a modified terminal cost that absorbs the prior coupling.</p>
+<p>Does this corrector actually remove the bias? Marginalize the SB joint over <span class="math inline">\(X_0\)</span>: <span id="eq-debias"><span class="math display">\[
+\begin{aligned}
+p^\star(X_1)
+&amp;\propto \varphi_1(X_1) \int \mathbb{P}(X_1 \mid X_0) \, \widehat{\varphi}_0(X_0) \, \mu(X_0) \, dX_0\\
+&amp;= \varphi_1(X_1) \, \widehat{\varphi}_1(X_1) \, p^\mathbb{P}_1(X_1) = \pi(X_1).
+\end{aligned}
+\tag{12}\]</span></span> The second step uses <span class="math inline">\(\widehat{\varphi}_1(x) \, p^\mathbb{P}_1(x) = \int \mathbb{P}_{1|0}(x \mid y) \, \widehat{\varphi}_0(y) \, \mu(y) \, dy\)</span> (the definition of <span class="math inline">\(\widehat{\varphi}_1\)</span> combined with Bayes’ rule), and the last step uses the SB marginal constraint <span class="math inline">\(\varphi_1 \, \widehat{\varphi}_1 \, p^\mathbb{P}_1 = \pi\)</span>. This is a consistency check: IF the SB potentials satisfy the Sinkhorn equations, THEN the terminal marginal is <span class="math inline">\(\pi\)</span>. The existence of potentials satisfying these constraints follows from the Sinkhorn/IPFP theory in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> (this requires <span class="math inline">\(D_{\text{KL}}(\mathbb{Q}\| \mathbb{P}) &lt; \infty\)</span> for some <span class="math inline">\(\mathbb{Q}\)</span> satisfying the marginal constraints; see the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> for conditions). The corrector <span class="math inline">\(\widehat{\varphi}_1\)</span> cancels the initial value function bias exactly. Every SB problem decomposes as: a Doob h-transform (the forward potential <span class="math inline">\(\varphi_t\)</span>, which steers trajectories toward the target) plus a corrector (the backward potential <span class="math inline">\(\widehat{\varphi}_t\)</span>, which absorbs the prior bias). The adjoint method handles the first piece; we now need a way to learn the second.</p>
+</section>
+<section id="corrector-matching" class="level3">
+<h3 class="anchored" data-anchor-id="corrector-matching">Corrector matching</h3>
+<p>The modified AM loss with terminal cost <a href="#eq-modified-terminal" class="quarto-xref">Equation&nbsp;11</a> needs <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span>, which is unknown. Since <span class="math inline">\(b = 0\)</span>, the lean adjoint is still constant (the same argument from <a href="#eq-constant-adjoint" class="quarto-xref">Equation&nbsp;4</a> applies), and the AM loss becomes <span id="eq-am-corrector"><span class="math display">\[
+L_\text{AM}(u) = \mathbb{E} {\left[ \big\|u_t(X_t) + \sigma_t  {\left( \nabla E +  \textcolor{blue}{\nabla \log \widehat{\varphi}_1} \right)} (X_1)\big\|^2 \right]}
+\tag{13}\]</span></span> where the expectation is over bridge pairs <span class="math inline">\((X_t, X_1)\)</span>. The corrector score <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span> adds one extra term alongside the energy gradient <span class="math inline">\(\nabla E\)</span>. When <span class="math inline">\(\mu = \delta_0\)</span>, we have <span class="math inline">\(\widehat{\varphi}_0 = \text{const}\)</span> (no prior information to propagate), hence <span class="math inline">\(\widehat{\varphi}_t = \text{const}\)</span> for all <span class="math inline">\(t\)</span>, and <a href="#eq-am-corrector" class="quarto-xref">Equation&nbsp;13</a> reduces to the plain AM loss <a href="#eq-am-loss" class="quarto-xref">Equation&nbsp;5</a>.</p>
+<p>To derive a learning objective for <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span>, start from the definition <span class="math inline">\(\widehat{\varphi}_t(x) = \mathbb{E}_\mathbb{P}[\widehat{\varphi}_0(X_0) \mid X_t = x]\)</span>. Converting from a backward conditional to a forward integral via Bayes’ rule (<span class="math inline">\(\mathbb{P}_{0|t}(y|x) = \mathbb{P}_{t|0}(x|y) \mu(y) / p_t^\mathbb{P}(x)\)</span>): <span class="math display">\[
+\widehat{\varphi}_t(x) = \int \widehat{\varphi}_0(y) \, \mathbb{P}_{0|t}(y | x) \, dy = \frac{\int \widehat{\varphi}_0(y) \, \mathbb{P}_{t|0}(x|y) \, \mu(y) \, dy}{p_t^\mathbb{P}(x)}.
+\]</span> Define <span class="math inline">\(\tilde{\varphi}_0(y) = \widehat{\varphi}_0(y) \cdot \mu(y)\)</span> to absorb the prior. Then <span id="eq-phi-integral"><span class="math display">\[
+\widehat{\varphi}_t(x) \, p_t^\mathbb{P}(x) = \int \mathbb{P}_{t|0}(x|y) \, \tilde{\varphi}_0(y) \, dy.
+\tag{14}\]</span></span> Take <span class="math inline">\(\nabla_x \log\)</span> of both sides (exchanging <span class="math inline">\(\nabla\)</span> and <span class="math inline">\(\int\)</span>, valid under standard regularity): <span class="math display">\[
+\nabla_x \log \widehat{\varphi}_t(x) + \nabla_x \log p_t^\mathbb{P}(x) = \frac{\int \nabla_x \mathbb{P}_{t|0}(x|y) \, \tilde{\varphi}_0(y) \, dy}{\widehat{\varphi}_t(x) \, p_t^\mathbb{P}(x)}.
+\]</span> Rewrite the numerator using <span class="math inline">\(\nabla_x \mathbb{P}_{t|0} = (\nabla_x \log \mathbb{P}_{t|0}) \, \mathbb{P}_{t|0}\)</span>: <span id="eq-log-grad-product"><span class="math display">\[
+\nabla_x \log[\widehat{\varphi}_t(x) \, p_t^\mathbb{P}(x)] = \frac{\int \nabla_x \log \mathbb{P}_{t|0}(x|y) \, \mathbb{P}_{t|0}(x|y) \, \tilde{\varphi}_0(y) \, dy}{\widehat{\varphi}_t(x) \, p_t^\mathbb{P}(x)}.
+\tag{15}\]</span></span> The ratio <span class="math inline">\(\mathbb{P}_{t|0}(x|y) \, \tilde{\varphi}_0(y) / [\widehat{\varphi}_t(x) \, p_t^\mathbb{P}(x)]\)</span> is a probability distribution over <span class="math inline">\(y\)</span>, and it is exactly the SB posterior <span class="math inline">\(p^\star(X_0 = y \mid X_t = x)\)</span>.</p>
+<details>
+<summary>
+The Bayes’ rule step.
+</summary>
+<p style="color: blue;">
+The SB joint at times <span class="math inline">\(0\)</span> and <span class="math inline">\(t\)</span> factorizes as <span class="math inline">\(p^\star(X_0, X_t) \propto \widehat{\varphi}_0(X_0) \, \mu(X_0) \, \mathbb{P}_{t|0}(X_t | X_0) \, \varphi_t(X_t)\)</span>. The posterior is <span class="math inline">\(p^\star(X_0 = y \mid X_t = x) \propto \widehat{\varphi}_0(y) \, \mu(y) \, \mathbb{P}_{t|0}(x | y) = \tilde{\varphi}_0(y) \, \mathbb{P}_{t|0}(x|y)\)</span>. Normalizing over <span class="math inline">\(y\)</span> gives exactly the denominator <span class="math inline">\(\widehat{\varphi}_t(x) \, p_t^\mathbb{P}(x) = \int \mathbb{P}_{t|0}(x|y) \tilde{\varphi}_0(y) \, dy\)</span> from <a href="#eq-phi-integral" class="quarto-xref">Equation&nbsp;14</a>. So the ratio in <a href="#eq-log-grad-product" class="quarto-xref">Equation&nbsp;15</a> is <span class="math inline">\(p^\star(X_0 = y \mid X_t = x)\)</span>, as claimed.
+</p>
+</details>
+<p>Substituting back into <a href="#eq-log-grad-product" class="quarto-xref">Equation&nbsp;15</a>: <span id="eq-cm-tweedie"><span class="math display">\[
+\nabla_x \log[\widehat{\varphi}_t(x) \, p_t^\mathbb{P}(x)] = \mathbb{E}_{p^\star} {\left[ \nabla_x \log \mathbb{P}_{t \mid 0}(x \mid X_0) \mid X_t = x \right]} .
+\tag{16}\]</span></span> The left side is <span class="math inline">\(\nabla \log \widehat{\varphi}_t + \nabla \log p_t^\mathbb{P}\)</span>, not just <span class="math inline">\(\nabla \log \widehat{\varphi}_t\)</span>. To isolate the corrector score, subtract <span class="math inline">\(\nabla \log p_t^\mathbb{P}\)</span>: <span class="math display">\[
+\nabla \log \widehat{\varphi}_t(x) = \mathbb{E}_{p^\star} {\left[ \nabla_x \log \mathbb{P}_{t|0}(x|X_0) \mid X_t = x \right]}  - \nabla \log p_t^\mathbb{P}(x).
+\]</span> At <span class="math inline">\(t = 1\)</span>, the corrector enters the AM loss <a href="#eq-am-corrector" class="quarto-xref">Equation&nbsp;13</a> evaluated at <span class="math inline">\(X_1\)</span>. The base marginal score <span class="math inline">\(\nabla \log p_1^\mathbb{P}\)</span> is known in closed form (it is the score of <span class="math inline">\(\mathcal{N}(0, \nu_1 I)\)</span>, namely <span class="math inline">\(-x/\nu_1\)</span>). So the corrector score at <span class="math inline">\(t=1\)</span> decomposes into a conditional expectation (which we learn by regression) minus a known Gaussian score (which we subtract analytically). <a href="#eq-cm-tweedie" class="quarto-xref">Equation&nbsp;16</a> is a <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">Tweedie-type formula</a>: the score of the product <span class="math inline">\(\widehat{\varphi}_t \cdot p_t^\mathbb{P}\)</span> at <span class="math inline">\((t,x)\)</span> is the conditional expectation of the transition score <span class="math inline">\(\nabla_x \log \mathbb{P}_{t \mid 0}(x \mid X_0)\)</span> given <span class="math inline">\(X_t = x\)</span>. The structure is identical to the denoising score matching identity: the score of a mixture equals the expected score of the component, averaged over the posterior on the component index.</p>
+<p>Since any conditional expectation minimizes a least-squares loss, <a href="#eq-cm-tweedie" class="quarto-xref">Equation&nbsp;16</a> at <span class="math inline">\(t = 1\)</span> gives: <span id="eq-cm"><span class="math display">\[
+\nabla \log[\widehat{\varphi}_1 \cdot p_1^\mathbb{P}] = \mathop{\mathrm{argmin}}_h \; \mathbb{E}_{(X_0, X_1) \sim p^\star_{0,1}}  {\left[ \big\|h(X_1) - \nabla_{X_1} \log \mathbb{P}(X_1 \mid X_0)\big\|^2 \right]} .
+\tag{17}\]</span></span> This is the <strong>corrector matching</strong> (CM) loss: regress <span class="math inline">\(h\)</span> onto the base transition score at endpoint pairs. In practice, the expectation is over the current model’s endpoint pairs <span class="math inline">\((X_0, X_1) \sim p^{u^{(k)}}_{0,1}\)</span>, not the unknown SB joint <span class="math inline">\(p^\star_{0,1}\)</span>. Each CM step finds the best approximation to <span class="math inline">\(\nabla \log[\widehat{\varphi}_1 \cdot p_1^{\mathbb{P}}]\)</span> at the current iterate; alternation converges by the IPFP contraction argument. For the Brownian base, <span class="math inline">\(\mathbb{P}(X_1 \mid X_0) = \mathcal{N}(X_0, (\nu_1 - \nu_0)I)\)</span>, and the transition score is just <span class="math inline">\(\nabla_{X_1} \log \mathbb{P}(X_1 \mid X_0) = -(X_1 - X_0)/(\nu_1 - \nu_0)\)</span>, known in closed form. The regression target is a Gaussian score evaluated at the endpoints; no energy evaluation needed. The minimizer of <a href="#eq-cm" class="quarto-xref">Equation&nbsp;17</a> gives <span class="math inline">\(\nabla \log[\widehat{\varphi}_1 \cdot p_1^\mathbb{P}]\)</span>; to recover <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span> we subtract the known base score <span class="math inline">\(\nabla \log p_1^\mathbb{P}(x) = -x/\nu_1\)</span>.</p>
+<p>Note the parallel with the AM loss. Both are mean-squared-error regressions. AM regresses the control <span class="math inline">\(u\)</span> onto the energy gradient <span class="math inline">\(\nabla g\)</span> at pairs <span class="math inline">\((X_t, X_1)\)</span> from the bridge. CM regresses the corrector <span class="math inline">\(h\)</span> onto the transition score at endpoint pairs <span class="math inline">\((X_0, X_1)\)</span> from the current process. Both are self-consistent: the expectation is over the model’s own samples. Both have a conditional expectation as their unique fixed point.</p>
+<p>The CM loss <a href="#eq-cm" class="quarto-xref">Equation&nbsp;17</a> should not be confused with the bridge matching objectives in data-driven SB methods like <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref"><strong>de2021diffusion?</strong></a>)</span>, where <span class="math inline">\(X_1\)</span> must be drawn from the target <span class="math inline">\(\pi\)</span>. Here, both AM and CM use only on-policy samples from the current control <span class="math inline">\(u\)</span>. This is what makes the approach scalable: no target samples are needed.</p>
+</section>
+<section id="alternating-am-cm-ipfp" class="level3">
+<h3 class="anchored" data-anchor-id="alternating-am-cm-ipfp">Alternating AM + CM = IPFP</h3>
+<p>The AM loss <a href="#eq-am-corrector" class="quarto-xref">Equation&nbsp;13</a> needs <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span>. The CM loss <a href="#eq-cm" class="quarto-xref">Equation&nbsp;17</a> needs samples from <span class="math inline">\(p^\star\)</span>. Neither can be solved alone. The fix: alternate.</p>
+<ol type="1">
+<li><strong>AM step:</strong> Solve <a href="#eq-am-corrector" class="quarto-xref">Equation&nbsp;13</a> with <span class="math inline">\(\nabla \log \widehat{\varphi}_1 \approx h^{(k-1)}\)</span> to get <span class="math inline">\(u^{(k)}\)</span>.</li>
+<li><strong>CM step:</strong> Solve <a href="#eq-cm" class="quarto-xref">Equation&nbsp;17</a> with endpoint pairs from <span class="math inline">\(u^{(k)}\)</span> to get <span class="math inline">\(\tilde{h}^{(k)} \approx \nabla \log[\widehat{\varphi}_1 \cdot p_1^\mathbb{P}]\)</span>, then set <span class="math inline">\(h^{(k)} = \tilde{h}^{(k)} - \nabla \log p_1^\mathbb{P}\)</span> (subtracting the known base score).</li>
+</ol>
+<p>Initialize with <span class="math inline">\(h^{(0)} = 0\)</span>. The first AM stage uses terminal cost <span class="math inline">\(g(x) = E(x) + \text{const}\)</span> (since <span class="math inline">\(\log \widehat{\varphi}_1 \approx 0\)</span>) and regresses the control onto <span class="math inline">\(-\sigma_t \nabla E(X_1)\)</span>: pure energy-guided transport with no corrector. This recovers exactly the Adjoint Sampling algorithm, which is the right starting point when no better guess for the corrector is available. The first CM stage then learns <span class="math inline">\(h^{(1)} \approx \nabla \log \widehat{\varphi}_1\)</span> from the endpoint pairs produced by <span class="math inline">\(u^{(1)}\)</span>. Subsequent stages progressively refine both the control and the corrector.</p>
+<p>The alternation has a variational interpretation. The AM step solves a forward half-bridge: <span class="math inline">\(\min_{\mathbb{Q}: \mathbb{Q}_0 = \mu} D_{\text{KL}}(\mathbb{Q}\| \mathbb{Q}^{\text{bwd}})\)</span>, where <span class="math inline">\(\mathbb{Q}^{\text{bwd}}\)</span> is the backward SDE determined by the previous corrector <span class="math inline">\(h^{(k-1)}\)</span>. The CM step solves a backward half-bridge: <span class="math inline">\(\min_{\mathbb{Q}: \mathbb{Q}_1 = \pi} D_{\text{KL}}(\mathbb{P}^{u^{(k)}} \| \mathbb{Q})\)</span>, updating the corrector to absorb whatever bias remains. Alternating between forward and backward half-bridge projections is exactly <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> on path-space <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref"><strong>de2021diffusion?</strong></a>)</span>.</p>
+<p>Recall from the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> that the static Sinkhorn algorithm alternates between projecting the coupling onto the set <span class="math inline">\(\{\gamma : \gamma_0 = \nu_0\}\)</span> and the set <span class="math inline">\(\{\gamma : \gamma_1 = \nu_1\}\)</span>. Here, we do the same thing on path-space: the forward half-bridge imposes <span class="math inline">\(\mathbb{Q}_0 = \mu\)</span> but lets <span class="math inline">\(\mathbb{Q}_1\)</span> float; the backward half-bridge imposes <span class="math inline">\(\mathbb{Q}_1 = \pi\)</span> but lets <span class="math inline">\(\mathbb{Q}_0\)</span> float. Each projection is itself a KL minimization over a convex constraint set, so each step reduces the KL to the SB solution. Convergence to <span class="math inline">\(\mathbb{Q}^\star\)</span> follows from standard IPFP contraction <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref"><strong>de2021diffusion?</strong></a>)</span>, provided each inner optimization is solved exactly (which never holds in practice with finite gradient steps; the practical version uses a few optimization steps per stage). In practice, 3-5 outer stages suffice; each stage consists of many AM or CM gradient steps.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 45%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Prior</th>
+<th>Terminal cost <span class="math inline">\(g(x)\)</span></th>
+<th>Corrector</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Adjoint Sampling <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref"><strong>havens2025adjoint?</strong></a>)</span></td>
+<td><span class="math inline">\(\delta_0\)</span> (memoryless)</td>
+<td><span class="math inline">\(\log \frac{p^\mathbb{P}_1(x)}{\pi(x)}\)</span></td>
+<td>None (<span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span>)</td>
+</tr>
+<tr class="even">
+<td>ASBS <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref"><strong>liu2025adjoint?</strong></a>)</span></td>
+<td>Arbitrary <span class="math inline">\(\mu\)</span></td>
+<td><span class="math inline">\(\log \frac{\widehat{\varphi}_1(x)}{\pi(x)}\)</span></td>
+<td>Learned <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>ASBS reduces to Adjoint Sampling when <span class="math inline">\(\mu = \delta_0\)</span>: the corrector becomes constant and the CM step is trivially solved. A concrete example of a useful non-Dirac prior: for molecular conformer generation, one can use a harmonic oscillator prior <span class="math inline">\(\mu(x) \propto \exp(-\frac{\alpha}{2} \sum_{i &lt; j} \|x_i - x_j - r^0_{ij}\|^2)\)</span> where <span class="math inline">\(r^0_{ij}\)</span> are equilibrium bond lengths read from the molecular graph. Particles start in a physically reasonable arrangement rather than at the origin, reducing the transport cost substantially.</p>
+<p>Every piece was already in the earlier notes. The <a href="../../notes/adjoint_method/adjoint.html">adjoint method</a> gives the regression target (<span class="math inline">\(\nabla g\)</span> is constant along trajectories when <span class="math inline">\(b = 0\)</span>). The <a href="../../notes/doob_transforms/doob.html">Brownian bridge</a> gives cheap training pairs (Gaussian conditioning, one draw per sample). The <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> gives the corrector (endpoint potentials that debias the prior). Adjoint sampling <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref"><strong>havens2025adjoint?</strong></a>)</span> assembles the first two; ASBS <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref"><strong>liu2025adjoint?</strong></a>)</span> adds the third. The reader who has followed the series could have assembled this themselves.</p>
+<p>The overall picture: sampling from an unnormalized Boltzmann distribution <span class="math inline">\(\pi \propto e^{-E}\)</span> reduces to solving a stochastic optimal control problem, which reduces to a sequence of mean-squared-error regressions on cheap Gaussian training pairs. The only expensive operation (energy evaluation at terminal samples) is amortized over many gradient updates. With a Dirac prior, a single matching objective suffices. With a non-trivial prior, two alternating objectives (AM + CM) converge to the Schrodinger bridge via IPFP.</p>
+<p>The ideas generalize beyond the <span class="math inline">\(b = 0\)</span> setting, though the simplifications are less dramatic. With a non-zero base drift (e.g.&nbsp;a pre-trained diffusion model as in the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note), the lean adjoint ODE is no longer trivially constant; it must be solved backward along each trajectory. The reciprocal projection still applies in principle, but the bridge distribution <span class="math inline">\(p^\text{base}_{t \mid 1}\)</span> is no longer a simple Gaussian, and must be approximated (e.g.&nbsp;by linearizing the base drift). The <span class="math inline">\(b = 0\)</span> case is the sweet spot: everything is closed-form, the adjoint is constant, the bridge is Gaussian, and the only approximation is the neural network parameterization of <span class="math inline">\(u\)</span>.</p>
+<p>A note on related methods. The RAM loss <a href="#eq-ram" class="quarto-xref">Equation&nbsp;9</a> is closely related to the training objectives in PDDS <span class="citation" data-cites="phillips2024particle">(<a href="#ref-phillips2024particle" role="doc-biblioref"><strong>phillips2024particle?</strong></a>)</span> and Target Score Matching <span class="citation" data-cites="de2024target">(<a href="#ref-de2024target" role="doc-biblioref"><strong>de2024target?</strong></a>)</span>, where the same squared-error expression appears inside the expectation. The difference is in what the expectation is taken over: PDDS and TSM sample <span class="math inline">\(X_1\)</span> from the target distribution <span class="math inline">\(\pi\)</span> (requiring importance sampling or SMC), while Adjoint Sampling samples <span class="math inline">\(X_1\)</span> from the current model <span class="math inline">\(p^{\bar{u}}_1\)</span>. This makes the loss a moving target, which is harder to analyze but far more practical: no target samples needed, no importance weights, no resampling.</p>
+<!-- BibTeX entries to add to ref.bib:
+@article{havens2025adjoint,
+  title={Adjoint Sampling: Highly Scalable Diffusion Samplers via Adjoint Matching},
+  author={Havens, Aaron and Huang, Benjamin and Urain, Julen and Amos, Brandon and Sener, Ozan and Domingo-Enrich, Carles and Peters, Jan and Shalit, Uri and Rish, Irina},
+  journal={ICML 2025},
+  year={2025},
+  url={https://arxiv.org/abs/2504.11713}
+}
+@article{domingoenrich2024adjoint,
+  title={Adjoint Matching: Fine-Tuning Flow and Diffusion Generative Models with Memoryless Stochastic Optimal Control},
+  author={Domingo-Enrich, Carles and Drozdzal, Michal and Liao, Ricky T. Q. and Chen, Ricky T. Q.},
+  journal={arXiv preprint arXiv:2409.15861},
+  year={2024},
+  url={https://arxiv.org/abs/2409.15861}
+}
+@article{phillips2024particle,
+  title={Particle Denoising Diffusion Sampler},
+  author={Phillips, Angus and Wildberger, Jonas and Rector-Brooks, Jarrid and Bengio, Yoshua},
+  journal={ICML 2024},
+  year={2024},
+  url={https://arxiv.org/abs/2402.06320}
+}
+@article{de2024target,
+  title={Target Score Matching},
+  author={De Bortoli, Valentin and Thornton, James and Heng, Jeremy and Doucet, Arnaud},
+  year={2024},
+  url={https://arxiv.org/abs/2402.08667}
+}
+@article{liu2025adjoint,
+  title={Adjoint {S}chr{\"o}dinger Bridge Sampler},
+  author={Liu, Guan-Horng and Chen, Tianrong and Lipman, Yaron and Albergo, Michael S. and Vanden-Eijnden, Eric},
+  year={2025},
+  url={https://arxiv.org/abs/2503.02874}
+}
+@article{de2021diffusion,
+  title={Diffusion {S}chr{\"o}dinger bridge with applications to score-based generative modeling},
+  author={De Bortoli, Valentin and Thornton, James and Heng, Jeremy and Doucet, Arnaud},
+  journal={NeurIPS},
+  year={2021},
+  url={https://arxiv.org/abs/2106.01357}
+}
+-->
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>about – Alexandre Thiéry</title>
+<title>Jarzynski and Crooks – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,19 +23,19 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -61,25 +61,56 @@ gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="– Alexandre Thiéry">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Jarzynski and Crooks – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/adjoint_samplers_draft/jarzynski_crooks.png">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="– Alexandre Thiéry">
+<meta name="twitter:title" content="Jarzynski and Crooks – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/adjoint_samplers_draft/jarzynski_crooks.png">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -89,29 +120,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html"> 
+    <a class="nav-link" href="../../people/index_people.html"> 
 <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html"> 
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
 <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html"> 
+    <a class="nav-link" href="../../teaching/teaching.html"> 
 <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notes/index_notes.html"> 
+    <a class="nav-link" href="../../notes/index_notes.html"> 
 <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../about/about.html" aria-current="page"> 
+    <a class="nav-link" href="../../about/about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -123,7 +154,39 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Jarzynski and Crooks</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">markov</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">22 02 2025</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">22 02 2025</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -131,85 +194,145 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#address" id="toc-address" class="nav-link active" data-scroll-target="#address">Address</a></li>
-  <li><a href="#employment-history" id="toc-employment-history" class="nav-link" data-scroll-target="#employment-history">Employment history</a></li>
-  <li><a href="#qualifications" id="toc-qualifications" class="nav-link" data-scroll-target="#qualifications">Qualifications</a></li>
-  <li><a href="#leadership" id="toc-leadership" class="nav-link" data-scroll-target="#leadership">Leadership</a></li>
-  <li><a href="#service" id="toc-service" class="nav-link" data-scroll-target="#service">Service</a></li>
-  <li><a href="#awards-and-honours" id="toc-awards-and-honours" class="nav-link" data-scroll-target="#awards-and-honours">Awards and honours</a></li>
-  <li><a href="#industrial-activities" id="toc-industrial-activities" class="nav-link" data-scroll-target="#industrial-activities">Industrial Activities</a></li>
+  <li><a href="#some-references" id="toc-some-references" class="nav-link active" data-scroll-target="#some-references">Some References:</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
-<section id="address" class="level2">
-<h2 class="anchored" data-anchor-id="address">Address</h2>
-<p><strong>Email:</strong> a.h.thiery [at] nus.edu.sg<br>
-<strong>Office:</strong> <a href="https://goo.gl/maps/9qX6Fi9CpWFbX2VJ6">Building S16, Office #06-113</a></p>
-</section>
-<section id="employment-history" class="level2">
-<h2 class="anchored" data-anchor-id="employment-history">Employment history</h2>
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./jarzynski_crooks.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/Christopher_Jarzynski">Christopher Jarzynski</a> and <a href="https://en.wikipedia.org/wiki/Gavin_E._Crooks">Gavin Crooks</a></figcaption>
+</figure>
+</div>
+</div>
+<p>Consider a sequence of densities on <span class="math inline">\(\mathbb{R}^D\)</span> indexed by time parameter <span class="math inline">\(t \in [0,T]\)</span>,</p>
+<p><span class="math display">\[
+\pi_t(x) \; = \; \frac{ e^{-U_t(x)}}{Z_t}
+\]</span></p>
+<p>where <span class="math inline">\(U_t: \mathbb{R}^D \to \mathbb{R}\)</span> is time-dependent potential function and <span class="math inline">\(Z_t\)</span> is the normalizing constant. We are in fact really interested in studying the final density <span class="math inline">\(\pi_T\)</span> and the bridging sequence of densities <span class="math inline">\(\pi_t\)</span> is just a tool to get there, starting from an initial and tractable density <span class="math inline">\(\pi_0\)</span>. If one initializes a particle <span class="math inline">\(X_0 \sim \pi_0\)</span> and evolves it according to the <a href="https://en.wikipedia.org/wiki/Langevin_equation">Langevin</a> dynamics</p>
+<p><span class="math display">\[
+dX_t \; = \; -\nabla U_t(X_t) \, dt + \sqrt{2} \, dW_t
+\]</span></p>
+<p>one can hope that the distribution of <span class="math inline">\(X_T\)</span> will be close to <span class="math inline">\(\pi_T\)</span>. This would be the case if one evolved the particle according <span class="math inline">\(dX_t \; = \; -\gamma \nabla U_t(X_t) \, dt + \sqrt{2 \gamma} \, dW_t\)</span> and let <span class="math inline">\(\gamma \to \infty\)</span> since in that case <span class="math inline">\(X_t\)</span> would be distributed according to <span class="math inline">\(\pi_t\)</span> for all <span class="math inline">\(t\)</span>. Can one correct the distribution of <span class="math inline">\(X_T\)</span> with importance sampling weights?</p>
+<p>I like the approach presented in <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref"><strong>vargas2023transport?</strong></a>)</span> and these notes are my attempt to understand it. One very fruitful idea that has been used in a number of works in the Monte-Carlo literature is to look at a probability distribution of interest as the marginal of a joint distribution and to carry out computations and build numerical methods on the joint distribution <span class="citation" data-cites="del2006sequential">(<a href="#ref-del2006sequential" role="doc-biblioref"><strong>del2006sequential?</strong></a>)</span>. Indeed, there is a lot of flexibility in the choice of the joint distribution.</p>
+<p>Here, we can also consider the diffusion process <span class="math inline">\(Y_T\)</span> that runs backward in times and that is initialized according to <span class="math inline">\(\pi_T\)</span> and follows the same Langevin dynamics (backward in time). Again, one expects the distribution of <span class="math inline">\(Y_t\)</span> to be close to <span class="math inline">\(\pi_t\)</span>. It is more intuitive to discuss discretized version of the process. For a time discretization <span class="math inline">\(\delta = T/N\)</span>, we consider the forward Markov chain <span class="math inline">\(X_t\)</span> defined as:</p>
+<p><span class="math display">\[
+\left\{
+\begin{aligned}
+x_{t + \delta} &amp;= x_t - \nabla U_t(x_t) \, \delta + \sqrt{2 \delta} \, \xi_t\\
+x_0 &amp;\sim \pi_0
+\end{aligned}
+\right.
+\]</span></p>
+<p>as well as the backward Markov chain <span class="math inline">\(Y_t\)</span> defined as <span class="math display">\[
+\left\{
+\begin{aligned}
+y_{t} &amp;= y_{t + \delta} - \nabla U_{t + \delta}(y_{t + \delta}) \, \delta + \sqrt{2 \delta} \, \xi_t\\
+y_T &amp;\sim \pi_T.
+\end{aligned}
+\right.
+\]</span></p>
+<p>The quantities <span class="math inline">\(\xi_t \sim \mathcal{N}(0,I)\)</span> are i.i.d. standard Gaussian random variables. Let us continue with these discretized versions and denote by <span class="math inline">\(\mathbb{P}^{X}\)</span> and <span class="math inline">\(\mathbb{P}^{Y}\)</span> the probability measures associated with the discretized processes. For a discretized path <span class="math inline">\(\underline{z} = (z_0, z_{\delta}, \ldots, z_{T})\)</span> and notation <span class="math inline">\(t_k = k \delta\)</span>, we have:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbb{P}^X(\underline{z}) &amp;=
+\pi_0(z_0) \, \exp {\left\{ -\frac{1}{4 \delta} \sum_{k=0}^{N-1} \|z_{t_{k+1}} - [z_{t_k} - \nabla U_{t_k}(z_{t_k})\,\delta]\|^2 \right\}} \\
+\mathbb{P}^Y(\underline{z}) &amp;=
+\pi_T(z_T) \, \exp {\left\{ -\frac{1}{4 \delta} \sum_{k=0}^{N-1} \|z_{t_{k}} - [z_{t_{k+1}} - \nabla U_{t_{k+1}}(z_{t_{k+1}})\,\delta]\|^2 \right\}} .
+\end{aligned}
+\]</span></p>
+<p>One can compute the ratio <span class="math inline">\(\mathbb{P}^Y(z) / \mathbb{P}^X(z)\)</span> and examine its limit as <span class="math inline">\(N \to \infty\)</span>. Algebra gives:</p>
+<p><span class="math display">\[
+\frac{\mathbb{P}^Y}{\mathbb{P}^X}(\underline{z}) =
+\frac{\pi_T(z_T)}{\pi_0(z_0)} \,
+\exp {\left\{ \sum_{k=0}^{N-1} \left&lt; z_{t_{k+1}} - z_{t_k}, \frac{\nabla U_{t_k}(z_{t_k}) + \nabla U_{t_{k+1}}(z_{t_{k+1}})}{2}  \right&gt; \right\}}   + \mathcal{O}(\delta^{1/2}).
+\]</span></p>
+<p>One could probably use some <a href="https://en.wikipedia.org/wiki/Stratonovich_integral">Stratonovich</a> calculus to study this, but I always forget these things, so let’s use Ito instead. Write</p>
+<p><span class="math display">\[\frac{\nabla U_{t_k}(z_{t_k}) + \nabla U_{t_{k+1}}(z_{t_{k+1}})}{2}
+=
+\nabla U_{t_k}(z_{t_k}) + \frac{1}{2} \mathrm{Hess}_{U_{t_{k}}} (z_{t_{k}}) (z_{t_{k+1}} - z_{t_k})
++
+\mathcal{O}(\delta).
+\]</span></p>
+<p>Consequently, in the limit <span class="math inline">\(N \to \infty\)</span>, the quantity converges to:</p>
+<p><span class="math display">\[
+\frac{d\mathbb{P}^Y}{d\mathbb{P}^X}(\underline{z}) \; = \;
+\frac{\pi_T(z_T)}{\pi_0(z_0)} \,
+\exp {\left\{  \int_{t=0}^T \nabla U_t(z_t) \, dz_t
++
+\frac{1}{2} \int_0^T \left&lt; dz_t, \mathrm{Hess}_{U_t}(z_t) \, dz_t \right&gt;
+\right\}} .
+\]</span></p>
+<p>One can obtain a slightly simpler formuler using Ito’s lemma. Since <span class="math inline">\(d U_t(z_t) = \partial_t U_t(z_T) \, dt + \left&lt; \nabla U_t(z_t), dz_t \right&gt; + \frac{1}{2} \left&lt; dz_t, \mathrm{Hess}_{U_t}(z_t) \, dz_t \right&gt;\)</span>, we also have:</p>
+<p><span class="math display">\[
+\frac{d \mathbb{P}^Y}{d \mathbb{P}^X}(\underline{z})
+=
+\frac{\pi_T(z_T)}{\pi_0(z_0)} \,
+\exp {\left\{  U_T(z_T) - U_0(z_0) - \int_0^T \partial_t U_t(z_t) \, dt \right\}} .
+\]</span></p>
+<p>Since <span class="math inline">\(\pi_t(z_t) = \exp(-U_t(z_t)) / Z_t\)</span>, this gives the <a href="https://en.wikipedia.org/wiki/Crooks_fluctuation_theorem">Crooks relation</a>:</p>
+<p><span class="math display">\[
+\frac{d \mathbb{P}^Y}{d \mathbb{P}^X}(\underline{z})
+=
+\frac{Z_0}{Z_T} \,
+\exp {\left\{  - \int_0^T \partial_t U_t(z_t) \, dt \right\}} .
+\]</span></p>
+<p>Integrating over trajectories of <span class="math inline">\(X_t\)</span>, since <span class="math inline">\(\mathbb{E}_{X}[(d \mathbb{P}^Y / d \mathbb{P}^X)(X)] = 1\)</span>, one obtains the <a href="https://en.wikipedia.org/wiki/Jarzynski_equality">Jarzynski equality</a> <span class="math display">\[
+\frac{Z_T}{Z_0} \; = \; \mathbb{E}_{X}  {\left[  \exp {\left\{  - \int_0^T \partial_t U_t(X_t) \, dt \right\}}  \right]}
+\]</span></p>
+<p>which is indeed also central to sequential Monte-Carlo methods. As described in <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref"><strong>vargas2023transport?</strong></a>)</span>, the same approach can be used to slightly generalize the Crooks relation. Indeed, suppose that one instead consider the dynamics:</p>
+<p><span class="math display">\[
+dX_t \; = \; -\nabla U_t(X_t) \, dt  \textcolor{blue}{+ b_t(X_t) \, dt} + \sqrt{2} \, dW_t
+\]</span></p>
+<p>where <span class="math inline">\(b: \mathbb{R}^D \to \mathbb{R}^D\)</span> is a control function. One can consider the backward dynamics <span class="math inline">\(Y_t\)</span> that is initialized according to <span class="math inline">\(\pi_T\)</span> and follows the dynamics <span class="math inline">\(dY_t = -\nabla U_t(Y_t) \, dt  \textcolor{red}{-} b(Y_t) \, dt + \sqrt{2} \, dW_t\)</span> backward in time, i.e.</p>
+<p><span class="math display">\[
+\left\{
+\begin{aligned}
+x_{t + \delta} &amp;= x_t - \nabla U_t(x_t) \, \delta + b_t(x_t) \, \delta + \sqrt{2 \delta} \, \xi_t\\
+y_{t} &amp;= y_{t + \delta} - \nabla U_{t + \delta}(y_{t + \delta}) \, \delta  \textcolor{red}{-} b_{t + \delta}(y_{t + \delta}) \, \delta + \sqrt{2 \delta} \, \xi_t.
+\end{aligned}
+\right.
+\]</span></p>
+<p>The minus sign for the backward dynamics <span class="math inline">\(Y_t\)</span> is natural. Indeed, one would like the dynamics of <span class="math inline">\(Y_t\)</span> to be as close as possible to the time-reversal of the dynamics of <span class="math inline">\(X_t\)</span>. Furthermore, one knows that the <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">backward dynamics</a> of <span class="math inline">\(X_t\)</span> is given by</p>
+<p><span class="math display">\[
+dY_t =  \textcolor{red}{+} \nabla U_t(Y_t) \, dt  \textcolor{red}{-} b_t(Y_t) \, dt + 2 \nabla \log p_t(Y_t) \, dt + \sqrt{2} \, dW_t
+\]</span></p>
+<p>where <span class="math inline">\(p_t\)</span> is the marginal distribution of <span class="math inline">\(X_t\)</span> at time <span class="math inline">\(t\)</span>. Since we would like <span class="math inline">\(p_t = \pi_t = \exp(-U_t) / Z_t\)</span>, in that case this gives</p>
+<p><span class="math display">\[
+dY_t = -\nabla U_t(Y_t) \, dt  \textcolor{red}{-} b_t(Y_t) \, dt + \sqrt{2} \, dW_t,
+\]</span></p>
+<p>which is exactly the dynamics we chose for <span class="math inline">\(Y_t\)</span>.One can then follow the exact same steps as done previously, using that the quadratic variation is <span class="math inline">\(\left&lt; dz_t, dz_t \right&gt; = 2 \, dt\)</span>, to obtain that</p>
+<p><span class="math display">\[
+\frac{d \mathbb{P}^Y}{d \mathbb{P}^X}(\underline{z})
+=
+\frac{Z_0}{Z_T} \,
+\exp {\left\{  \int_0^T -\partial_t U_t(z_t)  \textcolor{blue}{+ \nabla \cdot b_t(z_t) - \left&lt; \nabla U_t(z_t), b_t(z_t) \right&gt;} \, dt \right\}} .
+\]</span></p>
+<p>This for example shows that, for <span class="math inline">\(dX_t \; = \; -\nabla U_t(X_t) \, dt  \textcolor{blue}{+ b_t(X_t) \, dt} + \sqrt{2} \, dW_t\)</span> initialized according to <span class="math inline">\(\pi_0\)</span>, we have:</p>
+<p><span class="math display">\[
+\frac{Z_T}{Z_0} \; = \; \mathbb{E}_{X}  {\left\{  \exp {\left\{  \int_0^T -\partial_t U_t(X_t)  \textcolor{blue}{+ \nabla \cdot b_t(X_t) - \left&lt; \nabla U_t(X_t), b_t(X_t) \right&gt;} \, dt \right\}}  \right\}} .
+\]</span></p>
+<p>This generalization of the Crooks relation is also explored in <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref"><strong>albergo2024nets?</strong></a>)</span> where an alternative derivation by directly exploiting the <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation. Crucially, <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref"><strong>albergo2024nets?</strong></a>)</span> note that, if the control function <span class="math inline">\(b_t: \mathbb{R}^D \to \mathbb{R}^D\)</span> is chosen so that</p>
+<p><span id="eq-nets"><span class="math display">\[
+-\partial_t U_t(x) + \nabla \cdot b_t(x) - \left&lt; \nabla U_t(x), b_t(x) \right&gt;
+=
+\frac{d}{dt} \, \log Z_t
+\tag{1}\]</span></span></p>
+<p>then the term <span class="math inline">\(\int_0^T -\partial_t U_t(X_t) + \nabla \cdot b_t(X_t) - \left&lt; \nabla U_t(X_t), b_t(X_t) \right&gt; \, dt\)</span> is indeed constant, which gives a zero-variance estimator of the free energy difference <span class="math inline">\(\log(Z_T/Z_0)\)</span>. Indeed, it is a formidable challenge to solve the high-dimensional PDE <a href="#eq-nets" class="quarto-xref">Equation&nbsp;1</a> and <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref"><strong>albergo2024nets?</strong></a>)</span> propose interesting <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks">PINNs</a>-based methods to do so.</p>
+<section id="some-references" class="level3">
+<h3 class="anchored" data-anchor-id="some-references">Some References:</h3>
 <ul>
-<li><strong>Associate Professor</strong>, Department of Statistics &amp; Data Sciences, NUS, 2020–present.
-<ul>
-<li>Affiliate, NUS Artificial Intelligence Institute (NAII), 2025–present</li>
-<li>Affiliate, NUS Centre for Data Science and Machine Learning, 2021–present</li>
-<li>Affiliate, NUS Institute of Data Science, 2018–present</li>
-<li>Affiliate, NUS Graduate School for Integrative Sciences and Engineering, 2017–present</li>
-</ul></li>
-<li><strong>Assistant Professor</strong>, Department of Statistics &amp; Probability, NUS, 2014–2019.</li>
-<li><strong>Research Fellow</strong>, Department of Statistics &amp; Probability, NUS, 2013</li>
-</ul>
-</section>
-<section id="qualifications" class="level2">
-<h2 class="anchored" data-anchor-id="qualifications">Qualifications</h2>
-<ul>
-<li>Ph.D., Probability &amp; Statistics, <a href="https://en.wikipedia.org/wiki/University_of_Warwick">Warwick University</a>, 2009-2013.</li>
-<li><a href="https://en.wikipedia.org/wiki/École_normale_supérieure_(Paris)">Ecole Normale Superieure of Paris</a>, Mathematics, 2005-2009
-<ul>
-<li>Research Assistant, <a href="https://www.statslab.cam.ac.uk/history-statistical-laboratory">Statslab (Cambridge, UK)</a></li>
-<li>MSc (Probability &amp; Finance), <a href="https://en.wikipedia.org/wiki/Pierre_and_Marie_Curie_University">University of Paris VI</a></li>
-<li>MSc (Partial Differential Equations &amp; Modeling), <a href="https://en.wikipedia.org/wiki/Pierre_and_Marie_Curie_University">University of Paris VI</a></li>
-</ul></li>
-</ul>
-</section>
-<section id="leadership" class="level2">
-<h2 class="anchored" data-anchor-id="leadership">Leadership</h2>
-<ul>
-<li>Deputy Director of <a href="https://ims.nus.edu.sg/">Institute for Mathematical Sciences</a>, 7/2020 – 12/2023</li>
-</ul>
-</section>
-<section id="service" class="level2">
-<h2 class="anchored" data-anchor-id="service">Service</h2>
-<ul>
-<li>AE for Journal of Computational and Graphical Statistics JCGS (2026 –- present)</li>
-<li>AE for Bayesian Analysis (2025 –- 2027)</li>
-<li>Area Chair for AISTAT (2023–2025), ACML (2023), NeurIPS (2023 – 2026), ICLR (2024 – 2026)</li>
-<li>AE for Statistics &amp; Computing (2020–2022)</li>
-</ul>
-</section>
-<section id="awards-and-honours" class="level2">
-<h2 class="anchored" data-anchor-id="awards-and-honours">Awards and honours</h2>
-<ul>
-<li>NUS Faculty of Sciences Dean’s Chair Associate Professor, 2022–2025</li>
-<li>NUS Faculty Teaching Excellence Award, 2022</li>
-<li>NUS Faculty Teaching Excellence Award, 2019</li>
-<li>NUS Faculty Teaching Excellence Award, 2018</li>
-<li>NUS Young Scientist Award. (Faculty of Science: 1 awardee per year), 2017</li>
-<li>NUS Young Investigator Award. (Faculty of Science: 3 awardees per year), 2016</li>
-<li>John Copas prize for the best PhD dissertation, 2013</li>
-</ul>
-</section>
-<section id="industrial-activities" class="level2">
-<h2 class="anchored" data-anchor-id="industrial-activities">Industrial Activities</h2>
-<ul>
-<li>Co-founder of <a href="https://abyssprocessing.com">Abyss Processing</a>, start-up developing AI solutions for ophthalmology</li>
-<li>Consulting in the finance and health-care industries</li>
+<li>The original papers by Jarzynski <span class="citation" data-cites="jarzynski1997nonequilibrium">(<a href="#ref-jarzynski1997nonequilibrium" role="doc-biblioref"><strong>jarzynski1997nonequilibrium?</strong></a>)</span> and Crooks <span class="citation" data-cites="crooks1999entropy">(<a href="#ref-crooks1999entropy" role="doc-biblioref"><strong>crooks1999entropy?</strong></a>)</span>.</li>
+<li>The book <span class="citation" data-cites="stoltz2010free">(<a href="#ref-stoltz2010free" role="doc-biblioref"><strong>stoltz2010free?</strong></a>)</span> is excellent!</li>
+<li>The two papers that prompted these notes: <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref"><strong>vargas2023transport?</strong></a>)</span> and <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref"><strong>albergo2024nets?</strong></a>)</span>.</li>
 </ul>
 
 
@@ -615,6 +738,8 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     }
   });
   </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
 </div> <!-- /content -->
 
 

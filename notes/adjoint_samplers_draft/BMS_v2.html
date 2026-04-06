@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Bridge Matching Sampler – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Bridge Matching Sampler – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Bridge Matching Sampler – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Bridge Matching Sampler</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">markov</div>
+                <div class="quarto-category">sampling</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">22 03 2026</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">22 03 2026</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#nelsons-relation" id="toc-nelsons-relation" class="nav-link active" data-scroll-target="#nelsons-relation">Nelson’s relation</a></li>
+  <li><a href="#reciprocal-class-and-markovian-projection" id="toc-reciprocal-class-and-markovian-projection" class="nav-link" data-scroll-target="#reciprocal-class-and-markovian-projection">Reciprocal class and Markovian projection</a></li>
+  <li><a href="#fixed-point-iteration" id="toc-fixed-point-iteration" class="nav-link" data-scroll-target="#fixed-point-iteration">Fixed-point iteration</a></li>
+  <li><a href="#target-score-identity" id="toc-target-score-identity" class="nav-link" data-scroll-target="#target-score-identity">Target score identity</a></li>
+  <li><a href="#general-regression-target" id="toc-general-regression-target" class="nav-link" data-scroll-target="#general-regression-target">General regression target</a></li>
+  <li><a href="#three-couplings-three-algorithms" id="toc-three-couplings-three-algorithms" class="nav-link" data-scroll-target="#three-couplings-three-algorithms">Three couplings, three algorithms</a></li>
+  <li><a href="#the-independent-coupling-why-it-works" id="toc-the-independent-coupling-why-it-works" class="nav-link" data-scroll-target="#the-independent-coupling-why-it-works">The independent coupling: why it works</a></li>
+  <li><a href="#damped-iteration" id="toc-damped-iteration" class="nav-link" data-scroll-target="#damped-iteration">Damped iteration</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<!-- TODO: Add historical figure portrait here. Suggested: [Edward Nelson](https://en.wikipedia.org/wiki/Edward_Nelson) (1932-2014). Use format:
+::: {style="text-align:center;"}
+![[Edward Nelson](https://en.wikipedia.org/wiki/Edward_Nelson) (1932 - 2014)](./nelson.jpg){fig-align="center" width=35%}
+:::
+-->
+<p>Consider a controlled SDE on <span class="math inline">\([0,T]\)</span> with noise schedule <span class="math inline">\(\sigma_t &gt; 0\)</span>,</p>
+<p><span id="eq-controlled-sde"><span class="math display">\[
+dX_t = \sigma_t \, u(X_t, t) \, dt + \sigma_t \, dW_t, \quad X_0 \sim p_0.
+\tag{1}\]</span></span></p>
+<p>The goal: find <span class="math inline">\(u\)</span> such that <span class="math inline">\(X_T \sim \pi\)</span>, where <span class="math inline">\(\pi(x) = \rho(x)/\mathcal{Z}\)</span> is a target density known up to normalization. <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">Adjoint sampling</a> and <a href="../../notes/adjoint_samplers_draft/ASBS.html">ASBS</a> solve this via different endpoint couplings, but both require either a memoryless prior or alternating optimization. The <em>Bridge Matching Sampler</em> (BMS) identifies a single coupling, the <em>independent coupling</em>, that makes the regression target fully tractable and removes the need for alternation.</p>
+<p>The central tool is Nelson’s relation, which we derive next.</p>
+<section id="nelsons-relation" class="level3">
+<h3 class="anchored" data-anchor-id="nelsons-relation">Nelson’s relation</h3>
+<p>Let <span class="math inline">\(\mathbb{P}^u\)</span> denote the path measure of <a href="#eq-controlled-sde" class="quarto-xref">Equation&nbsp;1</a> with time marginals <span class="math inline">\(p_t\)</span>. Write the Euler discretization with step <span class="math inline">\(\delta\)</span>:</p>
+<p><span id="eq-euler-fwd"><span class="math display">\[
+X_{t+\delta} = X_t + \sigma_t \, u(X_t,t) \, \delta + \sigma_t \sqrt{\delta} \, \mathbf{n}, \qquad \mathbf{n}\sim \mathcal{N}(0,I).
+\tag{2}\]</span></span></p>
+<p>The forward conditional mean is <span class="math inline">\(\mathbb{E}[X_{t+\delta} \mid X_t = x] = x + \sigma_t \, u(x,t) \, \delta\)</span>. Now compute the backward conditional mean <span class="math inline">\(\mathbb{E}[X_t \mid X_{t+\delta} = y]\)</span> using Bayes’ rule, exactly as in the <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">reverse diffusions</a> note. For <span class="math inline">\(\delta \ll 1\)</span>:</p>
+<p><span class="math display">\[
+\mathbb{P}(X_t \in dx \mid X_{t+\delta} = y) \;\propto\; p_t(x) \, \exp {\left\{ -\frac{\|y - x - \sigma_t \, u(x,t) \, \delta\|^2}{2 \sigma_t^2 \, \delta} \right\}} .
+\]</span></p>
+<p>Expanding <span class="math inline">\(p_t(x) \approx p_t(y) \exp(\left&lt; \nabla \log p_t(y), x - y \right&gt;)\)</span> and completing the square, the conditional mean is</p>
+<p><span class="math display">\[
+\mathbb{E}[X_t \mid X_{t+\delta} = y] = y - \sigma_t \, u(y,t) \, \delta + \sigma_t^2 \, \nabla \log p_t(y) \, \delta + O(\delta^2).
+\]</span></p>
+<p>So if <span class="math inline">\(v(y,t)\)</span> denotes the backward drift (the drift of the time-reversed process), we read off</p>
+<p><span class="math display">\[
+-\sigma_t \, v(y,t) = -\sigma_t \, u(y,t) + \sigma_t^2 \, \nabla \log p_t(y),
+\]</span></p>
+<p>which gives <strong>Nelson’s relation</strong>:</p>
+<p><span id="eq-nelson"><span class="math display">\[
+\textcolor{blue}{u(x,t) + v(x,t) = \sigma_t \, \nabla \log p_t(x).}
+\tag{3}\]</span></span></p>
+<p>Forward drift pushes mass toward the target, backward drift pushes it toward the prior, and their sum is the diffusion coefficient times the score of the time marginal. This holds for any Markov diffusion of the form <a href="#eq-controlled-sde" class="quarto-xref">Equation&nbsp;1</a> with marginals <span class="math inline">\(p_t\)</span>.</p>
+</section>
+<section id="reciprocal-class-and-markovian-projection" class="level3">
+<h3 class="anchored" data-anchor-id="reciprocal-class-and-markovian-projection">Reciprocal class and Markovian projection</h3>
+<p>Let <span class="math inline">\(\mathbb{P}\)</span> denote the reference (uncontrolled) process <span class="math inline">\(dX_t = \sigma_t \, dW_t\)</span>. A path measure <span class="math inline">\(\Pi\)</span> belongs to the <em>reciprocal class</em> <span class="math inline">\(\mathcal{R}(\mathbb{P})\)</span> if it has the form <span class="math inline">\(\Pi = \Pi_{0,T} \, \mathbb{P}_{|0,T}\)</span>, where <span class="math inline">\(\Pi_{0,T}\)</span> is an endpoint coupling and <span class="math inline">\(\mathbb{P}_{|0,T}\)</span> is the reference bridge (Brownian bridge for Brownian <span class="math inline">\(\mathbb{P}\)</span>); see the <a href="../shrodinger/shrodinger.qmd">Schrodinger bridges</a> note.</p>
+<p>A reciprocal measure is generally non-Markovian: the bridge drift depends on <span class="math inline">\(X_T\)</span>. The <em>Markovian projection</em> finds a Markovian drift <span class="math inline">\(u^\star\)</span> whose time marginals match those of <span class="math inline">\(\Pi^\star\)</span>. This is an <span class="math inline">\(L^2\)</span> projection: if <span class="math inline">\(\xi(X,t)\)</span> is the path-dependent drift of <span class="math inline">\(\Pi^\star\)</span>, then</p>
+<p><span id="eq-markov-proj"><span class="math display">\[
+u^\star(x,t) = \mathbb{E}_{\Pi^\star} {\left[ \xi(X,t) \mid X_t = x \right]} .
+\tag{4}\]</span></span></p>
+<p>Why? For any Markovian <span class="math inline">\(u\)</span>, expand <span class="math inline">\(\mathbb{E}_{\Pi^\star}[\|\xi - u(X_t,t)\|^2]\)</span> and use the tower property:</p>
+<p><span class="math display">\[
+\mathbb{E}_{\Pi^\star} {\left[ \|\xi - u\|^2 \right]}  = \mathbb{E}_{\Pi^\star} {\left[ \|\xi - u^\star\|^2 \right]}  + \mathbb{E}_{\Pi^\star} {\left[ \|u^\star - u\|^2 \right]} .
+\]</span></p>
+<p>The cross-term vanishes because <span class="math inline">\(\mathbb{E}_{\Pi^\star}[\xi - u^\star \mid X_t] = 0\)</span> by definition of <span class="math inline">\(u^\star\)</span>. So <span class="math inline">\(u^\star\)</span> minimizes the matching loss</p>
+<p><span id="eq-matching-loss"><span class="math display">\[
+u^\star = \mathop{\mathrm{argmin}}_{u} \; \mathbb{E}_{\Pi^\star}  {\left[ \int_0^T \frac{1}{2} \| \xi(X,t) - u(X_t,t) \|^2 \, dt \right]} .
+\tag{5}\]</span></span></p>
+</section>
+<section id="fixed-point-iteration" class="level3">
+<h3 class="anchored" data-anchor-id="fixed-point-iteration">Fixed-point iteration</h3>
+<p>All three methods (adjoint sampling, ASBS, BMS) follow the same template. Starting from some control <span class="math inline">\(u_0\)</span>:</p>
+<ol type="1">
+<li><strong>Simulate</strong> the current SDE <span class="math inline">\(\mathbb{P}^{u_i}\)</span> to generate endpoint pairs <span class="math inline">\((X_0, X_T)\)</span>.</li>
+<li><strong>Reciprocal projection</strong>: form a coupling <span class="math inline">\(\Pi^i_{0,T}\)</span> from the endpoints, define <span class="math inline">\(\Pi^i = \Pi^i_{0,T} \, \mathbb{P}_{|0,T}\)</span>.</li>
+<li><strong>Markovianize</strong>: update <span class="math inline">\(u_{i+1}\)</span> by regressing onto the bridge drift via <a href="#eq-matching-loss" class="quarto-xref">Equation&nbsp;5</a>.</li>
+</ol>
+<p>If <span class="math inline">\(u_i = u^\star\)</span>, then <span class="math inline">\(\Pi^i = \Pi^\star\)</span> and <span class="math inline">\(u_{i+1} = u^\star\)</span>, so <span class="math inline">\(u^\star\)</span> is a fixed point. What distinguishes the methods is the coupling in step 2, which determines the regression target <span class="math inline">\(\xi\)</span>.</p>
+</section>
+<section id="target-score-identity" class="level3">
+<h3 class="anchored" data-anchor-id="target-score-identity">Target score identity</h3>
+<p>To get a tractable <span class="math inline">\(\xi\)</span>, we need the score <span class="math inline">\(\nabla \log \Pi^\star_t(x)\)</span>. Define the cumulative variance <span class="math inline">\(\kappa(t) = \int_0^t \sigma_s^2 \, ds\)</span> and <span class="math inline">\(\gamma(t) = \kappa(t)/\kappa(T)\)</span>. The bridge <span class="math inline">\(\mathbb{P}_{|0,T}\)</span> is Gaussian: for <span class="math inline">\(t \in (0,T)\)</span>,</p>
+<p><span id="eq-bridge-marginal"><span class="math display">\[
+X_t \mid (X_0, X_T) \;\sim\; \mathcal{N} {\left( (1-\gamma(t)) X_0 + \gamma(t) X_T, \;\; \kappa(T) \gamma(t)(1-\gamma(t)) \, I \right)} .
+\tag{6}\]</span></span></p>
+<p>The marginal density of <span class="math inline">\(\Pi^\star\)</span> at time <span class="math inline">\(t\)</span> is</p>
+<p><span id="eq-marginal-density"><span class="math display">\[
+\Pi^\star_t(x) = \int \mathbb{P}_{t|0,T}(x \mid x_0, x_T) \, \Pi^\star_{0,T}(x_0, x_T) \, dx_0 \, dx_T.
+\tag{7}\]</span></span></p>
+<p>Differentiate <span class="math inline">\(\log \Pi^\star_t(x)\)</span>:</p>
+<p><span class="math display">\[
+\nabla_x \log \Pi^\star_t(x) = \frac{\int \nabla_x \mathbb{P}_{t|0,T}(x \mid x_0, x_T) \, \Pi^\star_{0,T}(x_0, x_T) \, dx_0 \, dx_T}{\Pi^\star_t(x)}.
+\]</span></p>
+<p>Since <span class="math inline">\(\mathbb{P}_{t|0,T}\)</span> is Gaussian with mean <span class="math inline">\((1-\gamma)x_0 + \gamma \, x_T\)</span>,</p>
+<p><span class="math display">\[
+\nabla_x \log \mathbb{P}_{t|0,T}(x \mid x_0, x_T) = -\frac{x - (1-\gamma)x_0 - \gamma \, x_T}{\kappa(T)\gamma(1-\gamma)}.
+\]</span></p>
+<details>
+<summary>
+Integration by parts to swap gradients:
+</summary>
+<p style="color: blue;">
+</p><p>Integrate by parts in <span class="math inline">\(x_0\)</span>. Note that <span class="math inline">\(\nabla_x \mathbb{P}_{t|0,T} = -\frac{1}{1-\gamma} \nabla_{x_0} \mathbb{P}_{t|0,T}\)</span> (both shift the Gaussian mean). So</p>
+<p><span class="math display">\[
+\nabla_x \log \Pi^\star_t(x) = \frac{1}{1-\gamma} \frac{\int \mathbb{P}_{t|0,T}(x \mid x_0, x_T) \, \nabla_{x_0} \Pi^\star_{0,T}(x_0, x_T) \, dx_0 \, dx_T}{\Pi^\star_t(x)},
+\]</span></p>
+<p>where we integrated by parts, moving <span class="math inline">\(\nabla_{x_0}\)</span> from <span class="math inline">\(\mathbb{P}_{t|0,T}\)</span> onto <span class="math inline">\(\Pi^\star_{0,T}\)</span> (boundary terms vanish). Recognizing the conditional expectation:</p>
+<p><span class="math display">\[
+\nabla_x \log \Pi^\star_t(x) = \mathbb{E}_{\Pi^\star_{0,T|t}} {\left[ \frac{1}{1-\gamma(t)} \nabla_{X_0} \log \Pi^\star_{0,T}(X_0,X_T) \;\Big|\; X_t = x \right]} .
+\]</span></p>
+<p>The same argument with integration by parts in <span class="math inline">\(x_T\)</span> gives</p>
+<p><span class="math display">\[
+\nabla_x \log \Pi^\star_t(x) = \mathbb{E}_{\Pi^\star_{0,T|t}} {\left[ \frac{1}{\gamma(t)} \nabla_{X_T} \log \Pi^\star_{0,T}(X_0,X_T) \;\Big|\; X_t = x \right]} .
+\]</span></p>
+Since both expressions equal the same score, any convex combination <span class="math inline">\((1-c(t))\)</span> times the first plus <span class="math inline">\(c(t)\)</span> times the second is also valid, for any <span class="math inline">\(c(t) \in (0,1]\)</span>.
+<p></p>
+</details>
+<p>This gives the <strong>generalized target score identity</strong>: for any <span class="math inline">\(c(t) \in (0,1]\)</span>,</p>
+<p><span id="eq-tsi"><span class="math display">\[
+\nabla \log \Pi^\star_t(x) = \mathbb{E}_{\Pi^\star_{0,T|t}} {\left[ \frac{1-c(t)}{1-\gamma(t)} \nabla_{X_0} \log \Pi^\star_{0,T} + \frac{c(t)}{\gamma(t)} \nabla_{X_T} \log \Pi^\star_{0,T} \;\Big|\; X_t = x \right]} .
+\tag{8}\]</span></span></p>
+</section>
+<section id="general-regression-target" class="level3">
+<h3 class="anchored" data-anchor-id="general-regression-target">General regression target</h3>
+<p>Now combine everything. The backward drift of a process in <span class="math inline">\(\mathcal{R}(\mathbb{P})\)</span> has the form (from the <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> and the bridge structure)</p>
+<p><span id="eq-backward-drift"><span class="math display">\[
+v^\star(x,t) = \mathbb{E}_{\Pi^\star_{0|t}} {\left[ \sigma_t \, \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t \mid X_0) \;\Big|\; X_t = x \right]} .
+\tag{9}\]</span></span></p>
+<p>Since <span class="math inline">\(\mathbb{P}_{t|0}\)</span> is Gaussian <span class="math inline">\(\mathcal{N}(X_0, \kappa(t) I)\)</span>, this is <span class="math inline">\(-\sigma_t(X_t - X_0)/\kappa(t)\)</span> averaged over <span class="math inline">\(X_0 \mid X_t\)</span>. Using Nelson’s relation <span class="math inline">\(u^\star = \sigma_t \nabla \log \Pi^\star_t - v^\star\)</span> from <a href="#eq-nelson" class="quarto-xref">Equation&nbsp;3</a>, and substituting <a href="#eq-tsi" class="quarto-xref">Equation&nbsp;8</a> for the score and <a href="#eq-backward-drift" class="quarto-xref">Equation&nbsp;9</a> for <span class="math inline">\(v^\star\)</span>, the non-Markovian drift <span class="math inline">\(\xi\)</span> that we need to regress onto satisfies</p>
+<p><span id="eq-xi-general"><span class="math display">\[
+\sigma_t^{-1} \, \xi(X,t) = \frac{1-c(t)}{1-\gamma(t)} \nabla_{X_0} \log \Pi^\star_{0,T}(X_0,X_T) + \frac{c(t)}{\gamma(t)} \nabla_{X_T} \log \Pi^\star_{0,T}(X_0,X_T) - \nabla_{X_t} \log \mathbb{P}_{t|0}(X_t \mid X_0).
+\tag{10}\]</span></span></p>
+<p>Here <span class="math inline">\((X_0, X_t, X_T)\)</span> are all determined by the bridge path: <span class="math inline">\(X_0, X_T\)</span> from the coupling, <span class="math inline">\(X_t\)</span> from <a href="#eq-bridge-marginal" class="quarto-xref">Equation&nbsp;6</a>. The Markovianization step fits <span class="math inline">\(u(X_t,t)\)</span> to <span class="math inline">\(\mathbb{E}[\xi(X,t) \mid X_t]\)</span> via <a href="#eq-matching-loss" class="quarto-xref">Equation&nbsp;5</a>.</p>
+<p>The tractability of <a href="#eq-xi-general" class="quarto-xref">Equation&nbsp;10</a> depends entirely on the coupling scores <span class="math inline">\(\nabla \log \Pi^\star_{0,T}\)</span>.</p>
+</section>
+<section id="three-couplings-three-algorithms" class="level3">
+<h3 class="anchored" data-anchor-id="three-couplings-three-algorithms">Three couplings, three algorithms</h3>
+<p><strong>Half-bridge / <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>.</strong> Set <span class="math inline">\(\Pi^\star_{0,T} = \delta_{x_0} \otimes \pi\)</span> (Dirac prior, memoryless condition). Then <span class="math inline">\(\nabla_{X_0} \log \Pi^\star_{0,T}\)</span> is undefined (Dirac), and <span class="math inline">\(\nabla_{X_T} \log \Pi^\star_{0,T} = \nabla \log \pi(X_T)\)</span>. Taking <span class="math inline">\(c(t) = \gamma(t)\)</span> and using <span class="math inline">\(x_0 = 0\)</span>, the general formula <a href="#eq-xi-general" class="quarto-xref">Equation&nbsp;10</a> simplifies to</p>
+<p><span id="eq-xi-as"><span class="math display">\[
+\sigma_t^{-1} \, \xi(X,t) = \nabla_{X_T} \log \frac{\pi(X_T)}{\mathbb{P}_T(X_T)},
+\tag{11}\]</span></span></p>
+<p>where <span class="math inline">\(\mathbb{P}_T\)</span> is the terminal marginal of the reference. Simple, but requires Dirac prior and large <span class="math inline">\(\sigma_t\)</span> for exploration.</p>
+<p><strong>Full Schrodinger bridge / <a href="../../notes/adjoint_samplers_draft/ASBS.html">ASBS</a>.</strong> Set <span class="math inline">\(\Pi^\star_{0,T} = \hat\varphi_0(x_0) \, \mathbb{P}_{T|0}(x_T \mid x_0) \, \varphi_T(x_T)\)</span>, the <a href="../shrodinger/shrodinger.qmd">Schrodinger bridge</a> coupling. The drift becomes</p>
+<p><span id="eq-xi-asbs"><span class="math display">\[
+\sigma_t^{-1} \, \xi(X,t) = \nabla_{X_T} \log \frac{\pi(X_T)}{\hat\varphi_T(X_T)},
+\tag{12}\]</span></span></p>
+<p>where <span class="math inline">\(\hat\varphi_T\)</span> is the backward Schrodinger potential. This allows arbitrary priors, but <span class="math inline">\(\hat\varphi_T\)</span> is unknown and must be learned alongside <span class="math inline">\(u\)</span>, requiring alternating IPF-style updates.</p>
+<p><strong>Independent coupling / BMS.</strong> Set</p>
+<p><span id="eq-indep-coupling"><span class="math display">\[
+\Pi^\star_{0,T} = p_0 \otimes \pi.
+\tag{13}\]</span></span></p>
+<p>Plug into <a href="#eq-xi-general" class="quarto-xref">Equation&nbsp;10</a>. The coupling scores factor trivially: <span class="math inline">\(\nabla_{X_0} \log \Pi^\star_{0,T} = \nabla \log p_0(X_0)\)</span> and <span class="math inline">\(\nabla_{X_T} \log \Pi^\star_{0,T} = \nabla \log \pi(X_T)\)</span>. The regression target becomes</p>
+<p><span id="eq-xi-bms"><span class="math display">\[
+\sigma_t^{-1} \, \xi(X,t) = \frac{1-c(t)}{1-\gamma(t)} \nabla \log p_0(X_0) + \frac{c(t)}{\gamma(t)} \nabla \log \pi(X_T) - \frac{X_t - X_0}{\kappa(t)}.
+\tag{14}\]</span></span></p>
+<p>Every term on the right is known: <span class="math inline">\(\nabla \log p_0\)</span> is the prior score (Gaussian), <span class="math inline">\(\nabla \log \pi = \nabla \log \rho\)</span> is the target score (computable), and <span class="math inline">\((X_t - X_0)/\kappa(t)\)</span> is the Gaussian transition score. No unknown potentials, no alternation.</p>
+</section>
+<section id="the-independent-coupling-why-it-works" class="level3">
+<h3 class="anchored" data-anchor-id="the-independent-coupling-why-it-works">The independent coupling: why it works</h3>
+<p>The independent coupling <span class="math inline">\(p_0 \otimes \pi\)</span> satisfies the boundary constraints by construction: marginalizing over <span class="math inline">\(X_T\)</span> gives <span class="math inline">\(p_0\)</span>, marginalizing over <span class="math inline">\(X_0\)</span> gives <span class="math inline">\(\pi\)</span>. Any coupling satisfying these boundary constraints yields a valid fixed point <span class="math inline">\(u^\star\)</span> that transports <span class="math inline">\(p_0\)</span> to <span class="math inline">\(\pi\)</span>. The Schrodinger bridge coupling minimizes the path-space KL to the reference, so it is optimal in that sense. The independent coupling sacrifices this optimality for a fully tractable regression target.</p>
+<p>At each iteration, the coupling is <span class="math inline">\(\Pi^i_{0,T} = \mathbb{P}^{u_i}_0 \otimes \mathbb{P}^{u_i}_T\)</span>: independently resample <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_T\)</span> from their marginals under the current SDE. In practice, simulate trajectories, then randomly pair the initial and terminal samples.</p>
+<p>Sampling the bridge is cheap: given <span class="math inline">\((x_0, x_T)\)</span>, draw <span class="math inline">\(X_t\)</span> from <a href="#eq-bridge-marginal" class="quarto-xref">Equation&nbsp;6</a> and evaluate <a href="#eq-xi-bms" class="quarto-xref">Equation&nbsp;14</a>. No full trajectory simulation needed during regression.</p>
+</section>
+<section id="damped-iteration" class="level3">
+<h3 class="anchored" data-anchor-id="damped-iteration">Damped iteration</h3>
+<p>The undamped iteration <span class="math inline">\(u_{i+1} = \Phi(u_i)\)</span> can overshoot in high dimensions. The damped version uses step size <span class="math inline">\(\alpha \in (0,1]\)</span>:</p>
+<p><span id="eq-damped"><span class="math display">\[
+u_{i+1} = \alpha \, \Phi(u_i) + (1-\alpha) \, u_i.
+\tag{15}\]</span></span></p>
+<p>Setting <span class="math inline">\(\eta = (1-\alpha)/\alpha\)</span>, this solves</p>
+<p><span id="eq-damped-var"><span class="math display">\[
+u_{i+1} = \mathop{\mathrm{argmin}}_u \;  {\left\{  \mathbb{E}_{\Pi^i}  {\left[ \int_0^T \frac{1}{2} \| \xi - u(X_t,t) \|^2 \, dt \right]}  \;+\;  \textcolor{blue}{\eta \, \mathbb{E}_{\Pi^i}  {\left[ \int_0^T \frac{1}{2} \| u_i(X_t,t) - u(X_t,t) \|^2 \, dt \right]} }  \right\}} .
+\tag{16}\]</span></span></p>
+<p>The <span class="math inline">\( \textcolor{blue}{\text{second term}}\)</span> penalizes deviation from the previous iterate. Each step balances fitting new bridge data against staying close to <span class="math inline">\(u_i\)</span>, preventing mode collapse from aggressive updates.</p>
+</section>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Coupling <span class="math inline">\(\Pi^i_{0,T}\)</span></th>
+<th>Regression target <span class="math inline">\(\sigma_t^{-1} \xi\)</span></th>
+<th>Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">AS</a></td>
+<td><span class="math inline">\(\delta_{x_0} \otimes \mathbb{P}^{u_i}_T\)</span></td>
+<td><span class="math inline">\(\nabla \log [\pi/\mathbb{P}_T](X_T)\)</span></td>
+<td>Dirac prior</td>
+</tr>
+<tr class="even">
+<td><a href="../../notes/adjoint_samplers_draft/ASBS.html">ASBS</a></td>
+<td><span class="math inline">\(\mathbb{P}^{u_i}_{0,T}\)</span></td>
+<td><span class="math inline">\(\nabla \log [\pi/\hat\varphi_T](X_T)\)</span></td>
+<td>Alternating opt.</td>
+</tr>
+<tr class="odd">
+<td>BMS</td>
+<td><span class="math inline">\(\mathbb{P}^{u_i}_0 \otimes \mathbb{P}^{u_i}_T\)</span></td>
+<td><a href="#eq-xi-bms" class="quarto-xref">Equation&nbsp;14</a></td>
+<td>None (single obj.)</td>
+</tr>
+</tbody>
+</table>
+<p>All three converge to a fixed point <span class="math inline">\(u^\star\)</span> transporting <span class="math inline">\(p_0\)</span> to <span class="math inline">\(\pi\)</span>. The matching loss <a href="#eq-matching-loss" class="quarto-xref">Equation&nbsp;5</a> is a forward KL objective: <span class="math inline">\(u^\star = \mathop{\mathrm{argmin}}_u D_{\text{KL}}(\Pi^\star \mid \mathbb{P}^u)\)</span>. Forward KL is mode-covering (it penalizes placing zero mass where <span class="math inline">\(\Pi^\star\)</span> has mass), which partly explains the good mode diversity in practice.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

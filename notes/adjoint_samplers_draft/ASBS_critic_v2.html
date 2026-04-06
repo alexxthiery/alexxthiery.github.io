@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>asbs_critic_v2 – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#second-pass-critique-asbs_v2.qmd" id="toc-second-pass-critique-asbs_v2.qmd" class="nav-link active" data-scroll-target="#second-pass-critique-asbs_v2.qmd">Second-Pass Critique: ASBS_v2.qmd</a>
+  <ul class="collapse">
+  <li><a href="#verdict" id="toc-verdict" class="nav-link" data-scroll-target="#verdict">Verdict</a></li>
+  <li><a href="#sign-convention-issues" id="toc-sign-convention-issues" class="nav-link" data-scroll-target="#sign-convention-issues">Sign Convention Issues</a></li>
+  <li><a href="#notation-inconsistencies-cross-note" id="toc-notation-inconsistencies-cross-note" class="nav-link" data-scroll-target="#notation-inconsistencies-cross-note">Notation Inconsistencies (cross-note)</a></li>
+  <li><a href="#pedagogy-gaps" id="toc-pedagogy-gaps" class="nav-link" data-scroll-target="#pedagogy-gaps">Pedagogy Gaps</a></li>
+  <li><a href="#remaining-style-issues" id="toc-remaining-style-issues" class="nav-link" data-scroll-target="#remaining-style-issues">Remaining Style Issues</a></li>
+  <li><a href="#mathematical-errors-or-concerns" id="toc-mathematical-errors-or-concerns" class="nav-link" data-scroll-target="#mathematical-errors-or-concerns">Mathematical Errors or Concerns</a></li>
+  <li><a href="#minor-issues" id="toc-minor-issues" class="nav-link" data-scroll-target="#minor-issues">Minor Issues</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="second-pass-critique-asbs_v2.qmd" class="level1">
+<h1>Second-Pass Critique: ASBS_v2.qmd</h1>
+<section id="verdict" class="level2">
+<h2 class="anchored" data-anchor-id="verdict">Verdict</h2>
+<p>Major improvement over v1. The note now derives rather than announces. The corrector matching derivation is in main text (not buried in a details block). The opening is direct and problem-driven. The SOC-to-SB identification is computed, not stated as a theorem. Cross-references replaced most re-derivation. At 142 lines this is the shortest of the four v2 notes, as intended.</p>
+<p>Remaining issues are mostly at the equation level: one sign convention subtlety that could confuse readers moving between notes, a few notation mismatches with the other v2 notes and with shrodinger.qmd, and some broken cross-reference paths. No showstopper mathematical errors found, but two claims need tightening.</p>
+</section>
+<section id="sign-convention-issues" class="level2">
+<h2 class="anchored" data-anchor-id="sign-convention-issues">Sign Convention Issues</h2>
+<p><strong>1. SOC convention mismatch between ASBS_v2 and HJB.qmd.</strong></p>
+<p>HJB.qmd defines the SOC problem as a <em>maximization</em>:</p>
+<p><span class="math display">\[V(t,x) = \sup_u \E\left[\int_t^T (f - \tfrac{1}{2}\|u\|^2) ds + g(X_T) \mid X_t = x\right]\]</span></p>
+<p>with <span class="math inline">\(h(t,x) = \E[\exp(\int_t^T f\,ds + g(X_T)) \mid X_t = x]\)</span>, <span class="math inline">\(V = \log h\)</span>, and optimal control <span class="math inline">\(u^\star = \sigma^\top \nabla V = \sigma^\top \nabla \log h\)</span>.</p>
+<p>ASBS_v2 (line 39) uses the <em>minimization</em> convention from adjoint_sampling_v2: <span class="math inline">\(\min_u \E[\int \frac{1}{2}\|u\|^2 dt + g(X_1)]\)</span>. In this convention, <span class="math inline">\(h(t,x) = \E[e^{-g(X_1)} \mid X_t = x]\)</span> (note the minus sign on <span class="math inline">\(g\)</span>) and <span class="math inline">\(V = -\log h\)</span>. The optimal control is <span class="math inline">\(u^\star = \sigma \nabla \log h = -\sigma \nabla V\)</span>, which has the <em>opposite sign</em> from the HJB.qmd convention.</p>
+<p>The note tries to bridge the two by writing (line 39): “the SOC optimal joint is <span class="math inline">\(p^\star(X_0, X_1) = \bbP(X_0, X_1) e^{-g(X_1) + V_0(X_0)}\)</span>”. This is correct for the minimization convention where <span class="math inline">\(V_0(X_0) = \log \E[e^{-g(X_1)} \mid X_0]\)</span>. But the cross-reference to the “<a href="../../notes/HJB/HJB.html">SOC joint</a>” is misleading because HJB.qmd writes <span class="math inline">\(\frac{d\bbP^\star}{d\bbP} \propto \exp(g(X_T))\)</span> (maximization), not <span class="math inline">\(\exp(-g(X_1))\)</span>.</p>
+<p>Fix: add a parenthetical clarifying the sign flip. Something like: “the SOC optimal joint is <span class="math inline">\(p^\star(X_0, X_1) \propto \bbP(X_0, X_1) e^{-g(X_1) + V_0(X_0)}\)</span> (the <a href="../../notes/HJB/HJB.html">HJB notes</a> use a maximization convention where <span class="math inline">\(g\)</span> has the opposite sign).”</p>
+<p>Alternatively, adopt the same convention as adjoint_sampling_v2, which already handles this (line 36 of that note: “the [HJB notes] use a maximization convention… our minimization corresponds to <span class="math inline">\(f = 0\)</span> and <span class="math inline">\(g_{\text{HJB}} = -g\)</span>”). The ASBS note should include the same clarification.</p>
+<p><strong>2. The identification <span class="math inline">\(e^{-g(X_1)} = \varphi_1(X_1)\)</span> (line 42).</strong></p>
+<p>This is the crucial equation connecting SOC to SB. With the minimization convention, the SOC tilts the path measure by <span class="math inline">\(e^{-g(X_1) + V_0(X_0)}\)</span>. The SB tilts by <span class="math inline">\(\widehat{\varphi}_0(X_0) \varphi_1(X_1)\)</span>. Matching gives <span class="math inline">\(e^{-g} = \varphi_1\)</span> (up to constants absorbed into <span class="math inline">\(\widehat{\varphi}_0\)</span>). Then <span class="math inline">\(g = -\log \varphi_1\)</span>.</p>
+<p>Next, <span class="math inline">\(\varphi_1 = \pi / (p_1^{\bbP} \widehat{\varphi}_1)\)</span> from the SB marginal condition. So <span class="math inline">\(g = -\log[\pi / (p_1^{\bbP} \widehat{\varphi}_1)] = \log(p_1^{\bbP} \widehat{\varphi}_1 / \pi) = \log \widehat{\varphi}_1 - \log \pi + \log p_1^{\bbP}\)</span>.</p>
+<p>The note writes (line 45-46): <span class="math inline">\(g(x) = \log(\widehat{\varphi}_1(x)/\pi(x)) + \text{const}\)</span>, absorbing <span class="math inline">\(\log p_1^{\bbP}\)</span> into the constant. This is correct: <span class="math inline">\(p_1^{\bbP}\)</span> is the base process marginal at <span class="math inline">\(t=1\)</span>, which does not depend on the control and can be absorbed.</p>
+<p>Sign convention is consistent here. Verified.</p>
+<p><strong>3. The second identification <span class="math inline">\(e^{V_0(X_0)} = \widehat{\varphi}_0(X_0)/\mu(X_0)\)</span> (line 42).</strong></p>
+<p>Line 58 says this “is automatically satisfied by the SB boundary conditions at <span class="math inline">\(t = 0\)</span>.” This is too hand-wavy. The claim is that with <span class="math inline">\(g = -\log \varphi_1\)</span>, we get <span class="math inline">\(V_0(x) = \log \E[e^{-g(X_1)} \mid X_0 = x] = \log \E[\varphi_1(X_1) \mid X_0 = x] = \log \varphi_0(x)\)</span>. So <span class="math inline">\(e^{V_0} = \varphi_0\)</span>. Then <span class="math inline">\(\widehat{\varphi}_0/\mu = \varphi_0\)</span> needs to hold. From the SB boundary condition at <span class="math inline">\(t=0\)</span>: the SB density is <span class="math inline">\(q_0(x) = p_0^{\bbP}(x) \widehat{\varphi}_0(x) \varphi_0(x) = \mu(x)\)</span>. With <span class="math inline">\(p_0^{\bbP} = \mu\)</span> (the base starts from <span class="math inline">\(\mu\)</span>), this gives <span class="math inline">\(\widehat{\varphi}_0 \varphi_0 = 1\)</span>, hence <span class="math inline">\(\widehat{\varphi}_0 = 1/\varphi_0\)</span>.</p>
+<p>But the note claims <span class="math inline">\(e^{V_0} = \widehat{\varphi}_0/\mu\)</span>. We derived <span class="math inline">\(e^{V_0} = \varphi_0\)</span>. And <span class="math inline">\(\widehat{\varphi}_0/\mu = \widehat{\varphi}_0/p_0^{\bbP}\)</span>. With <span class="math inline">\(p_0^{\bbP} = \mu\)</span> and <span class="math inline">\(\widehat{\varphi}_0 = 1/\varphi_0\)</span>, this gives <span class="math inline">\(\widehat{\varphi}_0/\mu = 1/(\mu \varphi_0)\)</span>. For this to equal <span class="math inline">\(\varphi_0\)</span>, we’d need <span class="math inline">\(\varphi_0^2 = 1/\mu\)</span>, which is not generally true.</p>
+<p>There is a normalization issue here. The SB factorization <span class="math inline">\(d\bbQ^\star/d\bbP \propto \widehat{\varphi}_0(X_0) \varphi_1(X_1)\)</span> holds up to a multiplicative constant. And the SOC factorization is <span class="math inline">\(p^\star(X_0, X_1) \propto \bbP(X_0, X_1) e^{-g(X_1) + V_0(X_0)}\)</span>. The proportionality constants make the identification non-unique. The note sweeps this under “<span class="math inline">\(+ \text{const}\)</span>” in the exponent. The claim on line 42 should not be stated as an exact equality; it should say “up to multiplicative constants” or equivalently “taking logs, this gives <span class="math inline">\(-g = \log \varphi_1 + c_1\)</span> and <span class="math inline">\(V_0 = \log \widehat{\varphi}_0 - \log \mu + c_2\)</span> for constants <span class="math inline">\(c_1, c_2\)</span>.”</p>
+<p>This is not a mathematical error (the proportionality is enough for all downstream results), but the equality as written is imprecise and could confuse a careful reader.</p>
+</section>
+<section id="notation-inconsistencies-cross-note" class="level2">
+<h2 class="anchored" data-anchor-id="notation-inconsistencies-cross-note">Notation Inconsistencies (cross-note)</h2>
+<p><strong>1. SDE convention.</strong> ASBS_v2 does not write the controlled SDE explicitly. It inherits the convention from adjoint_sampling_v2: <span class="math inline">\(dX_t = \sigma_t u(t, X_t) dt + \sigma_t dW_t\)</span> with <span class="math inline">\(X_0 \sim \mu\)</span>. This matches BMS_v2 (line 22). Good.</p>
+<p>adjoint_matching_v2 uses a different convention: <span class="math inline">\(dX_t = [b(X_t, t) + \sigma(t) u(t, X_t)] dt + \sigma(t) dW_t\)</span> with non-trivial base drift <span class="math inline">\(b\)</span>. ASBS_v2 specializes to <span class="math inline">\(b = 0\)</span> (Brownian motion base), which is consistent.</p>
+<p>No issue here.</p>
+<p><strong>2. SB potential notation: <span class="math inline">\(\varphi_t\)</span> vs <span class="math inline">\(\widehat{\varphi}_t\)</span>.</strong></p>
+<p>In shrodinger.qmd (line 122-132), the notation is:</p>
+<ul>
+<li><span class="math inline">\(\varphi_t(x) = \E[g(X_1) \mid X_t = x]\)</span> (forward, propagates terminal potential)</li>
+<li><span class="math inline">\(\widehat{\varphi}_t(x) = \E[f(X_0) \mid X_t = x]\)</span> (backward, propagates initial potential)</li>
+</ul>
+<p>With boundary conditions <span class="math inline">\(\varphi_1 = g\)</span> and <span class="math inline">\(\widehat{\varphi}_0 = f\)</span>.</p>
+<p>In ASBS_v2 (line 30-32), the notation is:</p>
+<ul>
+<li><span class="math inline">\(\varphi_t(x) = \E_{\bbP}[\varphi_1(X_1) \mid X_t = x]\)</span> (forward)</li>
+<li><span class="math inline">\(\widehat{\varphi}_t(x) = \E_{\bbP}[\widehat{\varphi}_0(X_0) \mid X_t = x]\)</span> (backward)</li>
+</ul>
+<p>This is consistent with shrodinger.qmd. Good.</p>
+<p><strong>3. The marginal density factorization.</strong></p>
+<p>shrodinger.qmd (line 122) writes: <span class="math inline">\(q_t(x) = p_t^{\text{ref}}(x) \widehat{\varphi}_t(x) \varphi_t(x)\)</span>.</p>
+<p>ASBS_v2 (line 43) writes: “the SB density at time 1 is <span class="math inline">\(q_1(x) = p_1^{\bbP}(x) \widehat{\varphi}_1(x) \varphi_1(x) = \pi(x)\)</span>.”</p>
+<p>Consistent. Good.</p>
+<p><strong>4. The SB drift.</strong></p>
+<p>shrodinger.qmd (line 138) writes: drift correction is <span class="math inline">\(\sigma \sigma^\top \nabla_x \log \varphi_t(X_t)\)</span>.</p>
+<p>ASBS_v2 (line 33) writes: “the SB process has drift <span class="math inline">\(f_t + \sigma_t^2 \nabla \log \varphi_t\)</span>.”</p>
+<p>For scalar <span class="math inline">\(\sigma_t\)</span>, <span class="math inline">\(\sigma \sigma^\top = \sigma_t^2\)</span>. Consistent.</p>
+<p><strong>5. Terminal cost notation across the 4 v2 notes.</strong></p>
+<ul>
+<li>adjoint_matching_v2: <span class="math inline">\(g = r\)</span> (reward), maximization via <span class="math inline">\(\cJ(u) = \E[\int \frac{1}{2}\|u\|^2 dt - r(X_1)]\)</span></li>
+<li>adjoint_sampling_v2: <span class="math inline">\(g(x) = \log p_1^{\text{base}}(x) + E(x)/\tau\)</span></li>
+<li>ASBS_v2: <span class="math inline">\(g(x) = \log(\widehat{\varphi}_1(x)/\pi(x))\)</span></li>
+<li>BMS_v2: uses the general coupling framework, no explicit <span class="math inline">\(g\)</span></li>
+</ul>
+<p>adjoint_matching_v2 uses <span class="math inline">\(r\)</span> for reward, others use <span class="math inline">\(g\)</span> for terminal cost. The sign flip is documented in adjoint_sampling_v2. ASBS_v2 does not re-state this convention, relying on the reader having read adjoint_sampling_v2 first. Acceptable for the draft, but a one-sentence reminder on line 39 would help.</p>
+<p><strong>6. Bridge notation.</strong></p>
+<p>adjoint_sampling_v2 uses <span class="math inline">\(\bbP_{t \mid 0,1}\)</span> for the bridge kernel and <span class="math inline">\(p^{\bar{u}}_{0,1}\)</span> for the endpoint joint.</p>
+<p>ASBS_v2 uses <span class="math inline">\(\bbP_{t \mid 0,1}\)</span> and <span class="math inline">\(p^{\bar{u}}_{0,1}\)</span> in <strong>?@eq-am</strong> (line 67-68). Consistent.</p>
+<p>BMS_v2 uses <span class="math inline">\(\bbP_{t|0,T}\)</span> and <span class="math inline">\(\Pi^\star_{0,T}\)</span> (different notation for the coupling, but BMS has its own framework). Acceptable.</p>
+<p><strong>7. <span class="math inline">\(p^{\text{base}}_1\)</span> vs <span class="math inline">\(p_1^{\bbP}\)</span>.</strong></p>
+<p>adjoint_sampling_v2 writes <span class="math inline">\(p^{\text{base}}_1\)</span>. ASBS_v2 writes <span class="math inline">\(p^{\bbP}_1\)</span> on line 43 but <span class="math inline">\(p^{\text{base}}_1\)</span> on lines 47 and 117. Mix of the two notations within the same note. Pick one. Since <span class="math inline">\(\bbP\)</span> is the base path measure, <span class="math inline">\(p_1^{\bbP}\)</span> is cleaner and matches the path-measure notation used throughout. Replace the two occurrences of <span class="math inline">\(p^{\text{base}}_1\)</span> on lines 47 and 117.</p>
+</section>
+<section id="pedagogy-gaps" class="level2">
+<h2 class="anchored" data-anchor-id="pedagogy-gaps">Pedagogy Gaps</h2>
+<p><strong>1. The SB-to-SOC decomposition is now clear.</strong></p>
+<p>The computation on lines 35-60 is well-structured: start from the SB Radon-Nikodym derivative, match it with the SOC joint, identify the modified terminal cost, then verify the bias cancellation by explicit marginalization. The reader can follow the logic.</p>
+<p><strong>2. The corrector matching derivation (lines 76-98) is clear and in main text.</strong></p>
+<p>The progression from definition (<strong>?@eq-sb-potentials</strong>) to gradient (<strong>?@eq-cm-start</strong>) to Bayes’ rule (<strong>?@eq-cm-cond-exp</strong>) to regression (<strong>?@eq-cm</strong>) is well-paced. The connection to the Tweedie formula is stated on line 88. Good.</p>
+<p><strong>3. One pedagogical gap: WHY the alternation converges.</strong></p>
+<p>Line 110 says “Convergence to the SB solution follows from standard IPFP analysis.” This is a bit abrupt. The reader understands that AM = forward half-bridge and CM = backward half-bridge. But <em>why</em> alternating these two projections converges is not intuitive from the ASBS note alone. The cross-reference to shrodinger.qmd helps, but shrodinger.qmd also does not prove IPFP convergence (it describes IPFP and cites papers). A single sentence of intuition would help: “Each step reduces the KL to the SB solution (since projections onto convex sets are contractive in KL), so the iterates converge monotonically.”</p>
+<p><strong>4. Missing: what happens concretely at <span class="math inline">\(k=1\)</span>.</strong></p>
+<p>Line 108 says: “The first AM stage then regresses the control onto <span class="math inline">\(\sigma_t \nabla E(X_1)\)</span>: pure energy-guided transport with no corrector.” This is good but could be expanded by one sentence. With <span class="math inline">\(h^{(0)} = 0\)</span>, the first stage ignores the prior entirely, starting all trajectories from <span class="math inline">\(\mu\)</span> and pushing them toward low-energy regions using <span class="math inline">\(\nabla E\)</span> alone. The corrector at stage 2 then says “you’re overshooting some regions because the prior already had mass there.” This two-sentence picture would anchor the abstract alternation in concrete intuition.</p>
+<p><strong>5. The reciprocal projection trick (line 71) is handled by cross-reference.</strong></p>
+<p>“The same reciprocal projection trick from [adjoint sampling] applies.” This is fine for the shortest note, but the reader who skipped adjoint_sampling_v2 will be lost. Consider adding half a sentence: “…applies: sample <span class="math inline">\(X_1\)</span> from the current model, then draw <span class="math inline">\(X_t\)</span> from a Brownian bridge conditioned on <span class="math inline">\((X_0, X_1)\)</span>.”</p>
+<p>Actually, I see this is already on line 71: “sample <span class="math inline">\(X_1\)</span> from the current model, then draw <span class="math inline">\(X_t\)</span> from a Brownian bridge conditioned on <span class="math inline">\((X_0, X_1)\)</span>. No SDE simulation needed during training.” Good. No gap here.</p>
+</section>
+<section id="remaining-style-issues" class="level2">
+<h2 class="anchored" data-anchor-id="remaining-style-issues">Remaining Style Issues</h2>
+<p><strong>1. Opening (lines 20) is good.</strong></p>
+<p>“The [adjoint sampling] setup forces <span class="math inline">\(X_0 = 0\)</span>. What if we want a Gaussian prior…?” Direct, problem-driven, matches the v1 critique’s suggestion almost verbatim. No “This note describes” preamble. Passes.</p>
+<p><strong>2. No theorem-announcement style remaining.</strong></p>
+<p>The bold “SOC characteristics of SB” theorem from v1 is gone. Results are derived inline. Good.</p>
+<p><strong>3. The numbered list on lines 105-107 is borderline.</strong></p>
+<pre><code>1. **AM step:** Solve @eq-am with...
+2. **CM step:** Solve @eq-cm with...</code></pre>
+<p>This is an algorithmic description, not a bullet-point summary, so it is acceptable. The writing style guide says “avoid LLM-style bullet point lists unless summarizing key takeaways.” An alternating algorithm is naturally described as two steps, and the existing notes (e.g., shrodinger.qmd lines 97-98) use numbered lists for sampling procedures. Pass.</p>
+<p><strong>4. Line 92: “This is the <strong>corrector matching</strong> (CM) objective”.</strong></p>
+<p>Bold on “corrector matching” is fine as a term introduction. Matches the pattern in the other v2 notes (e.g., adjoint_matching_v2 line 185: “The <strong>Adjoint Matching loss</strong>”).</p>
+<p><strong>5. Line 110: “provided each step is solved exactly. In practice, 3-5 stages suffice.”</strong></p>
+<p>This is a nice practical remark. No style issue.</p>
+<p><strong>6. Line 122-123: the harmonic oscillator example.</strong></p>
+<p>“For molecular conformer generation, one can use a harmonic oscillator prior…” This is concrete and useful. Well placed.</p>
+<p><strong>7. Line 124: mode-seeking caveat.</strong></p>
+<p>“Like all SOC-based samplers, ASBS minimizes <span class="math inline">\(\kl(\bbQ \| \bbP)\)</span>, which is mode-seeking.” This is the forward KL from controlled to base, which is indeed mode-seeking. Wait: actually <span class="math inline">\(\kl(\bbQ \| \bbP)\)</span> penalizes <span class="math inline">\(\bbQ\)</span> for placing mass where <span class="math inline">\(\bbP\)</span> is small, which forces <span class="math inline">\(\bbQ\)</span> to stay within the support of <span class="math inline">\(\bbP\)</span>. This is mode-<em>covering</em> for <span class="math inline">\(\bbQ\)</span> relative to <span class="math inline">\(\bbP\)</span>. But the SOC tilts the terminal distribution, and the effective objective for the terminal marginal is mode-seeking (it prefers to concentrate mass on high-reward regions rather than covering all modes of <span class="math inline">\(\pi\)</span>). The claim as written is sloppy. The mode-seeking behavior comes from the fact that the SOC/SB solution is a Doob h-transform, which exponentially upweights certain modes, and the variational family (controlled diffusions) may not have enough capacity to cover all modes simultaneously.</p>
+<p>More precisely: the AM loss is a <em>reverse</em> KL regression (<span class="math inline">\(u\)</span> fitted to conditional expectations), which is mode-seeking in <span class="math inline">\(u\)</span>-space. This is worth stating correctly or dropping entirely. As written, the justification “<span class="math inline">\(\kl(\bbQ \| \bbP)\)</span> is mode-seeking” is not quite right.</p>
+<p><strong>8. No emojis, no em-dashes.</strong> Clean.</p>
+<p><strong>9. Historical figure portrait: still a TODO comment (lines 13-17).</strong></p>
+<p>All existing notes have one. This is a formatting gap flagged in v1. Still not addressed.</p>
+</section>
+<section id="mathematical-errors-or-concerns" class="level2">
+<h2 class="anchored" data-anchor-id="mathematical-errors-or-concerns">Mathematical Errors or Concerns</h2>
+<p><strong>1. The identification on line 42 has a normalization issue (detailed in Sign Convention Issues, item 3).</strong></p>
+<p>The equalities <span class="math inline">\(e^{-g(X_1)} = \varphi_1(X_1)\)</span> and <span class="math inline">\(e^{V_0(X_0)} = \widehat{\varphi}_0(X_0)/\mu(X_0)\)</span> hold up to multiplicative constants, not exactly. This is fine mathematically (the proportionality is all that matters) but should be stated as proportionality, not equality.</p>
+<p><strong>2. Line 55: “The second-to-last step uses the backward propagation from <strong>?@eq-sb-potentials</strong>: <span class="math inline">\(\widehat{\varphi}_1(x) = \int \bbP_{1|0}(x \mid y) \widehat{\varphi}_0(y) dy\)</span>.”</strong></p>
+<p>This is <span class="math inline">\(\widehat{\varphi}_1(x) = \E_{\bbP}[\widehat{\varphi}_0(X_0) \mid X_1 = x]\)</span>, which by Bayes’ rule is <span class="math inline">\(\int \bbP(X_0 = y \mid X_1 = x) \widehat{\varphi}_0(y) dy\)</span>, <em>not</em> <span class="math inline">\(\int \bbP_{1|0}(x \mid y) \widehat{\varphi}_0(y) dy\)</span>. The note writes the latter, which is <span class="math inline">\(\int \bbP(X_1 = x \mid X_0 = y) \widehat{\varphi}_0(y) dy\)</span>. By the definition in <strong>?@eq-sb-potentials</strong>, <span class="math inline">\(\widehat{\varphi}_t(x) = \E_{\bbP}[\widehat{\varphi}_0(X_0) \mid X_t = x]\)</span>. This is:</p>
+<p><span class="math display">\[\widehat{\varphi}_t(x) = \int \frac{p_{\bbP}(X_0 = y, X_t = x)}{p_t^{\bbP}(x)} \widehat{\varphi}_0(y) dy = \int \frac{\bbP_{t|0}(x|y) p_0^{\bbP}(y)}{p_t^{\bbP}(x)} \widehat{\varphi}_0(y) dy.\]</span></p>
+<p>The expression <span class="math inline">\(\int \bbP_{1|0}(x|y) \widehat{\varphi}_0(y) dy\)</span> (what the note writes) is <span class="math inline">\(\int \bbP(X_1 = x \mid X_0 = y) \widehat{\varphi}_0(y) dy\)</span>. This is <em>not</em> the same as <span class="math inline">\(\widehat{\varphi}_1(x)\)</span> unless <span class="math inline">\(\widehat{\varphi}_0(y) \propto p_0^{\bbP}(y) / p_1^{\bbP}(x)\)</span>… which is not generally true.</p>
+<p>Actually, wait. In <strong>?@eq-debias</strong> (line 51-57), the computation is:</p>
+<p><span class="math display">\[p^\star(X_1) \propto \varphi_1(X_1) \int \bbP(X_0, X_1) \widehat{\varphi}_0(X_0) dX_0 = \varphi_1(X_1) \int \bbP(X_1 \mid X_0) \underbrace{\bbP(X_0)}_{\text{absorbed}} \widehat{\varphi}_0(X_0) dX_0\]</span></p>
+<p>Wait, this absorbs <span class="math inline">\(\bbP(X_0) = p_0^{\bbP}(X_0)\)</span> into the integral. Then <span class="math inline">\(\int \bbP(X_1 \mid X_0) p_0^{\bbP}(X_0) \widehat{\varphi}_0(X_0) dX_0\)</span> is <em>not</em> <span class="math inline">\(\widehat{\varphi}_1(X_1)\)</span> by definition. It equals <span class="math inline">\(p_1^{\bbP}(X_1) \cdot \widehat{\varphi}_1(X_1)\)</span> by Bayes’ rule. So the second-to-last step in <strong>?@eq-debias</strong> should read:</p>
+<p><span class="math display">\[\varphi_1(X_1) \int \bbP(X_1 \mid X_0) p_0^{\bbP}(X_0) \widehat{\varphi}_0(X_0) dX_0 = \varphi_1(X_1) \cdot p_1^{\bbP}(X_1) \cdot \widehat{\varphi}_1(X_1) \propto \pi(X_1),\]</span></p>
+<p>using <span class="math inline">\(\varphi_1 \widehat{\varphi}_1 p_1^{\bbP} = \pi\)</span>. The note does say “absorbing <span class="math inline">\(p_1^{\bbP}\)</span> into the proportionality” on line 57, but the intermediate step <span class="math inline">\(\widehat{\varphi}_1(x) = \int \bbP_{1|0}(x \mid y) \widehat{\varphi}_0(y) dy\)</span> written on line 55 is wrong. It should be <span class="math inline">\(p_1^{\bbP}(x) \cdot \widehat{\varphi}_1(x) = \int \bbP_{1|0}(x \mid y) p_0^{\bbP}(y) \widehat{\varphi}_0(y) dy\)</span>, or more carefully: <span class="math inline">\(\int \bbP(X_1 = x \mid X_0 = y) \mu(y) \widehat{\varphi}_0(y) dy = p_1^{\bbP}(x) \widehat{\varphi}_1(x)\)</span>.</p>
+<p>This is a real error. The parenthetical explanation of the “backward propagation” step is incorrect as stated. The computation in <strong>?@eq-debias</strong> itself is correct (since the <span class="math inline">\(p_1^{\bbP}\)</span> factor is there implicitly and gets absorbed into <span class="math inline">\(\propto\)</span>), but the verbal explanation mis-identifies what <span class="math inline">\(\widehat{\varphi}_1\)</span> equals.</p>
+<p>Fix: Replace line 55’s parenthetical with: “The second-to-last step uses <span class="math inline">\(\int \bbP_{1|0}(x \mid y) \mu(y) \widehat{\varphi}_0(y) dy = p_1^{\bbP}(x) \widehat{\varphi}_1(x)\)</span> (from the definition <strong>?@eq-sb-potentials</strong> and Bayes’ rule).”</p>
+<p><strong>3. Line 69: “When <span class="math inline">\(\mu = \delta_0\)</span>, we have <span class="math inline">\(\widehat{\varphi}_0 = \text{const}\)</span>, hence <span class="math inline">\(\widehat{\varphi}_1(x) \propto p_1^{\text{base}}(x)\)</span>”.</strong></p>
+<p>With <span class="math inline">\(\mu = \delta_0\)</span>, <span class="math inline">\(X_0 = 0\)</span> deterministically. The SB boundary condition at <span class="math inline">\(t=0\)</span> requires <span class="math inline">\(q_0 = \mu = \delta_0\)</span>, which the base process already satisfies. The backward potential <span class="math inline">\(\widehat{\varphi}_0\)</span> must satisfy <span class="math inline">\(p_0^{\bbP}(x) \widehat{\varphi}_0(x) \varphi_0(x) = \delta_0(x)\)</span>. Since <span class="math inline">\(p_0^{\bbP}(x) = \delta_0(x)\)</span>, we need <span class="math inline">\(\widehat{\varphi}_0(0) \varphi_0(0) = 1\)</span>, i.e., <span class="math inline">\(\widehat{\varphi}_0\)</span> is only constrained at <span class="math inline">\(x = 0\)</span>. Taking <span class="math inline">\(\widehat{\varphi}_0 = \text{const}\)</span> is one valid choice (corresponding to the “trivial” backward potential).</p>
+<p>Then <span class="math inline">\(\widehat{\varphi}_1(x) = \E[\widehat{\varphi}_0(X_0) \mid X_1 = x] = \text{const}\)</span> (since <span class="math inline">\(\widehat{\varphi}_0\)</span> is constant). But the note claims <span class="math inline">\(\widehat{\varphi}_1(x) \propto p_1^{\text{base}}(x)\)</span>.</p>
+<p>This seems wrong. If <span class="math inline">\(\widehat{\varphi}_0 = c\)</span>, then <span class="math inline">\(\widehat{\varphi}_1(x) = c\)</span> as well. The terminal cost becomes <span class="math inline">\(g(x) = \log(c/\pi(x)) + \text{const} = -\log \pi(x) + \text{const}\)</span>. For Boltzmann <span class="math inline">\(\pi \propto e^{-E}\)</span>, this is <span class="math inline">\(g = E + \text{const}\)</span>.</p>
+<p>But adjoint_sampling_v2 uses <span class="math inline">\(g(x) = \log p_1^{\text{base}}(x) + E(x)/\tau\)</span>, which has an extra <span class="math inline">\(\log p_1^{\text{base}}\)</span> term. Where does this come from? It comes from writing <span class="math inline">\(\log(p_1^{\text{base}}/\pi) = \log p_1^{\text{base}} + E + \log Z\)</span>.</p>
+<p>The reconciliation: in the adjoint sampling setup with <span class="math inline">\(\mu = \delta_0\)</span> and <span class="math inline">\(b = 0\)</span>, the base process is a scaled Brownian motion. The terminal cost for the SOC problem is <span class="math inline">\(g(x) = \log(p_1^{\text{base}}(x)/\pi(x))\)</span>. In the ASBS framework, this should correspond to <span class="math inline">\(g(x) = \log(\widehat{\varphi}_1(x)/\pi(x))\)</span>, so <span class="math inline">\(\widehat{\varphi}_1 = p_1^{\text{base}}\)</span> (up to constants). But we just argued <span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span> when <span class="math inline">\(\widehat{\varphi}_0 = \text{const}\)</span>.</p>
+<p>The issue is normalization. The SB marginal condition says <span class="math inline">\(p_1^{\bbP}(x) \widehat{\varphi}_1(x) \varphi_1(x) = \pi(x)\)</span>. If <span class="math inline">\(\widehat{\varphi}_1 = c\)</span> (constant), then <span class="math inline">\(\varphi_1(x) = \pi(x)/(c \cdot p_1^{\bbP}(x))\)</span>. The terminal cost is <span class="math inline">\(g = -\log \varphi_1 = \log(c \cdot p_1^{\bbP}/\pi) = \log p_1^{\bbP} - \log \pi + \log c\)</span>. So <span class="math inline">\(g = \log p_1^{\text{base}} + E + \text{const}\)</span>, which <em>does</em> match adjoint_sampling_v2.</p>
+<p>So the note’s claim “<span class="math inline">\(\widehat{\varphi}_1(x) \propto p_1^{\text{base}}(x)\)</span>” is wrong; the correct statement is “<span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span>, and the <span class="math inline">\(p_1^{\text{base}}\)</span> factor re-emerges through <span class="math inline">\(\varphi_1\)</span>, giving a terminal cost <span class="math inline">\(g = \log(p_1^{\text{base}}/\pi) + \text{const}\)</span> which matches the adjoint sampling objective.”</p>
+<p>Fix: Replace “hence <span class="math inline">\(\widehat{\varphi}_1(x) \propto p_1^{\text{base}}(x)\)</span>” with “hence <span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span>. The terminal cost <strong>?@eq-modified-terminal</strong> then becomes <span class="math inline">\(g(x) = -\log \pi(x) + \text{const}\)</span>, and through <span class="math inline">\(\varphi_1(x) = \pi(x)/(p_1^{\bbP}(x) \cdot \text{const})\)</span>, this recovers the adjoint sampling terminal cost <span class="math inline">\(\log(p_1^{\text{base}}(x)/\pi(x))\)</span>.”</p>
+<p><strong>4. Line 90: the CM regression target (eq-cm).</strong></p>
+<p>The equation says <span class="math inline">\(\nabla \log \widehat{\varphi}_1 = \argmin_h \E_{(X_0, X_1) \sim p^{u^\star}_{0,1}} [\|h(X_1) - \nabla_{X_1} \log \bbP(X_1 \mid X_0)\|^2]\)</span>. The expectation is over <span class="math inline">\(p^{u^\star}_{0,1}\)</span>, the joint endpoint distribution of the <em>optimal</em> process. But in practice (line 106), the CM step uses the <em>current</em> iterate <span class="math inline">\(u^{(k)}\)</span>. This distinction is made on line 106 (“<span class="math inline">\(u^\star \approx u^{(k)}\)</span>”) but <strong>?@eq-cm</strong> itself writes <span class="math inline">\(p^{u^\star}\)</span>. Consider writing <span class="math inline">\(p^{u}\)</span> in the equation and noting the fixed-point condition explicitly.</p>
+<p><strong>5. Comparison table (lines 115-120): Adjoint Sampling corrector column says “None (<span class="math inline">\(\nabla \log p_1^{\text{base}}\)</span>)”.</strong></p>
+<p>Given the analysis in item 3, this is misleading. The corrector is absent (<span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span>), but what remains in the terminal cost is <span class="math inline">\(\nabla g = \nabla \log(p_1^{\text{base}}/\pi)\)</span>, which includes <span class="math inline">\(\nabla \log p_1^{\text{base}}\)</span>. So “<span class="math inline">\(\nabla \log p_1^{\text{base}}\)</span>” is not a corrector; it is part of the terminal cost gradient. The parenthetical is confusing. Suggest: change to “None (<span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span>)”.</p>
+</section>
+<section id="minor-issues" class="level2">
+<h2 class="anchored" data-anchor-id="minor-issues">Minor Issues</h2>
+<p><strong>1. Broken cross-reference paths.</strong></p>
+<p>All <code>../shrodinger/shrodinger.qmd</code> links should be <code>../shrodinger_bridge/shrodinger.qmd</code>. The actual directory on disk is <code>shrodinger_bridge/</code>, not <code>shrodinger/</code>. This affects lines 20, 25, 43, 110. Systemic across all v2 notes.</p>
+<p>Similarly, <code>../adjoint/adjoint.qmd</code> (used in other v2 notes, not ASBS_v2) should be <code>../adjoint_method/adjoint.qmd</code>.</p>
+<p><strong>2. Missing image for historical figure portrait (lines 13-17).</strong></p>
+<p>TODO comment still present. All gold-standard notes (HJB, doob, girsanov, shrodinger) have a portrait. Suggested: Erwin Schrodinger (the note already suggests this in the comment).</p>
+<p><strong>3. BibTeX entries in HTML comment (lines 127-141).</strong></p>
+<p>These need to be added to <code>ref.bib</code>. The note uses <code>@liu2025adjoint</code> and <code>@de2021diffusion</code> in the text, so citations will not render until the bib entries exist.</p>
+<p><strong>4. Line 65: “the lean adjoint is constant (since <span class="math inline">\(f_t = 0\)</span>, same as in [adjoint sampling]).”</strong></p>
+<p>Correct, but the parenthetical relies on the reader knowing that the lean adjoint ODE is <span class="math inline">\(\dot{\tilde{a}} = -(\nabla_x b)^\top \tilde{a}\)</span> with terminal condition <span class="math inline">\(\nabla g(X_1)\)</span>, and that <span class="math inline">\(b = 0\)</span> implies <span class="math inline">\(\tilde{a} = \text{const}\)</span>. A more self-contained phrasing: “the lean adjoint is constant along each trajectory: <span class="math inline">\(\tilde{a}(t) = \nabla g(X_1)\)</span> for all <span class="math inline">\(t\)</span> (since the base drift is zero, the lean adjoint ODE <span class="math inline">\(\dot{\tilde{a}} = 0\)</span> is trivial).”</p>
+<p><strong>5. Line 97: “which is the Brownian bridge score, known in closed form.”</strong></p>
+<p>The term “Brownian bridge score” is slightly imprecise. It is the score of the base transition density <span class="math inline">\(\bbP(X_1 \mid X_0)\)</span>, which is Gaussian. The Brownian bridge score (the score of <span class="math inline">\(\bbP(X_t \mid X_0, X_1)\)</span> with respect to <span class="math inline">\(X_t\)</span>) is a different thing. Suggest: “the score of the base transition kernel” or “the Gaussian transition score.”</p>
+<p>Actually, looking again at line 98, the note says “The CM regression target is just this Gaussian score, averaged over the posterior on <span class="math inline">\(X_0\)</span>.” This is correct. The issue is only the label “Brownian bridge score” on line 97. Minor but worth fixing for precision.</p>
+<p><strong>6. Line 67: double bars in the AM loss.</strong></p>
+<p>The notation <span class="math inline">\(\| u_t(X_t) + \sigma_t (\nabla E + \nabla \log \widehat{\varphi}_1)(X_1) \|^2\)</span> is clear but dense. Consider breaking into two lines for readability, with the target on a separate line.</p>
+<p><strong>7. Line 43: long sentence with nested parenthetical.</strong></p>
+<p>“To express this in terms of the corrector <span class="math inline">\(\widehat{\varphi}_1\)</span>, use the SB marginal constraint at <span class="math inline">\(t = 1\)</span>: the SB density at time 1 is <span class="math inline">\(q_1(x) = p_1^{\bbP}(x) \widehat{\varphi}_1(x) \varphi_1(x) = \pi(x)\)</span> (from the [SB notes]), so <span class="math inline">\(\varphi_1(x) = \pi(x) / (p_1^{\bbP}(x) \widehat{\varphi}_1(x))\)</span>.”</p>
+<p>This is one sentence doing three things (invoking the marginal constraint, stating the density, solving for <span class="math inline">\(\varphi_1\)</span>). Split into two sentences for readability.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

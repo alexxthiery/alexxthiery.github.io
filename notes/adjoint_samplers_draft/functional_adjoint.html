@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Functional Adjoint Sampler – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Functional Adjoint Sampler – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Functional Adjoint Sampler – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Functional Adjoint Sampler</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">sampling</div>
+                <div class="quarto-category">optimal control</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">23 03 2026</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">23 03 2026</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#setup-soc-on-path-space" id="toc-setup-soc-on-path-space" class="nav-link" data-scroll-target="#setup-soc-on-path-space">Setup: SOC on path space</a></li>
+  <li><a href="#the-adjoint-on-path-space" id="toc-the-adjoint-on-path-space" class="nav-link" data-scroll-target="#the-adjoint-on-path-space">The adjoint on path space</a></li>
+  <li><a href="#boundary-conditions-for-free" id="toc-boundary-conditions-for-free" class="nav-link" data-scroll-target="#boundary-conditions-for-free">Boundary conditions for free</a></li>
+  <li><a href="#connection-to-existing-framework" id="toc-connection-to-existing-framework" class="nav-link" data-scroll-target="#connection-to-existing-framework">Connection to existing framework</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<p><a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">Adjoint sampling</a> learns a control drift <span class="math inline">\(u(t,x)\)</span> that steers a Brownian motion in <span class="math inline">\(\mathbb{R}^d\)</span> toward a target <span class="math inline">\(\pi(x) \propto \exp(-E(x))\)</span>. Some problems require sampling <em>paths</em> rather than points. Transition path sampling (TPS) is the canonical example: a molecular system has two metastable states <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, and the goal is to sample reactive trajectories <span class="math inline">\(\mathbf{x}: [0,L] \to \mathbb{R}^d\)</span> connecting them. The target is a Gibbs measure over paths, <span class="math display">\[
+\pi[\mathbf{x}] \propto \exp {\left( -S[\mathbf{x}] \right)} , \qquad S[\mathbf{x}] = \int_0^L E(\mathbf{x}(s)) \, ds.
+\]</span></p>
+<p>The Functional Adjoint Sampler (FAS) <span class="citation" data-cites="bae2025functional">(<a href="#ref-bae2025functional" role="doc-biblioref"><strong>bae2025functional?</strong></a>)</span> applies <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> to this setting with an OU reference process instead of Brownian motion. After discretization, the “path” is just a vector in <span class="math inline">\(\mathbb{R}^{dK}\)</span>. FAS is adjoint sampling in <span class="math inline">\(\mathbb{R}^{dK}\)</span> with an OU reference process. The infinite-dimensional formulation in the original paper is a presentation choice, not a mathematical necessity. Strip away the infinite-dimensional machinery and the core idea is: adjoint sampling on paths instead of points, with an OU reference instead of Brownian motion, and Dirichlet boundary conditions to pin endpoints.</p>
+<p>(The other notes use <span class="math inline">\([0,1]\)</span>; here we use <span class="math inline">\([0,T]\)</span> to match the FAS paper.)</p>
+</section>
+<section id="setup-soc-on-path-space" class="level2">
+<h2 class="anchored" data-anchor-id="setup-soc-on-path-space">Setup: SOC on path space</h2>
+<p>Discretize the path into <span class="math inline">\(K\)</span> interior nodes: <span class="math inline">\(\mathbf{x} = (x_1, \ldots, x_K) \in \mathbb{R}^{dK}\)</span>, with boundary conditions <span class="math inline">\(x_0 = a \in A\)</span> and <span class="math inline">\(x_{K+1} = b \in B\)</span> fixed. The target density on the interior nodes is <span class="math inline">\(\pi(\mathbf{x}) \propto \exp(-S(\mathbf{x})) \, \nu(\mathbf{x})\)</span> for some reference measure <span class="math inline">\(\nu\)</span>. As in <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>, the terminal cost absorbs the mismatch: <span class="math inline">\(g(\mathbf{x}) = S(\mathbf{x}) + \log q_T(\mathbf{x}_0, \mathbf{x}) - \log \nu_\infty(\mathbf{x})\)</span>, where <span class="math inline">\(q_T\)</span> is the Radon-Nikodym derivative of the OU marginal at time <span class="math inline">\(T\)</span> against the invariant measure <span class="math inline">\(\nu_\infty\)</span>. The log-RND term <span class="math inline">\(\log q_T\)</span> corrects for the mismatch between the OU marginal and the invariant measure, analogous to the path-space reweighting in the <a href="../../notes/jarzynski/jarzynski.html">Jarzynski notes</a>.</p>
+<p>(Sign convention: <span class="math inline">\(g\)</span> is a cost, minimized; consistent with <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>. The <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note uses a reward <span class="math inline">\(r = -g\)</span>.)</p>
+<p>The reference process in <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> is Brownian motion. For paths, the natural reference is an <strong>Ornstein-Uhlenbeck (OU) process</strong>. Compared to Brownian motion, the OU reference adds a mean-reverting drift <span class="math inline">\(-A\mathbf{x}\)</span>. Two reasons to prefer it: (a) the eigenbasis parameterization with Dirichlet eigenfunctions enforces boundary conditions exactly, and (b) the OU invariant measure concentrates on smooth paths, providing a better prior for path sampling than Brownian motion (which generates rough paths). The reference SDE on <span class="math inline">\(\mathbb{R}^{dK}\)</span> is <span id="eq-ou-ref"><span class="math display">\[
+d\mathbf{X}_t = -A \, \mathbf{X}_t \, dt + \sigma_t \, dW_t^Q,
+\tag{1}\]</span></span> where <span class="math inline">\(A = -\Delta_h\)</span> is the negative discrete Laplacian (positive-definite, eigenvalues <span class="math inline">\(\lambda_k &gt; 0\)</span>): the <span class="math inline">\(K \times K\)</span> tridiagonal matrix with <span class="math inline">\(2\)</span> on the diagonal and <span class="math inline">\(-1\)</span> on the off-diagonals, incorporating Dirichlet boundary conditions. Here <span class="math inline">\(W_t^Q\)</span> is a <span class="math inline">\(Q\)</span>-Wiener process with <span class="math inline">\(\text{Cov}(dW^Q) = Q\,dt\)</span> and <span class="math inline">\(Q = A^{-s}\)</span> for some <span class="math inline">\(s &gt; d/2\)</span>.</p>
+<p>The Laplacian <span class="math inline">\(A\)</span> has eigenvectors <span class="math inline">\(\varphi_k\)</span> (discrete sine functions) with eigenvalues <span class="math inline">\(\lambda_k &gt; 0\)</span>. Expanding <span class="math inline">\(\mathbf{X}_t = \sum_k c_k(t) \, \varphi_k\)</span>, each mode evolves independently: <span id="eq-mode-sde"><span class="math display">\[
+dc_k(t) = -\lambda_k \, c_k(t) \, dt + \sigma_t \, \lambda_k^{-s/2} \, dB_k(t),
+\tag{2}\]</span></span> where <span class="math inline">\(B_k\)</span> are independent scalar Brownian motions and <span class="math inline">\(\lambda_k^{-s/2}\)</span> is the noise amplitude from the covariance operator <span class="math inline">\(Q = A^{-s}\)</span>. Each coefficient follows a scalar OU process. In the eigenbasis, the problem decomposes into <span class="math inline">\(K\)</span> independent 1D SDEs, each a standard scalar SOC problem.</p>
+<p>The controlled SDE adds a drift: <span id="eq-controlled-ou"><span class="math display">\[
+d\mathbf{X}_t =  {\left[ -A \, \mathbf{X}_t + \sigma_t \, Q^{1/2} \, u(t, \mathbf{X}_t) \right]}  \, dt + \sigma_t \, dW_t^Q.
+\tag{3}\]</span></span> Same structure as <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>, with base drift <span class="math inline">\(b(\mathbf{x}) = -A\mathbf{x}\)</span> instead of <span class="math inline">\(b = 0\)</span>. The optimal control <span class="math inline">\(u^\star = \sigma_t \nabla V\)</span> is a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> of the OU process, conditioning it to produce paths with low action.</p>
+</section>
+<section id="the-adjoint-on-path-space" class="level2">
+<h2 class="anchored" data-anchor-id="the-adjoint-on-path-space">The adjoint on path space</h2>
+<p>The lean adjoint from the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> notes satisfies <span class="math inline">\(\dot{\tilde{a}}(t) = -(\nabla_{\mathbf{x}} b)^\top \tilde{a}(t)\)</span> with <span class="math inline">\(\tilde{a}(T) = \nabla g(\mathbf{X}_T)\)</span>.</p>
+<p>Here <span class="math inline">\(b(\mathbf{x}) = -A\mathbf{x}\)</span>, so <span class="math inline">\(\nabla_{\mathbf{x}} b = -A\)</span> and the lean adjoint ODE becomes: <span id="eq-lean-adjoint-ou"><span class="math display">\[
+\dot{\tilde{a}}(t) = A^\top \tilde{a}(t), \qquad \tilde{a}(T) = \nabla g(\mathbf{X}_T).
+\tag{4}\]</span></span> This is a linear ODE with solution <span id="eq-adjoint-solution"><span class="math display">\[
+\tilde{a}(t) = e^{ \textcolor{red}{-(T-t)}A^\top} \nabla g(\mathbf{X}_T).
+\tag{5}\]</span></span></p>
+<p>Since <span class="math inline">\(A\)</span> is symmetric positive-definite with eigenvalues <span class="math inline">\(\lambda_k\)</span>, the matrix exponential <span class="math inline">\(e^{-(T-t)A^\top}\)</span> has eigenvalues <span class="math inline">\(e^{-(T-t)\lambda_k}\)</span>. It is diagonal in the eigenbasis: just multiply each mode by the scalar <span class="math inline">\(e^{-(T-t)\lambda_k}\)</span>, no matrix operations needed. In the eigenbasis: <span class="math display">\[
+\tilde{a}_k(t) = e^{-(T-t)\lambda_k} \cdot [\nabla g(\mathbf{X}_T)]_k.
+\]</span> Low-frequency modes (small <span class="math inline">\(\lambda_k\)</span>) get weight close to 1, nearly identical to the Brownian case. High-frequency modes (large <span class="math inline">\(\lambda_k\)</span>) are exponentially : their adjoint contribution at early times is negligible.</p>
+<p>Why is the adjoint no longer constant? For Brownian motion (<span class="math inline">\(b = 0\)</span>), perturbing <span class="math inline">\(X_t\)</span> by <span class="math inline">\(\delta X_t\)</span> shifts <span class="math inline">\(X_T\)</span> by the same amount (independent increments), so <span class="math inline">\(\tilde{a}(t) = \nabla g(X_T)\)</span> for all <span class="math inline">\(t\)</span>. For OU, the drift <span class="math inline">\(-A\mathbf{x}\)</span> pulls perturbations back toward zero. A perturbation <span class="math inline">\(\delta X_t\)</span> at time <span class="math inline">\(t\)</span> decays by <span class="math inline">\(e^{-(T-t)A}\)</span> before reaching <span class="math inline">\(T\)</span>. The terminal cost’s sensitivity to that perturbation is therefore <span class="math inline">\(e^{-(T-t)A^\top} \nabla g(X_T)\)</span>, not <span class="math inline">\(\nabla g(X_T)\)</span>. High-frequency modes are strongly damped by the OU reference, so the control has less leverage over them at early times: perturbing them costs energy but has minimal terminal effect.</p>
+<p>The FAS loss is the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> loss with this non-constant adjoint: <span id="eq-fas-loss"><span class="math display">\[
+L_\text{FAS}(u) = \mathbb{E} {\left[ \int_0^T \big\|u(t, \mathbf{X}_t) + \sigma_t \, Q^{1/2} \,  \textcolor{blue}{e^{-(T-t)A^\top}} \, \nabla g(\mathbf{X}_T)\big\|^2 \, dt \right]} ,
+\tag{6}\]</span></span> where the expectation is over trajectories of the controlled SDE <a href="#eq-controlled-ou" class="quarto-xref">Equation&nbsp;3</a> (with stop-gradient). The <span class="math inline">\(Q^{1/2}\)</span> factor appears because the control enters the SDE as <span class="math inline">\(\sigma_t Q^{1/2} u\)</span>; the Girsanov change of measure produces <span class="math inline">\(\|Q^{1/2} u\|^2\)</span>, not <span class="math inline">\(\|u\|^2\)</span>, so the adjoint target picks up <span class="math inline">\(Q^{1/2}\)</span>. The <span class="math inline">\( \textcolor{blue}{e^{-(T-t)A^\top}}\)</span> factor is the OU semigroup, which damps the terminal gradient according to how much the base dynamics attenuate perturbations.</p>
+</section>
+<section id="boundary-conditions-for-free" class="level2">
+<h2 class="anchored" data-anchor-id="boundary-conditions-for-free">Boundary conditions for free</h2>
+<p>The Dirichlet eigenfunctions of <span class="math inline">\(A\)</span> satisfy <span class="math inline">\(\varphi_k(0) = \varphi_k(L) = 0\)</span>. Any linear combination <span class="math inline">\(\mathbf{x} = \sum_k c_k \, \varphi_k\)</span> automatically satisfies <span class="math inline">\(\mathbf{x}(0) = 0\)</span> and <span class="math inline">\(\mathbf{x}(L) = 0\)</span>.</p>
+<p>To enforce <span class="math inline">\(\mathbf{x}(0) = a\)</span> and <span class="math inline">\(\mathbf{x}(L) = b\)</span>, write <span class="math inline">\(\mathbf{x}(s) = \bar{\mathbf{x}}(s) + \sum_k c_k \, \varphi_k(s)\)</span> where <span class="math inline">\(\bar{\mathbf{x}}\)</span> is any fixed path connecting <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span> (e.g., linear interpolation). The OU process evolves the <span class="math inline">\(c_k\)</span> coefficients; the boundary values are fixed by <span class="math inline">\(\bar{\mathbf{x}}\)</span>. No penalty terms, no projections. The controlled process respects boundary conditions by construction.</p>
+<p><strong>Discretization-invariant sampling.</strong> Train the control <span class="math inline">\(u\)</span> on a coarse grid (small <span class="math inline">\(K\)</span>). At inference, sample at arbitrary resolution by adding more eigenmodes. The high-frequency modes (<span class="math inline">\(k &gt; K\)</span>) receive zero control and simply follow the OU reference, which already assigns them low variance (<span class="math inline">\(\lambda_k^{-s}\)</span> decays with <span class="math inline">\(k\)</span>). This is a standard property of Galerkin truncation for linear reference processes; FAS inherits it rather than inventing it.</p>
+</section>
+<section id="connection-to-existing-framework" class="level2">
+<h2 class="anchored" data-anchor-id="connection-to-existing-framework">Connection to existing framework</h2>
+<p>Set <span class="math inline">\(A = 0\)</span>: the OU reference becomes Brownian motion, <span class="math inline">\(Q^{1/2} = I\)</span>, <span class="math inline">\(e^{0} = I\)</span>, and the FAS loss <a href="#eq-fas-loss" class="quarto-xref">Equation&nbsp;6</a> reduces to the <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> loss <span class="math inline">\(\|u + \sigma_t \nabla g(X_1)\|^2\)</span>. Standard adjoint sampling is the special case with no spatial structure in the base dynamics.</p>
+<p>The reciprocal projection from <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> carries over directly. Replace the Brownian bridge with an OU bridge: given terminal state <span class="math inline">\(\mathbf{X}_T\)</span>, sample <span class="math inline">\(\mathbf{X}_t \mid \mathbf{X}_T\)</span> from the OU bridge. Since each mode <span class="math inline">\(c_k\)</span> is an independent scalar OU process, the bridge decomposes into <span class="math inline">\(K\)</span> independent 1D Gaussian conditionals:</p>
+<details>
+<summary>
+<p style="color: blue;">
+OU bridge formula in the eigenbasis
+</p>
+</summary>
+<p style="color: blue;">
+For a scalar OU process <span class="math inline">\(dc_k = -\lambda_k c_k \, dt + \sigma_t \lambda_k^{-s/2} \, dB_k\)</span> started at <span class="math inline">\(c_k(0) = 0\)</span>, the bridge is standard Gaussian conditioning (cf. <strong>?@eq-bridge</strong> of <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>): <span class="math display">\[
+c_k(t) \mid c_k(T) \;\sim\; \mathcal{N} {\left( \frac{\mathop{\mathrm{Cov}}(c_k(t), c_k(T))}{v_k(T)} \, c_k(T), \;\; v_k(t) - \frac{\mathop{\mathrm{Cov}}(c_k(t), c_k(T))^2}{v_k(T)} \right)} ,
+\]</span> with <span class="math inline">\(v_k(t) = \lambda_k^{-s} \int_0^t \sigma_r^2 \, e^{-2\lambda_k(t-r)} \, dr\)</span> and <span class="math inline">\(\mathop{\mathrm{Cov}}(c_k(t), c_k(T)) = e^{-\lambda_k(T-t)} v_k(t)\)</span>.
+</p>
+</details>
+<p>The buffer-based training from <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> transfers directly: simulate forward to fill a replay buffer, then sample from the OU bridge for cheap inner-loop gradient steps.</p>
+<!-- BibTeX entry for ref.bib:
+@article{bae2025functional,
+  title={Functional Adjoint Sampler},
+  author={Bae, Geonho and Lee, Juho},
+  journal={arXiv preprint arXiv:2506.04429},
+  year={2025},
+  url={https://arxiv.org/abs/2506.04429}
+}
+-->
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
