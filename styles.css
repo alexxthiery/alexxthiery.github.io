@@ -5,8 +5,22 @@ p {
 
 @media only screen and (max-width: 600px) {
     p {
-        font-size: 12px;
+        font-size: 0.95rem;
+        text-align: left;
     }
+}
+
+.quarto-title .title {
+  overflow-wrap: anywhere;
+}
+
+/* Long display equations should scroll, not widen the whole page. */
+span.math.display,
+mjx-container[jax="CHTML"][display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 /* Force these on one line in the listing */

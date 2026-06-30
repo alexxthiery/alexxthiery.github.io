@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Adjoint Schrodinger Bridge Sampler – Alexandre Thiéry</title>
+<title>Predictive Posteriors – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -92,10 +112,10 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Adjoint Schrodinger Bridge Sampler – Alexandre Thiéry">
+<meta property="og:title" content="Predictive Posteriors – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Adjoint Schrodinger Bridge Sampler – Alexandre Thiéry">
+<meta name="twitter:title" content="Predictive Posteriors – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -155,11 +175,10 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Adjoint Schrodinger Bridge Sampler</h1>
+      <h1 class="title">Predictive Posteriors</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">SDE</div>
-                <div class="quarto-category">markov</div>
-                <div class="quarto-category">Schrodinger bridge</div>
+                <div class="quarto-category">bayes</div>
+                <div class="quarto-category">prediction</div>
               </div>
                   </div>
   </div>
@@ -171,14 +190,14 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">22 03 2026</p>
+        <p class="date">30 06 2026</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">22 03 2026</p>
+        <p class="date-modified">30 06 2026</p>
       </div>
     </div>
       
@@ -193,11 +212,14 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#from-soc-to-schrodinger-bridge-the-corrector" id="toc-from-soc-to-schrodinger-bridge-the-corrector" class="nav-link active" data-scroll-target="#from-soc-to-schrodinger-bridge-the-corrector">From SOC to Schrodinger bridge: the corrector</a></li>
-  <li><a href="#adjoint-matching-with-corrector" id="toc-adjoint-matching-with-corrector" class="nav-link" data-scroll-target="#adjoint-matching-with-corrector">Adjoint matching with corrector</a></li>
-  <li><a href="#corrector-matching-deriving-the-cm-objective" id="toc-corrector-matching-deriving-the-cm-objective" class="nav-link" data-scroll-target="#corrector-matching-deriving-the-cm-objective">Corrector matching: deriving the CM objective</a></li>
-  <li><a href="#alternating-optimization-ipfp" id="toc-alternating-optimization-ipfp" class="nav-link" data-scroll-target="#alternating-optimization-ipfp">Alternating optimization = IPFP</a></li>
-  <li><a href="#comparison-and-practical-remarks" id="toc-comparison-and-practical-remarks" class="nav-link" data-scroll-target="#comparison-and-practical-remarks">Comparison and practical remarks</a></li>
+  <li><a href="#average-the-score-or-score-the-average" id="toc-average-the-score-or-score-the-average" class="nav-link active" data-scroll-target="#average-the-score-or-score-the-average">Average the score or score the average</a></li>
+  <li><a href="#log-score-and-mixture-likelihood" id="toc-log-score-and-mixture-likelihood" class="nav-link" data-scroll-target="#log-score-and-mixture-likelihood">Log score and mixture likelihood</a></li>
+  <li><a href="#conditional-prediction" id="toc-conditional-prediction" class="nav-link" data-scroll-target="#conditional-prediction">Conditional prediction</a></li>
+  <li><a href="#a-latent-subpopulation-example" id="toc-a-latent-subpopulation-example" class="nav-link" data-scroll-target="#a-latent-subpopulation-example">A latent-subpopulation example</a></li>
+  <li><a href="#a-misspecified-simulator-example" id="toc-a-misspecified-simulator-example" class="nav-link" data-scroll-target="#a-misspecified-simulator-example">A misspecified simulator example</a></li>
+  <li><a href="#what-does-q-mean" id="toc-what-does-q-mean" class="nav-link" data-scroll-target="#what-does-q-mean">What does Q mean?</a></li>
+  <li><a href="#computation" id="toc-computation" class="nav-link" data-scroll-target="#computation">Computation</a></li>
+  <li><a href="#where-this-appears" id="toc-where-this-appears" class="nav-link" data-scroll-target="#where-this-appears">Where this appears</a></li>
   </ul>
 </nav>
     </div>
@@ -208,118 +230,134 @@ window.Quarto = {
 
 
 
-<!-- TODO: Add historical figure portrait here. Suggested: [Erwin Schrodinger](https://en.wikipedia.org/wiki/Erwin_Schr%C3%B6dinger) (1887-1961). Use format:
-::: {style="text-align:center;"}
-![[Erwin Schrodinger](https://en.wikipedia.org/wiki/Erwin_Schr%C3%B6dinger) (1887-1961)](./image.jpg){fig-align="center" width=35%}
-:::
--->
-<p>The <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> setup forces <span class="math inline">\(X_0 = 0\)</span>. What if we want a Gaussian prior, or a harmonic oscillator prior for molecules? With a non-trivial prior <span class="math inline">\(\mu\)</span>, the base process couples <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span>, and the <a href="../../notes/HJB/HJB.html">SOC solution</a> produces a terminal marginal <span class="math inline">\(p^\star(X_1) \neq \pi(X_1)\)</span>: the initial value function <span class="math inline">\(V_0(X_0)\)</span> biases the result. To fix this bias while keeping the scalable <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> framework, solve a full <a href="../shrodinger/shrodinger.qmd">Schrodinger bridge</a> instead of a plain SOC problem. This is the idea behind the Adjoint Schrodinger Bridge Sampler (ASBS) of <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref"><strong>liu2025adjoint?</strong></a>)</span>.</p>
-<section id="from-soc-to-schrodinger-bridge-the-corrector" class="level3">
-<h3 class="anchored" data-anchor-id="from-soc-to-schrodinger-bridge-the-corrector">From SOC to Schrodinger bridge: the corrector</h3>
-<p>Recall from the <a href="../shrodinger/shrodinger.qmd">SB notes</a> that the Schrodinger bridge <span class="math inline">\(\mathbb{Q}^\star\)</span> minimizing <span class="math inline">\(D_{\text{KL}}(\mathbb{Q}\,\|\, \mathbb{P})\)</span> subject to <span class="math inline">\(\mathbb{Q}_0 = \mu\)</span> and <span class="math inline">\(\mathbb{Q}_1 = \pi\)</span> has path measure <span id="eq-sb-rn"><span class="math display">\[
-\frac{d\mathbb{Q}^\star}{d\mathbb{P}}(\boldsymbol{X}) \;\propto\; \widehat{\varphi}_0(X_0) \, \varphi_1(X_1),
-\tag{1}\]</span></span> with time-dependent SB potentials <span id="eq-sb-potentials"><span class="math display">\[
-\varphi_t(x) = \mathbb{E}_\mathbb{P}[\varphi_1(X_1) \mid X_t = x], \qquad \widehat{\varphi}_t(x) = \mathbb{E}_\mathbb{P}[\widehat{\varphi}_0(X_0) \mid X_t = x].
-\tag{2}\]</span></span> The forward potential <span class="math inline">\(\varphi_t\)</span> is a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a>: the SB process has drift <span class="math inline">\(f_t + \sigma_t^2 \nabla \log \varphi_t\)</span>. The backward potential <span class="math inline">\(\widehat{\varphi}_t\)</span> propagates information about the initial distribution <span class="math inline">\(\mu\)</span> forward in time.</p>
-<p>Now, the SB solution <span class="math inline">\(\mathbb{Q}^\star\)</span> is also a controlled diffusion, so it must solve some SOC problem. Which one? From <a href="#eq-sb-rn" class="quarto-xref">Equation&nbsp;1</a>, the optimal joint density of endpoints satisfies <span id="eq-sb-joint"><span class="math display">\[
-p^\star(X_0, X_1) \;\propto\; \mathbb{P}(X_0, X_1) \, \widehat{\varphi}_0(X_0) \, \varphi_1(X_1).
-\tag{3}\]</span></span> Compare this with the <a href="../../notes/HJB/HJB.html">SOC joint</a>: for a terminal cost <span class="math inline">\(g\)</span>, the SOC optimal joint is <span class="math inline">\(p^\star(X_0, X_1) = \mathbb{P}(X_0, X_1) \, e^{-g(X_1) + V_0(X_0)}\)</span>, where <span class="math inline">\(V_0(x) = \log \mathbb{E}_\mathbb{P}[e^{-g(X_1)} \mid X_0 = x]\)</span> is the initial value function (the <a href="../../notes/HJB/HJB.html">HJB notes</a> use a maximization convention where <span class="math inline">\(g\)</span> has the opposite sign; our minimization convention follows <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>). Matching the two expressions requires <span id="eq-identification"><span class="math display">\[
-e^{-g(X_1)} \propto \varphi_1(X_1), \qquad e^{V_0(X_0)} \propto \frac{\widehat{\varphi}_0(X_0)}{\mu(X_0)}
-\tag{4}\]</span></span> (up to multiplicative constants absorbed into the other factor). The first condition gives <span class="math inline">\(g(x) = -\log \varphi_1(x) + \text{const}\)</span>. To express this in terms of the corrector <span class="math inline">\(\widehat{\varphi}_1\)</span>, use the SB marginal constraint at <span class="math inline">\(t = 1\)</span> from the <a href="../shrodinger/shrodinger.qmd">SB notes</a>: the SB density at time 1 is <span class="math inline">\(q_1(x) = p^{\mathbb{P}}_1(x) \, \widehat{\varphi}_1(x) \, \varphi_1(x) = \pi(x)\)</span>. So <span class="math inline">\(\varphi_1(x) = \pi(x) / (p^{\mathbb{P}}_1(x) \, \widehat{\varphi}_1(x))\)</span>. Substituting into <span class="math inline">\(g = -\log \varphi_1\)</span>: <span id="eq-modified-terminal"><span class="math display">\[
-\textcolor{blue}{g(x) = \log \frac{\widehat{\varphi}_1(x)}{\pi(x)}} + \text{const}.
-\tag{5}\]</span></span> This is the modified terminal cost. Compared to the <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> terminal cost <span class="math inline">\(g(x) = \log p^{\mathbb{P}}_1(x) / \pi(x)\)</span>, the base marginal <span class="math inline">\(p^{\mathbb{P}}_1\)</span> is replaced by <span class="math inline">\( \textcolor{blue}{\widehat{\varphi}_1}\)</span>: a corrector that accounts for the coupling between <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span>.</p>
-<p>Does this corrector actually remove the <span class="math inline">\(V_0\)</span> bias? Marginalize <a href="#eq-sb-joint" class="quarto-xref">Equation&nbsp;3</a> over <span class="math inline">\(X_0\)</span>. Using <a href="#eq-modified-terminal" class="quarto-xref">Equation&nbsp;5</a> to replace <span class="math inline">\(\varphi_1\)</span>: <span id="eq-debias"><span class="math display">\[
-\begin{aligned}
-p^\star(X_1)
-&amp;\propto \varphi_1(X_1) \int \mathbb{P}(X_0, X_1) \, \widehat{\varphi}_0(X_0) \, dX_0 \\
-&amp;= \varphi_1(X_1) \int \mathbb{P}(X_1 \mid X_0) \, \widehat{\varphi}_0(X_0) \, \mu(X_0) \, dX_0 \\
-&amp;= \varphi_1(X_1) \, \widehat{\varphi}_1(X_1) \, p^{\mathbb{P}}_1(X_1) \;\propto\; \pi(X_1).
-\end{aligned}
-\tag{6}\]</span></span> The second-to-last step uses <span class="math inline">\(\int \mathbb{P}_{1|0}(x \mid y) \, \mu(y) \, \widehat{\varphi}_0(y) \, dy = p_1^{\mathbb{P}}(x) \, \widehat{\varphi}_1(x)\)</span> (from the definition and Bayes’ rule), and the last step uses <span class="math inline">\(\varphi_1 \, \widehat{\varphi}_1 \, p_1^{\mathbb{P}} = \pi\)</span>. The corrector <span class="math inline">\(\widehat{\varphi}_1\)</span> cancels the initial value function bias exactly. In <a href="#eq-identification" class="quarto-xref">Equation&nbsp;4</a>, the second condition <span class="math inline">\(\mu(X_0) \, e^{V_0(X_0)} \propto \widehat{\varphi}_0(X_0)\)</span> is automatically satisfied by the SB boundary conditions at <span class="math inline">\(t = 0\)</span>.</p>
-<p>In other words, every SB problem decomposes as: SOC with the standard adjoint (the <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> piece <span class="math inline">\(\varphi_t\)</span>) plus a corrector <span class="math inline">\(\widehat{\varphi}_1\)</span> that absorbs the prior bias.</p>
+<p>A Bayesian model gives a distribution <span class="math inline">\(P_\theta\)</span> for future data, indexed by a parameter <span class="math inline">\(\theta\)</span> abd predictions are usually done through the posterior predictive. If <span class="math inline">\(\Pi_n\)</span> is the posterior on <span class="math inline">\(\theta\)</span>, then the posterior predictive is <span class="math inline">\(P_{\Pi_n} = \int_\Theta P_\theta \, d\Pi_n(\theta)\)</span> and it can be interpreted as a mixture of the model components <span class="math inline">\(P_\theta\)</span> weighed by the posterior <span class="math inline">\(\Pi_n\)</span>. The standard Bayesian approach chooses the weights by scoring parameters with the likelihood, not by directly scoring the mixture predictive, which can be especially limiting when the model is misspecified!</p>
+<p>For example, suppose that the data come from two subpopulations, but the model only accounts for one. The posterior will learn a compromise parameter, and the posterior predictive will be a mixture of one component. A predictive posterior approach, as we will describe below, can learn a mixture of two components and predict much better. This is achieved by scoring the mixture predictive directly, rather than scoring the individual components through the likelihood function. In other words, the predictive posteriors still mix the original model components <span class="math inline">\(P_\theta\)</span>, still using a distribution <span class="math inline">\(Q\)</span> on <span class="math inline">\(\theta\)</span>, but they choose <span class="math inline">\(Q\)</span> by scoring the resulting mixture predictive directly in terms of predictive performance. In contrast, Bayes chooses <span class="math inline">\(Q\)</span> by scoring the individual components <span class="math inline">\(P_\theta\)</span> through the likelihood function.</p>
+<p>Let us setup some notation: the observations take values in a space <span class="math inline">\(\mathcal Z\)</span>, and we typically have <span class="math inline">\(n\)</span> observations <span class="math inline">\(z_1,\ldots,z_n\in\mathcal Z\)</span>. The parameter <span class="math inline">\(\theta\)</span> belongs to a parameter space <span class="math inline">\(\Theta\)</span>, and <span class="math inline">\(p_\theta(z)\)</span> is the density of <span class="math inline">\(P_\theta\)</span> with respect to a reference measure <span class="math inline">\(\mu\)</span> on <span class="math inline">\(\mathcal Z\)</span>. The log-likelihood is <span class="math inline">\(\ell_n(\theta) = \sum_{i=1}^n \log p_\theta(z_i)\)</span> and the model is:</p>
+<p><span class="math display">\[
+\mathcal M=\{P_\theta:\theta\in\Theta\}.
+\]</span></p>
+<p>A mixing distribution <span class="math inline">\(Q\)</span> is a probability distribution on <span class="math inline">\(\Theta\)</span> and the mixture predictive with respect to <span class="math inline">\(Q\)</span> is defined as</p>
+<p><span id="eq-predictive-mixture"><span class="math display">\[
+P_Q = \int_\Theta P_\theta \, dQ(\theta).
+\tag{1}\]</span></span></p>
+<p>The mixture <span class="math inline">\(P_Q\)</span> is again a probability distribution on <span class="math inline">\(\mathcal Z\)</span> and for an event <span class="math inline">\(A\subset\mathcal Z\)</span> we have <span class="math inline">\(P_Q(A)=\int_\Theta P_\theta(A)\,dQ(\theta)\)</span>.</p>
+<section id="average-the-score-or-score-the-average" class="level3">
+<h3 class="anchored" data-anchor-id="average-the-score-or-score-the-average">Average the score or score the average</h3>
+<p>Let <span class="math inline">\(Q_0\)</span> be a prior or reference measure on <span class="math inline">\(\Theta\)</span>. The <a href="../../notes/sanov/sanov.html">Kullback-Leibler</a> term below is the regularizer. Bayesian and generalized Bayesian approaches can be written as</p>
+<p><span id="eq-gibbs-template"><span class="math display">\[
+Q_n^G
+\in
+\mathop{\mathrm{argmin}}_{Q\in\mathcal P(\Theta)}
+\left\{
+-\int_\Theta \ell_n(\theta)\,dQ(\theta)
++
+\lambda_n D_{\text{KL}}(Q \mid Q_0)
+\right\}.
+\tag{2}\]</span></span></p>
+<p>Standard Bayes is the special case with <span class="math inline">\(\lambda_n=1\)</span> and <span class="math inline">\(Q_0\)</span> the prior, while generalized Bayes allows other losses and scaling of <span class="math inline">\(\lambda_n\)</span> <span class="citation" data-cites="Bissiri2016">(<a href="#ref-Bissiri2016" role="doc-biblioref">Bissiri, Holmes, and Walker 2016</a>)</span>. A predictive posterior instead solves</p>
+<p><span id="eq-predictive-template"><span class="math display">\[
+Q_n^P
+\in
+\mathop{\mathrm{argmin}}_{Q\in\mathcal P(\Theta)}
+\left\{
+D_n(P_n,P_Q)
++
+\lambda_n D_{\text{KL}}(Q \mid Q_0)
+\right\}
+\tag{3}\]</span></span></p>
+<p>where <span class="math inline">\(P_n=\frac1n\sum_{i=1}^n\delta_{z_i}\)</span> is the empirical distribution of the data and <span class="math inline">\(D_n\)</span> is a discrepancy between the predictive <span class="math inline">\(P_Q\)</span> and the empirical distribution <span class="math inline">\(P_n\)</span>. The first term scores the mixture predictive directly, while the second term keeps <span class="math inline">\(Q\)</span> close to a reference measure <span class="math inline">\(Q_0\)</span>. The discrepancy <span class="math inline">\(D_n(P_n,P)\)</span> may be chosen as the negative log likelihood, i.e.</p>
+<p><span class="math display">\[
+D_n(P_n,P_Q) = -\sum_{i=1}^n \log \int_\Theta p_\theta(z_i)\,dQ(\theta),
+\]</span></p>
+<p>but indeed it does not have to be. It can be any scoring rule and a few examples are given in the next section. The regularization term is important to avoid overfitting, especially when the model is misspecified and the mixture predictive can be very flexible. For a pointwise <a href="../../notes/scoring_rules/scoring.html">scoring rule</a> <span class="math inline">\(S\)</span>, with smaller scores being better, the discrepancy can be written as</p>
+<p><span class="math display">\[
+D_n(P_n,P_Q) = \sum_{i=1}^n S(P_Q,z_i).
+\]</span></p>
+<p>Note that the quantity <span class="math inline">\(\lambda_n\)</span> can be chosen to depend on <span class="math inline">\(n\)</span>, and it can be tuned to optimize predictive performance, typically using a validation set or cross-validation.</p>
 </section>
-<section id="adjoint-matching-with-corrector" class="level3">
-<h3 class="anchored" data-anchor-id="adjoint-matching-with-corrector">Adjoint matching with corrector</h3>
-<p>For Boltzmann sampling (<span class="math inline">\(\pi \propto e^{-E}\)</span>, <span class="math inline">\(f_t = 0\)</span>), the modified terminal cost <a href="#eq-modified-terminal" class="quarto-xref">Equation&nbsp;5</a> becomes <span class="math inline">\(g(x) = E(x) + \log \widehat{\varphi}_1(x) + \text{const}\)</span>. Applying <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> to this SOC problem, the lean adjoint is constant (since the base drift is zero, the lean adjoint ODE <span class="math inline">\(\dot{\tilde{a}} = -(\nabla_x b)^\top \tilde{a}\)</span> becomes <span class="math inline">\(\dot{\tilde{a}} = 0\)</span>, same as in <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>) and equals <span class="math inline">\(\nabla g(X_1) = (\nabla E +  \textcolor{blue}{\nabla \log \widehat{\varphi}_1})(X_1)\)</span>. The AM loss is <span id="eq-am"><span class="math display">\[
-L_\text{AM}(u) = \mathbb{E}_{\mathbb{P}_{t \mid 0,1} \, p^{\bar{u}}_{0,1}}  {\left[  \big\| u_t(X_t) + \sigma_t  {\left(  \nabla E +  \textcolor{blue}{\nabla \log \widehat{\varphi}_1}  \right)} (X_1) \big\|^2  \right]} ,
-\tag{7}\]</span></span> where <span class="math inline">\(\bar{u} = \texttt{stopgrad}(u)\)</span>, <span class="math inline">\(p^{\bar{u}}_{0,1}\)</span> is the joint endpoint distribution under the current control, and <span class="math inline">\(\mathbb{P}_{t \mid 0,1}\)</span> is the Brownian bridge kernel (since <span class="math inline">\(f_t = 0\)</span>). Compared to the <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> loss, the only new ingredient is <span class="math inline">\( \textcolor{blue}{\nabla \log \widehat{\varphi}_1}\)</span>. When <span class="math inline">\(\mu = \delta_0\)</span>, <span class="math inline">\(\widehat{\varphi}_0 = \text{const}\)</span>, hence <span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span>. The terminal cost <a href="#eq-modified-terminal" class="quarto-xref">Equation&nbsp;5</a> becomes <span class="math inline">\(g(x) = -\log \pi(x) + \text{const}\)</span>, and through the SB marginal condition <span class="math inline">\(\varphi_1(x) = \pi(x)/(p_1^{\mathbb{P}}(x) \cdot \text{const})\)</span>, this recovers the <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> terminal cost <span class="math inline">\(\log(p_1^{\mathbb{P}}(x)/\pi(x))\)</span>.</p>
-<p>The same reciprocal projection trick from <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> applies: sample <span class="math inline">\(X_1\)</span> from the current model, then draw <span class="math inline">\(X_t\)</span> from a Brownian bridge conditioned on <span class="math inline">\((X_0, X_1)\)</span>. No SDE simulation needed during training.</p>
+<section id="log-score-and-mixture-likelihood" class="level3">
+<h3 class="anchored" data-anchor-id="log-score-and-mixture-likelihood">Log score and mixture likelihood</h3>
+<p>With the log score and no KL penalty, <a href="#eq-predictive-template" class="quarto-xref">Equation&nbsp;3</a> becomes</p>
+<p><span id="eq-mixture-likelihood"><span class="math display">\[
+\mathop{\mathrm{argmin}}_Q
+\left\{
+-\sum_{i=1}^n
+\log\int_\Theta p_\theta(z_i)\,dQ(\theta)
+\right\}.
+\tag{4}\]</span></span></p>
+<p>This is the likelihood for a mixture model with unknown mixing distribution <span class="citation" data-cites="Lindsay1995">(<a href="#ref-Lindsay1995" role="doc-biblioref">Lindsay 1995</a>)</span>. So in this case the predictive posterior is doing classical mixture estimation. If <span class="math inline">\(Q\)</span> is restricted to a finite list of predictors, the same objective gives stacking or convex aggregation <span class="citation" data-cites="Yao2018">(<a href="#ref-Yao2018" role="doc-biblioref">Yao et al. 2018</a>)</span>. Better prediction may simply mean that mixtures predict better than single components. The posterior-like part is the <a href="../../notes/information_theory_basics/information_theory_entropy.html">entropy</a> penalty on <span class="math inline">\(Q\)</span>.</p>
 </section>
-<section id="corrector-matching-deriving-the-cm-objective" class="level3">
-<h3 class="anchored" data-anchor-id="corrector-matching-deriving-the-cm-objective">Corrector matching: deriving the CM objective</h3>
-<p>The AM loss <a href="#eq-am" class="quarto-xref">Equation&nbsp;7</a> requires <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span>, which is unknown. We need a way to learn it. Start from the definition <a href="#eq-sb-potentials" class="quarto-xref">Equation&nbsp;2</a>: <span class="math inline">\(\widehat{\varphi}_t(x) = \mathbb{E}_\mathbb{P}[\widehat{\varphi}_0(X_0) \mid X_t = x]\)</span>. Writing this as an integral and differentiating: <span id="eq-cm-start"><span class="math display">\[
-\nabla \log \widehat{\varphi}_t(x) = \frac{\int \nabla_x \mathbb{P}_{t \mid 0}(x \mid y) \, \widehat{\varphi}_0(y) \, dy}{\widehat{\varphi}_t(x)}.
-\tag{8}\]</span></span> Pull the gradient inside the transition kernel: <span id="eq-cm-mid"><span class="math display">\[
-\nabla \log \widehat{\varphi}_t(x) = \frac{\int \nabla_x \log \mathbb{P}_{t \mid 0}(x \mid y) \, \mathbb{P}_{t \mid 0}(x \mid y) \, \widehat{\varphi}_0(y) \, dy}{\widehat{\varphi}_t(x)}.
-\tag{9}\]</span></span> The ratio <span class="math inline">\(\mathbb{P}_{t \mid 0}(x \mid y) \, \widehat{\varphi}_0(y) / \widehat{\varphi}_t(x)\)</span> is, by Bayes’ rule, the posterior <span class="math inline">\(p^\star(X_0 = y \mid X_t = x)\)</span>. So the corrector score is a conditional expectation: <span id="eq-cm-cond-exp"><span class="math display">\[
-\nabla \log \widehat{\varphi}_t(x) = \mathbb{E}_{p^\star} {\left[  \nabla_x \log \mathbb{P}_{t \mid 0}(x \mid X_0) \mid X_t = x  \right]} .
-\tag{10}\]</span></span> This is precisely the <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">Tweedie-type formula</a>: the corrector score equals the conditional expectation of the transition score <span class="math inline">\(\nabla_x \log \mathbb{P}_{t|0}(x \mid X_0)\)</span> given <span class="math inline">\(X_t = x\)</span>. Since any conditional expectation is the minimizer of a least-squares regression, it follows that <span id="eq-cm"><span class="math display">\[
-\nabla \log \widehat{\varphi}_1 = \mathop{\mathrm{argmin}}_h \; \mathbb{E}_{(X_0, X_1) \sim p^{u^\star}_{0,1}}  {\left[  \big\| h(X_1) - \nabla_{X_1} \log \mathbb{P}(X_1 \mid X_0) \big\|^2  \right]} .
-\tag{11}\]</span></span> This is the <strong>corrector matching</strong> (CM) objective: regress <span class="math inline">\(h\)</span> onto the score of the base transition kernel, evaluated at endpoint pairs from the current optimal process.</p>
-<p>For <span class="math inline">\(f_t = 0\)</span>, the base process is a scaled Brownian motion, so <span class="math inline">\(\mathbb{P}(X_1 \mid X_0) = \mathcal{N}(X_1; X_0, (\nu_1 - \nu_0) I)\)</span> where <span class="math inline">\(\nu_t = \int_0^t \sigma_s^2 \, ds\)</span>. The transition score is <span id="eq-gaussian-score"><span class="math display">\[
-\nabla_{X_1} \log \mathbb{P}(X_1 \mid X_0) = -\frac{X_1 - X_0}{\nu_1 - \nu_0},
-\tag{12}\]</span></span> which is the score of the base transition kernel, known in closed form. The CM regression target is just this Gaussian score, averaged over the posterior on <span class="math inline">\(X_0\)</span>.</p>
+<section id="conditional-prediction" class="level3">
+<h3 class="anchored" data-anchor-id="conditional-prediction">Conditional prediction</h3>
+<p>For supervised data, write <span class="math inline">\(x\in\mathcal X\)</span> for covariates and <span class="math inline">\(y\in\mathcal Y\)</span> for responses so that the observation is <span class="math inline">\(z=(x,y)\in\mathcal X\times\mathcal Y\)</span>. Replace <span class="math inline">\(P_\theta\)</span> by a conditional distribution <span class="math inline">\(P_\theta(dy\mid x)\)</span> on <span class="math inline">\(\mathcal Y\)</span> and the mixture predictive is</p>
+<p><span id="eq-conditional-mixture"><span class="math display">\[
+P_Q(dy\mid x)
+=
+\int_\Theta P_\theta(dy\mid x)\,dQ(\theta).
+\tag{5}\]</span></span></p>
+<p>If one uses a proper scoring rule <span class="math inline">\(S\)</span> as the discrepancy, the predictive posterior solves</p>
+<p><span id="eq-conditional-score"><span class="math display">\[
+\sum_{i=1}^n S(P_Q(\cdot\mid x_i),y_i)
++
+\lambda_nD_{\text{KL}}(Q\mid Q_0)
+\tag{6}\]</span></span></p>
+<p>where as usual the first term scores the mixture predictive and the second term keeps <span class="math inline">\(Q\)</span> close to a reference measure <span class="math inline">\(Q_0\)</span>. The log score is a special case, but other proper scoring rules can be used as well.</p>
 </section>
-<section id="alternating-optimization-ipfp" class="level3">
-<h3 class="anchored" data-anchor-id="alternating-optimization-ipfp">Alternating optimization = IPFP</h3>
-<p>The AM objective <a href="#eq-am" class="quarto-xref">Equation&nbsp;7</a> needs <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span>. The CM objective <a href="#eq-cm" class="quarto-xref">Equation&nbsp;11</a> needs samples from <span class="math inline">\(p^{u^\star}\)</span>. Neither can be solved alone. The natural fix: alternate.</p>
-<ol type="1">
-<li><strong>AM step:</strong> Solve <a href="#eq-am" class="quarto-xref">Equation&nbsp;7</a> with <span class="math inline">\(\nabla \log \widehat{\varphi}_1 \approx h^{(k-1)}\)</span> to get <span class="math inline">\(u^{(k)}\)</span>.</li>
-<li><strong>CM step:</strong> Solve <a href="#eq-cm" class="quarto-xref">Equation&nbsp;11</a> with <span class="math inline">\(u^\star \approx u^{(k)}\)</span> to get <span class="math inline">\(h^{(k)}\)</span>.</li>
-</ol>
-<p>Initialize with <span class="math inline">\(h^{(0)} = 0\)</span>. The first AM stage then regresses the control onto <span class="math inline">\(\sigma_t \nabla E(X_1)\)</span>: pure energy-guided transport with no corrector. Subsequent CM stages progressively learn the bias correction.</p>
-<p>This alternation has a clean interpretation. The AM step solves a forward half-bridge: <span class="math inline">\(\min D_{\text{KL}}(\mathbb{Q}\,\|\, \mathbb{Q}^{\text{bwd}})\)</span> subject to <span class="math inline">\(\mathbb{Q}_0 = \mu\)</span>. The CM step solves a backward half-bridge: <span class="math inline">\(\min D_{\text{KL}}(\mathbb{P}^{u^{(k)}} \,\|\, \mathbb{Q})\)</span> subject to <span class="math inline">\(\mathbb{Q}_1 = \pi\)</span>. Alternating between these two projections is exactly <a href="../shrodinger/shrodinger.qmd">IPFP/Sinkhorn</a> on path-space. Convergence to the SB solution follows from standard IPFP analysis <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref"><strong>de2021diffusion?</strong></a>)</span>, provided each step is solved exactly. Each step reduces <span class="math inline">\(D_{\text{KL}}(\mathbb{Q}^{(k)} \| \mathbb{Q}^\star)\)</span> since projections onto convex constraint sets are contractive in KL. In practice, 3-5 stages suffice.</p>
+<section id="a-latent-subpopulation-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-latent-subpopulation-example">A latent-subpopulation example</h3>
+<p>Consider the Gaussian regression model <span class="math inline">\(P_\theta(dy\mid x)=\mathcal N(y;x^\top\theta,\sigma^2)\,dy\)</span> where <span class="math inline">\(sigma^2\)</span> is known and <span class="math inline">\(\theta\in\mathbb R^p\)</span> is the regression coefficient. Now suppose the population has unobserved groups:</p>
+<p><span id="eq-latent-mixture"><span class="math display">\[
+Y\mid X=x
+\sim
+\sum_{k=1}^K w_k\,\mathcal N(y;x^\top\theta_k,\sigma^2).
+\tag{7}\]</span></span></p>
+<p>Bayes under the single-slope model learns one compromise slope, which can have arbitrarily poor predictive performance. A predictive posterior can put mass near <span class="math inline">\(\theta_1,\ldots,\theta_K\)</span>, which gives a mixture predictive that can be much closer to the truth. If the groups are part of the scientific model, <span class="math inline">\(Q\)</span> estimates population heterogeneity. If the same mixture is only approximating nonlinear regression, heteroscedastic noise, or missing covariates, <span class="math inline">\(Q\)</span> is an ensemble representation.</p>
 </section>
-<section id="comparison-and-practical-remarks" class="level3">
-<h3 class="anchored" data-anchor-id="comparison-and-practical-remarks">Comparison and practical remarks</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Method</th>
-<th>Prior</th>
-<th>Terminal cost <span class="math inline">\(g(x)\)</span></th>
-<th>Corrector</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">Adjoint Sampling</a></td>
-<td><span class="math inline">\(\delta_0\)</span> (memoryless)</td>
-<td><span class="math inline">\(\log \frac{p^{\mathbb{P}}_1(x)}{\pi(x)}\)</span></td>
-<td>None (<span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span>)</td>
-</tr>
-<tr class="even">
-<td>ASBS</td>
-<td>Arbitrary <span class="math inline">\(\mu\)</span></td>
-<td><span class="math inline">\(\log \frac{\widehat{\varphi}_1(x)}{\pi(x)}\)</span></td>
-<td>Learned <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span></td>
-</tr>
-</tbody>
-</table>
-<p>ASBS reduces to Adjoint Sampling when <span class="math inline">\(\mu = \delta_0\)</span>: the corrector becomes <span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span> and the CM step is trivially solved.</p>
-<p>A concrete example of a useful prior: for molecular conformer generation, one can use a harmonic oscillator prior <span class="math inline">\(\mu(x) \propto \exp(-\frac{\alpha}{2} \sum_{i &lt; j} \|x_i - x_j - r^0_{ij}\|^2)\)</span>, where <span class="math inline">\(r^0_{ij}\)</span> are equilibrium bond lengths from the molecular graph. Particles start in a physically reasonable arrangement rather than at the origin, substantially reducing the transport cost.</p>
-<p>One caveat: like all SOC-based samplers, the AM regression is mode-seeking: it fits <span class="math inline">\(u\)</span> to conditional expectations under <span class="math inline">\(\mathbb{P}^{u^\star}\)</span>, which concentrates on high-probability regions of <span class="math inline">\(\pi\)</span>.</p>
-<!-- BibTeX entries to add to ref.bib:
-@article{liu2025adjoint,
-  title={Adjoint {S}chr{\"o}dinger Bridge Sampler},
-  author={Liu, Guan-Horng and Chen, Tianrong and Lipman, Yaron and Albergo, Michael S. and Vanden-Eijnden, Eric},
-  year={2025},
-  url={https://arxiv.org/abs/2503.02874}
-}
+<section id="a-misspecified-simulator-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-misspecified-simulator-example">A misspecified simulator example</h3>
+<p>The interpretation changes in mechanistic models. Consider a mechanistic simulator <span class="math inline">\(P_\theta(dy\mid x)\)</span>. For a deterministic simulator, this may be a point mass, or the simulator output plus observation noise. The parameter <span class="math inline">\(\theta\)</span> may contain rate constants, forcing terms, initial-state corrections, or boundary conditions. If the simulator omits a source of randomness or a reaction channel, ordinary Bayes can learn one best wrong simulator. The mixture can add predictive spread, as is empirically observed in ensemble weather forecasts. It can widen intervals, add heavier tails, or create several plausible predictive modes. Note that this predictive spread is not a discovery of the missing mechanism. It is just a predictive fix for a misspecified model. In other words, there is nothing magical about the mixture predictive: it is just a mixture of the original model components, and the mixture weights are chosen to optimize predictive performance. A broad <span class="math inline">\(Q\)</span> may mean physical heterogeneity, missing process noise, numerical ensemble spread, or regularization.</p>
+</section>
+<section id="what-does-q-mean" class="level3">
+<h3 class="anchored" data-anchor-id="what-does-q-mean">What does Q mean?</h3>
+<p>The objective identifies <span class="math inline">\(P_Q\)</span>, not <span class="math inline">\(Q\)</span> and the map <span class="math inline">\(Q \mapsto P_Q\)</span> needs not be injective since different mixing distributions can give the same predictive distribution. Two nearly identical predictive distributions can come from very different mixing distributions. The objective directly supports claims about <span class="math inline">\(P_Q\)</span>. On the other hand, claims about parameter uncertainty, latent heterogeneity, or scientific mechanism need more assumptions. They need identifiability of the mixture representation and a data-generating story in which <span class="math inline">\(Q\)</span> has that meaning.</p>
+<p>The regularization scale <span class="math inline">\(\lambda_n\)</span> also matters. While a Bayes-scaled value keeps the posterior analogy closer, a validation-tuned value targets prediction. Large <span class="math inline">\(\lambda_n\)</span> keeps <span class="math inline">\(Q\)</span> close to <span class="math inline">\(Q_0\)</span>. Small <span class="math inline">\(\lambda_n\)</span> chases predictive fit. In the second case, the spread of <span class="math inline">\(Q\)</span> is partly a tuning effect.</p>
+</section>
+<section id="computation" class="level3">
+<h3 class="anchored" data-anchor-id="computation">Computation</h3>
+<p>The optimization is over distributions <span class="math inline">\(Q\)</span> on parameter space, so computation starts by choosing a representation of <span class="math inline">\(Q\)</span>. A variational implementation chooses a parametric density <span class="math inline">\(q_\lambda\)</span> on <span class="math inline">\(\Theta\)</span> and optimizes <span class="math inline">\(\lambda\)</span>. A particle implementation uses</p>
+<p><span id="eq-particle-q"><span class="math display">\[
+Q_M=\frac1M\sum_{m=1}^M\delta_{\theta_m}
+\tag{8}\]</span></span></p>
+<p>and optimizes the locations <span class="math inline">\(\theta_1,\ldots,\theta_M\)</span> of the particles. This leads to a nonconvex optimizaition problem that is often attacked with stochastic gradient descent. For MMD, CRPS, or energy scores, the objective can often be estimated from simulations. They only require simulation from <span class="math inline">\(P_\theta\)</span>, not evaluation of <span class="math inline">\(p_\theta\)</span>.</p>
+</section>
+<section id="where-this-appears" class="level3">
+<h3 class="anchored" data-anchor-id="where-this-appears">Where this appears</h3>
+<p>Several recent papers study this score-the-mixture update. Predictive variational inference, prediction-centric uncertainty quantification, and predictively oriented posteriors all fit the score-the-mixture pattern <span class="citation" data-cites="Lai2024 Shen2024 McLatchie2025">(<a href="#ref-Lai2024" role="doc-biblioref">Lai, Linero, and Yao 2024</a>; <a href="#ref-Shen2024" role="doc-biblioref">Shen et al. 2024</a>; <a href="#ref-McLatchie2025" role="doc-biblioref">McLatchie et al. 2025</a>)</span>. Generalized Bayes fits the average-loss pattern <span class="citation" data-cites="Bissiri2016">(<a href="#ref-Bissiri2016" role="doc-biblioref">Bissiri, Holmes, and Walker 2016</a>)</span>. MMD posterior bootstrap and MMD regression are nearby, but they remain parameter-projection methods unless they score the mixture predictive itself.</p>
 
-@article{de2021diffusion,
-  title={Diffusion {S}chr{\"o}dinger bridge with applications to score-based generative modeling},
-  author={De Bortoli, Valentin and Thornton, James and Heng, Jeremy and Doucet, Arnaud},
-  journal={NeurIPS},
-  year={2021},
-  url={https://arxiv.org/abs/2106.01357}
-}
--->
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Bissiri2016" class="csl-entry" role="listitem">
+Bissiri, P. G., C. C. Holmes, and S. G. Walker. 2016. <span>“A General Framework for Updating Belief Distributions.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 78 (5). Oxford University Press (OUP): 1103–30. doi:<a href="https://doi.org/10.1111/rssb.12158">10.1111/rssb.12158</a>.
+</div>
+<div id="ref-Lai2024" class="csl-entry" role="listitem">
+Lai, Jinlin, Antonio Linero, and Yuling Yao. 2024. <span>“Predictive Variational Inference: Learn the Predictively Optimal Posterior Distribution.”</span> arXiv preprint arXiv:2410.14843.
+</div>
+<div id="ref-Lindsay1995" class="csl-entry" role="listitem">
+Lindsay, Bruce G. 1995. <em>Mixture Models: Theory, Geometry and Applications</em>. <em>NSF-CBMS Regional Conference Series in Probability and Statistics</em>. Institute of Mathematical Statistics; American Statistical Association. doi:<a href="https://doi.org/10.1214/cbms/1462106013">10.1214/cbms/1462106013</a>.
+</div>
+<div id="ref-McLatchie2025" class="csl-entry" role="listitem">
+McLatchie, Yann, Badr-Eddine Cherief-Abdellatif, David T. Frazier, and Jeremias Knoblauch. 2025. <span>“Predictively Oriented Posteriors.”</span> arXiv preprint arXiv:2510.01915.
+</div>
+<div id="ref-Shen2024" class="csl-entry" role="listitem">
+Shen, Zheyang, Jeremias Knoblauch, Sam Power, and Chris. J. Oates. 2024. <span>“Prediction-Centric Uncertainty Quantification via MMD.”</span> In <em>International Conference on Artificial Intelligence and Statistics</em>.
+</div>
+<div id="ref-Yao2018" class="csl-entry" role="listitem">
+Yao, Yuling, Aki Vehtari, Daniel Simpson, and Andrew Gelman. 2018. <span>“Using Stacking to Average Bayesian Predictive Distributions (with Discussion).”</span> <em>Bayesian Analysis</em> 13 (3). Institute of Mathematical Statistics: 917–1007. doi:<a href="https://doi.org/10.1214/17-ba1091">10.1214/17-ba1091</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

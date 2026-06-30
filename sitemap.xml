@@ -9,16 +9,32 @@
     <lastmod>2025-02-28T02:16:17.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/teaching/DSA4212/assignments.html</loc>
-    <lastmod>2024-09-19T02:09:31.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/teaching/SBI_infection/SBI-infection.html</loc>
+    <lastmod>2026-03-07T17:26:17.622Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/DL-for-time-series.html</loc>
-    <lastmod>2026-03-07T02:54:24.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/teaching/character_LLM/charllm.html</loc>
+    <lastmod>2025-10-14T02:52:00.435Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/molecular-prediction.html</loc>
     <lastmod>2026-03-07T05:31:15.356Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/text-classification.html</loc>
+    <lastmod>2026-03-07T02:54:21.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/LinearModel/LM.html</loc>
+    <lastmod>2026-02-07T15:55:48.012Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/fraud-detection.html</loc>
+    <lastmod>2026-03-07T02:54:18.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/recommender-systems.html</loc>
+    <lastmod>2026-03-07T02:54:17.000Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/topics_list.html</loc>
@@ -53,16 +69,48 @@
     <lastmod>2023-10-02T15:04:35.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</loc>
-    <lastmod>2023-12-27T15:38:18.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_matching.html</loc>
+    <lastmod>2026-03-22T15:54:09.331Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/HJB/HJB.html</loc>
-    <lastmod>2025-10-21T06:51:29.674Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/jarzynski.html</loc>
+    <lastmod>2025-09-17T16:56:05.622Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/shrodinger_bridge/shrodinger.html</loc>
-    <lastmod>2026-02-17T17:07:40.183Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/BMS.html</loc>
+    <lastmod>2026-03-22T15:54:31.022Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling.html</loc>
+    <lastmod>2026-03-22T15:53:24.284Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint.html</loc>
+    <lastmod>2025-09-17T16:08:15.042Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/shrodinger.html</loc>
+    <lastmod>2026-02-17T17:07:40.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/functional_adjoint.html</loc>
+    <lastmod>2026-03-23T15:50:09.739Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/sparse_GP/sparse_gp.html</loc>
+    <lastmod>2026-02-01T13:27:00.064Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/DiscreteDiff/DiscreteDiff.html</loc>
+    <lastmod>2025-10-27T17:08:30.071Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</loc>
+    <lastmod>2023-10-03T02:32:24.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</loc>
+    <lastmod>2023-12-08T04:37:40.000Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/jarzynski/jarzynski.html</loc>
@@ -85,207 +133,91 @@
     <lastmod>2023-12-15T10:13:02.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/sanov/sanov.html</loc>
-    <lastmod>2025-07-05T16:08:47.889Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/SAW/SAW.html</loc>
+    <lastmod>2025-04-05T11:29:45.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
-    <lastmod>2023-09-26T10:08:54.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</loc>
+    <lastmod>2026-03-09T16:44:44.337Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/conformal_inference/conformal.html</loc>
-    <lastmod>2024-12-09T17:08:48.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</loc>
+    <lastmod>2025-11-29T06:44:15.507Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/index.html</loc>
-    <lastmod>2025-10-12T08:19:24.383Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</loc>
+    <lastmod>2024-03-16T03:40:20.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_Error_Bounds_for_Sequential_Monte_Carlo_Samplers_for_Multimodal_Distributions.html</loc>
-    <lastmod>2023-06-05T16:10:36.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/adjoint_method/adjoint.html</loc>
+    <lastmod>2025-09-17T16:08:15.042Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_GIT-net.html</loc>
-    <lastmod>2023-12-06T08:45:32.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/about/about.html</loc>
+    <lastmod>2026-04-06T15:05:44.552Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_Particle_Filter_efficiency_under_limited_communication.html</loc>
-    <lastmod>2023-12-19T07:15:31.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Manifold_Markov_Chain_Monte_Carlo_Methods.html</loc>
+    <lastmod>2023-06-05T15:38:56.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Generalized_Robust_Framework.html</loc>
-    <lastmod>2023-06-05T16:31:11.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2017_Pseudo_marginal_Metropolis_Hastings_using_averages_of_unbiased_estimators.html</loc>
+    <lastmod>2023-06-05T16:15:26.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2016_Consistency_and_Fluctuations_for_Stochastic_Gradient_Langevin_Dynamics.html</loc>
-    <lastmod>2023-06-05T16:20:15.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_Out_Distribution_Diffusion.html</loc>
+    <lastmod>2024-09-26T01:27:54.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2025_ETGPSSM.html</loc>
-    <lastmod>2025-12-06T04:22:43.898Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_A_discrete_Bouncy_Particle_Sampler.html</loc>
+    <lastmod>2023-06-05T16:07:14.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_norm_flow.html</loc>
-    <lastmod>2024-09-27T02:48:05.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2016_On_The_Convergence_Of_Adaptive_Sequential_Monte_Carlo_Methods.html</loc>
+    <lastmod>2024-06-07T02:00:47.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_Conditional_Sequential_Monte_Carlo.html</loc>
-    <lastmod>2023-12-19T07:16:06.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2018_On_Coupling_Particle_Filter_Trajectories.html</loc>
+    <lastmod>2023-12-19T07:15:25.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2017_Levy_statistics_of_interacting_Rydberg_gases.html</loc>
-    <lastmod>2023-06-05T16:14:04.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_Efficiency_of_delayed_acceptance_random_walk_Metropolis_algorithms.html</loc>
+    <lastmod>2023-06-05T16:12:45.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_On_Non_Negative_Unbiased_Estimators.html</loc>
-    <lastmod>2023-06-05T16:21:53.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_Computational_Doobs_H_Transforms.html</loc>
+    <lastmod>2023-12-19T07:15:36.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Pretrained_Equivariant_Features.html</loc>
-    <lastmod>2023-06-05T15:46:09.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Manifold_Lifting.html</loc>
+    <lastmod>2023-06-05T15:33:55.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_DAIS.html</loc>
-    <lastmod>2025-12-06T04:20:57.787Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_ENKF-Aided.html</loc>
+    <lastmod>2024-08-24T05:03:03.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2018_Asymptotic_Analysis_of_the_Random_Walk_Metropolis_Algorithm_on_Ridged_Densities.html</loc>
-    <lastmod>2023-06-05T16:08:34.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2012_Optimal_Scaling_and_Diffusion_Limits_for_the_Langevin_Algorithm_in_High_Dimensions.html</loc>
+    <lastmod>2023-06-05T16:30:59.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_scalable_optimal_transport_based_local_particle_filter.html</loc>
-    <lastmod>2023-06-05T16:04:47.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_Uncertainty_Quantification_Deep_Ensembles.html</loc>
+    <lastmod>2023-06-05T15:35:34.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_On_The_Efficiency_Of_Pseudo_Marginal_Random_Walk_Metropolis_Algorithms.html</loc>
-    <lastmod>2023-06-05T16:23:43.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_On_Data_Augmentation.html</loc>
+    <lastmod>2023-06-05T15:36:22.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_On_Importance_Weighted_Autoencoders.html</loc>
-    <lastmod>2023-06-05T15:45:20.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2014_Gradient_Flow_From_A_Random_Walk_In_Hilbert_Space.html</loc>
+    <lastmod>2023-06-05T16:29:55.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2021_Identification_of_differential_RNA_modifications_from_nanopore_direct_RNA_sequencing_with_xPore.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_Sequential_Ensemble_Transform.html</loc>
+    <lastmod>2023-12-19T07:15:34.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2018_DRUNET_A_Dilated_Residual_U_Net_Deep_Learning_Network_to_Digitally_Stain_Optic_Nerve_Head_Tissues_in_Optical_Coherence_Tomography_Images.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_DeshadowGAN_A_Deep_Learning_Approach_to_Remove_Shadows_from_Optical_Coherence_Tomography_Images.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_NanoVar_Accurate_Characterization_of_Patients_Genomic_Structural_Variants.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Three_Dimensional_Structural_Phenotype_of_the_Optic_Nerve_Head_as_a_Function_of_Glaucoma_Severity.html</loc>
-    <lastmod>2023-08-22T03:52:12.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Towards_Label-Free_3D_Segmentation_of_Optical_Coherence_Tomography_Images_of_the_Optic_Nerve_Head_Using_Deep_Learning.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_Beyond_quadratic_error_Case_study_of_a_multiple_criteria_approach_to_the_performance_assessment_of_numerical_forecasts_of_solar_irradiance_in_the_tropics.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2018_Probabilistic_forecasting_of_day_ahead_solar_irradiance_using_quantile_gradient_boosting.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/index_pubs.html</loc>
-    <lastmod>2025-12-06T06:08:30.326Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/spectral.html</loc>
-    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/conductance.html</loc>
-    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/sobolev.html</loc>
-    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/coupling.html</loc>
-    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/SSM/SSM_references.html</loc>
-    <lastmod>2024-01-19T09:23:51.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/posts/index_blog.html</loc>
-    <lastmod>2023-06-21T14:08:49.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2023-07-01T10:40:26.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_students/probability_basics/probability_basics.html</loc>
-    <lastmod>2024-08-13T13:33:26.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/posts/hello_world/index.html</loc>
-    <lastmod>2023-06-06T17:57:44.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/SSM/SSM.html</loc>
-    <lastmod>2024-01-19T10:34:22.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/optimization/duality.html</loc>
-    <lastmod>2024-08-25T04:34:28.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/drift.html</loc>
-    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/isoperimetric.html</loc>
-    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/markov.html</loc>
-    <lastmod>2025-02-06T15:08:38.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes_DRAFT/natural_grad/natur_grad.html</loc>
-    <lastmod>2024-12-04T13:53:09.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2019_Deep_Learning_Approach_to_Denoise_Optical_Coherence_Tomography_Images_of_the_Optic_Nerve_Head.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2021_Deep_Learning_Algorithms_to_Isolate_and_Quantify_the_Structures_of_the_Anterior_Segment_in_Optical_Coherence_Tomography_Images.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2019_Glaucoma_management_in_the_era_of_artificial_intelligence.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_Detection_of_m6A_from_direct_RNA_sequencing.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_Describing_the_Structural_Phenotype_of_the_Glaucomatous_Optic_Nerve_Head_Using_Artificial_Intelligence.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Geometric_Deep_Learning_to_Identify_the_Critical_3D_Structural_Features_of_the_Optic_Nerve_Head_for_Glaucoma_Diagnosis.html</loc>
-    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_The_Three-Dimensional_Structural_Configuration_of_the_Central_Retinal_Vessel_Trunk_and_Branches_as_a_Glaucoma_Biomarker.html</loc>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Medical_Application_of_Geometric_Deep_Learning_for_the_Diagnosis_of_Glaucoma.html</loc>
     <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
@@ -293,92 +225,212 @@
     <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Medical_Application_of_Geometric_Deep_Learning_for_the_Diagnosis_of_Glaucoma.html</loc>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_The_Three-Dimensional_Structural_Configuration_of_the_Central_Retinal_Vessel_Trunk_and_Branches_as_a_Glaucoma_Biomarker.html</loc>
     <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_Sequential_Ensemble_Transform.html</loc>
-    <lastmod>2023-12-19T07:15:34.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Geometric_Deep_Learning_to_Identify_the_Critical_3D_Structural_Features_of_the_Optic_Nerve_Head_for_Glaucoma_Diagnosis.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2014_Gradient_Flow_From_A_Random_Walk_In_Hilbert_Space.html</loc>
-    <lastmod>2023-06-05T16:29:55.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_Describing_the_Structural_Phenotype_of_the_Glaucomatous_Optic_Nerve_Head_Using_Artificial_Intelligence.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_On_Data_Augmentation.html</loc>
-    <lastmod>2023-06-05T15:36:22.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2022_Detection_of_m6A_from_direct_RNA_sequencing.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2021_Uncertainty_Quantification_Deep_Ensembles.html</loc>
-    <lastmod>2023-06-05T15:35:34.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2019_Glaucoma_management_in_the_era_of_artificial_intelligence.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2012_Optimal_Scaling_and_Diffusion_Limits_for_the_Langevin_Algorithm_in_High_Dimensions.html</loc>
-    <lastmod>2023-06-05T16:30:59.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2021_Deep_Learning_Algorithms_to_Isolate_and_Quantify_the_Structures_of_the_Anterior_Segment_in_Optical_Coherence_Tomography_Images.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_ENKF-Aided.html</loc>
-    <lastmod>2024-08-24T05:03:03.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2019_Deep_Learning_Approach_to_Denoise_Optical_Coherence_Tomography_Images_of_the_Optic_Nerve_Head.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Manifold_Lifting.html</loc>
-    <lastmod>2023-06-05T15:33:55.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/natural_grad/natur_grad.html</loc>
+    <lastmod>2024-12-04T13:53:09.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_Computational_Doobs_H_Transforms.html</loc>
-    <lastmod>2023-12-19T07:15:36.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/markov.html</loc>
+    <lastmod>2025-02-06T15:08:38.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_Efficiency_of_delayed_acceptance_random_walk_Metropolis_algorithms.html</loc>
-    <lastmod>2023-06-05T16:12:45.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/isoperimetric.html</loc>
+    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2018_On_Coupling_Particle_Filter_Trajectories.html</loc>
-    <lastmod>2023-12-19T07:15:25.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/drift.html</loc>
+    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2016_On_The_Convergence_Of_Adaptive_Sequential_Monte_Carlo_Methods.html</loc>
-    <lastmod>2024-06-07T02:00:47.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/optimization/duality.html</loc>
+    <lastmod>2024-08-25T04:34:28.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_A_discrete_Bouncy_Particle_Sampler.html</loc>
-    <lastmod>2023-06-05T16:07:14.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/SSM/SSM.html</loc>
+    <lastmod>2024-01-19T10:34:22.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_Out_Distribution_Diffusion.html</loc>
-    <lastmod>2024-09-26T01:27:54.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/posts/hello_world/index.html</loc>
+    <lastmod>2023-06-06T17:57:44.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2017_Pseudo_marginal_Metropolis_Hastings_using_averages_of_unbiased_estimators.html</loc>
-    <lastmod>2023-06-05T16:15:26.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_students/probability_basics/probability_basics.html</loc>
+    <lastmod>2024-08-13T13:33:26.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Manifold_Markov_Chain_Monte_Carlo_Methods.html</loc>
-    <lastmod>2023-06-05T15:38:56.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/posts/reverse_and_tweedie/reverse_and_tweedie.html</loc>
+    <lastmod>2023-07-01T10:40:26.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/about/about.html</loc>
-    <lastmod>2026-04-06T15:05:44.552Z</lastmod>
+    <loc>https://alexxthiery.github.io/posts/index_blog.html</loc>
+    <lastmod>2023-06-21T14:08:49.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_method/adjoint.html</loc>
-    <lastmod>2025-09-17T16:08:15.042Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/SSM/SSM_references.html</loc>
+    <lastmod>2024-01-19T09:23:51.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</loc>
-    <lastmod>2024-03-16T03:40:20.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/coupling.html</loc>
+    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</loc>
-    <lastmod>2025-11-29T06:44:15.507Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/sobolev.html</loc>
+    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</loc>
-    <lastmod>2026-03-09T16:44:44.337Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/conductance.html</loc>
+    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/SAW/SAW.html</loc>
-    <lastmod>2025-04-05T11:29:45.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes_DRAFT/markov/spectral.html</loc>
+    <lastmod>2025-02-06T15:09:19.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/index_pubs.html</loc>
+    <lastmod>2025-12-06T06:08:30.326Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2018_Probabilistic_forecasting_of_day_ahead_solar_irradiance_using_quantile_gradient_boosting.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_Beyond_quadratic_error_Case_study_of_a_multiple_criteria_approach_to_the_performance_assessment_of_numerical_forecasts_of_solar_irradiance_in_the_tropics.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Towards_Label-Free_3D_Segmentation_of_Optical_Coherence_Tomography_Images_of_the_Optic_Nerve_Head_Using_Deep_Learning.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2023_Three_Dimensional_Structural_Phenotype_of_the_Optic_Nerve_Head_as_a_Function_of_Glaucoma_Severity.html</loc>
+    <lastmod>2023-08-22T03:52:12.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_NanoVar_Accurate_Characterization_of_Patients_Genomic_Structural_Variants.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2020_DeshadowGAN_A_Deep_Learning_Approach_to_Remove_Shadows_from_Optical_Coherence_Tomography_Images.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2018_DRUNET_A_Dilated_Residual_U_Net_Deep_Learning_Network_to_Digitally_Stain_Optic_Nerve_Head_Tissues_in_Optical_Coherence_Tomography_Images.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_applications/2021_Identification_of_differential_RNA_modifications_from_nanopore_direct_RNA_sequencing_with_xPore.html</loc>
+    <lastmod>2023-06-05T17:29:07.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_On_Importance_Weighted_Autoencoders.html</loc>
+    <lastmod>2023-06-05T15:45:20.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_On_The_Efficiency_Of_Pseudo_Marginal_Random_Walk_Metropolis_Algorithms.html</loc>
+    <lastmod>2023-06-05T16:23:43.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_scalable_optimal_transport_based_local_particle_filter.html</loc>
+    <lastmod>2023-06-05T16:04:47.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2018_Asymptotic_Analysis_of_the_Random_Walk_Metropolis_Algorithm_on_Ridged_Densities.html</loc>
+    <lastmod>2023-06-05T16:08:34.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_DAIS.html</loc>
+    <lastmod>2025-12-06T04:20:57.787Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Pretrained_Equivariant_Features.html</loc>
+    <lastmod>2023-06-05T15:46:09.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2015_On_Non_Negative_Unbiased_Estimators.html</loc>
+    <lastmod>2023-06-05T16:21:53.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2017_Levy_statistics_of_interacting_Rydberg_gases.html</loc>
+    <lastmod>2023-06-05T16:14:04.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_Conditional_Sequential_Monte_Carlo.html</loc>
+    <lastmod>2023-12-19T07:16:06.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2024_norm_flow.html</loc>
+    <lastmod>2024-09-27T02:48:05.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2025_ETGPSSM.html</loc>
+    <lastmod>2025-12-06T04:22:43.898Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2016_Consistency_and_Fluctuations_for_Stochastic_Gradient_Langevin_Dynamics.html</loc>
+    <lastmod>2023-06-05T16:20:15.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2022_Generalized_Robust_Framework.html</loc>
+    <lastmod>2023-06-05T16:31:11.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_Particle_Filter_efficiency_under_limited_communication.html</loc>
+    <lastmod>2023-12-19T07:15:31.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2023_GIT-net.html</loc>
+    <lastmod>2023-12-06T08:45:32.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2019_Error_Bounds_for_Sequential_Monte_Carlo_Samplers_for_Multimodal_Distributions.html</loc>
+    <lastmod>2023-06-05T16:10:36.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/index.html</loc>
+    <lastmod>2025-10-12T08:19:24.383Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/conformal_inference/conformal.html</loc>
+    <lastmod>2024-12-09T17:08:48.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
+    <lastmod>2023-09-26T10:08:54.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/sanov/sanov.html</loc>
+    <lastmod>2025-07-05T16:08:47.889Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/predictive_posterior/predictive_posterior.html</loc>
+    <lastmod>2026-06-30T17:39:54.195Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</loc>
@@ -386,31 +438,63 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2026-02-25T10:23:14.973Z</lastmod>
+    <lastmod>2026-06-30T17:40:39.674Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/doob_transforms/doob.html</loc>
-    <lastmod>2025-12-25T15:05:32.443Z</lastmod>
+    <lastmod>2026-06-30T04:11:33.247Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</loc>
     <lastmod>2023-11-20T13:15:29.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</loc>
-    <lastmod>2023-12-08T04:37:40.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/potts_transition/potts.html</loc>
+    <lastmod>2026-06-30T03:29:26.942Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</loc>
-    <lastmod>2023-10-03T02:32:24.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/shrodinger_bridge/shrodinger.html</loc>
+    <lastmod>2026-02-17T17:07:40.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/DiscreteDiff/DiscreteDiff.html</loc>
+    <loc>https://alexxthiery.github.io/notes/HJB/HJB.html</loc>
+    <lastmod>2026-04-25T12:45:14.115Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</loc>
+    <lastmod>2023-12-27T15:38:18.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/DiscreteDiff.html</loc>
     <lastmod>2025-10-27T17:08:30.071Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/sparse_GP/sparse_gp.html</loc>
-    <lastmod>2026-02-01T13:27:00.064Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/discrete_adjoint_audit.html</loc>
+    <lastmod>2026-03-23T15:38:59.841Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/HJB.html</loc>
+    <lastmod>2025-10-21T06:51:29.674Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/discrete_adjoint.html</loc>
+    <lastmod>2026-03-23T15:50:22.860Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/girsanov.html</loc>
+    <lastmod>2025-02-22T15:41:29.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/reverse_and_tweedie.html</loc>
+    <lastmod>2026-03-09T16:44:44.337Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/doob.html</loc>
+    <lastmod>2025-12-25T15:05:32.443Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/functional_adjoint_audit.html</loc>
+    <lastmod>2026-03-23T15:37:59.213Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/infinite_products/inft_prod.html</loc>
@@ -441,54 +525,6 @@
     <lastmod>2026-03-07T05:29:26.841Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/DL-for-tabular-data.html</loc>
-    <lastmod>2026-03-07T02:54:23.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/creative_linear_regression.html</loc>
-    <lastmod>2025-03-26T17:56:42.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/teaching/character_LLM/charllm.html</loc>
-    <lastmod>2025-10-14T02:52:00.435Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/people/index_people.html</loc>
-    <lastmod>2025-12-06T06:17:04.494Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_control/2024_controlled.html</loc>
-    <lastmod>2024-05-14T02:14:06.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/LinearModel/LM.html</loc>
-    <lastmod>2026-02-07T15:55:48.012Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/pott_transition/pott.html</loc>
-    <lastmod>2026-02-25T10:21:27.740Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/pott_transition/pott_report.html</loc>
-    <lastmod>2026-02-25T09:38:48.899Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/potts_transition/potts.html</loc>
-    <lastmod>2026-02-25T16:29:37.413Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/CV-transfer-learning.html</loc>
-    <lastmod>2026-03-07T02:54:17.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/fraud-detection.html</loc>
-    <lastmod>2026-03-07T02:54:18.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/recommender-systems.html</loc>
-    <lastmod>2026-03-07T02:54:17.000Z</lastmod>
-  </url>
-  <url>
     <loc>https://alexxthiery.github.io/teaching/DSS5104/image-segmentation.html</loc>
     <lastmod>2026-03-07T02:54:22.000Z</lastmod>
   </url>
@@ -501,191 +537,27 @@
     <lastmod>2026-03-07T02:06:23.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/text-classification.html</loc>
-    <lastmod>2026-03-07T02:54:21.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/CV-transfer-learning.html</loc>
+    <lastmod>2026-03-07T02:54:17.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/teaching/DSS5104/sanity.html</loc>
-    <lastmod>2026-03-07T02:49:34.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/DL-for-tabular-data.html</loc>
+    <lastmod>2026-03-07T02:54:23.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/teaching/SBI_infection/SBI-infection.html</loc>
-    <lastmod>2026-03-07T17:26:17.622Z</lastmod>
+    <loc>https://alexxthiery.github.io/teaching/DSS5104/DL-for-time-series.html</loc>
+    <lastmod>2026-03-07T02:54:24.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_matching_v2.html</loc>
-    <lastmod>2026-03-22T08:44:26.063Z</lastmod>
+    <loc>https://alexxthiery.github.io/teaching/DSA4212/assignments.html</loc>
+    <lastmod>2024-09-19T02:09:31.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/BMS_critic.html</loc>
-    <lastmod>2026-03-22T07:32:23.578Z</lastmod>
+    <loc>https://alexxthiery.github.io/people/index_people.html</loc>
+    <lastmod>2025-12-06T06:17:04.494Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/BMS_v2.html</loc>
-    <lastmod>2026-03-22T09:27:45.687Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/jarzynski.html</loc>
-    <lastmod>2025-09-17T16:56:05.622Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/reverse_and_tweedie.html</loc>
-    <lastmod>2026-03-09T16:44:44.337Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/ASBS_critic.html</loc>
-    <lastmod>2026-03-22T07:32:26.394Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_matching_critic.html</loc>
-    <lastmod>2026-03-22T07:31:42.068Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling.html</loc>
-    <lastmod>2026-03-22T15:53:24.284Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/ASBS.html</loc>
-    <lastmod>2026-03-22T07:19:59.381Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/HJB.html</loc>
-    <lastmod>2025-10-21T06:51:29.674Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/DiscreteDiff.html</loc>
-    <lastmod>2025-10-27T17:08:30.071Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/jarzynski.html</loc>
-    <lastmod>2025-09-17T16:56:05.622Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/girsanov.html</loc>
-    <lastmod>2025-02-22T15:41:29.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/HJB.html</loc>
-    <lastmod>2025-10-21T06:51:29.674Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/DiscreteDiff.html</loc>
-    <lastmod>2025-10-27T17:08:30.071Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/shrodinger.html</loc>
-    <lastmod>2026-02-17T17:07:40.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/adjoint.html</loc>
-    <lastmod>2025-09-17T16:08:15.042Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/reverse_and_tweedie.html</loc>
-    <lastmod>2026-03-09T16:44:44.337Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/doob.html</loc>
-    <lastmod>2025-12-25T15:05:32.443Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/shrodinger.html</loc>
-    <lastmod>2026-02-17T17:07:40.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint.html</loc>
-    <lastmod>2025-09-17T16:08:15.042Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/ASBS_v2.html</loc>
-    <lastmod>2026-03-22T09:27:28.087Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/girsanov.html</loc>
-    <lastmod>2025-02-22T15:41:29.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/BMS.html</loc>
-    <lastmod>2026-03-22T15:54:31.022Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling_critic.html</loc>
-    <lastmod>2026-03-22T07:32:05.680Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling_v2.html</loc>
-    <lastmod>2026-03-22T08:46:35.107Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/doob.html</loc>
-    <lastmod>2025-12-25T15:05:32.443Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_matching.html</loc>
-    <lastmod>2026-03-22T15:54:09.331Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_matching_v3.html</loc>
-    <lastmod>2026-03-22T13:06:56.736Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/BMS_v3.html</loc>
-    <lastmod>2026-03-22T13:24:32.742Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling_v3.html</loc>
-    <lastmod>2026-03-22T09:28:51.472Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_matching_critic_v2.html</loc>
-    <lastmod>2026-03-22T08:49:07.281Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/BMS_critic_v2.html</loc>
-    <lastmod>2026-03-22T08:48:59.574Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling_critic_v2.html</loc>
-    <lastmod>2026-03-22T08:46:40.254Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/ASBS_critic_v2.html</loc>
-    <lastmod>2026-03-22T08:49:06.752Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/ASBS_v3.html</loc>
-    <lastmod>2026-03-22T09:29:09.606Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling_v4.html</loc>
-    <lastmod>2026-03-22T13:34:53.066Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling_audit.html</loc>
-    <lastmod>2026-03-22T15:36:44.035Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/BMS_audit.html</loc>
-    <lastmod>2026-03-22T15:36:04.739Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_matching_audit.html</loc>
-    <lastmod>2026-03-22T15:34:56.869Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/functional_adjoint.html</loc>
-    <lastmod>2026-03-23T15:50:09.739Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/functional_adjoint_audit.html</loc>
-    <lastmod>2026-03-23T15:37:59.213Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/discrete_adjoint_audit.html</loc>
-    <lastmod>2026-03-23T15:38:59.841Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/discrete_adjoint.html</loc>
-    <lastmod>2026-03-23T15:50:22.860Z</lastmod>
+    <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_control/2024_controlled.html</loc>
+    <lastmod>2024-05-14T02:14:06.000Z</lastmod>
   </url>
 </urlset>
