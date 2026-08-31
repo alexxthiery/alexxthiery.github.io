@@ -70,7 +70,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_matching.html</loc>
-    <lastmod>2026-03-22T15:54:09.331Z</lastmod>
+    <lastmod>2026-08-31T16:36:11.097Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/jarzynski.html</loc>
@@ -82,7 +82,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint_sampling.html</loc>
-    <lastmod>2026-03-22T15:53:24.284Z</lastmod>
+    <lastmod>2026-08-31T16:36:11.144Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/adjoint.html</loc>
@@ -94,7 +94,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/functional_adjoint.html</loc>
-    <lastmod>2026-03-23T15:50:09.739Z</lastmod>
+    <lastmod>2026-08-31T16:36:10.988Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/sparse_GP/sparse_gp.html</loc>
@@ -438,11 +438,11 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2026-06-30T17:40:39.674Z</lastmod>
+    <lastmod>2026-08-31T16:43:53.521Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/doob_transforms/doob.html</loc>
-    <lastmod>2026-06-30T04:11:33.247Z</lastmod>
+    <lastmod>2026-06-30T04:15:58.689Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</loc>
@@ -470,7 +470,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/discrete_adjoint_audit.html</loc>
-    <lastmod>2026-03-23T15:38:59.841Z</lastmod>
+    <lastmod>2026-08-31T16:40:37.295Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/HJB.html</loc>
@@ -478,7 +478,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/discrete_adjoint.html</loc>
-    <lastmod>2026-03-23T15:50:22.860Z</lastmod>
+    <lastmod>2026-08-31T16:37:34.230Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/girsanov.html</loc>
@@ -494,7 +494,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers_draft/functional_adjoint_audit.html</loc>
-    <lastmod>2026-03-23T15:37:59.213Z</lastmod>
+    <lastmod>2026-08-31T16:36:11.193Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/infinite_products/inft_prod.html</loc>
@@ -506,7 +506,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2024-02-09T10:06:09.000Z</lastmod>
+    <lastmod>2026-08-31T16:22:38.014Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html</loc>
@@ -559,5 +559,121 @@
   <url>
     <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_control/2024_controlled.html</loc>
     <lastmod>2024-05-14T02:14:06.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/ai_views_blog.html</loc>
+    <lastmod>2026-07-03T17:17:10.396Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/ai_views.html</loc>
+    <lastmod>2026-07-02T14:48:42.411Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/source_map.html</loc>
+    <lastmod>2026-07-03T02:55:17.672Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/citation_plan.html</loc>
+    <lastmod>2026-07-03T02:55:17.755Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/draft_audit.html</loc>
+    <lastmod>2026-07-03T15:21:05.002Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/style_contract.html</loc>
+    <lastmod>2026-07-02T16:33:42.911Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/section_paragraph_plans.html</loc>
+    <lastmod>2026-07-02T15:57:21.535Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/claims_ledger.html</loc>
+    <lastmod>2026-07-02T15:55:27.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/article_blueprint.html</loc>
+    <lastmod>2026-07-02T16:34:03.709Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/feedback_cost_map.html</loc>
+    <lastmod>2026-07-02T15:38:51.500Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/plateau_agi_partition.html</loc>
+    <lastmod>2026-07-02T15:39:15.988Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/importance_oracle.html</loc>
+    <lastmod>2026-07-02T15:39:15.735Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/reference_inventory.html</loc>
+    <lastmod>2026-07-02T15:58:05.621Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/measurability_distortion.html</loc>
+    <lastmod>2026-07-02T15:39:32.956Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/community_layer.html</loc>
+    <lastmod>2026-07-02T15:37:18.965Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/conjecture_economy.html</loc>
+    <lastmod>2026-07-02T15:39:15.904Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/acquisition_asymmetry.html</loc>
+    <lastmod>2026-07-02T15:38:51.744Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/synthesis_debt.html</loc>
+    <lastmod>2026-07-02T15:38:51.997Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/cheap_feedback.html</loc>
+    <lastmod>2026-07-02T15:38:51.422Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/concepts/amplification_to_replacement.html</loc>
+    <lastmod>2026-07-02T15:38:51.578Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/concept_map.html</loc>
+    <lastmod>2026-07-02T15:54:34.823Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/flow_test.html</loc>
+    <lastmod>2026-07-02T16:46:13.195Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/article_spine.html</loc>
+    <lastmod>2026-07-02T15:58:05.468Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/open_verification_tasks.html</loc>
+    <lastmod>2026-07-02T15:55:27.837Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/section_claim_ladders.html</loc>
+    <lastmod>2026-07-02T15:56:15.053Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/drafting_contract.html</loc>
+    <lastmod>2026-07-02T16:33:42.995Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/article_thesis.html</loc>
+    <lastmod>2026-07-02T15:58:05.395Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/ai_systems/scaffold/acceptance_checklist.html</loc>
+    <lastmod>2026-07-02T16:33:43.081Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/cvxpy/cvxpy.html</loc>
+    <lastmod>2026-08-31T16:21:38.612Z</lastmod>
   </url>
 </urlset>

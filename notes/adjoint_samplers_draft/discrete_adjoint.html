@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -253,7 +273,7 @@ u^\star_t(y,x) = r_t(y,x) \cdot e^{V_t(y) - V_t(x)}.
 <section id="additive-noise-on-cyclic-groups" class="level2">
 <h2 class="anchored" data-anchor-id="additive-noise-on-cyclic-groups">Additive noise on cyclic groups</h2>
 <p>Continuous <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> relies on translation invariance of Gaussian noise: the reference transition kernel <span class="math inline">\(p^r_{1|t}(y \mid x) = q_t(y - x)\)</span> depends only on the displacement <span class="math inline">\(y - x\)</span>.</p>
-<p>For CTMCs on a finite state space, there is no obvious analogue. The key observation from <span class="citation" data-cites="liu2025dasbs so2026dam">(<a href="#ref-liu2025dasbs" role="doc-biblioref"><strong>liu2025dasbs?</strong></a>; <a href="#ref-so2026dam" role="doc-biblioref"><strong>so2026dam?</strong></a>)</span> is to equip the state space with a group structure. Take <span class="math inline">\(\mathcal{X}= \mathbb{Z}_N^D\)</span>, the cyclic group of integers modulo <span class="math inline">\(N\)</span> in <span class="math inline">\(D\)</span> dimensions. Each state is <span class="math inline">\(x = (x^1, \ldots, x^D)\)</span> with <span class="math inline">\(x^d \in \{0, 1, \ldots, N-1\}\)</span>, and addition is component-wise modulo <span class="math inline">\(N\)</span>.</p>
+<p>For CTMCs on a finite state space, there is no obvious analogue. The key observation from <span class="citation" data-cites="guo2026discrete so2026dam">(<a href="#ref-guo2026discrete" role="doc-biblioref">Guo et al. 2026</a>; <a href="#ref-so2026dam" role="doc-biblioref">So et al. 2026</a>)</span> is to equip the state space with a group structure. Take <span class="math inline">\(\mathcal{X}= \mathbb{Z}_N^D\)</span>, the cyclic group of integers modulo <span class="math inline">\(N\)</span> in <span class="math inline">\(D\)</span> dimensions. Each state is <span class="math inline">\(x = (x^1, \ldots, x^D)\)</span> with <span class="math inline">\(x^d \in \{0, 1, \ldots, N-1\}\)</span>, and addition is component-wise modulo <span class="math inline">\(N\)</span>.</p>
 <p>Choose a uniform reference rate:</p>
 <p><span id="eq-uniform-rate"><span class="math display">\[
 r_t(y, x) = \frac{\gamma_t}{N} \quad \text{for all } y \neq x \text{ with } d_H(y,x) = 1,
@@ -369,8 +389,8 @@ u^\star_t(y, x) = r_t(y, x) \cdot \frac{\varphi_t(y)}{\varphi_t(x)},
 <li><strong>Denoising matching</strong> for the corrector: regresses onto <span class="math inline">\(p^r_{1|t}(x_1^{d \gets n} \mid x) / p^r_{1|t}(x_1 \mid x)\)</span>, the ratio of reference transition probabilities. This does not require the additive property and works for general reference kernels.</li>
 </ul></li>
 </ul>
-<p>This alternation is <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> in disguise: each half-step solves a half-bridge problem. Convergence follows from the contraction argument in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a>; see <span class="citation" data-cites="liu2025dasbs">(<a href="#ref-liu2025dasbs" role="doc-biblioref"><strong>liu2025dasbs?</strong></a>)</span> for the discrete convergence proof.</p>
-<p>Empirical finding from <span class="citation" data-cites="liu2025dasbs">(<a href="#ref-liu2025dasbs" role="doc-biblioref"><strong>liu2025dasbs?</strong></a>)</span>: non-memoryless reference schedules outperform memoryless ones in discrete settings. The memoryless condition forces aggressive mixing that wastes computation; relaxing it allows more efficient transport.</p>
+<p>This alternation is <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> in disguise: each half-step solves a half-bridge problem. Convergence follows from the contraction argument in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a>; see <span class="citation" data-cites="guo2026discrete">(<a href="#ref-guo2026discrete" role="doc-biblioref">Guo et al. 2026</a>)</span> for the discrete convergence proof.</p>
+<p>Empirical finding from <span class="citation" data-cites="guo2026discrete">(<a href="#ref-guo2026discrete" role="doc-biblioref">Guo et al. 2026</a>)</span>: non-memoryless reference schedules outperform memoryless ones in discrete settings. The memoryless condition forces aggressive mixing that wastes computation; relaxing it allows more efficient transport.</p>
 </section>
 </section>
 <section id="summary-continuous-vs-discrete" class="level2">
@@ -432,25 +452,19 @@ u^\star_t(y, x) = r_t(y, x) \cdot \frac{\varphi_t(y)}{\varphi_t(x)},
 </tbody>
 </table>
 <p>The discrete analogue of Nelson’s relation from the <a href="../../notes/adjoint_samplers_draft/BMS.html">BMS notes</a> is detailed balance: <span class="math inline">\(u^\star_t(y,x)/u^{\star,\text{rev}}_t(x,y) = p^\star_t(y)/p^\star_t(x)\)</span>.</p>
-<!-- BibTeX entries to add to ref.bib:
-@article{liu2025dasbs,
-  title={Discrete Adjoint Schr{\"o}dinger Bridge Sampler},
-  author={Liu, Bingchang and Shi, Yubin and Chen, Ricky T. Q. and Grathwohl, Will and De Bortoli, Valentin},
-  journal={arXiv preprint arXiv:2506.xxxxx},
-  year={2025}
-}
-@article{so2026dam,
-  title={Discrete Adjoint Matching},
-  author={So, Junhyun and Chen, Sung Ju and Lee, Jeongyol and Lee, Dongha},
-  journal={arXiv preprint arXiv:2506.xxxxx},
-  year={2026}
-}
--->
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-guo2026discrete" class="csl-entry" role="listitem">
+Guo, Wei, Yuchen Zhu, Xiaochen Du, Juno Nam, Yongxin Chen, Rafael Gómez-Bombarelli, Guan-Horng Liu, Molei Tao, and Jaemoo Choi. 2026. <span>“Discrete Adjoint Schrödinger Bridge Sampler.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2602.08243">10.48550/ARXIV.2602.08243</a>.
+</div>
+<div id="ref-so2026dam" class="csl-entry" role="listitem">
+So, Oswin, Brian Karrer, Chuchu Fan, Ricky T. Q. Chen, and Guan-Horng Liu. 2026. <span>“Discrete Adjoint Matching.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2602.07132">10.48550/ARXIV.2602.07132</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

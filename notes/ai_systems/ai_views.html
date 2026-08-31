@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ai_views – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>[1/7/26 9:46 PM] AlexT: Over the past few months, we discussed a lot about Ai for maths and science, how it’s going to influence the field, its likely evolutions, etc. A lot has been said in online article, but surprisingly, often very shallow comments when compared to what we have in the vault, either implicitly or explicitly.</p>
+<p>Think very hard, leveraging the vault, on ideas and opinions that are genuinely interesting and not trivial. [1/7/26 9:46 PM] alfred: Still working - this is taking longer than usual. I will send the answer when the current step finishes. [1/7/26 9:48 PM] alfred: Drawing from the full vault across the AI-for-science cards. Six threads that online commentary systematically misses:</p>
+<p>⎯⎯⎯</p>
+<ol type="1">
+<li>AI accelerates production but not digestion — the synthesis debt crisis worsens</li>
+</ol>
+<p>synthesis-debt-knowledge-overhang says: fields already accumulate results faster than they synthesize them. The knowledge overhang is the gap between what is proven and what is genuinely comprehended — and it’s already large in most mathematical sciences.</p>
+<p>Online articles treat AI as the solution to this. The non-trivial read: AI intensifies the problem. AI accelerates the production side (new results, new theorems, new structures). But the digestion bottleneck — understanding what a result means, extracting the reusable conceptual skeleton, recognizing it as a special case of something broader — is precisely what ai-capability-asymmetry says AI is weakest at. Digestion requires the open-objective functions (taste, intelligibility standards, knowing which results matter) that resist automation.</p>
+<p>The prediction: fields under heavy AI pressure will face an epistemological bifurcation. Fields with strong synthesis communities (active scholars, clear aesthetic standards, good pedagogy) will convert AI-generated results into genuine knowledge. Fields with weak synthesis capacity will become formally richer and epistemically more hollow simultaneously. The theorem count rises; the knowledge count does not.</p>
+<p>By the intelligibility-required-accretive-knowledge standard: an unintelligible proof adds to the theorem count, not the knowledge count. AI at scale may be an unintelligible-proof factory.</p>
+<p>⎯⎯⎯</p>
+<ol start="2" type="1">
+<li>The community hollowing problem — the substrate matters more than the documents</li>
+</ol>
+<p>knowledge-lives-in-community makes the strong claim: when the community around a field contracts, operational knowledge degrades even if every document remains accessible.</p>
+<p>Here is the non-trivial scenario no one is discussing: if AI successfully automates a significant fraction of graduate-level mathematical work, fewer people need to deeply learn that domain. The community contracts. But without a living community, the tacit knowledge that makes documents usable — the judgment about which techniques transfer, which results are really about the same thing, what the “right” proof is — starts to decay.</p>
+<p>You end up with a formally intact literature that is operationally inaccessible: the texts are there, but the interpretive community that makes them navigable has hollowed out. This is not a science fiction scenario — it’s already happened to dead languages, to obsolete engineering disciplines, to mathematical sub-fields that briefly flourished and then lost their community. AI could accelerate the community contraction without providing the substitute it would need to.</p>
+<p>The darkest version: mathematics and science that are “done by AI” may stop being understood by humans in a way that matters for cumulative knowledge-building. The archive grows; the civilization doesn’t.</p>
+<p>⎯⎯⎯</p>
+<ol start="3" type="1">
+<li>The acquisition asymmetry and the missing generation</li>
+</ol>
+<p>surface-automation-elevates-strategic-layer contains the acquisition asymmetry: the same tool that amplifies experts prevents the path to expertise. The formative value of mathematical struggle is in building intuition — the capacity for strategic-layer judgment about which problems matter, which approaches are promising, what a good result looks like.</p>
+<p>Students who use AI to solve their problem sets develop none of this. They get correct answers but bypass the formative experience that builds judgment. This is not about cheating — it’s structural: even a student who uses AI “legitimately” to explore mathematics may be blocking their own formation. [1/7/26 9:48 PM] alfred: The non-trivial forward projection: the current generation of students who are AI-native in mathematics will, in 15-20 years, be the people responsible for directing AI in mathematics. They are the ones who will need to exercise taste and judgment at the highest level, when AI is far more capable than it is now. But they will have not had the formative experience that builds that judgment. The mathematical equivalent of the “hollow generation” — technically fluent, strategically underdeveloped.</p>
+<p>Nobody is discussing what to teach students who will direct AI rather than do mathematics directly. The curriculum hasn’t been reinvented; it’s just been undermined.</p>
+<p>⎯⎯⎯</p>
+<ol start="4" type="1">
+<li>The prize and metric misalignment — recognition systems optimize for the automatable layer</li>
+</ol>
+<p>conjecture-economy-value-shifts-from-proving-to-asking: value migrates from proving to asking. The Fields Medal and most prestigious prizes in mathematics reward proof achievement — solving hard open problems, establishing difficult results. This is exactly the layer AI is automating.</p>
+<p>The Erdős inversion is the sharpest version of this: when AI proves Erdős conjectures, it retroactively confirms that Erdős’s achievement was the questions, not the proofs. The proofs were the automatable component. The taste — seeing which questions were deep, generative, and connected to the heart of combinatorics — was the scarce human achievement.</p>
+<p>Implication: the entire metric system of academic mathematics (publications, citations, prize committees, promotion criteria) is optimized for the wrong layer. It rewards the closing of questions. The people who will be most valuable going forward are those who open new questions, design new research programs, invent new conceptual frameworks — and there is essentially no formal recognition structure for this. The mathematician who asks a great question that takes 50 years to answer is less visible in academic metrics than the mathematician who answers it.</p>
+<p>This misalignment will become acute: the most prestigious activities in mathematics will be AI-commoditizable, while the most AI-resistant activities have no prestige infrastructure.</p>
+<p>⎯⎯⎯</p>
+<ol start="5" type="1">
+<li>The feedback cost map predicts disruption timing more precisely than subdomain</li>
+</ol>
+<p>scientific-feedback-cost-governs-ai-progress: the binding resource is how quickly candidates can be converted into trustworthy training or evaluation signal. Online articles discuss “AI in biology” or “AI in chemistry” as units. The right classification is by feedback cost structure:</p>
+<p>• Near-zero feedback cost (formal systems, combinatorics): already disrupted — AlphaProof, automated theorem proving, Erdős conjecture verification • Fast computational feedback (molecular dynamics, protein structure, materials simulation): disrupting now — AlphaFold, AlphaFold3, materials discovery • Medium feedback cost (clinical trials Phase 1-2, some wet-lab biology): 5-10 year horizon — AI-assisted drug discovery pipeline • Slow feedback cost (macroeconomics, epidemiology, climate): decades — you can’t run controlled experiments on economies • Open-objective feedback (mathematical taste, theoretical physics conjectures about unformalizable objects): indefinitely resistant — no ground truth exists</p>
+<p>This is a more precise and predictive model than “AI will disrupt field X.” It predicts the wave front of disruption and identifies which fields are structurally immune to near-term disruption regardless of capability improvements. Statistical physics has fast simulation feedback → highly vulnerable. Macroeconomic theory has near-zero feedback (you can’t falsify a macro model cleanly) → highly resistant.</p>
+<p>⎯⎯⎯</p>
+<ol start="6" type="1">
+<li>The prestige gradient is nearly orthogonal to the vulnerability gradient [1/7/26 9:48 PM] alfred: This follows from the feedback cost and capability asymmetry analysis. Traditional mathematical prestige runs roughly: algebraic geometry, number theory &gt; differential geometry, topology &gt; algebra, analysis &gt; combinatorics, applied mathematics &gt; statistics, computation.</li>
+</ol>
+<p>The AI-vulnerability gradient runs almost the opposite direction: combinatorics and competition mathematics are maximally vulnerable (already solved by AI); formal algebra and structured computation are highly vulnerable; the soft/applied/structural areas are more resistant because they have worse feedback cost and are less formalized.</p>
+<p>The fields academic job markets pay the most for, and where the most prestigious prizes are concentrated, are almost exactly the fields most susceptible to near-term AI disruption. The fields with the lowest prestige — applied statistics, computational methods, numerical analysis — have the most durable human value proposition: they require understanding what questions are worth asking in messy, high-feedback-cost domains, and they maintain the connection to the institutional and scientific context that grounds open-objective judgment.</p>
+<p>For someone at your career juncture: applied probability and computational statistics are more defensible long-term positions than pure algebraic geometry, despite lower prestige. The market has the vulnerability gradient backwards.</p>
+<p>⎯⎯⎯</p>
+<p>The common thread across all six: online commentary treats AI as an amplifier of science-as-currently-constituted. The vault’s framework suggests something more disruptive: AI changes what science IS — shifting the locus of value from the activities that current institutions recognize and reward to the activities those institutions have no infrastructure for. The crisis is not just technological but institutional. [1/7/26 9:55 PM] AlexT: I think the vault contains a number of other ideas, even more interesting, implicitly or explicitly, related to ai [1/7/26 9:56 PM] alfred: Still working - this is taking longer than usual. I will send the answer when the current step finishes. [1/7/26 9:58 PM] alfred: Still working - no final answer yet. I will keep going and send the result here. [1/7/26 9:59 PM] alfred: Still working - this is taking longer than usual. I will send the answer when the current step finishes. [1/7/26 10:00 PM] alfred: Yes — and some of these are sharper than what I sent before. Five threads, drawn from cards that don’t get referenced in the usual AI discourse:</p>
+<ol type="1">
+<li>The importance oracle problem (closed-objective-prerequisite-for-self-play)</li>
+</ol>
+<p>The standard story: formalize math → get a fast verifier (Lean) → run self-play → AlphaProof-style explosion. But the ceiling isn’t correctness verification — it’s importance verification. Self-play requires a judge that scores trajectories as better/worse. For correctness this is mechanical. For mathematical taste — what’s worth proving, what’s deep versus trivial — there is no oracle. RLHF can’t substitute because each importance evaluation requires genuine expertise, and the candidate space is combinatorially large. So AI scales toward proof search within a fixed importance landscape, but the landscape itself remains human-curated. The bottleneck shifts from “can we prove X” to “what should X be” — the one thing that doesn’t compress.</p>
+<ol start="2" type="1">
+<li>Tractability colonizes significance (means-reshape-ends)</li>
+</ol>
+<p>The subtlest AI risk for science isn’t displacement — it’s redefinition. Tools don’t just change what we can do; they silently change what counts as significant. If AI makes certain problems dramatically easier, fields gradually reorient toward those problems — not because they’re more important but because they’re more tractable. Significance criteria drift toward AI-compatibility. This is already visible in ML: benchmark performance became the currency of significance precisely because it’s verifiable. The trap: the field looks maximally productive by every measurable metric while systematically avoiding the questions that matter most.</p>
+<ol start="3" type="1">
+<li>The orthogonal shift is permanent (taste-migrates-upward-and-orthogonal-under-commoditization)</li>
+</ol>
+<p>When a capability is commoditized, taste migrates in two directions: upward (higher complexity of the same type) and orthogonal (off-spectrum entirely — conjecture-making, framework-building, synthesis). The upward shift is temporary because AI can follow. The orthogonal shift is permanent because there is no verifier for “invented a useful framework” or “asked the right question.” Photography didn’t kill portrait painting; it pushed fine art into abstraction — a register photography can’t follow. For you at Cubist: conjecture quality, cross-domain analogies, identifying which formalisms to bet on — none of which AI can score.</p>
+<ol start="4" type="1">
+<li>The timing paradox of skill atrophy (substitution-drives-invisible-skill-atrophy)</li>
+</ol>
+<p>Rational disuse is locally optimal and collectively dangerous. The atrophy is invisible during normal operation — revealed only at the moment of tool failure, which is exactly when you most need the underlying skill. For mathematical reasoning: a generation that outsources proof verification will be unable to detect subtle errors in AI proofs during the rare cases where the AI is systematically wrong in a novel domain. The GPS analogy is precise — spatial navigation degrades smoothly until the battery dies somewhere without landmarks. The population-level fragility builds silently.</p>
+<ol start="5" type="1">
+<li>Amplification as waystation, not destination (ai-amplification-is-local-optimum-replacement-is-global)</li>
+</ol>
+<p>Amdahl’s law applied to science: if a human reviewer is the bottleneck, adding AI everywhere else has capped returns. The economic incentive is always to remove the human bottleneck — not by plan, but because every local optimization points there. “AI research assistant” is the waystation; full autonomy is the global optimum that economic logic converges toward. The current phase of AI-assisted research is a capability probe that identifies which human roles are bottlenecks, making them the next targets. The researchers who are genuinely safe are those whose contributions can’t be removed without losing the output — which circles back to the importance oracle problem above. [1/7/26 10:00 PM] alfred: The through-line: AI scales in the verifiable register and cannot scale in the unverifiable register — and the unverifiable register (importance, taste, framework-invention, conjecture quality) is precisely what constitutes genuine intellectual contribution at the frontier. [1/7/26 10:05 PM] AlexT: What about societal impact, about the type of work/proofs ai is good/bad at, about plateau or not and AGI and why, etc [1/7/26 10:06 PM] alfred: Still working - this is taking longer than usual. I will send the answer when the current step finishes. [1/7/26 10:06 PM] alfred: Good. Three separate questions — let me take each properly.</p>
+<p>⎯⎯⎯</p>
+<p>What AI is good and bad at, for proofs</p>
+<p>The vault has a card on this: the boundary isn’t “combinatorial vs structural” as usually stated — it’s verifiable construction vs taste. AI excels where the training signal is sharp: competition math (Erdős conjectures, IMO-style problems), finite search space, external checker. It has not invented new proof techniques with broad applicability, new mathematical fields, or new conceptual languages — because there’s no training signal for “invented a useful abstraction.” No ground truth exists at training time.</p>
+<p>The red-team/blue-team distinction from the vault is practically useful here. AI is safe in a red-team role: verifying, stress-testing, critiquing content you can independently check. It’s unsafe in a blue-team role: generating structure that outruns your ability to check it. Blue-team errors propagate silently. Before delegating any task to AI, the right question is: can I cheaply verify the output? If yes, delegate freely. If no, keep the human in the loop.</p>
+<p>There’s a subtler point about proof length: the cost of verification scales with the length of what must be checked. An AI proof that’s too long to digest doesn’t just become tedious — it becomes epistemically inert. A field can be formally correct and practically frozen simultaneously if proofs accumulate faster than digestion. This matters because AI tends to generate long proofs; the bottleneck shifts to compression and intelligibility, which AI can’t currently supply.</p>
+<p>⎯⎯⎯</p>
+<p>Societal impact</p>
+<p>Two mechanisms, both insidious:</p>
+<p>Measurability distortion is self-reinforcing. When funding, hiring, and peer review can only measure progress on tractable/verifiable problems, resources migrate there — even when practitioners know deeper problems lie elsewhere. AI amplifies this by producing fluent output on competition-style tasks, making tractable work look like the natural frontier. Worse: as resources migrate, new researchers train their taste on tractable problems. The community gradually loses capacity for less legible work. This isn’t a temporary phase — it’s a ratchet. Benchmarks become what science is for, rather than proxies for what science is for.</p>
+<p>Epistemic standards shift. Standards of adequate justification are communal norms, not logical constants — what counts as proof in Euclid, Bourbaki, and Lean are not identical. When AI enters a knowledge community it doesn’t just change productivity; it changes what counts as an acceptable knowledge-producing act. If AI-assisted proofs become standard, the community loses the shared sense of what “understanding” a proof means. The theorem count goes up; the understanding depth may go down.</p>
+<p>The conjecture economy. When proof and verification become cheap, the value of proofs declines and the value of good conjectures rises. The Langlands program was more valuable as a conjecture than any individual proof it subsequently generated. This isn’t utopian — it’s just the same dynamic as every other commoditization: value migrates upstream. The risk is that academic incentive structures (promotions, grants, citations) are still denominated in theorems, not conjectures. The mismatch creates a generation of AI-augmented mathematicians producing proofs that are formally correct and strategically irrelevant.</p>
+<p>⎯⎯⎯</p>
+<p>Plateau or not, and AGI</p>
+<p>My honest view, vault-grounded:</p>
+<p>No plateau in the near term, but the form of progress changes. The vault cites Gowers’s bet: progress in AI mathematics will continue. That seems right for verifiable, combinatorial, search-heavy work. The scaling curve for that register hasn’t flattened. But the progress is increasingly narrow — it’s scaling within the space of problems where the training signal is sharp. The apparent breadth is recombination, not invention. [1/7/26 10:06 PM] alfred: There are two distinct ceilings, often conflated. The first is a compute/data ceiling — the usual “scaling plateau” debate. My read is this is overstated short-term; architecture improvements (chain-of-thought, scaffolding, inference-time compute) continue to move the frontier. The second is a structural ceiling: the feedback cost bottleneck for open-objective domains. In domains where feedback is slow, expensive, or absent (most of science, most of math beyond competition problems), AI cannot close the improvement loop. This ceiling is architectural, not a matter of compute. It won’t be solved by more parameters.</p>
+<p>AGI as a coherent concept: I’m skeptical. “AGI” implicitly assumes that intelligence is a single axis and that there’s a threshold past which a system is generally capable. But capability is domain-structured — verifiable vs unverifiable, short-horizon vs long-horizon, well-specified vs open-objective. A system that’s superhuman at combinatorial mathematics is below human at conjecture selection. There’s no natural moment at which that resolves into “general.” What actually happens is capability continues to expand in the verifiable register and remains bounded in the open-objective register, possibly indefinitely. The question “when will we have AGI” may be malformed — the right question is “which domains become fully automated and which don’t, and what’s the economic consequence of the partition.”</p>
+<p>The economic consequence matters more than the capability question. Even a weak form of “AI replaces all verifiable intellectual work” produces a massive labor displacement in knowledge work — statistics, engineering, software, routine science. That’s societal-scale even without solving open-objective domains. The interesting question isn’t whether AGI arrives; it’s whether the open-objective domains remain valuable enough to employ the humans displaced from the verifiable ones. [1/7/26 10:08 PM] AlexT: Have you leveraged the vault for that? If not, do do deeply [1/7/26 10:09 PM] alfred: Still working - this is taking longer than usual. I will send the answer when the current step finishes. [1/7/26 10:09 PM] alfred: The previous response was partly vault-grounded but missed several cards that sharpen the picture significantly. Here’s the fuller version:</p>
+<p>⎯⎯⎯</p>
+<p>What AI is good and bad at, for proofs — the finer structure</p>
+<p>The vault has three distinct cards that together give the right picture:</p>
+<p>Verifiable construction vs taste (ai-capability-asymmetry-combinatorial-vs-structural): the boundary isn’t combinatorial vs structural — it’s whether the training signal is sharp. AI solved multiple Erdős conjectures and an IMO problem (finite search, external checker). It has not invented new proof techniques with broad applicability. Mechanistically: “invented a useful abstraction” has no ground truth at training time, so no signal exists to learn from. This is architectural, not a compute limitation.</p>
+<p>Breadth, not depth (ai-advantage-is-tireless-breadth-not-insight): the unit-distance disproof (Gowers’s result) was characterized by multiple mathematicians as patience, not superior depth — encyclopaedic recall, willingness to pursue low-prior “scary” branches that humans prune for time-budget reasons, breadth-first trawling of whole problem lists vs human depth-first driven by curiosity. AI is running probabilistic search at scale and turning many low-probability attempts into a rising hit rate. Gowers’s own view: no clear sign of a plateau for verifiable work, and we’ll see AI solve problems “hard to explain away as easier-than-expected.”</p>
+<p>Proof has three stages; only digestion is irreducibly human (proof-has-three-stages-only-digestion-is-human, understanding-is-a-constellation-of-abilities): generation (searching for a proof), verification (checking it), digestion (making it intelligible, connecting it, teaching it, applying it elsewhere). AI can do the first two. The third — Avigad’s operational account — is a constellation of abilities: restate in your own terms, apply it, extend it, recognize when it applies, debug when it breaks. A machine-generated proof that nobody can digest is like the Chinese Room lookup dictionary: it settles a question without raising anyone’s per-capita understanding. The field can be formally correct and practically frozen simultaneously.</p>
+<p>Red-team safe, blue-team dangerous (red-team-blue-team-division-of-ai-labor): route AI to wherever output is cheaply verifiable. The cost of verification scales with proof length — which matters because AI proofs tend to be long. Brevity and digestion are themselves part of making a result epistemically useful. An 8000-line AI proof that nobody will read doesn’t advance mathematics; it terminates a conjecture.</p>
+<p>⎯⎯⎯</p>
+<p>Societal impact — the cards I missed last time</p>
+<p>Synthesis debt compounds (synthesis-debt-knowledge-overhang): a field accumulates formal results faster than it synthesizes them into usable understanding. The gap is synthesis debt. It’s self-concealing — practitioners count theorems as progress, so the overhang grows invisibly until a crisis of incomprehensibility makes it undeniable. An unassimilated result cannot be taught, cannot be generalized, cannot be recognized as a special case of something broader; it’s formally real but epistemically inert. AI dramatically accelerates result generation while contributing nothing to digestion — so the debt compounds faster. [1/7/26 10:09 PM] alfred: Measurability distortion is self-reinforcing (measurability-distorts-research-priorities): resources migrate toward tractable problems, new researchers train their taste on those problems, the community loses capacity for less legible work. This is a ratchet. It operates even when practitioners know deeper problems lie elsewhere. The Leiden Declaration (567 signatories, Scholze, IMU endorsement) identified this as one of five core threats to mathematics — and their analysis names autonomy loss (threat 5) as the most consequential: outsourcing routine symbolic manipulation weakens the training path through which mathematical intuition and taste develop. You cannot acquire taste by watching AI exercise it.</p>
+<p>Epistemic standards shift (epistemic-standards-are-contingent): what counts as proof is a communal norm, not a logical constant. Euclidean proof, Bourbaki formalism, and Lean verification are not the same standard. When AI enters a knowledge community it changes what counts as an acceptable knowledge-producing act. This is epistemology, not productivity. If AI-assisted proofs become standard before digestion norms are established, the community loses the shared sense of what “understanding” a result means.</p>
+<p>⎯⎯⎯</p>
+<p>Plateau and AGI — sharper</p>
+<p>No plateau for verifiable work, but gains don’t transfer (posttraining-specialization-has-limited-transfer): RL post-training produces strong behavior in a domain, but gains are tied to the task distribution, action space, and reward channels that generated the feedback. Code-agent RL improvements don’t automatically become law, science, or mathematics improvements without rebuilding the environment and rewards. The organizational implication: domain teams and specialized agents, possibly merged back into a general model. Progress is real but domain-localized.</p>
+<p>Two distinct ceilings, often conflated: the compute/data ceiling (empirically: not hit, architectural improvements continue) vs the structural ceiling in open-objective domains (feedback is slow, expensive, or absent — no improvement loop can close). The structural ceiling is architectural, not a matter of parameters. Scientific domains outside of protein folding, weather, and other simulation-tight problems are mostly in the structural ceiling regime.</p>
+<p>AGI is probably a malformed question. Capability is domain-structured. A system superhuman at combinatorial mathematics is below human at conjecture selection. There’s no natural threshold at which that resolves into “general.” What actually happens is a partition: verifiable register fully automated, open-objective register bounded possibly indefinitely. The economic consequence of that partition is more important than whether AGI “arrives.” Even weak automation of all verifiable intellectual work is massive labor displacement — without needing to solve anything in the open-objective register. The open question is whether the open-objective domains remain economically valuable enough to absorb the displaced.</p>
+<p>The most precise statement: AI for science/math is currently a breadth machine at the verifiable frontier. It will continue to advance there. The ceiling is not compute — it’s whether feedback can close the loop. For most of science, it can’t yet. The societal risk in the meantime is not replacement of scientists but progressive misalignment of incentives: measurability distortion pulls institutions toward the AI-tractable part of the frontier, synthesis debt accumulates, and the community’s capacity for open-objective work erodes through rational disuse — the atrophy that is invisible until the tools fail. [1/7/26 10:52 PM] AlexT: the vault leveraged many sources for these ideas (books / blogpost / papers / etc..). List everythgin here [1/7/26 10:52 PM] alfred: Still working - this is taking longer than usual. I will send the answer when the current step finishes. [1/7/26 10:53 PM] alfred: Here’s the full source list. I’ve separated external sources from internal synthesis:</p>
+<p>⎯⎯⎯</p>
+<p>arXiv papers</p>
+<p>• Avigad, 2603.03684 — on operational understanding in mathematics; basis for understanding-is-a-constellation-of-abilities • Leiden Workshop paper, 2603.24914 — basis for means-reshape-ends (tools reshape goals/significance) • Tao &amp; Klowden, 2603.26524 — basis for red-team-blue-team-division-of-ai-labor • Unit-distance disproof, 2605.20695 — Gowers et al.; basis for ai-advantage-is-tireless-breadth-not-insight (patience, not depth, is the AI advantage) • Epistemic standards paper, 2509.15998 — basis for epistemic-standards-are-contingent (proof standards as community norms)</p>
+<p>Blog posts</p>
+<p>• Scott Aaronson, “Dispatches (Possibly Last Days)”, scottaaronson.blog, May 2026 — basis for ai-capability-asymmetry-combinatorial-vs-structural • Gwern, “Guardian Angel”, gwern.net, Jun 2026 — basis for ai-amplification-is-local-optimum-replacement-is-global</p>
+<p>Declaration</p>
+<p>• Leiden Declaration on Mathematics and AI, DOI 10.5281/zenodo.20302944, Jun 2, 2026, 567 signatories (Scholze, Dijkgraaf, Buzzard, Avigad, Strogatz) — basis for measurability-distorts-research-priorities and leiden-declaration-2026</p>
+<p>Talks / lectures</p>
+<p>• Tao, EMS webinar — basis for substitution-drives-invisible-skill-atrophy (rational disuse, GPS analogy) • AI-in-physics public lecture, 2026 (physicist joining Gemini team) — basis for individual-production-inverts-to-private-consumption (“guilty pleasure” framing)</p>
+<p>Community / interviews</p>
+<p>• MathOverflow #511562, “Incentivizing Mathematics” — basis for conjecture-economy-value-shifts-from-proving-to-asking and Avigad’s understanding account • Max Welling, Information Bottleneck interview — basis for scientific-feedback-cost-governs-ai-progress</p>
+<p>Internal synthesis (Alfred + Alex, telegram discussions Jun 2026)</p>
+<p>• closed-objective-prerequisite-for-self-play — synthesized from discussions on AI math proof limits • taste-migrates-upward-and-orthogonal-under-commoditization — synthesized from your tweet on AI math commoditization + cross-domain generalization • open-objective-functions-resist-substitution — synthesized from discussions on crypto/institutional substitution • surface-automation-elevates-strategic-layer — synthesized from telegram discussions May 2026 • synthesis-debt-knowledge-overhang, intelligibility-required-accretive-knowledge — synthesized from telegram discussions May 2026 • scientific-feedback-cost-governs-ai-progress — synthesized from telegram discussions Jun 2026</p>
+<p>⎯⎯⎯</p>
+<p>So: 5 arXiv papers, 2 blog posts, 1 signed declaration, 2 talks, 1 forum thread, 1 interview, and ~8 cards that are original syntheses from our conversations. [1/7/26 10:59 PM] AlexT: if possible, be more precise with the ref if you have more details, eg. exact title / doi / etc.. so that somebody could actually easily locate [1/7/26 11:00 PM] alfred: Still working - this is taking longer than usual. I will send the answer when the current step finishes. [1/7/26 11:01 PM] alfred: Here’s the precise list:</p>
+<p>⎯⎯⎯</p>
+<p>arXiv papers</p>
+<ol type="1">
+<li><p>Jeremy Avigad, “Mathematicians in the Age of AI”, arXiv:2603.03684, March 3, 2026 → basis for: operational understanding, digestion, red-team/blue-team</p></li>
+<li><p>Terence Tao &amp; Tanya Klowden, “Mathematical Methods and Human Thought in the Age of AI”, arXiv:2603.26524, 2026 → basis for: red-team/blue-team division of AI labor</p></li>
+<li><p>Johan Commelin, Mateja Jamnik, Rodrigo Ochigame, Lenny Taelman et al., “Shaping the Future of Mathematics in the Age of AI”, arXiv:2603.24914, 2026 (report from the Mechanization and Mathematical Research Workshop, Lorentz Center, Leiden, Sep 2025) → basis for: means-reshape-ends (tractability colonizes significance)</p></li>
+<li><p>Noga Alon, Thomas F. Bloom, W. T. Gowers et al., “Remarks on the Disproof of the Unit Distance Conjecture”, arXiv:2605.20695, 2026 → basis for: AI breadth/patience advantage, Gowers’s no-plateau bet</p></li>
+<li><p>arXiv:2509.15998 (Sep 2025 — title not stored in vault; covers epistemic standards as communal norms, naturalness-as-achievement, capability cultivation through productive struggle)</p></li>
+</ol>
+<p>Also referenced in Avigad’s essay: arXiv:2502.14874 (“Is Mathematics Obsolete?”, Avigad)</p>
+<p>⎯⎯⎯</p>
+<p>Blog posts</p>
+<ol start="6" type="1">
+<li><p>Scott Aaronson, “Dispatches (Possibly Last Days)”, scottaaronson.blog, May 29, 2026 → basis for: AI capability asymmetry (combinatorial vs structural/taste)</p></li>
+<li><p>Gwern, “Guardian Angel”, gwern.net/guardian-angel, June 8, 2026 → basis for: amplification as local optimum, replacement as global optimum (Amdahl’s law argument)</p></li>
+</ol>
+<p>⎯⎯⎯</p>
+<p>Declaration</p>
+<ol start="8" type="1">
+<li>Leiden Declaration on Mathematics and AI, DOI: 10.5281/zenodo.20302944, June 2, 2026. 567 signatories including Peter Scholze, Robbert Dijkgraaf, Kevin Buzzard, Jeremy Avigad, Steven Strogatz. IMU-endorsed. → basis for: measurability distortion, autonomy loss as most consequential threat</li>
+</ol>
+<p>⎯⎯⎯</p>
+<p>Talk / lecture transcripts</p>
+<ol start="9" type="1">
+<li><p>Terence Tao, EMS Webinar (date not stored in vault) → basis for: skill atrophy / rational disuse / timing paradox</p></li>
+<li><p>Anonymous physicist (joined Gemini team), AI-in-physics public lecture, 2026 → basis for: individual artifact production inverts to “guilty pleasure” when multiplier exists</p></li>
+</ol>
+<p>⎯⎯⎯</p>
+<p>Community thread</p>
+<ol start="11" type="1">
+<li>MathOverflow #511562, “Incentivizing Mathematics”, mathoverflow.net/questions/511562 → basis for: conjecture economy, Avigad’s operational account of understanding</li>
+</ol>
+<p>⎯⎯⎯</p>
+<p>Interview</p>
+<ol start="12" type="1">
+<li>Max Welling, Information Bottleneck interview (outlet/date not stored in vault) → basis for: feedback-cost bottleneck governs AI-for-science progress</li>
+</ol>
+<p>⎯⎯⎯</p>
+<p>The cards closed-objective-prerequisite-for-self-play, taste-migrates-upward-and-orthogonal-under-commoditization, open-objective-functions-resist-substitution, surface-automation-elevates-strategic-layer are original syntheses from our telegram discussions — no single external source.</p>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

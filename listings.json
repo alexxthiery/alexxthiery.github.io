@@ -64,6 +64,7 @@
     "items": [
       "/notes/adjoint_samplers_draft/discrete_adjoint_audit.html",
       "/notes/adjoint_samplers_draft/functional_adjoint_audit.html",
+      "/notes/cvxpy/cvxpy.html",
       "/notes/predictive_posterior/predictive_posterior.html",
       "/notes/adjoint_samplers_draft/functional_adjoint.html",
       "/notes/adjoint_samplers_draft/discrete_adjoint.html",

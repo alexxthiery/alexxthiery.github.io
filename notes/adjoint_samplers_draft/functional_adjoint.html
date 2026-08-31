@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -213,7 +233,7 @@ window.Quarto = {
 <p><a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">Adjoint sampling</a> learns a control drift <span class="math inline">\(u(t,x)\)</span> that steers a Brownian motion in <span class="math inline">\(\mathbb{R}^d\)</span> toward a target <span class="math inline">\(\pi(x) \propto \exp(-E(x))\)</span>. Some problems require sampling <em>paths</em> rather than points. Transition path sampling (TPS) is the canonical example: a molecular system has two metastable states <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, and the goal is to sample reactive trajectories <span class="math inline">\(\mathbf{x}: [0,L] \to \mathbb{R}^d\)</span> connecting them. The target is a Gibbs measure over paths, <span class="math display">\[
 \pi[\mathbf{x}] \propto \exp {\left( -S[\mathbf{x}] \right)} , \qquad S[\mathbf{x}] = \int_0^L E(\mathbf{x}(s)) \, ds.
 \]</span></p>
-<p>The Functional Adjoint Sampler (FAS) <span class="citation" data-cites="bae2025functional">(<a href="#ref-bae2025functional" role="doc-biblioref"><strong>bae2025functional?</strong></a>)</span> applies <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> to this setting with an OU reference process instead of Brownian motion. After discretization, the “path” is just a vector in <span class="math inline">\(\mathbb{R}^{dK}\)</span>. FAS is adjoint sampling in <span class="math inline">\(\mathbb{R}^{dK}\)</span> with an OU reference process. The infinite-dimensional formulation in the original paper is a presentation choice, not a mathematical necessity. Strip away the infinite-dimensional machinery and the core idea is: adjoint sampling on paths instead of points, with an OU reference instead of Brownian motion, and Dirichlet boundary conditions to pin endpoints.</p>
+<p>The Functional Adjoint Sampler (FAS) <span class="citation" data-cites="park2025functional">(<a href="#ref-park2025functional" role="doc-biblioref">Park, Lee, and Liu 2025</a>)</span> applies <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> to this setting with an OU reference process instead of Brownian motion. After discretization, the “path” is just a vector in <span class="math inline">\(\mathbb{R}^{dK}\)</span>. FAS is adjoint sampling in <span class="math inline">\(\mathbb{R}^{dK}\)</span> with an OU reference process. The infinite-dimensional formulation in the original paper is a presentation choice, not a mathematical necessity. Strip away the infinite-dimensional machinery and the core idea is: adjoint sampling on paths instead of points, with an OU reference instead of Brownian motion, and Dirichlet boundary conditions to pin endpoints.</p>
 <p>(The other notes use <span class="math inline">\([0,1]\)</span>; here we use <span class="math inline">\([0,T]\)</span> to match the FAS paper.)</p>
 </section>
 <section id="setup-soc-on-path-space" class="level2">
@@ -263,26 +283,22 @@ OU bridge formula in the eigenbasis
 </p>
 </summary>
 <p style="color: blue;">
-For a scalar OU process <span class="math inline">\(dc_k = -\lambda_k c_k \, dt + \sigma_t \lambda_k^{-s/2} \, dB_k\)</span> started at <span class="math inline">\(c_k(0) = 0\)</span>, the bridge is standard Gaussian conditioning (cf. <strong>?@eq-bridge</strong> of <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>): <span class="math display">\[
+For a scalar OU process <span class="math inline">\(dc_k = -\lambda_k c_k \, dt + \sigma_t \lambda_k^{-s/2} \, dB_k\)</span> started at <span class="math inline">\(c_k(0) = 0\)</span>, the bridge is standard Gaussian conditioning (cf.&nbsp;<a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html#eq-bridge">the Brownian-bridge formula</a>): <span class="math display">\[
 c_k(t) \mid c_k(T) \;\sim\; \mathcal{N} {\left( \frac{\mathop{\mathrm{Cov}}(c_k(t), c_k(T))}{v_k(T)} \, c_k(T), \;\; v_k(t) - \frac{\mathop{\mathrm{Cov}}(c_k(t), c_k(T))^2}{v_k(T)} \right)} ,
 \]</span> with <span class="math inline">\(v_k(t) = \lambda_k^{-s} \int_0^t \sigma_r^2 \, e^{-2\lambda_k(t-r)} \, dr\)</span> and <span class="math inline">\(\mathop{\mathrm{Cov}}(c_k(t), c_k(T)) = e^{-\lambda_k(T-t)} v_k(t)\)</span>.
 </p>
 </details>
 <p>The buffer-based training from <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> transfers directly: simulate forward to fill a replay buffer, then sample from the OU bridge for cheap inner-loop gradient steps.</p>
-<!-- BibTeX entry for ref.bib:
-@article{bae2025functional,
-  title={Functional Adjoint Sampler},
-  author={Bae, Geonho and Lee, Juho},
-  journal={arXiv preprint arXiv:2506.04429},
-  year={2025},
-  url={https://arxiv.org/abs/2506.04429}
-}
--->
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-park2025functional" class="csl-entry" role="listitem">
+Park, Byoungwoo, Juho Lee, and Guan-Horng Liu. 2025. <span>“Functional Adjoint Sampler: Scalable Sampling on Infinite Dimensional Spaces.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2511.06239">10.48550/ARXIV.2511.06239</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

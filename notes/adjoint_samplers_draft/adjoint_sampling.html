@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -288,7 +308,7 @@ J(u) &amp;= \mathbb{E}_{\mathbb{P}^u} {\left[ \tfrac{1}{2}\|u\|^2 + g(X_1) \righ
 </p>
 </details>
 <p>After projection, RAM and AM coincide: <span class="math inline">\(\Pi(u)\)</span> is a SB with terminal marginal <span class="math inline">\(p^u_1\)</span>, so its path measure factorizes as <span class="math inline">\(\mathbb{P}(\cdot | X_1) p^u_1(X_1)\)</span>, and the reciprocal projection is the identity. The two losses have the same fixed point and the same critical points on the projected space. In other words, we lose nothing by using the cheaper loss, and we gain a monotone improvement guarantee.</p>
-<p><strong>The algorithm.</strong> The full Adjoint Sampling algorithm <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref"><strong>havens2025adjoint?</strong></a>)</span> alternates between two phases. The outer loop (expensive) simulates the controlled SDE forward to produce terminal samples <span class="math inline">\(\{X_1^{(i)}\}\)</span>, evaluates <span class="math inline">\(\nabla g(X_1^{(i)})\)</span>, and stores the pairs in a replay buffer <span class="math inline">\(\cB\)</span>. The inner loop (cheap) draws <span class="math inline">\((X_1, \nabla g)\)</span> from the buffer, samples <span class="math inline">\(t \sim \text{Uniform}([0,1])\)</span> and <span class="math inline">\(X_t\)</span> from the bridge <a href="#eq-bridge" class="quarto-xref">Equation&nbsp;8</a>, and updates <span class="math inline">\(u\)</span> by gradient descent on the RAM loss <a href="#eq-ram" class="quarto-xref">Equation&nbsp;9</a>. Many gradient steps per energy evaluation, since the inner loop never touches <span class="math inline">\(E\)</span>.</p>
+<p><strong>The algorithm.</strong> The full Adjoint Sampling algorithm <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span> alternates between two phases. The outer loop (expensive) simulates the controlled SDE forward to produce terminal samples <span class="math inline">\(\{X_1^{(i)}\}\)</span>, evaluates <span class="math inline">\(\nabla g(X_1^{(i)})\)</span>, and stores the pairs in a replay buffer <span class="math inline">\(\cB\)</span>. The inner loop (cheap) draws <span class="math inline">\((X_1, \nabla g)\)</span> from the buffer, samples <span class="math inline">\(t \sim \text{Uniform}([0,1])\)</span> and <span class="math inline">\(X_t\)</span> from the bridge <a href="#eq-bridge" class="quarto-xref">Equation&nbsp;8</a>, and updates <span class="math inline">\(u\)</span> by gradient descent on the RAM loss <a href="#eq-ram" class="quarto-xref">Equation&nbsp;9</a>. Many gradient steps per energy evaluation, since the inner loop never touches <span class="math inline">\(E\)</span>.</p>
 <p>This scheme has a clean fixed-point interpretation. Each outer step implicitly performs the reciprocal projection <span class="math inline">\(\Pi\)</span> (by freezing the terminal samples), and each inner step minimizes the AM loss on the projected control. If <span class="math inline">\(u_i\)</span> denotes the current control and we fully converge the inner loop using <span class="math inline">\(X_1\)</span> samples from <span class="math inline">\(p^{u_i}_1\)</span>, the update satisfies <span class="math display">\[
 u_{i+1} = \Pi(u_i) - \frac{\delta L_\text{AM}}{\delta u}(\Pi(u_i)).
 \]</span> The fixed point <span class="math inline">\(u = \Pi(u)\)</span> with <span class="math inline">\(\frac{\delta L_\text{AM}}{\delta u}(u) = 0\)</span> is exactly the optimal control <span class="math inline">\(u^\star\)</span>. In practice the inner loop is not converged fully: the buffer is refreshed when the control has drifted sufficiently from the stored samples.</p>
@@ -304,7 +324,7 @@ u_{i+1} = \Pi(u_i) - \frac{\delta L_\text{AM}}{\delta u}(\Pi(u_i)).
 \tag{10}\]</span></span> with time-dependent SB potentials <span class="math inline">\(\varphi_t(x) = \mathbb{E}_\mathbb{P}[\varphi_1(X_1) \mid X_t = x]\)</span> and <span class="math inline">\(\widehat{\varphi}_t(x) = \mathbb{E}_\mathbb{P}[\widehat{\varphi}_0(X_0) \mid X_t = x]\)</span> (in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a>, these are defined with endpoint potentials <span class="math inline">\(f, g\)</span>; here <span class="math inline">\(\varphi_1\)</span> corresponds to <span class="math inline">\(g\)</span> and <span class="math inline">\(\widehat{\varphi}_0\)</span> to <span class="math inline">\(f\)</span>). The forward potential <span class="math inline">\(\varphi_t\)</span> is the <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a>: the SB process has drift <span class="math inline">\(b_t + \sigma_t^2 \nabla \log \varphi_t\)</span>, steering trajectories toward the target. The backward potential <span class="math inline">\(\widehat{\varphi}_t\)</span> propagates information about the prior <span class="math inline">\(\mu\)</span> forward in time.</p>
 <p>The SB <span class="math inline">\(\mathbb{Q}^\star\)</span> is also a controlled diffusion (its drift is the base drift plus <span class="math inline">\(\sigma_t^2 \nabla \log \varphi_t\)</span>), so it must solve some SOC problem with an appropriate terminal cost. What terminal cost? The SOC optimal joint from the <a href="../../notes/HJB/HJB.html">HJB notes</a> is <span class="math inline">\(p^\star(X_0, X_1) \propto \mathbb{P}(X_0, X_1) \, e^{-g(X_1) + V_0(X_0)}\)</span>, while the SB joint from <a href="#eq-sb-rn" class="quarto-xref">Equation&nbsp;10</a> is <span class="math inline">\(p^\star(X_0, X_1) \propto \mathbb{P}(X_0, X_1) \, \widehat{\varphi}_0(X_0) \, \varphi_1(X_1)\)</span>. The SOC here optimizes both the drift <span class="math inline">\(u\)</span> and the initial distribution (the HJB formulation in <a href="#eq-soc" class="quarto-xref">Equation&nbsp;1</a> jointly optimizes <span class="math inline">\(q_0\)</span> and <span class="math inline">\(u\)</span>). The SB constraint <span class="math inline">\(\mathbb{Q}_0 = \mu\)</span> pins the initial distribution, and <span class="math inline">\(\widehat{\varphi}_0\)</span> enters through this constraint. Matching the terminal tilt requires <span class="math inline">\(e^{-g(X_1)} \propto \varphi_1(X_1)\)</span>. The SB marginal constraint at <span class="math inline">\(t = 1\)</span> requires <span class="math inline">\(\pi(x) = p^\mathbb{P}_1(x) \, \widehat{\varphi}_1(x) \, \varphi_1(x)\)</span>, giving <span class="math inline">\(\varphi_1(x) = \pi(x)/(p^\mathbb{P}_1(x) \, \widehat{\varphi}_1(x))\)</span>. Substituting into <span class="math inline">\(g = -\log \varphi_1 + \text{const}\)</span> identifies the modified terminal cost: <span id="eq-modified-terminal"><span class="math display">\[
 \textcolor{blue}{g(x) = \log \frac{\widehat{\varphi}_1(x)}{\pi(x)}} + \text{const}.
-\tag{11}\]</span></span> Compared to the original <span class="math inline">\(g = \log(p^\mathbb{P}_1 / \pi)\)</span>, the base marginal <span class="math inline">\(p^\mathbb{P}_1\)</span> is replaced by <span class="math inline">\( \textcolor{blue}{\widehat{\varphi}_1}\)</span>: a corrector that accounts for the coupling between <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span>. This is the central insight from <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref"><strong>liu2025adjoint?</strong></a>)</span>: every SB problem can be recast as an SOC problem with a modified terminal cost that absorbs the prior coupling.</p>
+\tag{11}\]</span></span> Compared to the original <span class="math inline">\(g = \log(p^\mathbb{P}_1 / \pi)\)</span>, the base marginal <span class="math inline">\(p^\mathbb{P}_1\)</span> is replaced by <span class="math inline">\( \textcolor{blue}{\widehat{\varphi}_1}\)</span>: a corrector that accounts for the coupling between <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span>. This is the central insight from <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref">Liu et al. 2025</a>)</span>: every SB problem can be recast as an SOC problem with a modified terminal cost that absorbs the prior coupling.</p>
 <p>Does this corrector actually remove the bias? Marginalize the SB joint over <span class="math inline">\(X_0\)</span>: <span id="eq-debias"><span class="math display">\[
 \begin{aligned}
 p^\star(X_1)
@@ -344,7 +364,7 @@ The SB joint at times <span class="math inline">\(0\)</span> and <span class="ma
 \nabla \log[\widehat{\varphi}_1 \cdot p_1^\mathbb{P}] = \mathop{\mathrm{argmin}}_h \; \mathbb{E}_{(X_0, X_1) \sim p^\star_{0,1}}  {\left[ \big\|h(X_1) - \nabla_{X_1} \log \mathbb{P}(X_1 \mid X_0)\big\|^2 \right]} .
 \tag{17}\]</span></span> This is the <strong>corrector matching</strong> (CM) loss: regress <span class="math inline">\(h\)</span> onto the base transition score at endpoint pairs. In practice, the expectation is over the current model’s endpoint pairs <span class="math inline">\((X_0, X_1) \sim p^{u^{(k)}}_{0,1}\)</span>, not the unknown SB joint <span class="math inline">\(p^\star_{0,1}\)</span>. Each CM step finds the best approximation to <span class="math inline">\(\nabla \log[\widehat{\varphi}_1 \cdot p_1^{\mathbb{P}}]\)</span> at the current iterate; alternation converges by the IPFP contraction argument. For the Brownian base, <span class="math inline">\(\mathbb{P}(X_1 \mid X_0) = \mathcal{N}(X_0, (\nu_1 - \nu_0)I)\)</span>, and the transition score is just <span class="math inline">\(\nabla_{X_1} \log \mathbb{P}(X_1 \mid X_0) = -(X_1 - X_0)/(\nu_1 - \nu_0)\)</span>, known in closed form. The regression target is a Gaussian score evaluated at the endpoints; no energy evaluation needed. The minimizer of <a href="#eq-cm" class="quarto-xref">Equation&nbsp;17</a> gives <span class="math inline">\(\nabla \log[\widehat{\varphi}_1 \cdot p_1^\mathbb{P}]\)</span>; to recover <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span> we subtract the known base score <span class="math inline">\(\nabla \log p_1^\mathbb{P}(x) = -x/\nu_1\)</span>.</p>
 <p>Note the parallel with the AM loss. Both are mean-squared-error regressions. AM regresses the control <span class="math inline">\(u\)</span> onto the energy gradient <span class="math inline">\(\nabla g\)</span> at pairs <span class="math inline">\((X_t, X_1)\)</span> from the bridge. CM regresses the corrector <span class="math inline">\(h\)</span> onto the transition score at endpoint pairs <span class="math inline">\((X_0, X_1)\)</span> from the current process. Both are self-consistent: the expectation is over the model’s own samples. Both have a conditional expectation as their unique fixed point.</p>
-<p>The CM loss <a href="#eq-cm" class="quarto-xref">Equation&nbsp;17</a> should not be confused with the bridge matching objectives in data-driven SB methods like <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref"><strong>de2021diffusion?</strong></a>)</span>, where <span class="math inline">\(X_1\)</span> must be drawn from the target <span class="math inline">\(\pi\)</span>. Here, both AM and CM use only on-policy samples from the current control <span class="math inline">\(u\)</span>. This is what makes the approach scalable: no target samples are needed.</p>
+<p>The CM loss <a href="#eq-cm" class="quarto-xref">Equation&nbsp;17</a> should not be confused with the bridge matching objectives in data-driven SB methods like <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref">De Bortoli et al. 2021</a>)</span>, where <span class="math inline">\(X_1\)</span> must be drawn from the target <span class="math inline">\(\pi\)</span>. Here, both AM and CM use only on-policy samples from the current control <span class="math inline">\(u\)</span>. This is what makes the approach scalable: no target samples are needed.</p>
 </section>
 <section id="alternating-am-cm-ipfp" class="level3">
 <h3 class="anchored" data-anchor-id="alternating-am-cm-ipfp">Alternating AM + CM = IPFP</h3>
@@ -354,8 +374,8 @@ The SB joint at times <span class="math inline">\(0\)</span> and <span class="ma
 <li><strong>CM step:</strong> Solve <a href="#eq-cm" class="quarto-xref">Equation&nbsp;17</a> with endpoint pairs from <span class="math inline">\(u^{(k)}\)</span> to get <span class="math inline">\(\tilde{h}^{(k)} \approx \nabla \log[\widehat{\varphi}_1 \cdot p_1^\mathbb{P}]\)</span>, then set <span class="math inline">\(h^{(k)} = \tilde{h}^{(k)} - \nabla \log p_1^\mathbb{P}\)</span> (subtracting the known base score).</li>
 </ol>
 <p>Initialize with <span class="math inline">\(h^{(0)} = 0\)</span>. The first AM stage uses terminal cost <span class="math inline">\(g(x) = E(x) + \text{const}\)</span> (since <span class="math inline">\(\log \widehat{\varphi}_1 \approx 0\)</span>) and regresses the control onto <span class="math inline">\(-\sigma_t \nabla E(X_1)\)</span>: pure energy-guided transport with no corrector. This recovers exactly the Adjoint Sampling algorithm, which is the right starting point when no better guess for the corrector is available. The first CM stage then learns <span class="math inline">\(h^{(1)} \approx \nabla \log \widehat{\varphi}_1\)</span> from the endpoint pairs produced by <span class="math inline">\(u^{(1)}\)</span>. Subsequent stages progressively refine both the control and the corrector.</p>
-<p>The alternation has a variational interpretation. The AM step solves a forward half-bridge: <span class="math inline">\(\min_{\mathbb{Q}: \mathbb{Q}_0 = \mu} D_{\text{KL}}(\mathbb{Q}\| \mathbb{Q}^{\text{bwd}})\)</span>, where <span class="math inline">\(\mathbb{Q}^{\text{bwd}}\)</span> is the backward SDE determined by the previous corrector <span class="math inline">\(h^{(k-1)}\)</span>. The CM step solves a backward half-bridge: <span class="math inline">\(\min_{\mathbb{Q}: \mathbb{Q}_1 = \pi} D_{\text{KL}}(\mathbb{P}^{u^{(k)}} \| \mathbb{Q})\)</span>, updating the corrector to absorb whatever bias remains. Alternating between forward and backward half-bridge projections is exactly <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> on path-space <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref"><strong>de2021diffusion?</strong></a>)</span>.</p>
-<p>Recall from the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> that the static Sinkhorn algorithm alternates between projecting the coupling onto the set <span class="math inline">\(\{\gamma : \gamma_0 = \nu_0\}\)</span> and the set <span class="math inline">\(\{\gamma : \gamma_1 = \nu_1\}\)</span>. Here, we do the same thing on path-space: the forward half-bridge imposes <span class="math inline">\(\mathbb{Q}_0 = \mu\)</span> but lets <span class="math inline">\(\mathbb{Q}_1\)</span> float; the backward half-bridge imposes <span class="math inline">\(\mathbb{Q}_1 = \pi\)</span> but lets <span class="math inline">\(\mathbb{Q}_0\)</span> float. Each projection is itself a KL minimization over a convex constraint set, so each step reduces the KL to the SB solution. Convergence to <span class="math inline">\(\mathbb{Q}^\star\)</span> follows from standard IPFP contraction <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref"><strong>de2021diffusion?</strong></a>)</span>, provided each inner optimization is solved exactly (which never holds in practice with finite gradient steps; the practical version uses a few optimization steps per stage). In practice, 3-5 outer stages suffice; each stage consists of many AM or CM gradient steps.</p>
+<p>The alternation has a variational interpretation. The AM step solves a forward half-bridge: <span class="math inline">\(\min_{\mathbb{Q}: \mathbb{Q}_0 = \mu} D_{\text{KL}}(\mathbb{Q}\| \mathbb{Q}^{\text{bwd}})\)</span>, where <span class="math inline">\(\mathbb{Q}^{\text{bwd}}\)</span> is the backward SDE determined by the previous corrector <span class="math inline">\(h^{(k-1)}\)</span>. The CM step solves a backward half-bridge: <span class="math inline">\(\min_{\mathbb{Q}: \mathbb{Q}_1 = \pi} D_{\text{KL}}(\mathbb{P}^{u^{(k)}} \| \mathbb{Q})\)</span>, updating the corrector to absorb whatever bias remains. Alternating between forward and backward half-bridge projections is exactly <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> on path-space <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref">De Bortoli et al. 2021</a>)</span>.</p>
+<p>Recall from the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> that the static Sinkhorn algorithm alternates between projecting the coupling onto the set <span class="math inline">\(\{\gamma : \gamma_0 = \nu_0\}\)</span> and the set <span class="math inline">\(\{\gamma : \gamma_1 = \nu_1\}\)</span>. Here, we do the same thing on path-space: the forward half-bridge imposes <span class="math inline">\(\mathbb{Q}_0 = \mu\)</span> but lets <span class="math inline">\(\mathbb{Q}_1\)</span> float; the backward half-bridge imposes <span class="math inline">\(\mathbb{Q}_1 = \pi\)</span> but lets <span class="math inline">\(\mathbb{Q}_0\)</span> float. Each projection is itself a KL minimization over a convex constraint set, so each step reduces the KL to the SB solution. Convergence to <span class="math inline">\(\mathbb{Q}^\star\)</span> follows from standard IPFP contraction <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref">De Bortoli et al. 2021</a>)</span>, provided each inner optimization is solved exactly (which never holds in practice with finite gradient steps; the practical version uses a few optimization steps per stage). In practice, 3-5 outer stages suffice; each stage consists of many AM or CM gradient steps.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 16%">
@@ -373,13 +393,13 @@ The SB joint at times <span class="math inline">\(0\)</span> and <span class="ma
 </thead>
 <tbody>
 <tr class="odd">
-<td>Adjoint Sampling <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref"><strong>havens2025adjoint?</strong></a>)</span></td>
+<td>Adjoint Sampling <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span></td>
 <td><span class="math inline">\(\delta_0\)</span> (memoryless)</td>
 <td><span class="math inline">\(\log \frac{p^\mathbb{P}_1(x)}{\pi(x)}\)</span></td>
 <td>None (<span class="math inline">\(\widehat{\varphi}_1 = \text{const}\)</span>)</td>
 </tr>
 <tr class="even">
-<td>ASBS <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref"><strong>liu2025adjoint?</strong></a>)</span></td>
+<td>ASBS <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref">Liu et al. 2025</a>)</span></td>
 <td>Arbitrary <span class="math inline">\(\mu\)</span></td>
 <td><span class="math inline">\(\log \frac{\widehat{\varphi}_1(x)}{\pi(x)}\)</span></td>
 <td>Learned <span class="math inline">\(\nabla \log \widehat{\varphi}_1\)</span></td>
@@ -387,57 +407,32 @@ The SB joint at times <span class="math inline">\(0\)</span> and <span class="ma
 </tbody>
 </table>
 <p>ASBS reduces to Adjoint Sampling when <span class="math inline">\(\mu = \delta_0\)</span>: the corrector becomes constant and the CM step is trivially solved. A concrete example of a useful non-Dirac prior: for molecular conformer generation, one can use a harmonic oscillator prior <span class="math inline">\(\mu(x) \propto \exp(-\frac{\alpha}{2} \sum_{i &lt; j} \|x_i - x_j - r^0_{ij}\|^2)\)</span> where <span class="math inline">\(r^0_{ij}\)</span> are equilibrium bond lengths read from the molecular graph. Particles start in a physically reasonable arrangement rather than at the origin, reducing the transport cost substantially.</p>
-<p>Every piece was already in the earlier notes. The <a href="../../notes/adjoint_method/adjoint.html">adjoint method</a> gives the regression target (<span class="math inline">\(\nabla g\)</span> is constant along trajectories when <span class="math inline">\(b = 0\)</span>). The <a href="../../notes/doob_transforms/doob.html">Brownian bridge</a> gives cheap training pairs (Gaussian conditioning, one draw per sample). The <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> gives the corrector (endpoint potentials that debias the prior). Adjoint sampling <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref"><strong>havens2025adjoint?</strong></a>)</span> assembles the first two; ASBS <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref"><strong>liu2025adjoint?</strong></a>)</span> adds the third. The reader who has followed the series could have assembled this themselves.</p>
+<p>Every piece was already in the earlier notes. The <a href="../../notes/adjoint_method/adjoint.html">adjoint method</a> gives the regression target (<span class="math inline">\(\nabla g\)</span> is constant along trajectories when <span class="math inline">\(b = 0\)</span>). The <a href="../../notes/doob_transforms/doob.html">Brownian bridge</a> gives cheap training pairs (Gaussian conditioning, one draw per sample). The <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> gives the corrector (endpoint potentials that debias the prior). Adjoint sampling <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span> assembles the first two; ASBS <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref">Liu et al. 2025</a>)</span> adds the third. The reader who has followed the series could have assembled this themselves.</p>
 <p>The overall picture: sampling from an unnormalized Boltzmann distribution <span class="math inline">\(\pi \propto e^{-E}\)</span> reduces to solving a stochastic optimal control problem, which reduces to a sequence of mean-squared-error regressions on cheap Gaussian training pairs. The only expensive operation (energy evaluation at terminal samples) is amortized over many gradient updates. With a Dirac prior, a single matching objective suffices. With a non-trivial prior, two alternating objectives (AM + CM) converge to the Schrodinger bridge via IPFP.</p>
 <p>The ideas generalize beyond the <span class="math inline">\(b = 0\)</span> setting, though the simplifications are less dramatic. With a non-zero base drift (e.g.&nbsp;a pre-trained diffusion model as in the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note), the lean adjoint ODE is no longer trivially constant; it must be solved backward along each trajectory. The reciprocal projection still applies in principle, but the bridge distribution <span class="math inline">\(p^\text{base}_{t \mid 1}\)</span> is no longer a simple Gaussian, and must be approximated (e.g.&nbsp;by linearizing the base drift). The <span class="math inline">\(b = 0\)</span> case is the sweet spot: everything is closed-form, the adjoint is constant, the bridge is Gaussian, and the only approximation is the neural network parameterization of <span class="math inline">\(u\)</span>.</p>
-<p>A note on related methods. The RAM loss <a href="#eq-ram" class="quarto-xref">Equation&nbsp;9</a> is closely related to the training objectives in PDDS <span class="citation" data-cites="phillips2024particle">(<a href="#ref-phillips2024particle" role="doc-biblioref"><strong>phillips2024particle?</strong></a>)</span> and Target Score Matching <span class="citation" data-cites="de2024target">(<a href="#ref-de2024target" role="doc-biblioref"><strong>de2024target?</strong></a>)</span>, where the same squared-error expression appears inside the expectation. The difference is in what the expectation is taken over: PDDS and TSM sample <span class="math inline">\(X_1\)</span> from the target distribution <span class="math inline">\(\pi\)</span> (requiring importance sampling or SMC), while Adjoint Sampling samples <span class="math inline">\(X_1\)</span> from the current model <span class="math inline">\(p^{\bar{u}}_1\)</span>. This makes the loss a moving target, which is harder to analyze but far more practical: no target samples needed, no importance weights, no resampling.</p>
-<!-- BibTeX entries to add to ref.bib:
-@article{havens2025adjoint,
-  title={Adjoint Sampling: Highly Scalable Diffusion Samplers via Adjoint Matching},
-  author={Havens, Aaron and Huang, Benjamin and Urain, Julen and Amos, Brandon and Sener, Ozan and Domingo-Enrich, Carles and Peters, Jan and Shalit, Uri and Rish, Irina},
-  journal={ICML 2025},
-  year={2025},
-  url={https://arxiv.org/abs/2504.11713}
-}
-@article{domingoenrich2024adjoint,
-  title={Adjoint Matching: Fine-Tuning Flow and Diffusion Generative Models with Memoryless Stochastic Optimal Control},
-  author={Domingo-Enrich, Carles and Drozdzal, Michal and Liao, Ricky T. Q. and Chen, Ricky T. Q.},
-  journal={arXiv preprint arXiv:2409.15861},
-  year={2024},
-  url={https://arxiv.org/abs/2409.15861}
-}
-@article{phillips2024particle,
-  title={Particle Denoising Diffusion Sampler},
-  author={Phillips, Angus and Wildberger, Jonas and Rector-Brooks, Jarrid and Bengio, Yoshua},
-  journal={ICML 2024},
-  year={2024},
-  url={https://arxiv.org/abs/2402.06320}
-}
-@article{de2024target,
-  title={Target Score Matching},
-  author={De Bortoli, Valentin and Thornton, James and Heng, Jeremy and Doucet, Arnaud},
-  year={2024},
-  url={https://arxiv.org/abs/2402.08667}
-}
-@article{liu2025adjoint,
-  title={Adjoint {S}chr{\"o}dinger Bridge Sampler},
-  author={Liu, Guan-Horng and Chen, Tianrong and Lipman, Yaron and Albergo, Michael S. and Vanden-Eijnden, Eric},
-  year={2025},
-  url={https://arxiv.org/abs/2503.02874}
-}
-@article{de2021diffusion,
-  title={Diffusion {S}chr{\"o}dinger bridge with applications to score-based generative modeling},
-  author={De Bortoli, Valentin and Thornton, James and Heng, Jeremy and Doucet, Arnaud},
-  journal={NeurIPS},
-  year={2021},
-  url={https://arxiv.org/abs/2106.01357}
-}
--->
+<p>A note on related methods. The RAM loss <a href="#eq-ram" class="quarto-xref">Equation&nbsp;9</a> is closely related to the training objectives in PDDS <span class="citation" data-cites="phillips2024particle">(<a href="#ref-phillips2024particle" role="doc-biblioref">Phillips et al. 2024</a>)</span> and Target Score Matching <span class="citation" data-cites="de2024target">(<a href="#ref-de2024target" role="doc-biblioref">De Bortoli et al. 2024</a>)</span>, where the same squared-error expression appears inside the expectation. The difference is in what the expectation is taken over: PDDS and TSM sample <span class="math inline">\(X_1\)</span> from the target distribution <span class="math inline">\(\pi\)</span> (requiring importance sampling or SMC), while Adjoint Sampling samples <span class="math inline">\(X_1\)</span> from the current model <span class="math inline">\(p^{\bar{u}}_1\)</span>. This makes the loss a moving target, which is harder to analyze but far more practical: no target samples needed, no importance weights, no resampling.</p>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-de2024target" class="csl-entry" role="listitem">
+De Bortoli, Valentin, Michael Hutchinson, Peter Wirnsberger, and Arnaud Doucet. 2024. <span>“Target Score Matching.”</span> <em>arXiv Preprint arXiv:2402.08667</em>.
+</div>
+<div id="ref-de2021diffusion" class="csl-entry" role="listitem">
+De Bortoli, Valentin, James Thornton, Jeremy Heng, and Arnaud Doucet. 2021. <span>“Diffusion Schrodinger Bridge with Applications to Score-Based Generative Modeling.”</span> <em>Advances in Neural Information Processing Systems</em> 34: 17695–709.
+</div>
+<div id="ref-havens2025adjoint" class="csl-entry" role="listitem">
+Havens, Aaron, Benjamin Kurt Miller, Bing Yan, Carles Domingo-Enrich, Anuroop Sriram, Brandon Wood, Daniel Levine, et al. 2025. <span>“Adjoint Sampling: Highly Scalable Diffusion Samplers via Adjoint Matching.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2504.11713">10.48550/ARXIV.2504.11713</a>.
+</div>
+<div id="ref-liu2025adjoint" class="csl-entry" role="listitem">
+Liu, Guan-Horng, Jaemoo Choi, Yongxin Chen, Benjamin Kurt Miller, and Ricky T. Q. Chen. 2025. <span>“Adjoint Schrödinger Bridge Sampler.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2506.22565">10.48550/ARXIV.2506.22565</a>.
+</div>
+<div id="ref-phillips2024particle" class="csl-entry" role="listitem">
+Phillips, Angus, Hai-Dang Dau, Michael John Hutchinson, Valentin De Bortoli, George Deligiannidis, and Arnaud Doucet. 2024. <span>“Particle Denoising Diffusion Sampler.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2402.06320">10.48550/ARXIV.2402.06320</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

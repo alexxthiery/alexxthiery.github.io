@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -269,11 +289,11 @@ p^\star(X_1) &amp;= p_1(X_1) \, \exp(r(X_1)) \int p^{\text{base}}(X_0) \, \exp(-
 \tag{7}\]</span></span></p>
 <p>The integral over <span class="math inline">\(X_0\)</span> collapses to a constant. The bias disappears.</p>
 <p>A base process <a href="#eq-base-sde" class="quarto-xref">Equation&nbsp;1</a> is <em>memoryless</em> when <span class="math inline">\(X_0 \perp X_1\)</span>. For the family of generative SDEs that arise in flow matching and diffusion models, this condition pins down <span class="math inline">\(\sigma_t\)</span>.</p>
-<p>The generative SDE <a href="#eq-base-sde" class="quarto-xref">Equation&nbsp;1</a> is built to have the same time marginals as the reference interpolation <span class="math inline">\(\bar{X}_t = \beta_t \bar{X}_0 + \alpha_t \bar{X}_1\)</span> with <span class="math inline">\(\bar{X}_0 \sim \mathcal{N}(0,I)\)</span> independent of <span class="math inline">\(\bar{X}_1\)</span>. Conditionally on <span class="math inline">\(\bar{X}_1\)</span>, this reference has <span class="math inline">\(\bar{X}_t \mid \bar{X}_1 \sim \mathcal{N}(\alpha_t \bar{X}_1, \beta_t^2 I)\)</span>: the conditional variance is <span class="math inline">\(\beta_t^2\)</span>, which starts at <span class="math inline">\(\beta_0^2 = 1\)</span> (pure noise) and decays to <span class="math inline">\(\beta_1^2 = 0\)</span> (deterministic). The unified drift from <span class="citation" data-cites="domingoenrich2024adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref"><strong>domingoenrich2024adjoint?</strong></a>)</span> is</p>
+<p>The generative SDE <a href="#eq-base-sde" class="quarto-xref">Equation&nbsp;1</a> is built to have the same time marginals as the reference interpolation <span class="math inline">\(\bar{X}_t = \beta_t \bar{X}_0 + \alpha_t \bar{X}_1\)</span> with <span class="math inline">\(\bar{X}_0 \sim \mathcal{N}(0,I)\)</span> independent of <span class="math inline">\(\bar{X}_1\)</span>. Conditionally on <span class="math inline">\(\bar{X}_1\)</span>, this reference has <span class="math inline">\(\bar{X}_t \mid \bar{X}_1 \sim \mathcal{N}(\alpha_t \bar{X}_1, \beta_t^2 I)\)</span>: the conditional variance is <span class="math inline">\(\beta_t^2\)</span>, which starts at <span class="math inline">\(\beta_0^2 = 1\)</span> (pure noise) and decays to <span class="math inline">\(\beta_1^2 = 0\)</span> (deterministic). The unified drift from <span class="citation" data-cites="domingoenrich2024adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>)</span> is</p>
 <p><span id="eq-unified-drift"><span class="math display">\[
 b(x,t) = \kappa_t \, x +  {\left( \tfrac{\sigma_t^2}{2} + \eta_t \right)}  \nabla \log p_t(x)
 \tag{8}\]</span></span></p>
-<p>This drift is constructed so that the SDE has the same time marginals as the reference interpolation; the <span class="math inline">\(\kappa_t x\)</span> term handles the deterministic scaling and the score term corrects for the noise. Here <span class="math inline">\(\kappa_t = \dot{\alpha}_t / \alpha_t\)</span> and <span class="math inline">\(\eta_t = \beta_t(\dot{\alpha}_t \beta_t / \alpha_t - \dot{\beta}_t)\)</span>. For the SDE to produce independent <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span>, it needs to inject enough noise to erase memory of <span class="math inline">\(X_0\)</span> by time 1. The base SDE with drift <span class="math inline">\(b\)</span> and diffusion <span class="math inline">\(\sigma_t\)</span> has the same marginals as <span class="math inline">\(\bar{X}_t\)</span>. For <span class="math inline">\(X_0 \perp X_1\)</span> to hold, the noise must be large enough that the SDE “forgets” its initial condition by time 1. The memoryless noise level <span class="math inline">\(\sigma_t = \sqrt{2\eta_t}\)</span> is the unique choice that makes the conditional law <span class="math inline">\(X_t | X_1\)</span> under the SDE match the reference Gaussian structure <span class="math inline">\(\mathcal{N}(\alpha_t X_1, \beta_t^2 I)\)</span> for all <span class="math inline">\(t\)</span>. The paper (Proposition in Section 12.1 of <span class="citation" data-cites="domingoenrich2024adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref"><strong>domingoenrich2024adjoint?</strong></a>)</span>) proves this by analyzing the time-reversed SDE and showing that the coefficient of <span class="math inline">\(X_0\)</span> in the explicit solution vanishes if and only if <span class="math inline">\(\sigma_t^2 \geq 2\eta_t\)</span>, with <span class="math inline">\(\sigma_t^2 = 2\eta_t\)</span> being the minimal such choice. This requires</p>
+<p>This drift is constructed so that the SDE has the same time marginals as the reference interpolation; the <span class="math inline">\(\kappa_t x\)</span> term handles the deterministic scaling and the score term corrects for the noise. Here <span class="math inline">\(\kappa_t = \dot{\alpha}_t / \alpha_t\)</span> and <span class="math inline">\(\eta_t = \beta_t(\dot{\alpha}_t \beta_t / \alpha_t - \dot{\beta}_t)\)</span>. For the SDE to produce independent <span class="math inline">\(X_0\)</span> and <span class="math inline">\(X_1\)</span>, it needs to inject enough noise to erase memory of <span class="math inline">\(X_0\)</span> by time 1. The base SDE with drift <span class="math inline">\(b\)</span> and diffusion <span class="math inline">\(\sigma_t\)</span> has the same marginals as <span class="math inline">\(\bar{X}_t\)</span>. For <span class="math inline">\(X_0 \perp X_1\)</span> to hold, the noise must be large enough that the SDE “forgets” its initial condition by time 1. The memoryless noise level <span class="math inline">\(\sigma_t = \sqrt{2\eta_t}\)</span> is the unique choice that makes the conditional law <span class="math inline">\(X_t | X_1\)</span> under the SDE match the reference Gaussian structure <span class="math inline">\(\mathcal{N}(\alpha_t X_1, \beta_t^2 I)\)</span> for all <span class="math inline">\(t\)</span>. The paper (Proposition in Section 12.1 of <span class="citation" data-cites="domingoenrich2024adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>)</span>) proves this by analyzing the time-reversed SDE and showing that the coefficient of <span class="math inline">\(X_0\)</span> in the explicit solution vanishes if and only if <span class="math inline">\(\sigma_t^2 \geq 2\eta_t\)</span>, with <span class="math inline">\(\sigma_t^2 = 2\eta_t\)</span> being the minimal such choice. This requires</p>
 <p><span id="eq-memoryless"><span class="math display">\[
 \textcolor{blue}{\sigma_t = \sqrt{2 \eta_t}}.
 \tag{9}\]</span></span></p>
@@ -357,20 +377,16 @@ L_{\text{AM}}(\theta) = \frac{1}{2} \int_0^1 \| u_\theta(X_t, t) + \sigma_t^\top
 <section id="after-fine-tuning" class="level2">
 <h2 class="anchored" data-anchor-id="after-fine-tuning">After fine-tuning</h2>
 <p>The memoryless schedule <span class="math inline">\(\sigma_t = \sqrt{2\eta_t}\)</span> is only used during training. After convergence, the fine-tuned drift can be converted to a velocity field and sampled with any noise schedule, including <span class="math inline">\(\sigma_t = 0\)</span> for deterministic generation.</p>
-<!-- BibTeX entries to add to ref.bib:
-@article{domingoenrich2024adjoint,
-  title={Adjoint Matching: Fine-Tuning Flow and Diffusion Generative Models with Memoryless Stochastic Optimal Control},
-  author={Domingo-Enrich, Carla and Drozdzal, Michal and Karras, Brian and Chen, Ricky T. Q. and Lipman, Yaron},
-  journal={ICML 2025},
-  year={2024},
-  url={https://arxiv.org/abs/2409.08861}
-}
--->
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-domingoenrich2024adjoint" class="csl-entry" role="listitem">
+Domingo-Enrich, Carles, Michal Drozdzal, Brian Karrer, and Ricky T. Q. Chen. 2024. <span>“Adjoint Matching: Fine-Tuning Flow and Diffusion Generative Models with Memoryless Stochastic Optimal Control.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2409.08861">10.48550/ARXIV.2409.08861</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

@@ -10,7 +10,506 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Alex Thiery Notes</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Mon, 29 Jun 2026 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 30 Aug 2026 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Short introduction to CVXPY</title>
+  <link>https://alexxthiery.github.io/notes/cvxpy/cvxpy.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/cvxpy/cvxpy-logo.png" class="img-fluid figure-img" style="width:55.0%"></p>
+<figcaption><a href="https://www.cvxpy.org">CVXPY</a></figcaption>
+</figure>
+</div>
+</div>
+<p>These notes are a brief introduction to <a href="https://www.cvxpy.org/">CVXPY</a> for students of DSA4212. Let’s start with a simple least-squares problem with linear constraints. We want to minimize <img src="https://latex.codecogs.com/png.latex?%5C%7CAx-b%5C%7C_2%5E2"> subject to <img src="https://latex.codecogs.com/png.latex?x%20%5Cgeq%200"> and <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B1%7D%5E%7B%5Ctop%7Dx=1">, where <img src="https://latex.codecogs.com/png.latex?A%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bm%20%5Ctimes%20n%7D"> and <img src="https://latex.codecogs.com/png.latex?b%20%5Cin%20%5Cmathbb%7BR%7D%5Em"> are given data, and <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5En"> is the unknown vector:</p>
+<p><span id="eq-simplex-least-squares"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Cunderset%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5En%7D%7B%5Coperatorname%7Bminimize%7D%7D%20%5Cquad%0A&amp;%20%5Cfrac12%20%5C,%20%5C%7CAx-b%5C%7C_2%5E2%20%5C%5C%0A%5Ctext%7Bsubject%20to%7D%20%5Cquad%0A&amp;%20x%20%5Cgeq%200,%20%5Cqquad%20%5Cboldsymbol%7B1%7D%5E%7B%5Ctop%7Dx=1.%0A%5Cend%7Baligned%7D%0A%5Ctag%7B1%7D"></span></p>
+<p>The objective is quadratic and the constraints are affine, so Equation&nbsp;1 is a convex quadratic program. <a href="https://www.cvxpy.org/">CVXPY</a> translates this problem almost verbatim into Python code:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> cvxpy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> cp</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> numpy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> np</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># some data for the problem</span></span>
+<span id="cb1-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">except</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">Exception</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> e:</span>
+<span id="cb1-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">raise</span> e</span>
+<span id="cb1-7">A <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([</span>
+<span id="cb1-8">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>],</span>
+<span id="cb1-9">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>],</span>
+<span id="cb1-10">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>],</span>
+<span id="cb1-11">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>],</span>
+<span id="cb1-12">])</span>
+<span id="cb1-13">b <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.3</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>])</span>
+<span id="cb1-14">m, n <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> A.shape</span>
+<span id="cb1-15"></span>
+<span id="cb1-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the variable to be optimized</span></span>
+<span id="cb1-17">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Variable(n)</span>
+<span id="cb1-18"></span>
+<span id="cb1-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the list of constraints</span></span>
+<span id="cb1-20">constraints <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, cp.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(x) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb1-21"></span>
+<span id="cb1-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># finally, the objective</span></span>
+<span id="cb1-23">objective <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Minimize(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> cp.sum_squares(A <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> b))</span>
+<span id="cb1-24"></span>
+<span id="cb1-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the problem is obtained by assembling the objective and constraints</span></span>
+<span id="cb1-26">problem <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Problem(objective, constraints)</span>
+<span id="cb1-27"></span>
+<span id="cb1-28"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check that the problem is DCP before solving</span></span>
+<span id="cb1-29"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">assert</span> problem.is_dcp()</span>
+<span id="cb1-30"></span>
+<span id="cb1-31"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># solve the problem!</span></span>
+<span id="cb1-32">problem.solve()</span></code></pre></div>
+<p>The object <code>objective</code> is an <code>Objective</code> wrapping a symbolic expression; each entry of <code>constraints</code> is a <code>Constraint</code> object, and <code>problem</code> collects them into a single model. Before <code>problem.solve()</code> is called, <code>x.value</code> is <code>None</code> since the variable has not yet been assigned a numerical value.</p>
+<p>More generally, for convex functions <img src="https://latex.codecogs.com/png.latex?f_0,%5Cldots,f_m">, a matrix <img src="https://latex.codecogs.com/png.latex?G%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bp%20%5Ctimes%20n%7D">, and <img src="https://latex.codecogs.com/png.latex?h%20%5Cin%20%5Cmathbb%7BR%7D%5Ep">, CVXPY can describe a problem of the form</p>
+<p><span id="eq-convex-program"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Cunderset%7Bx%20%5Cin%20%5Cmathbb%7BR%7D%5En%7D%7B%5Coperatorname%7Bminimize%7D%7D%20%5Cquad%20&amp;%20f_0(x)%20%5C%5C%0A%5Ctext%7Bsubject%20to%7D%20%5Cquad%20&amp;%20f_i(x)%20%5Cleq%200,%20%5Cqquad%20i=1,%5Cldots,m,%5C%5C%0A&amp;%20Gx=h.%0A%5Cend%7Baligned%7D%0A%5Ctag%7B2%7D"></span></p>
+<p>CVXPY assembles the variables, parameters, and compound expressions into a tree, checks that this tree satisfies its convexity rules, and transforms the model into cone program that can (often) be solved very efficiently. Alsothough we restrict attention to continuous convex problems, <a href="https://www.cvxpy.org/">CVXPY</a> is in fact quite a bit more general, and can handle mixed-integer convex problems as well, as well as some nonconvex problems. Go have a look at the <a href="https://www.cvxpy.org/">CVXPY documentation</a> for more details.</p>
+<p>After the call to <code>solve</code>, CVXPY stores the solver status, the optimal objective, the primal variables, and the dual variables attached to explicit constraints. It is always good practice to check that the solver has actually returned an optimal solution before using the results.</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> problem.status <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> (cp.OPTIMAL, cp.OPTIMAL_INACCURATE):</span>
+<span id="cb2-2">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">raise</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">RuntimeError</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"The solver returned </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>problem<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>status<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb2-3"></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># if solved correctly:</span></span>
+<span id="cb2-5">x_star <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> x.value</span>
+<span id="cb2-6">objective_star <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> problem.value</span>
+<span id="cb2-7">nonnegativity_dual <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> constraints[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].dual_value</span>
+<span id="cb2-8">sum_constraint_dual <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> constraints[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>].dual_value</span></code></pre></div>
+<p>The status <code>OPTIMAL_INACCURATE</code> means that the solver regards its solution or certificate as potentially inaccurate. For a serious computation, it is good practice to also evaluate the objective and the constraint residuals directly with NumPy.</p>
+<section id="symbolic-expressions" class="level3">
+<h3 class="anchored" data-anchor-id="symbolic-expressions">Symbolic expressions</h3>
+<p>CVXPY borrows much of its syntax from NumPy, but a CVXPY expression represents a function of the unknown variables rather than an array of numbers. Matrix multiplication uses <code>@</code>, while coordinatewise multiplication uses <code>cp.multiply</code>. Functions applied to symbolic expressions must come from CVXPY’s library of <a href="https://www.cvxpy.org/tutorial/functions/index.html">atomic functions</a>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Mathematical expression</th>
+<th>CVXPY expression</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><img src="https://latex.codecogs.com/png.latex?Ax"></td>
+<td><code>A @ x</code></td>
+</tr>
+<tr class="even">
+<td><img src="https://latex.codecogs.com/png.latex?a%20%5Codot%20x"></td>
+<td><code>cp.multiply(a, x)</code></td>
+</tr>
+<tr class="odd">
+<td><img src="https://latex.codecogs.com/png.latex?%5Csum_i%20x_i"></td>
+<td><code>cp.sum(x)</code></td>
+</tr>
+<tr class="even">
+<td><img src="https://latex.codecogs.com/png.latex?%5C%7Cx%5C%7C_1"></td>
+<td><code>cp.norm(x, 1)</code></td>
+</tr>
+<tr class="odd">
+<td><img src="https://latex.codecogs.com/png.latex?%5C%7Cx%5C%7C_2"></td>
+<td><code>cp.norm(x, 2)</code></td>
+</tr>
+<tr class="even">
+<td><img src="https://latex.codecogs.com/png.latex?%5C%7CAx-b%5C%7C_2%5E2"></td>
+<td><code>cp.sum_squares(A @ x - b)</code></td>
+</tr>
+<tr class="odd">
+<td><img src="https://latex.codecogs.com/png.latex?x%5E%5Ctop%20P%20x"> for <img src="https://latex.codecogs.com/png.latex?P%20%5Csucceq%200"></td>
+<td><code>cp.quad_form(x, P)</code></td>
+</tr>
+<tr class="even">
+<td><img src="https://latex.codecogs.com/png.latex?%5Clog%5C!%5Cleft(%5Csum_i%20e%5E%7Bx_i%7D%5Cright)"></td>
+<td><code>cp.log_sum_exp(x)</code></td>
+</tr>
+</tbody>
+</table>
+<p>For example, <code>np.linalg.norm(x)</code> tries to evaluate <code>x</code> numerically and is not valid. The expression <code>cp.norm(x)</code>, on the other hand, records a symbolic norm in the optimization problem.</p>
+<p>A <code>Parameter</code> is another leaf of the symbolic expression tree. It represents a constant whose value may change between solves, so that the same problem can be solved repeatedly without rebuilding the tree (which is computationally expensive).</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># define a (regularization) parameter</span></span>
+<span id="cb3-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># note here that we declare it to be non-negative</span></span>
+<span id="cb3-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># which is important for the convexity checker to accept the problem</span></span>
+<span id="cb3-4">lam <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Parameter(nonneg<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb3-5"></span>
+<span id="cb3-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># define the constrained convex problem with a regularization term</span></span>
+<span id="cb3-7">regularized_problem <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Problem(</span>
+<span id="cb3-8">    cp.Minimize(</span>
+<span id="cb3-9">        cp.sum_squares(A <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> b) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> lam <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> cp.sum_squares(x)</span>
+<span id="cb3-10">    ),</span>
+<span id="cb3-11">    constraints,</span>
+<span id="cb3-12">)</span>
+<span id="cb3-13"></span>
+<span id="cb3-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check that the problem is DCP before solving</span></span>
+<span id="cb3-15"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">assert</span> regularized_problem.is_dcp()</span>
+<span id="cb3-16"></span>
+<span id="cb3-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># iterate over different values of the parameter</span></span>
+<span id="cb3-18"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> value <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> (<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>):</span>
+<span id="cb3-19">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># set the parameter value</span></span>
+<span id="cb3-20">    lam.value <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> value</span>
+<span id="cb3-21">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># solve the problem (with a warm start!)</span></span>
+<span id="cb3-22">    regularized_problem.solve(warm_start<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span></code></pre></div>
+<p>Declaring <code>lam</code> as non-negative supplies information needed by the convexity checker. A <code>Problem</code>’s objective and constraint list cannot be modified after construction; changing the model structure requires a new <code>Problem</code>. By default, when changing a <code>Parameter</code> value, CVXPY will attempt to warm-start the solver with the previous solution, which can (sometimes greatly!) speed up convergence.</p>
+</section>
+<section id="disciplined-convex-programming" class="level3">
+<h3 class="anchored" data-anchor-id="disciplined-convex-programming">Disciplined convex programming</h3>
+<p>CVXPY certifies convexity using <a href="https://www.cvxpy.org/tutorial/dcp/">disciplined convex programming</a>, usually abbreviated DCP. Each atomic function comes with known curvature and monotonicity, and CVXPY propagates this information from the leaves of the expression tree to its root. This allows CVXPY to check that the objective and constraints satisfy the DCP rules, which are sufficient for convexity. Only a few rules are used:</p>
+<ul>
+<li>sums of convex expressions are convex, sums of concave expressions are concave, multiplication by a non-negative constant preserves curvature, and multiplication by a negative constant reverses it;</li>
+<li>if <img src="https://latex.codecogs.com/png.latex?f"> is convex <strong>and increasing</strong> (students often forget this!), then <img src="https://latex.codecogs.com/png.latex?f%20%5Ccirc%20g"> is convex when <img src="https://latex.codecogs.com/png.latex?g"> is convex; if <img src="https://latex.codecogs.com/png.latex?f"> is convex and decreasing, the same holds when <img src="https://latex.codecogs.com/png.latex?g"> is concave.</li>
+</ul>
+<p>For example, the scalar function</p>
+<p><span id="eq-sqrt-quadratic"><img src="https://latex.codecogs.com/png.latex?%0Af(t)=%5Csqrt%7B1+t%5E2%7D%0A%5Ctag%7B3%7D"></span></p>
+<p>is convex, but the first expression below is not recognized as DCP since although <img src="https://latex.codecogs.com/png.latex?1+t%5E2"> is convex, <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7B%5Ccdot%7D"> is concave and increasing, so the basic composition rule does not apply. A better way is to formulate the function as <img src="https://latex.codecogs.com/png.latex?f(t)%20=%20%5C%7C%5B1,t%5D%5C%7C_2">, which is recognized as DCP because the Euclidean norm is convex and <img src="https://latex.codecogs.com/png.latex?%5B1,t%5D"> is affine. This shows that some care is needed when formulating a problem, and that the DCP rules are sufficient but not necessary for convexity.</p>
+<p>The atom <code>cp.sqrt(t)</code> carries the implicit domain <img src="https://latex.codecogs.com/png.latex?t%20%5Cgeq%200">, and the constraint <code>cp.sqrt(t) &gt;= 1</code> is DCP because a concave expression is bounded below by an affine expression. The reversed constraint <code>cp.sqrt(t) &lt;= 1</code> is not DCP as written, even though its feasible set <img src="https://latex.codecogs.com/png.latex?%5B0,1%5D"> is convex. This shows again that the DCP rules are sufficient but not necessary for convexity, and some thoughts are sometimes needed to reformulate a problem in a DCP-compliant way.</p>
+</section>
+<section id="from-atoms-to-cones" class="level3">
+<h3 class="anchored" data-anchor-id="from-atoms-to-cones">From atoms to cones</h3>
+<p>CVXPY converts recognized atoms into constraints involving a small collection of convex cones. The model is then passed to a solver that supports the cones it contains. In most applications, one writes norms, quadratic forms, eigenvalue functions, exponentials, or entropies and lets CVXPY construct the conic representation.</p>
+<p>The least-squares problem Equation&nbsp;1 is a quadratic program. Replacing its squared norm by a norm gives a second-order cone program. Positive semidefinite inequalities produce semidefinite programs, while <code>exp</code>, <code>log_sum_exp</code>, and relative entropy use the exponential cone.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># A second-order cone program</span></span>
+<span id="cb4-2">soc_problem <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Problem(</span>
+<span id="cb4-3">    cp.Minimize(cp.norm(A <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> b, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)),</span>
+<span id="cb4-4">    constraints,</span>
+<span id="cb4-5">)</span>
+<span id="cb4-6"></span>
+<span id="cb4-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># A semidefinite program</span></span>
+<span id="cb4-8">C <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([[<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>], [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.0</span>]])</span>
+<span id="cb4-9">X <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Variable((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>), symmetric<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb4-10">sdp_problem <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Problem(</span>
+<span id="cb4-11">    cp.Minimize(cp.trace(C <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> X)),</span>
+<span id="cb4-12">    [X <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, cp.diag(X) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> np.ones(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)],</span>
+<span id="cb4-13">)</span>
+<span id="cb4-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Rq: here the constraint is over correlation matrices: </span></span>
+<span id="cb4-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># matrices that are PSD and have unit diagonal</span></span>
+<span id="cb4-16"></span>
+<span id="cb4-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># An exponential-cone program</span></span>
+<span id="cb4-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># min: tau</span></span>
+<span id="cb4-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># subject to:</span></span>
+<span id="cb4-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (1): log( exp(u_1) + exp(u_2) + exp(u_3) ) &lt;= tau</span></span>
+<span id="cb4-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (2): u_1 + u_2 + u_3 = 0</span></span>
+<span id="cb4-22">u <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Variable(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span>
+<span id="cb4-23">tau <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Variable()</span>
+<span id="cb4-24">exponential_problem <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cp.Problem(</span>
+<span id="cb4-25">    cp.Minimize(tau),</span>
+<span id="cb4-26">    [cp.log_sum_exp(u) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;=</span> tau, cp.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(u) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>],</span>
+<span id="cb4-27">)</span>
+<span id="cb4-28"></span>
+<span id="cb4-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># check that all problems are DCP</span></span>
+<span id="cb4-30">cone_problems <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [soc_problem, sdp_problem, exponential_problem]</span>
+<span id="cb4-31"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">assert</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">all</span>(p.is_dcp() <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> cone_problems)</span>
+<span id="cb4-32"></span>
+<span id="cb4-33"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># solve all problems</span></span>
+<span id="cb4-34"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> cone_problem <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> cone_problems:</span>
+<span id="cb4-35">    cone_problem.solve()</span></code></pre></div>
+<p>The relation <code>X &gt;&gt; 0</code> means that the symmetric matrix <img src="https://latex.codecogs.com/png.latex?X"> is positive semidefinite; it is not a coordinatewise inequality. Alternatively, one can declare <code>X = cp.Variable((2, 2), PSD=True)</code>. An explicit constraint such as <code>X &gt;&gt; 0</code> is preferable when its dual variable is needed.</p>
+</section>
+<section id="a-few-common-mistakes" class="level3">
+<h3 class="anchored" data-anchor-id="a-few-common-mistakes">A few common mistakes</h3>
+<p>Keep in mind the following patterns:</p>
+<ul>
+<li>Use <code>A @ x</code> for matrix multiplication and <code>cp.multiply(a, x)</code> for coordinatewise multiplication.</li>
+<li>Use CVXPY atoms such as <code>cp.norm</code>, <code>cp.exp</code>, and <code>cp.sum_squares</code> on symbolic expressions, rather than their NumPy counterparts.</li>
+<li>Write the two constraints <code>x &gt;= 0</code> and <code>x &lt;= 1</code> separately. Python’s chained expression <code>0 &lt;= x &lt;= 1</code> cannot be interpreted by CVXPY.</li>
+<li>CVXPY does not support strict inequalities <code>&lt;</code> and <code>&gt;</code>.</li>
+<li>A product of two nonconstant CVXPY expressions, such as <code>x * y</code> for two variables, is generally not DCP. Multiplication by known scalars or arrays is allowed.</li>
+<li>A vector with shape <code>(n,)</code> and a column vector with shape <code>(n, 1)</code> are different objects. Checking dimensions before constructing the problem avoids unintended broadcasting.</li>
+</ul>
+<p>The call <code>problem.solve()</code> chooses a compatible installed solver by default. The available solvers can be inspected with <code>cp.installed_solvers()</code>, and a particular one can be requested with <code>problem.solve(solver=...)</code> when its numerical method or accuracy options matter. Solver tolerances act on a finite-precision representation of the cone program, so badly scaled data can lead to slow convergence or an <code>OPTIMAL_INACCURATE</code> status even when the mathematical problem is well posed. Do try to scale the data, or use the strategies discussed in class to improve the conditioning of the problem.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>optimization</category>
+  <category>convexity</category>
+  <guid>https://alexxthiery.github.io/notes/cvxpy/cvxpy.html</guid>
+  <pubDate>Sun, 30 Aug 2026 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Predictive Posteriors</title>
   <link>https://alexxthiery.github.io/notes/predictive_posterior/predictive_posterior.html</link>
@@ -119,7 +618,7 @@ Yao, Yuling, Aki Vehtari, Daniel Simpson, and Andrew Gelman. 2018. <span>“Usin
 <section id="motivation" class="level2">
 <h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
 <p><a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">Adjoint sampling</a> learns a control drift <img src="https://latex.codecogs.com/png.latex?u(t,x)"> that steers a Brownian motion in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5Ed"> toward a target <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%20%5Cpropto%20%5Cexp(-E(x))">. Some problems require sampling <em>paths</em> rather than points. Transition path sampling (TPS) is the canonical example: a molecular system has two metastable states <img src="https://latex.codecogs.com/png.latex?A"> and <img src="https://latex.codecogs.com/png.latex?B">, and the goal is to sample reactive trajectories <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D:%20%5B0,L%5D%20%5Cto%20%5Cmathbb%7BR%7D%5Ed"> connecting them. The target is a Gibbs measure over paths, <img src="https://latex.codecogs.com/png.latex?%0A%5Cpi%5B%5Cmathbf%7Bx%7D%5D%20%5Cpropto%20%5Cexp%20%7B%5Cleft(%20-S%5B%5Cmathbf%7Bx%7D%5D%20%5Cright)%7D%20,%20%5Cqquad%20S%5B%5Cmathbf%7Bx%7D%5D%20=%20%5Cint_0%5EL%20E(%5Cmathbf%7Bx%7D(s))%20%5C,%20ds.%0A"></p>
-<p>The Functional Adjoint Sampler (FAS) <span class="citation" data-cites="bae2025functional">(<strong>bae2025functional?</strong>)</span> applies <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> to this setting with an OU reference process instead of Brownian motion. After discretization, the “path” is just a vector in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5E%7BdK%7D">. FAS is adjoint sampling in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5E%7BdK%7D"> with an OU reference process. The infinite-dimensional formulation in the original paper is a presentation choice, not a mathematical necessity. Strip away the infinite-dimensional machinery and the core idea is: adjoint sampling on paths instead of points, with an OU reference instead of Brownian motion, and Dirichlet boundary conditions to pin endpoints.</p>
+<p>The Functional Adjoint Sampler (FAS) <span class="citation" data-cites="park2025functional">(Park, Lee, and Liu 2025)</span> applies <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> to this setting with an OU reference process instead of Brownian motion. After discretization, the “path” is just a vector in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5E%7BdK%7D">. FAS is adjoint sampling in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5E%7BdK%7D"> with an OU reference process. The infinite-dimensional formulation in the original paper is a presentation choice, not a mathematical necessity. Strip away the infinite-dimensional machinery and the core idea is: adjoint sampling on paths instead of points, with an OU reference instead of Brownian motion, and Dirichlet boundary conditions to pin endpoints.</p>
 <p>(The other notes use <img src="https://latex.codecogs.com/png.latex?%5B0,1%5D">; here we use <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D"> to match the FAS paper.)</p>
 </section>
 <section id="setup-soc-on-path-space" class="level2">
@@ -155,24 +654,20 @@ OU bridge formula in the eigenbasis
 </p>
 </summary>
 <p style="color: blue;">
-For a scalar OU process <img src="https://latex.codecogs.com/png.latex?dc_k%20=%20-%5Clambda_k%20c_k%20%5C,%20dt%20+%20%5Csigma_t%20%5Clambda_k%5E%7B-s/2%7D%20%5C,%20dB_k"> started at <img src="https://latex.codecogs.com/png.latex?c_k(0)%20=%200">, the bridge is standard Gaussian conditioning (cf. <strong>?@eq-bridge</strong> of <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>): <img src="https://latex.codecogs.com/png.latex?%0Ac_k(t)%20%5Cmid%20c_k(T)%20%5C;%5Csim%5C;%20%5Cmathcal%7BN%7D%20%7B%5Cleft(%20%5Cfrac%7B%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(c_k(t),%20c_k(T))%7D%7Bv_k(T)%7D%20%5C,%20c_k(T),%20%5C;%5C;%20v_k(t)%20-%20%5Cfrac%7B%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(c_k(t),%20c_k(T))%5E2%7D%7Bv_k(T)%7D%20%5Cright)%7D%20,%0A"> with <img src="https://latex.codecogs.com/png.latex?v_k(t)%20=%20%5Clambda_k%5E%7B-s%7D%20%5Cint_0%5Et%20%5Csigma_r%5E2%20%5C,%20e%5E%7B-2%5Clambda_k(t-r)%7D%20%5C,%20dr"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(c_k(t),%20c_k(T))%20=%20e%5E%7B-%5Clambda_k(T-t)%7D%20v_k(t)">.
+For a scalar OU process <img src="https://latex.codecogs.com/png.latex?dc_k%20=%20-%5Clambda_k%20c_k%20%5C,%20dt%20+%20%5Csigma_t%20%5Clambda_k%5E%7B-s/2%7D%20%5C,%20dB_k"> started at <img src="https://latex.codecogs.com/png.latex?c_k(0)%20=%200">, the bridge is standard Gaussian conditioning (cf.&nbsp;<a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html#eq-bridge">the Brownian-bridge formula</a>): <img src="https://latex.codecogs.com/png.latex?%0Ac_k(t)%20%5Cmid%20c_k(T)%20%5C;%5Csim%5C;%20%5Cmathcal%7BN%7D%20%7B%5Cleft(%20%5Cfrac%7B%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(c_k(t),%20c_k(T))%7D%7Bv_k(T)%7D%20%5C,%20c_k(T),%20%5C;%5C;%20v_k(t)%20-%20%5Cfrac%7B%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(c_k(t),%20c_k(T))%5E2%7D%7Bv_k(T)%7D%20%5Cright)%7D%20,%0A"> with <img src="https://latex.codecogs.com/png.latex?v_k(t)%20=%20%5Clambda_k%5E%7B-s%7D%20%5Cint_0%5Et%20%5Csigma_r%5E2%20%5C,%20e%5E%7B-2%5Clambda_k(t-r)%7D%20%5C,%20dr"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(c_k(t),%20c_k(T))%20=%20e%5E%7B-%5Clambda_k(T-t)%7D%20v_k(t)">.
 </p>
 </details>
 <p>The buffer-based training from <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a> transfers directly: simulate forward to fill a replay buffer, then sample from the OU bridge for cheap inner-loop gradient steps.</p>
-<!-- BibTeX entry for ref.bib:
-@article{bae2025functional,
-  title={Functional Adjoint Sampler},
-  author={Bae, Geonho and Lee, Juho},
-  journal={arXiv preprint arXiv:2506.04429},
-  year={2025},
-  url={https://arxiv.org/abs/2506.04429}
-}
--->
+
 
 
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-park2025functional" class="csl-entry">
+Park, Byoungwoo, Juho Lee, and Guan-Horng Liu. 2025. <span>“Functional Adjoint Sampler: Scalable Sampling on Infinite Dimensional Spaces.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2511.06239">10.48550/ARXIV.2511.06239</a>.
+</div>
+</div></section></div> ]]></description>
   <category>SDE</category>
   <category>sampling</category>
   <category>optimal control</category>
@@ -210,7 +705,7 @@ For a scalar OU process <img src="https://latex.codecogs.com/png.latex?dc_k%20=%
 <section id="additive-noise-on-cyclic-groups" class="level2">
 <h2 class="anchored" data-anchor-id="additive-noise-on-cyclic-groups">Additive noise on cyclic groups</h2>
 <p>Continuous <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> relies on translation invariance of Gaussian noise: the reference transition kernel <img src="https://latex.codecogs.com/png.latex?p%5Er_%7B1%7Ct%7D(y%20%5Cmid%20x)%20=%20q_t(y%20-%20x)"> depends only on the displacement <img src="https://latex.codecogs.com/png.latex?y%20-%20x">.</p>
-<p>For CTMCs on a finite state space, there is no obvious analogue. The key observation from <span class="citation" data-cites="liu2025dasbs so2026dam">(<strong>liu2025dasbs?</strong>; <strong>so2026dam?</strong>)</span> is to equip the state space with a group structure. Take <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D=%20%5Cmathbb%7BZ%7D_N%5ED">, the cyclic group of integers modulo <img src="https://latex.codecogs.com/png.latex?N"> in <img src="https://latex.codecogs.com/png.latex?D"> dimensions. Each state is <img src="https://latex.codecogs.com/png.latex?x%20=%20(x%5E1,%20%5Cldots,%20x%5ED)"> with <img src="https://latex.codecogs.com/png.latex?x%5Ed%20%5Cin%20%5C%7B0,%201,%20%5Cldots,%20N-1%5C%7D">, and addition is component-wise modulo <img src="https://latex.codecogs.com/png.latex?N">.</p>
+<p>For CTMCs on a finite state space, there is no obvious analogue. The key observation from <span class="citation" data-cites="guo2026discrete so2026dam">(Guo et al. 2026; So et al. 2026)</span> is to equip the state space with a group structure. Take <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D=%20%5Cmathbb%7BZ%7D_N%5ED">, the cyclic group of integers modulo <img src="https://latex.codecogs.com/png.latex?N"> in <img src="https://latex.codecogs.com/png.latex?D"> dimensions. Each state is <img src="https://latex.codecogs.com/png.latex?x%20=%20(x%5E1,%20%5Cldots,%20x%5ED)"> with <img src="https://latex.codecogs.com/png.latex?x%5Ed%20%5Cin%20%5C%7B0,%201,%20%5Cldots,%20N-1%5C%7D">, and addition is component-wise modulo <img src="https://latex.codecogs.com/png.latex?N">.</p>
 <p>Choose a uniform reference rate:</p>
 <p><span id="eq-uniform-rate"><img src="https://latex.codecogs.com/png.latex?%0Ar_t(y,%20x)%20=%20%5Cfrac%7B%5Cgamma_t%7D%7BN%7D%20%5Cquad%20%5Ctext%7Bfor%20all%20%7D%20y%20%5Cneq%20x%20%5Ctext%7B%20with%20%7D%20d_H(y,x)%20=%201,%0A%5Ctag%7B5%7D"></span></p>
 <p>where <img src="https://latex.codecogs.com/png.latex?d_H"> is the Hamming distance (differing in exactly one coordinate) and <img src="https://latex.codecogs.com/png.latex?%5Cgamma_t%20%3E%200"> is a noise schedule. Restricting to single-coordinate jumps (<img src="https://latex.codecogs.com/png.latex?d_H(y,x)%20=%201">) keeps the rate matrix sparse and the computation per step <img src="https://latex.codecogs.com/png.latex?O(DN)">. The resulting transition kernel <img src="https://latex.codecogs.com/png.latex?p%5Er_%7B1%7Ct%7D(y%20%5Cmid%20x)"> depends only on <img src="https://latex.codecogs.com/png.latex?y%20-%20x"> (subtraction in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BZ%7D_N%5ED">):</p>
@@ -298,8 +793,8 @@ Under <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5E%7Bu%5E%
 <li><strong>Denoising matching</strong> for the corrector: regresses onto <img src="https://latex.codecogs.com/png.latex?p%5Er_%7B1%7Ct%7D(x_1%5E%7Bd%20%5Cgets%20n%7D%20%5Cmid%20x)%20/%20p%5Er_%7B1%7Ct%7D(x_1%20%5Cmid%20x)">, the ratio of reference transition probabilities. This does not require the additive property and works for general reference kernels.</li>
 </ul></li>
 </ul>
-<p>This alternation is <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> in disguise: each half-step solves a half-bridge problem. Convergence follows from the contraction argument in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a>; see <span class="citation" data-cites="liu2025dasbs">(<strong>liu2025dasbs?</strong>)</span> for the discrete convergence proof.</p>
-<p>Empirical finding from <span class="citation" data-cites="liu2025dasbs">(<strong>liu2025dasbs?</strong>)</span>: non-memoryless reference schedules outperform memoryless ones in discrete settings. The memoryless condition forces aggressive mixing that wastes computation; relaxing it allows more efficient transport.</p>
+<p>This alternation is <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> in disguise: each half-step solves a half-bridge problem. Convergence follows from the contraction argument in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a>; see <span class="citation" data-cites="guo2026discrete">(Guo et al. 2026)</span> for the discrete convergence proof.</p>
+<p>Empirical finding from <span class="citation" data-cites="guo2026discrete">(Guo et al. 2026)</span>: non-memoryless reference schedules outperform memoryless ones in discrete settings. The memoryless condition forces aggressive mixing that wastes computation; relaxing it allows more efficient transport.</p>
 </section>
 </section>
 <section id="summary-continuous-vs-discrete" class="level2">
@@ -361,25 +856,19 @@ Under <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5E%7Bu%5E%
 </tbody>
 </table>
 <p>The discrete analogue of Nelson’s relation from the <a href="../../notes/adjoint_samplers_draft/BMS.html">BMS notes</a> is detailed balance: <img src="https://latex.codecogs.com/png.latex?u%5E%5Cstar_t(y,x)/u%5E%7B%5Cstar,%5Ctext%7Brev%7D%7D_t(x,y)%20=%20p%5E%5Cstar_t(y)/p%5E%5Cstar_t(x)">.</p>
-<!-- BibTeX entries to add to ref.bib:
-@article{liu2025dasbs,
-  title={Discrete Adjoint Schr{\"o}dinger Bridge Sampler},
-  author={Liu, Bingchang and Shi, Yubin and Chen, Ricky T. Q. and Grathwohl, Will and De Bortoli, Valentin},
-  journal={arXiv preprint arXiv:2506.xxxxx},
-  year={2025}
-}
-@article{so2026dam,
-  title={Discrete Adjoint Matching},
-  author={So, Junhyun and Chen, Sung Ju and Lee, Jeongyol and Lee, Dongha},
-  journal={arXiv preprint arXiv:2506.xxxxx},
-  year={2026}
-}
--->
+
 
 
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-guo2026discrete" class="csl-entry">
+Guo, Wei, Yuchen Zhu, Xiaochen Du, Juno Nam, Yongxin Chen, Rafael Gómez-Bombarelli, Guan-Horng Liu, Molei Tao, and Jaemoo Choi. 2026. <span>“Discrete Adjoint Schrödinger Bridge Sampler.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2602.08243">10.48550/ARXIV.2602.08243</a>.
+</div>
+<div id="ref-so2026dam" class="csl-entry">
+So, Oswin, Brian Karrer, Chuchu Fan, Ricky T. Q. Chen, and Guan-Horng Liu. 2026. <span>“Discrete Adjoint Matching.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2602.07132">10.48550/ARXIV.2602.07132</a>.
+</div>
+</div></section></div> ]]></description>
   <category>CTMC</category>
   <category>markov</category>
   <category>sampling</category>
@@ -434,7 +923,7 @@ Write <img src="https://latex.codecogs.com/png.latex?%5Ctext%7BSB%7D_%7Bp%5Eu_1%
 </p>
 </details>
 <p>After projection, RAM and AM coincide: <img src="https://latex.codecogs.com/png.latex?%5CPi(u)"> is a SB with terminal marginal <img src="https://latex.codecogs.com/png.latex?p%5Eu_1">, so its path measure factorizes as <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(%5Ccdot%20%7C%20X_1)%20p%5Eu_1(X_1)">, and the reciprocal projection is the identity. The two losses have the same fixed point and the same critical points on the projected space. In other words, we lose nothing by using the cheaper loss, and we gain a monotone improvement guarantee.</p>
-<p><strong>The algorithm.</strong> The full Adjoint Sampling algorithm <span class="citation" data-cites="havens2025adjoint">(<strong>havens2025adjoint?</strong>)</span> alternates between two phases. The outer loop (expensive) simulates the controlled SDE forward to produce terminal samples <img src="https://latex.codecogs.com/png.latex?%5C%7BX_1%5E%7B(i)%7D%5C%7D">, evaluates <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20g(X_1%5E%7B(i)%7D)">, and stores the pairs in a replay buffer <img src="https://latex.codecogs.com/png.latex?%5CcB">. The inner loop (cheap) draws <img src="https://latex.codecogs.com/png.latex?(X_1,%20%5Cnabla%20g)"> from the buffer, samples <img src="https://latex.codecogs.com/png.latex?t%20%5Csim%20%5Ctext%7BUniform%7D(%5B0,1%5D)"> and <img src="https://latex.codecogs.com/png.latex?X_t"> from the bridge Equation&nbsp;8, and updates <img src="https://latex.codecogs.com/png.latex?u"> by gradient descent on the RAM loss Equation&nbsp;9. Many gradient steps per energy evaluation, since the inner loop never touches <img src="https://latex.codecogs.com/png.latex?E">.</p>
+<p><strong>The algorithm.</strong> The full Adjoint Sampling algorithm <span class="citation" data-cites="havens2025adjoint">(Havens et al. 2025)</span> alternates between two phases. The outer loop (expensive) simulates the controlled SDE forward to produce terminal samples <img src="https://latex.codecogs.com/png.latex?%5C%7BX_1%5E%7B(i)%7D%5C%7D">, evaluates <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20g(X_1%5E%7B(i)%7D)">, and stores the pairs in a replay buffer <img src="https://latex.codecogs.com/png.latex?%5CcB">. The inner loop (cheap) draws <img src="https://latex.codecogs.com/png.latex?(X_1,%20%5Cnabla%20g)"> from the buffer, samples <img src="https://latex.codecogs.com/png.latex?t%20%5Csim%20%5Ctext%7BUniform%7D(%5B0,1%5D)"> and <img src="https://latex.codecogs.com/png.latex?X_t"> from the bridge Equation&nbsp;8, and updates <img src="https://latex.codecogs.com/png.latex?u"> by gradient descent on the RAM loss Equation&nbsp;9. Many gradient steps per energy evaluation, since the inner loop never touches <img src="https://latex.codecogs.com/png.latex?E">.</p>
 <p>This scheme has a clean fixed-point interpretation. Each outer step implicitly performs the reciprocal projection <img src="https://latex.codecogs.com/png.latex?%5CPi"> (by freezing the terminal samples), and each inner step minimizes the AM loss on the projected control. If <img src="https://latex.codecogs.com/png.latex?u_i"> denotes the current control and we fully converge the inner loop using <img src="https://latex.codecogs.com/png.latex?X_1"> samples from <img src="https://latex.codecogs.com/png.latex?p%5E%7Bu_i%7D_1">, the update satisfies <img src="https://latex.codecogs.com/png.latex?%0Au_%7Bi+1%7D%20=%20%5CPi(u_i)%20-%20%5Cfrac%7B%5Cdelta%20L_%5Ctext%7BAM%7D%7D%7B%5Cdelta%20u%7D(%5CPi(u_i)).%0A"> The fixed point <img src="https://latex.codecogs.com/png.latex?u%20=%20%5CPi(u)"> with <img src="https://latex.codecogs.com/png.latex?%5Cfrac%7B%5Cdelta%20L_%5Ctext%7BAM%7D%7D%7B%5Cdelta%20u%7D(u)%20=%200"> is exactly the optimal control <img src="https://latex.codecogs.com/png.latex?u%5E%5Cstar">. In practice the inner loop is not converged fully: the buffer is refreshed when the control has drifted sufficiently from the stored samples.</p>
 <p>The computational savings are significant. Previous SOC-based samplers require simulating the SDE <em>and</em> backpropagating through it at every gradient step, plus at least one energy evaluation per step. Adjoint Sampling decouples sampling from optimization: the outer loop produces <img src="https://latex.codecogs.com/png.latex?N"> terminal samples per buffer refresh (each requiring one SDE simulation + one <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20g"> evaluation), while the inner loop does <img src="https://latex.codecogs.com/png.latex?K%20%5Cgg%20N"> gradient updates using stored buffer entries (each requiring one Gaussian draw from Equation&nbsp;8 + one forward pass of the neural network). No SDE simulation, no energy call during the inner loop. The ratio <img src="https://latex.codecogs.com/png.latex?K/N"> of gradient updates to energy evaluations can be in the hundreds. For expensive energy functions like molecular force fields, this is the difference between feasibility and infeasibility.</p>
 <p>The replay buffer also provides a form of experience replay: older samples from earlier stages of training remain in the buffer alongside fresh samples, smoothing the optimization. Buffer entries are weighted uniformly; more sophisticated prioritization schemes are possible but have not been explored.</p>
@@ -444,7 +933,7 @@ Write <img src="https://latex.codecogs.com/png.latex?%5Ctext%7BSB%7D_%7Bp%5Eu_1%
 <p>The setup <img src="https://latex.codecogs.com/png.latex?X_0%20=%200"> is restrictive. For molecular systems, a harmonic oscillator prior <img src="https://latex.codecogs.com/png.latex?%5Cmu"> that starts particles near equilibrium bond lengths is a far better starting point: the transport cost is lower and convergence is faster. Even for non-molecular problems, starting from a Gaussian <img src="https://latex.codecogs.com/png.latex?%5Cmu%20=%20%5Cmathcal%7BN%7D(0,%20I)"> and using a moderate noise schedule <img src="https://latex.codecogs.com/png.latex?%5Csigma_t"> is more natural than pumping all the stochasticity through the Brownian motion from a single point.</p>
 <p>The base process <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D"> now starts from <img src="https://latex.codecogs.com/png.latex?X_0%20%5Csim%20%5Cmu"> (not <img src="https://latex.codecogs.com/png.latex?%5Cdelta_0">), and <img src="https://latex.codecogs.com/png.latex?%5Cnu_t">, <img src="https://latex.codecogs.com/png.latex?p_t%5E%7B%5Cmathbb%7BP%7D%7D">, and the Brownian bridge all depend on this initial distribution. With a non-trivial prior, <img src="https://latex.codecogs.com/png.latex?X_0"> and <img src="https://latex.codecogs.com/png.latex?X_1"> are coupled under the base process, and the initial value function bias from the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note reappears. The SOC optimal terminal marginal is <img src="https://latex.codecogs.com/png.latex?p%5E%5Cstar(X_1)%20%5Cpropto%20%5Cint%20%5Cmathbb%7BP%7D(X_0,%20X_1)%20%5C,%20e%5E%7B-g(X_1)%20+%20V_0(X_0)%7D%20%5C,%20dX_0">, which is not proportional to <img src="https://latex.codecogs.com/png.latex?%5Cpi(X_1)"> because the <img src="https://latex.codecogs.com/png.latex?V_0(X_0)"> factor cannot be pulled out of the integral. The memoryless condition (<img src="https://latex.codecogs.com/png.latex?X_0%20%5Cperp%20X_1"> under <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D">) eliminates this bias by making the integral over <img src="https://latex.codecogs.com/png.latex?X_0"> collapse to a constant, but it also forces <img src="https://latex.codecogs.com/png.latex?X_0%20=%200"> (or equivalently, requires a noise schedule <img src="https://latex.codecogs.com/png.latex?%5Csigma_t"> that injects enough noise to erase all memory of <img src="https://latex.codecogs.com/png.latex?X_0"> by time 1, as discussed in the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note).</p>
 <p>The fix comes from the <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> formulation. Instead of solving a plain SOC (which only imposes <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_1%20%5Capprox%20%5Cpi"> via a terminal cost), solve the full SB problem that imposes both marginal constraints <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_0%20=%20%5Cmu"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_1%20=%20%5Cpi"> simultaneously. The SB <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%5Cstar"> minimizing <img src="https://latex.codecogs.com/png.latex?D_%7B%5Ctext%7BKL%7D%7D(%5Cmathbb%7BQ%7D%5C%7C%20%5Cmathbb%7BP%7D)"> subject to these two constraints has path measure <span id="eq-sb-rn"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%5Cmathbb%7BQ%7D%5E%5Cstar%7D%7Bd%5Cmathbb%7BP%7D%7D(%5Cboldsymbol%7BX%7D)%20%5C;%5Cpropto%5C;%20%5Cwidehat%7B%5Cvarphi%7D_0(X_0)%20%5C,%20%5Cvarphi_1(X_1),%0A%5Ctag%7B10%7D"></span> with time-dependent SB potentials <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_t(x)%20=%20%5Cmathbb%7BE%7D_%5Cmathbb%7BP%7D%5B%5Cvarphi_1(X_1)%20%5Cmid%20X_t%20=%20x%5D"> and <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_t(x)%20=%20%5Cmathbb%7BE%7D_%5Cmathbb%7BP%7D%5B%5Cwidehat%7B%5Cvarphi%7D_0(X_0)%20%5Cmid%20X_t%20=%20x%5D"> (in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a>, these are defined with endpoint potentials <img src="https://latex.codecogs.com/png.latex?f,%20g">; here <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_1"> corresponds to <img src="https://latex.codecogs.com/png.latex?g"> and <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_0"> to <img src="https://latex.codecogs.com/png.latex?f">). The forward potential <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_t"> is the <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a>: the SB process has drift <img src="https://latex.codecogs.com/png.latex?b_t%20+%20%5Csigma_t%5E2%20%5Cnabla%20%5Clog%20%5Cvarphi_t">, steering trajectories toward the target. The backward potential <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_t"> propagates information about the prior <img src="https://latex.codecogs.com/png.latex?%5Cmu"> forward in time.</p>
-<p>The SB <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%5Cstar"> is also a controlled diffusion (its drift is the base drift plus <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%5E2%20%5Cnabla%20%5Clog%20%5Cvarphi_t">), so it must solve some SOC problem with an appropriate terminal cost. What terminal cost? The SOC optimal joint from the <a href="../../notes/HJB/HJB.html">HJB notes</a> is <img src="https://latex.codecogs.com/png.latex?p%5E%5Cstar(X_0,%20X_1)%20%5Cpropto%20%5Cmathbb%7BP%7D(X_0,%20X_1)%20%5C,%20e%5E%7B-g(X_1)%20+%20V_0(X_0)%7D">, while the SB joint from Equation&nbsp;10 is <img src="https://latex.codecogs.com/png.latex?p%5E%5Cstar(X_0,%20X_1)%20%5Cpropto%20%5Cmathbb%7BP%7D(X_0,%20X_1)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_0(X_0)%20%5C,%20%5Cvarphi_1(X_1)">. The SOC here optimizes both the drift <img src="https://latex.codecogs.com/png.latex?u"> and the initial distribution (the HJB formulation in Equation&nbsp;1 jointly optimizes <img src="https://latex.codecogs.com/png.latex?q_0"> and <img src="https://latex.codecogs.com/png.latex?u">). The SB constraint <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_0%20=%20%5Cmu"> pins the initial distribution, and <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_0"> enters through this constraint. Matching the terminal tilt requires <img src="https://latex.codecogs.com/png.latex?e%5E%7B-g(X_1)%7D%20%5Cpropto%20%5Cvarphi_1(X_1)">. The SB marginal constraint at <img src="https://latex.codecogs.com/png.latex?t%20=%201"> requires <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%20=%20p%5E%5Cmathbb%7BP%7D_1(x)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_1(x)%20%5C,%20%5Cvarphi_1(x)">, giving <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_1(x)%20=%20%5Cpi(x)/(p%5E%5Cmathbb%7BP%7D_1(x)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_1(x))">. Substituting into <img src="https://latex.codecogs.com/png.latex?g%20=%20-%5Clog%20%5Cvarphi_1%20+%20%5Ctext%7Bconst%7D"> identifies the modified terminal cost: <span id="eq-modified-terminal"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bblue%7D%7Bg(x)%20=%20%5Clog%20%5Cfrac%7B%5Cwidehat%7B%5Cvarphi%7D_1(x)%7D%7B%5Cpi(x)%7D%7D%20+%20%5Ctext%7Bconst%7D.%0A%5Ctag%7B11%7D"></span> Compared to the original <img src="https://latex.codecogs.com/png.latex?g%20=%20%5Clog(p%5E%5Cmathbb%7BP%7D_1%20/%20%5Cpi)">, the base marginal <img src="https://latex.codecogs.com/png.latex?p%5E%5Cmathbb%7BP%7D_1"> is replaced by <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7B%5Cwidehat%7B%5Cvarphi%7D_1%7D">: a corrector that accounts for the coupling between <img src="https://latex.codecogs.com/png.latex?X_0"> and <img src="https://latex.codecogs.com/png.latex?X_1">. This is the central insight from <span class="citation" data-cites="liu2025adjoint">(<strong>liu2025adjoint?</strong>)</span>: every SB problem can be recast as an SOC problem with a modified terminal cost that absorbs the prior coupling.</p>
+<p>The SB <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%5Cstar"> is also a controlled diffusion (its drift is the base drift plus <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%5E2%20%5Cnabla%20%5Clog%20%5Cvarphi_t">), so it must solve some SOC problem with an appropriate terminal cost. What terminal cost? The SOC optimal joint from the <a href="../../notes/HJB/HJB.html">HJB notes</a> is <img src="https://latex.codecogs.com/png.latex?p%5E%5Cstar(X_0,%20X_1)%20%5Cpropto%20%5Cmathbb%7BP%7D(X_0,%20X_1)%20%5C,%20e%5E%7B-g(X_1)%20+%20V_0(X_0)%7D">, while the SB joint from Equation&nbsp;10 is <img src="https://latex.codecogs.com/png.latex?p%5E%5Cstar(X_0,%20X_1)%20%5Cpropto%20%5Cmathbb%7BP%7D(X_0,%20X_1)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_0(X_0)%20%5C,%20%5Cvarphi_1(X_1)">. The SOC here optimizes both the drift <img src="https://latex.codecogs.com/png.latex?u"> and the initial distribution (the HJB formulation in Equation&nbsp;1 jointly optimizes <img src="https://latex.codecogs.com/png.latex?q_0"> and <img src="https://latex.codecogs.com/png.latex?u">). The SB constraint <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_0%20=%20%5Cmu"> pins the initial distribution, and <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_0"> enters through this constraint. Matching the terminal tilt requires <img src="https://latex.codecogs.com/png.latex?e%5E%7B-g(X_1)%7D%20%5Cpropto%20%5Cvarphi_1(X_1)">. The SB marginal constraint at <img src="https://latex.codecogs.com/png.latex?t%20=%201"> requires <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%20=%20p%5E%5Cmathbb%7BP%7D_1(x)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_1(x)%20%5C,%20%5Cvarphi_1(x)">, giving <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_1(x)%20=%20%5Cpi(x)/(p%5E%5Cmathbb%7BP%7D_1(x)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_1(x))">. Substituting into <img src="https://latex.codecogs.com/png.latex?g%20=%20-%5Clog%20%5Cvarphi_1%20+%20%5Ctext%7Bconst%7D"> identifies the modified terminal cost: <span id="eq-modified-terminal"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bblue%7D%7Bg(x)%20=%20%5Clog%20%5Cfrac%7B%5Cwidehat%7B%5Cvarphi%7D_1(x)%7D%7B%5Cpi(x)%7D%7D%20+%20%5Ctext%7Bconst%7D.%0A%5Ctag%7B11%7D"></span> Compared to the original <img src="https://latex.codecogs.com/png.latex?g%20=%20%5Clog(p%5E%5Cmathbb%7BP%7D_1%20/%20%5Cpi)">, the base marginal <img src="https://latex.codecogs.com/png.latex?p%5E%5Cmathbb%7BP%7D_1"> is replaced by <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7B%5Cwidehat%7B%5Cvarphi%7D_1%7D">: a corrector that accounts for the coupling between <img src="https://latex.codecogs.com/png.latex?X_0"> and <img src="https://latex.codecogs.com/png.latex?X_1">. This is the central insight from <span class="citation" data-cites="liu2025adjoint">(Liu et al. 2025)</span>: every SB problem can be recast as an SOC problem with a modified terminal cost that absorbs the prior coupling.</p>
 <p>Does this corrector actually remove the bias? Marginalize the SB joint over <img src="https://latex.codecogs.com/png.latex?X_0">: <span id="eq-debias"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0Ap%5E%5Cstar(X_1)%0A&amp;%5Cpropto%20%5Cvarphi_1(X_1)%20%5Cint%20%5Cmathbb%7BP%7D(X_1%20%5Cmid%20X_0)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_0(X_0)%20%5C,%20%5Cmu(X_0)%20%5C,%20dX_0%5C%5C%0A&amp;=%20%5Cvarphi_1(X_1)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_1(X_1)%20%5C,%20p%5E%5Cmathbb%7BP%7D_1(X_1)%20=%20%5Cpi(X_1).%0A%5Cend%7Baligned%7D%0A%5Ctag%7B12%7D"></span> The second step uses <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_1(x)%20%5C,%20p%5E%5Cmathbb%7BP%7D_1(x)%20=%20%5Cint%20%5Cmathbb%7BP%7D_%7B1%7C0%7D(x%20%5Cmid%20y)%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_0(y)%20%5C,%20%5Cmu(y)%20%5C,%20dy"> (the definition of <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_1"> combined with Bayes’ rule), and the last step uses the SB marginal constraint <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_1%20%5C,%20%5Cwidehat%7B%5Cvarphi%7D_1%20%5C,%20p%5E%5Cmathbb%7BP%7D_1%20=%20%5Cpi">. This is a consistency check: IF the SB potentials satisfy the Sinkhorn equations, THEN the terminal marginal is <img src="https://latex.codecogs.com/png.latex?%5Cpi">. The existence of potentials satisfying these constraints follows from the Sinkhorn/IPFP theory in the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> (this requires <img src="https://latex.codecogs.com/png.latex?D_%7B%5Ctext%7BKL%7D%7D(%5Cmathbb%7BQ%7D%5C%7C%20%5Cmathbb%7BP%7D)%20%3C%20%5Cinfty"> for some <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> satisfying the marginal constraints; see the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> for conditions). The corrector <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_1"> cancels the initial value function bias exactly. Every SB problem decomposes as: a Doob h-transform (the forward potential <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_t">, which steers trajectories toward the target) plus a corrector (the backward potential <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_t">, which absorbs the prior bias). The adjoint method handles the first piece; we now need a way to learn the second.</p>
 </section>
 <section id="corrector-matching" class="level3">
@@ -462,7 +951,7 @@ The SB joint at times <img src="https://latex.codecogs.com/png.latex?0"> and <im
 <p>Substituting back into Equation&nbsp;15: <span id="eq-cm-tweedie"><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla_x%20%5Clog%5B%5Cwidehat%7B%5Cvarphi%7D_t(x)%20%5C,%20p_t%5E%5Cmathbb%7BP%7D(x)%5D%20=%20%5Cmathbb%7BE%7D_%7Bp%5E%5Cstar%7D%20%7B%5Cleft%5B%20%5Cnabla_x%20%5Clog%20%5Cmathbb%7BP%7D_%7Bt%20%5Cmid%200%7D(x%20%5Cmid%20X_0)%20%5Cmid%20X_t%20=%20x%20%5Cright%5D%7D%20.%0A%5Ctag%7B16%7D"></span> The left side is <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20%5Cwidehat%7B%5Cvarphi%7D_t%20+%20%5Cnabla%20%5Clog%20p_t%5E%5Cmathbb%7BP%7D">, not just <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20%5Cwidehat%7B%5Cvarphi%7D_t">. To isolate the corrector score, subtract <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20p_t%5E%5Cmathbb%7BP%7D">: <img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla%20%5Clog%20%5Cwidehat%7B%5Cvarphi%7D_t(x)%20=%20%5Cmathbb%7BE%7D_%7Bp%5E%5Cstar%7D%20%7B%5Cleft%5B%20%5Cnabla_x%20%5Clog%20%5Cmathbb%7BP%7D_%7Bt%7C0%7D(x%7CX_0)%20%5Cmid%20X_t%20=%20x%20%5Cright%5D%7D%20%20-%20%5Cnabla%20%5Clog%20p_t%5E%5Cmathbb%7BP%7D(x).%0A"> At <img src="https://latex.codecogs.com/png.latex?t%20=%201">, the corrector enters the AM loss Equation&nbsp;13 evaluated at <img src="https://latex.codecogs.com/png.latex?X_1">. The base marginal score <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20p_1%5E%5Cmathbb%7BP%7D"> is known in closed form (it is the score of <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BN%7D(0,%20%5Cnu_1%20I)">, namely <img src="https://latex.codecogs.com/png.latex?-x/%5Cnu_1">). So the corrector score at <img src="https://latex.codecogs.com/png.latex?t=1"> decomposes into a conditional expectation (which we learn by regression) minus a known Gaussian score (which we subtract analytically). Equation&nbsp;16 is a <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">Tweedie-type formula</a>: the score of the product <img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_t%20%5Ccdot%20p_t%5E%5Cmathbb%7BP%7D"> at <img src="https://latex.codecogs.com/png.latex?(t,x)"> is the conditional expectation of the transition score <img src="https://latex.codecogs.com/png.latex?%5Cnabla_x%20%5Clog%20%5Cmathbb%7BP%7D_%7Bt%20%5Cmid%200%7D(x%20%5Cmid%20X_0)"> given <img src="https://latex.codecogs.com/png.latex?X_t%20=%20x">. The structure is identical to the denoising score matching identity: the score of a mixture equals the expected score of the component, averaged over the posterior on the component index.</p>
 <p>Since any conditional expectation minimizes a least-squares loss, Equation&nbsp;16 at <img src="https://latex.codecogs.com/png.latex?t%20=%201"> gives: <span id="eq-cm"><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla%20%5Clog%5B%5Cwidehat%7B%5Cvarphi%7D_1%20%5Ccdot%20p_1%5E%5Cmathbb%7BP%7D%5D%20=%20%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_h%20%5C;%20%5Cmathbb%7BE%7D_%7B(X_0,%20X_1)%20%5Csim%20p%5E%5Cstar_%7B0,1%7D%7D%20%20%7B%5Cleft%5B%20%5Cbig%5C%7Ch(X_1)%20-%20%5Cnabla_%7BX_1%7D%20%5Clog%20%5Cmathbb%7BP%7D(X_1%20%5Cmid%20X_0)%5Cbig%5C%7C%5E2%20%5Cright%5D%7D%20.%0A%5Ctag%7B17%7D"></span> This is the <strong>corrector matching</strong> (CM) loss: regress <img src="https://latex.codecogs.com/png.latex?h"> onto the base transition score at endpoint pairs. In practice, the expectation is over the current model’s endpoint pairs <img src="https://latex.codecogs.com/png.latex?(X_0,%20X_1)%20%5Csim%20p%5E%7Bu%5E%7B(k)%7D%7D_%7B0,1%7D">, not the unknown SB joint <img src="https://latex.codecogs.com/png.latex?p%5E%5Cstar_%7B0,1%7D">. Each CM step finds the best approximation to <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%5B%5Cwidehat%7B%5Cvarphi%7D_1%20%5Ccdot%20p_1%5E%7B%5Cmathbb%7BP%7D%7D%5D"> at the current iterate; alternation converges by the IPFP contraction argument. For the Brownian base, <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(X_1%20%5Cmid%20X_0)%20=%20%5Cmathcal%7BN%7D(X_0,%20(%5Cnu_1%20-%20%5Cnu_0)I)">, and the transition score is just <img src="https://latex.codecogs.com/png.latex?%5Cnabla_%7BX_1%7D%20%5Clog%20%5Cmathbb%7BP%7D(X_1%20%5Cmid%20X_0)%20=%20-(X_1%20-%20X_0)/(%5Cnu_1%20-%20%5Cnu_0)">, known in closed form. The regression target is a Gaussian score evaluated at the endpoints; no energy evaluation needed. The minimizer of Equation&nbsp;17 gives <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%5B%5Cwidehat%7B%5Cvarphi%7D_1%20%5Ccdot%20p_1%5E%5Cmathbb%7BP%7D%5D">; to recover <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20%5Cwidehat%7B%5Cvarphi%7D_1"> we subtract the known base score <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20p_1%5E%5Cmathbb%7BP%7D(x)%20=%20-x/%5Cnu_1">.</p>
 <p>Note the parallel with the AM loss. Both are mean-squared-error regressions. AM regresses the control <img src="https://latex.codecogs.com/png.latex?u"> onto the energy gradient <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20g"> at pairs <img src="https://latex.codecogs.com/png.latex?(X_t,%20X_1)"> from the bridge. CM regresses the corrector <img src="https://latex.codecogs.com/png.latex?h"> onto the transition score at endpoint pairs <img src="https://latex.codecogs.com/png.latex?(X_0,%20X_1)"> from the current process. Both are self-consistent: the expectation is over the model’s own samples. Both have a conditional expectation as their unique fixed point.</p>
-<p>The CM loss Equation&nbsp;17 should not be confused with the bridge matching objectives in data-driven SB methods like <span class="citation" data-cites="de2021diffusion">(<strong>de2021diffusion?</strong>)</span>, where <img src="https://latex.codecogs.com/png.latex?X_1"> must be drawn from the target <img src="https://latex.codecogs.com/png.latex?%5Cpi">. Here, both AM and CM use only on-policy samples from the current control <img src="https://latex.codecogs.com/png.latex?u">. This is what makes the approach scalable: no target samples are needed.</p>
+<p>The CM loss Equation&nbsp;17 should not be confused with the bridge matching objectives in data-driven SB methods like <span class="citation" data-cites="de2021diffusion">(De Bortoli et al. 2021)</span>, where <img src="https://latex.codecogs.com/png.latex?X_1"> must be drawn from the target <img src="https://latex.codecogs.com/png.latex?%5Cpi">. Here, both AM and CM use only on-policy samples from the current control <img src="https://latex.codecogs.com/png.latex?u">. This is what makes the approach scalable: no target samples are needed.</p>
 </section>
 <section id="alternating-am-cm-ipfp" class="level3">
 <h3 class="anchored" data-anchor-id="alternating-am-cm-ipfp">Alternating AM + CM = IPFP</h3>
@@ -472,8 +961,8 @@ The SB joint at times <img src="https://latex.codecogs.com/png.latex?0"> and <im
 <li><strong>CM step:</strong> Solve Equation&nbsp;17 with endpoint pairs from <img src="https://latex.codecogs.com/png.latex?u%5E%7B(k)%7D"> to get <img src="https://latex.codecogs.com/png.latex?%5Ctilde%7Bh%7D%5E%7B(k)%7D%20%5Capprox%20%5Cnabla%20%5Clog%5B%5Cwidehat%7B%5Cvarphi%7D_1%20%5Ccdot%20p_1%5E%5Cmathbb%7BP%7D%5D">, then set <img src="https://latex.codecogs.com/png.latex?h%5E%7B(k)%7D%20=%20%5Ctilde%7Bh%7D%5E%7B(k)%7D%20-%20%5Cnabla%20%5Clog%20p_1%5E%5Cmathbb%7BP%7D"> (subtracting the known base score).</li>
 </ol>
 <p>Initialize with <img src="https://latex.codecogs.com/png.latex?h%5E%7B(0)%7D%20=%200">. The first AM stage uses terminal cost <img src="https://latex.codecogs.com/png.latex?g(x)%20=%20E(x)%20+%20%5Ctext%7Bconst%7D"> (since <img src="https://latex.codecogs.com/png.latex?%5Clog%20%5Cwidehat%7B%5Cvarphi%7D_1%20%5Capprox%200">) and regresses the control onto <img src="https://latex.codecogs.com/png.latex?-%5Csigma_t%20%5Cnabla%20E(X_1)">: pure energy-guided transport with no corrector. This recovers exactly the Adjoint Sampling algorithm, which is the right starting point when no better guess for the corrector is available. The first CM stage then learns <img src="https://latex.codecogs.com/png.latex?h%5E%7B(1)%7D%20%5Capprox%20%5Cnabla%20%5Clog%20%5Cwidehat%7B%5Cvarphi%7D_1"> from the endpoint pairs produced by <img src="https://latex.codecogs.com/png.latex?u%5E%7B(1)%7D">. Subsequent stages progressively refine both the control and the corrector.</p>
-<p>The alternation has a variational interpretation. The AM step solves a forward half-bridge: <img src="https://latex.codecogs.com/png.latex?%5Cmin_%7B%5Cmathbb%7BQ%7D:%20%5Cmathbb%7BQ%7D_0%20=%20%5Cmu%7D%20D_%7B%5Ctext%7BKL%7D%7D(%5Cmathbb%7BQ%7D%5C%7C%20%5Cmathbb%7BQ%7D%5E%7B%5Ctext%7Bbwd%7D%7D)">, where <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%7B%5Ctext%7Bbwd%7D%7D"> is the backward SDE determined by the previous corrector <img src="https://latex.codecogs.com/png.latex?h%5E%7B(k-1)%7D">. The CM step solves a backward half-bridge: <img src="https://latex.codecogs.com/png.latex?%5Cmin_%7B%5Cmathbb%7BQ%7D:%20%5Cmathbb%7BQ%7D_1%20=%20%5Cpi%7D%20D_%7B%5Ctext%7BKL%7D%7D(%5Cmathbb%7BP%7D%5E%7Bu%5E%7B(k)%7D%7D%20%5C%7C%20%5Cmathbb%7BQ%7D)">, updating the corrector to absorb whatever bias remains. Alternating between forward and backward half-bridge projections is exactly <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> on path-space <span class="citation" data-cites="de2021diffusion">(<strong>de2021diffusion?</strong>)</span>.</p>
-<p>Recall from the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> that the static Sinkhorn algorithm alternates between projecting the coupling onto the set <img src="https://latex.codecogs.com/png.latex?%5C%7B%5Cgamma%20:%20%5Cgamma_0%20=%20%5Cnu_0%5C%7D"> and the set <img src="https://latex.codecogs.com/png.latex?%5C%7B%5Cgamma%20:%20%5Cgamma_1%20=%20%5Cnu_1%5C%7D">. Here, we do the same thing on path-space: the forward half-bridge imposes <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_0%20=%20%5Cmu"> but lets <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_1"> float; the backward half-bridge imposes <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_1%20=%20%5Cpi"> but lets <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_0"> float. Each projection is itself a KL minimization over a convex constraint set, so each step reduces the KL to the SB solution. Convergence to <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%5Cstar"> follows from standard IPFP contraction <span class="citation" data-cites="de2021diffusion">(<strong>de2021diffusion?</strong>)</span>, provided each inner optimization is solved exactly (which never holds in practice with finite gradient steps; the practical version uses a few optimization steps per stage). In practice, 3-5 outer stages suffice; each stage consists of many AM or CM gradient steps.</p>
+<p>The alternation has a variational interpretation. The AM step solves a forward half-bridge: <img src="https://latex.codecogs.com/png.latex?%5Cmin_%7B%5Cmathbb%7BQ%7D:%20%5Cmathbb%7BQ%7D_0%20=%20%5Cmu%7D%20D_%7B%5Ctext%7BKL%7D%7D(%5Cmathbb%7BQ%7D%5C%7C%20%5Cmathbb%7BQ%7D%5E%7B%5Ctext%7Bbwd%7D%7D)">, where <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%7B%5Ctext%7Bbwd%7D%7D"> is the backward SDE determined by the previous corrector <img src="https://latex.codecogs.com/png.latex?h%5E%7B(k-1)%7D">. The CM step solves a backward half-bridge: <img src="https://latex.codecogs.com/png.latex?%5Cmin_%7B%5Cmathbb%7BQ%7D:%20%5Cmathbb%7BQ%7D_1%20=%20%5Cpi%7D%20D_%7B%5Ctext%7BKL%7D%7D(%5Cmathbb%7BP%7D%5E%7Bu%5E%7B(k)%7D%7D%20%5C%7C%20%5Cmathbb%7BQ%7D)">, updating the corrector to absorb whatever bias remains. Alternating between forward and backward half-bridge projections is exactly <a href="../../notes/shrodinger_bridge/shrodinger.html">IPFP/Sinkhorn</a> on path-space <span class="citation" data-cites="de2021diffusion">(De Bortoli et al. 2021)</span>.</p>
+<p>Recall from the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB notes</a> that the static Sinkhorn algorithm alternates between projecting the coupling onto the set <img src="https://latex.codecogs.com/png.latex?%5C%7B%5Cgamma%20:%20%5Cgamma_0%20=%20%5Cnu_0%5C%7D"> and the set <img src="https://latex.codecogs.com/png.latex?%5C%7B%5Cgamma%20:%20%5Cgamma_1%20=%20%5Cnu_1%5C%7D">. Here, we do the same thing on path-space: the forward half-bridge imposes <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_0%20=%20%5Cmu"> but lets <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_1"> float; the backward half-bridge imposes <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_1%20=%20%5Cpi"> but lets <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D_0"> float. Each projection is itself a KL minimization over a convex constraint set, so each step reduces the KL to the SB solution. Convergence to <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%5Cstar"> follows from standard IPFP contraction <span class="citation" data-cites="de2021diffusion">(De Bortoli et al. 2021)</span>, provided each inner optimization is solved exactly (which never holds in practice with finite gradient steps; the practical version uses a few optimization steps per stage). In practice, 3-5 outer stages suffice; each stage consists of many AM or CM gradient steps.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 16%">
@@ -491,13 +980,13 @@ The SB joint at times <img src="https://latex.codecogs.com/png.latex?0"> and <im
 </thead>
 <tbody>
 <tr class="odd">
-<td>Adjoint Sampling <span class="citation" data-cites="havens2025adjoint">(<strong>havens2025adjoint?</strong>)</span></td>
+<td>Adjoint Sampling <span class="citation" data-cites="havens2025adjoint">(Havens et al. 2025)</span></td>
 <td><img src="https://latex.codecogs.com/png.latex?%5Cdelta_0"> (memoryless)</td>
 <td><img src="https://latex.codecogs.com/png.latex?%5Clog%20%5Cfrac%7Bp%5E%5Cmathbb%7BP%7D_1(x)%7D%7B%5Cpi(x)%7D"></td>
 <td>None (<img src="https://latex.codecogs.com/png.latex?%5Cwidehat%7B%5Cvarphi%7D_1%20=%20%5Ctext%7Bconst%7D">)</td>
 </tr>
 <tr class="even">
-<td>ASBS <span class="citation" data-cites="liu2025adjoint">(<strong>liu2025adjoint?</strong>)</span></td>
+<td>ASBS <span class="citation" data-cites="liu2025adjoint">(Liu et al. 2025)</span></td>
 <td>Arbitrary <img src="https://latex.codecogs.com/png.latex?%5Cmu"></td>
 <td><img src="https://latex.codecogs.com/png.latex?%5Clog%20%5Cfrac%7B%5Cwidehat%7B%5Cvarphi%7D_1(x)%7D%7B%5Cpi(x)%7D"></td>
 <td>Learned <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20%5Clog%20%5Cwidehat%7B%5Cvarphi%7D_1"></td>
@@ -505,57 +994,32 @@ The SB joint at times <img src="https://latex.codecogs.com/png.latex?0"> and <im
 </tbody>
 </table>
 <p>ASBS reduces to Adjoint Sampling when <img src="https://latex.codecogs.com/png.latex?%5Cmu%20=%20%5Cdelta_0">: the corrector becomes constant and the CM step is trivially solved. A concrete example of a useful non-Dirac prior: for molecular conformer generation, one can use a harmonic oscillator prior <img src="https://latex.codecogs.com/png.latex?%5Cmu(x)%20%5Cpropto%20%5Cexp(-%5Cfrac%7B%5Calpha%7D%7B2%7D%20%5Csum_%7Bi%20%3C%20j%7D%20%5C%7Cx_i%20-%20x_j%20-%20r%5E0_%7Bij%7D%5C%7C%5E2)"> where <img src="https://latex.codecogs.com/png.latex?r%5E0_%7Bij%7D"> are equilibrium bond lengths read from the molecular graph. Particles start in a physically reasonable arrangement rather than at the origin, reducing the transport cost substantially.</p>
-<p>Every piece was already in the earlier notes. The <a href="../../notes/adjoint_method/adjoint.html">adjoint method</a> gives the regression target (<img src="https://latex.codecogs.com/png.latex?%5Cnabla%20g"> is constant along trajectories when <img src="https://latex.codecogs.com/png.latex?b%20=%200">). The <a href="../../notes/doob_transforms/doob.html">Brownian bridge</a> gives cheap training pairs (Gaussian conditioning, one draw per sample). The <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> gives the corrector (endpoint potentials that debias the prior). Adjoint sampling <span class="citation" data-cites="havens2025adjoint">(<strong>havens2025adjoint?</strong>)</span> assembles the first two; ASBS <span class="citation" data-cites="liu2025adjoint">(<strong>liu2025adjoint?</strong>)</span> adds the third. The reader who has followed the series could have assembled this themselves.</p>
+<p>Every piece was already in the earlier notes. The <a href="../../notes/adjoint_method/adjoint.html">adjoint method</a> gives the regression target (<img src="https://latex.codecogs.com/png.latex?%5Cnabla%20g"> is constant along trajectories when <img src="https://latex.codecogs.com/png.latex?b%20=%200">). The <a href="../../notes/doob_transforms/doob.html">Brownian bridge</a> gives cheap training pairs (Gaussian conditioning, one draw per sample). The <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> gives the corrector (endpoint potentials that debias the prior). Adjoint sampling <span class="citation" data-cites="havens2025adjoint">(Havens et al. 2025)</span> assembles the first two; ASBS <span class="citation" data-cites="liu2025adjoint">(Liu et al. 2025)</span> adds the third. The reader who has followed the series could have assembled this themselves.</p>
 <p>The overall picture: sampling from an unnormalized Boltzmann distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi%20%5Cpropto%20e%5E%7B-E%7D"> reduces to solving a stochastic optimal control problem, which reduces to a sequence of mean-squared-error regressions on cheap Gaussian training pairs. The only expensive operation (energy evaluation at terminal samples) is amortized over many gradient updates. With a Dirac prior, a single matching objective suffices. With a non-trivial prior, two alternating objectives (AM + CM) converge to the Schrodinger bridge via IPFP.</p>
 <p>The ideas generalize beyond the <img src="https://latex.codecogs.com/png.latex?b%20=%200"> setting, though the simplifications are less dramatic. With a non-zero base drift (e.g.&nbsp;a pre-trained diffusion model as in the <a href="../../notes/adjoint_samplers_draft/adjoint_matching.html">adjoint matching</a> note), the lean adjoint ODE is no longer trivially constant; it must be solved backward along each trajectory. The reciprocal projection still applies in principle, but the bridge distribution <img src="https://latex.codecogs.com/png.latex?p%5E%5Ctext%7Bbase%7D_%7Bt%20%5Cmid%201%7D"> is no longer a simple Gaussian, and must be approximated (e.g.&nbsp;by linearizing the base drift). The <img src="https://latex.codecogs.com/png.latex?b%20=%200"> case is the sweet spot: everything is closed-form, the adjoint is constant, the bridge is Gaussian, and the only approximation is the neural network parameterization of <img src="https://latex.codecogs.com/png.latex?u">.</p>
-<p>A note on related methods. The RAM loss Equation&nbsp;9 is closely related to the training objectives in PDDS <span class="citation" data-cites="phillips2024particle">(<strong>phillips2024particle?</strong>)</span> and Target Score Matching <span class="citation" data-cites="de2024target">(<strong>de2024target?</strong>)</span>, where the same squared-error expression appears inside the expectation. The difference is in what the expectation is taken over: PDDS and TSM sample <img src="https://latex.codecogs.com/png.latex?X_1"> from the target distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi"> (requiring importance sampling or SMC), while Adjoint Sampling samples <img src="https://latex.codecogs.com/png.latex?X_1"> from the current model <img src="https://latex.codecogs.com/png.latex?p%5E%7B%5Cbar%7Bu%7D%7D_1">. This makes the loss a moving target, which is harder to analyze but far more practical: no target samples needed, no importance weights, no resampling.</p>
-<!-- BibTeX entries to add to ref.bib:
-@article{havens2025adjoint,
-  title={Adjoint Sampling: Highly Scalable Diffusion Samplers via Adjoint Matching},
-  author={Havens, Aaron and Huang, Benjamin and Urain, Julen and Amos, Brandon and Sener, Ozan and Domingo-Enrich, Carles and Peters, Jan and Shalit, Uri and Rish, Irina},
-  journal={ICML 2025},
-  year={2025},
-  url={https://arxiv.org/abs/2504.11713}
-}
-@article{domingoenrich2024adjoint,
-  title={Adjoint Matching: Fine-Tuning Flow and Diffusion Generative Models with Memoryless Stochastic Optimal Control},
-  author={Domingo-Enrich, Carles and Drozdzal, Michal and Liao, Ricky T. Q. and Chen, Ricky T. Q.},
-  journal={arXiv preprint arXiv:2409.15861},
-  year={2024},
-  url={https://arxiv.org/abs/2409.15861}
-}
-@article{phillips2024particle,
-  title={Particle Denoising Diffusion Sampler},
-  author={Phillips, Angus and Wildberger, Jonas and Rector-Brooks, Jarrid and Bengio, Yoshua},
-  journal={ICML 2024},
-  year={2024},
-  url={https://arxiv.org/abs/2402.06320}
-}
-@article{de2024target,
-  title={Target Score Matching},
-  author={De Bortoli, Valentin and Thornton, James and Heng, Jeremy and Doucet, Arnaud},
-  year={2024},
-  url={https://arxiv.org/abs/2402.08667}
-}
-@article{liu2025adjoint,
-  title={Adjoint {S}chr{\"o}dinger Bridge Sampler},
-  author={Liu, Guan-Horng and Chen, Tianrong and Lipman, Yaron and Albergo, Michael S. and Vanden-Eijnden, Eric},
-  year={2025},
-  url={https://arxiv.org/abs/2503.02874}
-}
-@article{de2021diffusion,
-  title={Diffusion {S}chr{\"o}dinger bridge with applications to score-based generative modeling},
-  author={De Bortoli, Valentin and Thornton, James and Heng, Jeremy and Doucet, Arnaud},
-  journal={NeurIPS},
-  year={2021},
-  url={https://arxiv.org/abs/2106.01357}
-}
--->
+<p>A note on related methods. The RAM loss Equation&nbsp;9 is closely related to the training objectives in PDDS <span class="citation" data-cites="phillips2024particle">(Phillips et al. 2024)</span> and Target Score Matching <span class="citation" data-cites="de2024target">(De Bortoli et al. 2024)</span>, where the same squared-error expression appears inside the expectation. The difference is in what the expectation is taken over: PDDS and TSM sample <img src="https://latex.codecogs.com/png.latex?X_1"> from the target distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi"> (requiring importance sampling or SMC), while Adjoint Sampling samples <img src="https://latex.codecogs.com/png.latex?X_1"> from the current model <img src="https://latex.codecogs.com/png.latex?p%5E%7B%5Cbar%7Bu%7D%7D_1">. This makes the loss a moving target, which is harder to analyze but far more practical: no target samples needed, no importance weights, no resampling.</p>
+
 
 
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-de2024target" class="csl-entry">
+De Bortoli, Valentin, Michael Hutchinson, Peter Wirnsberger, and Arnaud Doucet. 2024. <span>“Target Score Matching.”</span> <em>arXiv Preprint arXiv:2402.08667</em>.
+</div>
+<div id="ref-de2021diffusion" class="csl-entry">
+De Bortoli, Valentin, James Thornton, Jeremy Heng, and Arnaud Doucet. 2021. <span>“Diffusion Schrodinger Bridge with Applications to Score-Based Generative Modeling.”</span> <em>Advances in Neural Information Processing Systems</em> 34: 17695–709.
+</div>
+<div id="ref-havens2025adjoint" class="csl-entry">
+Havens, Aaron, Benjamin Kurt Miller, Bing Yan, Carles Domingo-Enrich, Anuroop Sriram, Brandon Wood, Daniel Levine, et al. 2025. <span>“Adjoint Sampling: Highly Scalable Diffusion Samplers via Adjoint Matching.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2504.11713">10.48550/ARXIV.2504.11713</a>.
+</div>
+<div id="ref-liu2025adjoint" class="csl-entry">
+Liu, Guan-Horng, Jaemoo Choi, Yongxin Chen, Benjamin Kurt Miller, and Ricky T. Q. Chen. 2025. <span>“Adjoint Schrödinger Bridge Sampler.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2506.22565">10.48550/ARXIV.2506.22565</a>.
+</div>
+<div id="ref-phillips2024particle" class="csl-entry">
+Phillips, Angus, Hai-Dang Dau, Michael John Hutchinson, Valentin De Bortoli, George Deligiannidis, and Arnaud Doucet. 2024. <span>“Particle Denoising Diffusion Sampler.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2402.06320">10.48550/ARXIV.2402.06320</a>.
+</div>
+</div></section></div> ]]></description>
   <category>SDE</category>
   <category>markov</category>
   <category>sampling</category>
@@ -820,9 +1284,9 @@ Brunick, Gerard, and Steven Shreve. 2013. <span>“Mimicking an Itô Process by 
 <p><span id="eq-marginal-good"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0Ap%5E%5Cstar(X_1)%20&amp;=%20p_1(X_1)%20%5C,%20%5Cexp(r(X_1))%20%5Cint%20p%5E%7B%5Ctext%7Bbase%7D%7D(X_0)%20%5C,%20%5Cexp(-V(0,%20X_0))%20%5C,%20dX_0%5C%5C%0A&amp;%5Cpropto%20p_1(X_1)%20%5C,%20%5Cexp(r(X_1)).%0A%5Cend%7Balign%7D%0A%5Ctag%7B7%7D"></span></p>
 <p>The integral over <img src="https://latex.codecogs.com/png.latex?X_0"> collapses to a constant. The bias disappears.</p>
 <p>A base process Equation&nbsp;1 is <em>memoryless</em> when <img src="https://latex.codecogs.com/png.latex?X_0%20%5Cperp%20X_1">. For the family of generative SDEs that arise in flow matching and diffusion models, this condition pins down <img src="https://latex.codecogs.com/png.latex?%5Csigma_t">.</p>
-<p>The generative SDE Equation&nbsp;1 is built to have the same time marginals as the reference interpolation <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_t%20=%20%5Cbeta_t%20%5Cbar%7BX%7D_0%20+%20%5Calpha_t%20%5Cbar%7BX%7D_1"> with <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_0%20%5Csim%20%5Cmathcal%7BN%7D(0,I)"> independent of <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_1">. Conditionally on <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_1">, this reference has <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_t%20%5Cmid%20%5Cbar%7BX%7D_1%20%5Csim%20%5Cmathcal%7BN%7D(%5Calpha_t%20%5Cbar%7BX%7D_1,%20%5Cbeta_t%5E2%20I)">: the conditional variance is <img src="https://latex.codecogs.com/png.latex?%5Cbeta_t%5E2">, which starts at <img src="https://latex.codecogs.com/png.latex?%5Cbeta_0%5E2%20=%201"> (pure noise) and decays to <img src="https://latex.codecogs.com/png.latex?%5Cbeta_1%5E2%20=%200"> (deterministic). The unified drift from <span class="citation" data-cites="domingoenrich2024adjoint">(<strong>domingoenrich2024adjoint?</strong>)</span> is</p>
+<p>The generative SDE Equation&nbsp;1 is built to have the same time marginals as the reference interpolation <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_t%20=%20%5Cbeta_t%20%5Cbar%7BX%7D_0%20+%20%5Calpha_t%20%5Cbar%7BX%7D_1"> with <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_0%20%5Csim%20%5Cmathcal%7BN%7D(0,I)"> independent of <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_1">. Conditionally on <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_1">, this reference has <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_t%20%5Cmid%20%5Cbar%7BX%7D_1%20%5Csim%20%5Cmathcal%7BN%7D(%5Calpha_t%20%5Cbar%7BX%7D_1,%20%5Cbeta_t%5E2%20I)">: the conditional variance is <img src="https://latex.codecogs.com/png.latex?%5Cbeta_t%5E2">, which starts at <img src="https://latex.codecogs.com/png.latex?%5Cbeta_0%5E2%20=%201"> (pure noise) and decays to <img src="https://latex.codecogs.com/png.latex?%5Cbeta_1%5E2%20=%200"> (deterministic). The unified drift from <span class="citation" data-cites="domingoenrich2024adjoint">(Domingo-Enrich et al. 2024)</span> is</p>
 <p><span id="eq-unified-drift"><img src="https://latex.codecogs.com/png.latex?%0Ab(x,t)%20=%20%5Ckappa_t%20%5C,%20x%20+%20%20%7B%5Cleft(%20%5Ctfrac%7B%5Csigma_t%5E2%7D%7B2%7D%20+%20%5Ceta_t%20%5Cright)%7D%20%20%5Cnabla%20%5Clog%20p_t(x)%0A%5Ctag%7B8%7D"></span></p>
-<p>This drift is constructed so that the SDE has the same time marginals as the reference interpolation; the <img src="https://latex.codecogs.com/png.latex?%5Ckappa_t%20x"> term handles the deterministic scaling and the score term corrects for the noise. Here <img src="https://latex.codecogs.com/png.latex?%5Ckappa_t%20=%20%5Cdot%7B%5Calpha%7D_t%20/%20%5Calpha_t"> and <img src="https://latex.codecogs.com/png.latex?%5Ceta_t%20=%20%5Cbeta_t(%5Cdot%7B%5Calpha%7D_t%20%5Cbeta_t%20/%20%5Calpha_t%20-%20%5Cdot%7B%5Cbeta%7D_t)">. For the SDE to produce independent <img src="https://latex.codecogs.com/png.latex?X_0"> and <img src="https://latex.codecogs.com/png.latex?X_1">, it needs to inject enough noise to erase memory of <img src="https://latex.codecogs.com/png.latex?X_0"> by time 1. The base SDE with drift <img src="https://latex.codecogs.com/png.latex?b"> and diffusion <img src="https://latex.codecogs.com/png.latex?%5Csigma_t"> has the same marginals as <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_t">. For <img src="https://latex.codecogs.com/png.latex?X_0%20%5Cperp%20X_1"> to hold, the noise must be large enough that the SDE “forgets” its initial condition by time 1. The memoryless noise level <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%20=%20%5Csqrt%7B2%5Ceta_t%7D"> is the unique choice that makes the conditional law <img src="https://latex.codecogs.com/png.latex?X_t%20%7C%20X_1"> under the SDE match the reference Gaussian structure <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BN%7D(%5Calpha_t%20X_1,%20%5Cbeta_t%5E2%20I)"> for all <img src="https://latex.codecogs.com/png.latex?t">. The paper (Proposition in Section 12.1 of <span class="citation" data-cites="domingoenrich2024adjoint">(<strong>domingoenrich2024adjoint?</strong>)</span>) proves this by analyzing the time-reversed SDE and showing that the coefficient of <img src="https://latex.codecogs.com/png.latex?X_0"> in the explicit solution vanishes if and only if <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%5E2%20%5Cgeq%202%5Ceta_t">, with <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%5E2%20=%202%5Ceta_t"> being the minimal such choice. This requires</p>
+<p>This drift is constructed so that the SDE has the same time marginals as the reference interpolation; the <img src="https://latex.codecogs.com/png.latex?%5Ckappa_t%20x"> term handles the deterministic scaling and the score term corrects for the noise. Here <img src="https://latex.codecogs.com/png.latex?%5Ckappa_t%20=%20%5Cdot%7B%5Calpha%7D_t%20/%20%5Calpha_t"> and <img src="https://latex.codecogs.com/png.latex?%5Ceta_t%20=%20%5Cbeta_t(%5Cdot%7B%5Calpha%7D_t%20%5Cbeta_t%20/%20%5Calpha_t%20-%20%5Cdot%7B%5Cbeta%7D_t)">. For the SDE to produce independent <img src="https://latex.codecogs.com/png.latex?X_0"> and <img src="https://latex.codecogs.com/png.latex?X_1">, it needs to inject enough noise to erase memory of <img src="https://latex.codecogs.com/png.latex?X_0"> by time 1. The base SDE with drift <img src="https://latex.codecogs.com/png.latex?b"> and diffusion <img src="https://latex.codecogs.com/png.latex?%5Csigma_t"> has the same marginals as <img src="https://latex.codecogs.com/png.latex?%5Cbar%7BX%7D_t">. For <img src="https://latex.codecogs.com/png.latex?X_0%20%5Cperp%20X_1"> to hold, the noise must be large enough that the SDE “forgets” its initial condition by time 1. The memoryless noise level <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%20=%20%5Csqrt%7B2%5Ceta_t%7D"> is the unique choice that makes the conditional law <img src="https://latex.codecogs.com/png.latex?X_t%20%7C%20X_1"> under the SDE match the reference Gaussian structure <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BN%7D(%5Calpha_t%20X_1,%20%5Cbeta_t%5E2%20I)"> for all <img src="https://latex.codecogs.com/png.latex?t">. The paper (Proposition in Section 12.1 of <span class="citation" data-cites="domingoenrich2024adjoint">(Domingo-Enrich et al. 2024)</span>) proves this by analyzing the time-reversed SDE and showing that the coefficient of <img src="https://latex.codecogs.com/png.latex?X_0"> in the explicit solution vanishes if and only if <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%5E2%20%5Cgeq%202%5Ceta_t">, with <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%5E2%20=%202%5Ceta_t"> being the minimal such choice. This requires</p>
 <p><span id="eq-memoryless"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bblue%7D%7B%5Csigma_t%20=%20%5Csqrt%7B2%20%5Ceta_t%7D%7D.%0A%5Ctag%7B9%7D"></span></p>
 <p>Near <img src="https://latex.codecogs.com/png.latex?t=0">, <img src="https://latex.codecogs.com/png.latex?%5Ceta_t%20%5Cto%20%5Cinfty"> so <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%20%5Cto%20%5Cinfty">: the process mixes aggressively, erasing memory of <img src="https://latex.codecogs.com/png.latex?X_0">. Near <img src="https://latex.codecogs.com/png.latex?t=1">, <img src="https://latex.codecogs.com/png.latex?%5Ceta_t%20%5Cto%200"> so <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%20%5Cto%200">: the process stabilizes around <img src="https://latex.codecogs.com/png.latex?X_1">.</p>
 <details>
@@ -884,20 +1348,16 @@ The terms inside the expectation appear in the full adjoint ODE Equation&nbsp;11
 <section id="after-fine-tuning" class="level2">
 <h2 class="anchored" data-anchor-id="after-fine-tuning">After fine-tuning</h2>
 <p>The memoryless schedule <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%20=%20%5Csqrt%7B2%5Ceta_t%7D"> is only used during training. After convergence, the fine-tuned drift can be converted to a velocity field and sampled with any noise schedule, including <img src="https://latex.codecogs.com/png.latex?%5Csigma_t%20=%200"> for deterministic generation.</p>
-<!-- BibTeX entries to add to ref.bib:
-@article{domingoenrich2024adjoint,
-  title={Adjoint Matching: Fine-Tuning Flow and Diffusion Generative Models with Memoryless Stochastic Optimal Control},
-  author={Domingo-Enrich, Carla and Drozdzal, Michal and Karras, Brian and Chen, Ricky T. Q. and Lipman, Yaron},
-  journal={ICML 2025},
-  year={2024},
-  url={https://arxiv.org/abs/2409.08861}
-}
--->
+
 
 
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-domingoenrich2024adjoint" class="csl-entry">
+Domingo-Enrich, Carles, Michal Drozdzal, Brian Karrer, and Ricky T. Q. Chen. 2024. <span>“Adjoint Matching: Fine-Tuning Flow and Diffusion Generative Models with Memoryless Stochastic Optimal Control.”</span> arXiv. doi:<a href="https://doi.org/10.48550/ARXIV.2409.08861">10.48550/ARXIV.2409.08861</a>.
+</div>
+</div></section></div> ]]></description>
   <category>SDE</category>
   <category>markov</category>
   <category>optimal control</category>
@@ -1356,12 +1816,23 @@ with time-dependent scalar $R(t) = \frac{\P(\tau \geq t)}{\P(\tau < t)}$. This m
 </section>
 <section id="conclusion" class="level3">
 <h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
-<p>Discrete diffusion models with one-way masking are mathematically almost identical to masked language models. Hence their similar behavior and performance on text generation tasks are not coincidental. The ideas summarized in these notes were developed in a very interesting stream of papers, including <span class="citation" data-cites="ou2024your">(<strong>ou2024your?</strong>)</span>, <span class="citation" data-cites="sahoo2024simple">(<strong>sahoo2024simple?</strong>)</span>, <span class="citation" data-cites="shi2024simplified">(<strong>shi2024simplified?</strong>)</span> and a number of more recent works. One of the potential drawbacks of such masked discrete diffusion models is that the support of the noising distribution is typically strictly smaller, and indeed often much smaller, than the whole state space. This means that when the denoising model is not perfect and wanders outside the support of the noising distribution, one can quickly end up in regions never seen during training. This can leads to poor sample quality and unstable behavior. Other discrete diffusion models such as the ones reaching the uniform distribution over all tokens at time <img src="https://latex.codecogs.com/png.latex?T"> are not as badly affected by this issue, although they do suffer from other important computational and modeling challenges. Exciting research directions remain to be explored in this area!</p>
+<p>Discrete diffusion models with one-way masking are mathematically almost identical to masked language models. Hence their similar behavior and performance on text generation tasks are not coincidental. The ideas summarized in these notes were developed in a very interesting stream of papers, including <span class="citation" data-cites="ou2024your">(Ou et al. 2024)</span>, <span class="citation" data-cites="sahoo2024simple">(Sahoo et al. 2024)</span>, <span class="citation" data-cites="shi2024simplified">(Shi et al. 2024)</span> and a number of more recent works. One of the potential drawbacks of such masked discrete diffusion models is that the support of the noising distribution is typically strictly smaller, and indeed often much smaller, than the whole state space. This means that when the denoising model is not perfect and wanders outside the support of the noising distribution, one can quickly end up in regions never seen during training. This can leads to poor sample quality and unstable behavior. Other discrete diffusion models such as the ones reaching the uniform distribution over all tokens at time <img src="https://latex.codecogs.com/png.latex?T"> are not as badly affected by this issue, although they do suffer from other important computational and modeling challenges. Exciting research directions remain to be explored in this area!</p>
+
 
 
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-ou2024your" class="csl-entry">
+Ou, Jingyang, Shen Nie, Kaiwen Xue, Fengqi Zhu, Jiacheng Sun, Zhenguo Li, and Chongxuan Li. 2024. <span>“Your Absorbing Discrete Diffusion Secretly Models the Conditional Distributions of Clean Data.”</span> <em>arXiv Preprint arXiv:2406.03736</em>.
+</div>
+<div id="ref-sahoo2024simple" class="csl-entry">
+Sahoo, Subham, Marianne Arriola, Yair Schiff, Aaron Gokaslan, Edgar Marroquin, Justin Chiu, Alexander Rush, and Volodymyr Kuleshov. 2024. <span>“Simple and Effective Masked Diffusion Language Models.”</span> <em>Advances in Neural Information Processing Systems</em> 37: 130136–84.
+</div>
+<div id="ref-shi2024simplified" class="csl-entry">
+Shi, Jiaxin, Kehang Han, Zhe Wang, Arnaud Doucet, and Michalis Titsias. 2024. <span>“Simplified and Generalized Masked Diffusion for Discrete Data.”</span> <em>Advances in Neural Information Processing Systems</em> 37: 103131–67.
+</div>
+</div></section></div> ]]></description>
   <category>DDPM</category>
   <category>score</category>
   <guid>https://alexxthiery.github.io/notes/adjoint_samplers_draft/DiscreteDiff.html</guid>
@@ -1493,7 +1964,7 @@ Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. 
 <p><span id="eq-entropic-ot"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cgamma%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20d(x_0,x_1)%20%5C,%20%5Cgamma(x_0,x_1)%20%20%5Ctextcolor%7Bblue%7D%7B%5C;%20-%20%5C;%20%5Cvarepsilon%5C,%20%5Cmathrm%7BH%7D(%5Cgamma)%7D%0A%5Ctag%7B2%7D"></span></p>
 <p>where <img src="https://latex.codecogs.com/png.latex?%5Cmathrm%7BH%7D(%5Cgamma)%20=%20-%20%5Csum_%7Bx_0,x_1%7D%20%5Cgamma(x_0,x_1)%20%5Clog%20%5Cgamma(x_0,x_1)"> is the <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">entropy</a> of the coupling <img src="https://latex.codecogs.com/png.latex?%5Cgamma">. Note that since the marginals of <img src="https://latex.codecogs.com/png.latex?%5Cgamma"> are fixed, it is also equivalent (up to constants) to replacing the entropy term by the <a href="https://en.wikipedia.org/wiki/Kullback–Leibler_divergence">Kullback-Leibler</a> divergence to the independent coupling <img src="https://latex.codecogs.com/png.latex?%5Cnu_0(x_0)%20%5Cotimes%20%5Cnu_1(x_1)">,</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7B%5Cgamma%20%5Cin%20%5CPi(%5Cnu_0,%20%5Cnu_1)%7D%20%5C;%20%5Csum_%7Bx_0,x_1%7D%20d(x_0,x_1)%20%5C,%20%5Cgamma(x_0,x_1)%20%20%5Ctextcolor%7Bblue%7D%7B%5C;%20+%20%5C;%20%5Cvarepsilon%5C,%20D_%7B%5Ctext%7BKL%7D%7D(%5Cgamma%20%5Cmid%20%5Cnu_0%20%5Cotimes%20%5Cnu_1)%7D.%0A"></p>
-<p>Writing the <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange dual</a> formulation of the problem Equation&nbsp;2 provides fast algorithms to solve it such as the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">iterative proportional fitting</a> procedure (IPFP), also known as the Sinkhorn-Knopp algorithm in the optimal transport literature <span class="citation" data-cites="cuturi2013sinkhorn">(<strong>cuturi2013sinkhorn?</strong>)</span>. Importantly, it also almost immediately shows that the optimal coupling has a very simple form,</p>
+<p>Writing the <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">Lagrange dual</a> formulation of the problem Equation&nbsp;2 provides fast algorithms to solve it such as the <a href="https://en.wikipedia.org/wiki/Iterative_proportional_fitting">iterative proportional fitting</a> procedure (IPFP), also known as the Sinkhorn-Knopp algorithm in the optimal transport literature <span class="citation" data-cites="cuturi2013sinkhorn">(Cuturi 2013)</span>. Importantly, it also almost immediately shows that the optimal coupling has a very simple form,</p>
 <p><span id="eq-schrodinger-solution"><img src="https://latex.codecogs.com/png.latex?%0A%5Cgamma(x_0,x_1)%20=%20f(x_0)%20%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%20%5C,%20g(x_1).%0A%5Ctag%7B3%7D"></span></p>
 <p>These potentials must satisfy the marginal constraints, equivalently the <strong>Schrödinger/Sinkhorn scaling equations</strong>:</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0A%5Cnu_0(x_0)%20&amp;=%20%5Csum_%7Bx_1%7D%20f(x_0)%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%5C,%20g(x_1),%5C%5C%0A%5Cnu_1(x_1)%20&amp;=%20%5Csum_%7Bx_0%7D%20f(x_0)%5C,%20%5Cmu_%7B%5Cmathrm%7Bref%7D%7D(x_0,x_1)%5C,%20g(x_1).%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
@@ -1533,12 +2004,29 @@ The Lagrangian of the constrained convex optimization Equation&nbsp;1 reads: <im
 <p><strong>Discrete-Time Markov Chains:</strong></p>
 <p>It is often useful to state the Schrödinger bridge dynamics in a discrete setting. Let the reference process be a Markov chain <img src="https://latex.codecogs.com/png.latex?X_0,%20%5Cldots,%20X_T"> with one-step kernels <img src="https://latex.codecogs.com/png.latex?M_k(x,dy)">, i.e. <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BP%7D%5E%7B%5Ctext%7Bref%7D%7D(X_%7Bk+1%7D%5Cin%20dy%5Cmid%20X_k=x)=M_k(x,dy).%0A"> Let <img src="https://latex.codecogs.com/png.latex?g"> be the terminal potential at time <img src="https://latex.codecogs.com/png.latex?T"> and define the backward (harmonic) potentials defined by <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_T%20%5Cequiv%20g"> and recursively as: <img src="https://latex.codecogs.com/png.latex?%0A%5Cvarphi_k(x)%20=%20%5Cint%20M_k(x,dy)%5C,%5Cvarphi_%7Bk+1%7D(y).%0A"></p>
 <p>Then the Schrödinger bridge <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D%5E%5Cstar"> is Markov and its <strong>forward transition kernels</strong> are given by the discrete Doob <img src="https://latex.codecogs.com/png.latex?h">-transform: <img src="https://latex.codecogs.com/png.latex?%0A%5Cmathbb%7BQ%7D%5E%5Cstar(X_%7Bk+1%7D%5Cin%20dy%5Cmid%20X_k=x)%0A=%5Cfrac%7BM_k(x,dy)%5C,%5Cvarphi_%7Bk+1%7D(y)%7D%7B%5Cvarphi_k(x)%7D.%0A"> This is the discrete-time counterpart of the continuous-time drift correction <img src="https://latex.codecogs.com/png.latex?b_t%20%5Cmapsto%20b_t%20+%20%5Csigma%5Csigma%5E%5Ctop%5Cnabla%5Clog%5Cvarphi_t(%5Ccdot)">.</p>
-<p>In general, Schrödinger bridge problems are difficult problems since the endpoint potentials <img src="https://latex.codecogs.com/png.latex?f"> and <img src="https://latex.codecogs.com/png.latex?g"> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">(<strong>shi2023diffusion?</strong>)</span>; <span class="citation" data-cites="de2021diffusion">(<strong>de2021diffusion?</strong>)</span>; <span class="citation" data-cites="vargas2021solving">(<strong>vargas2021solving?</strong>)</span>; <span class="citation" data-cites="chen2021likelihood">(<strong>chen2021likelihood?</strong>)</span>.</p>
+<p>In general, Schrödinger bridge problems are difficult problems since the endpoint potentials <img src="https://latex.codecogs.com/png.latex?f"> and <img src="https://latex.codecogs.com/png.latex?g"> need to be found such that the marginal constraints are satisfied. These recent years have seen the development of many numerical methods to solve this problem approximately, especially in the machine learning community, eg: <span class="citation" data-cites="shi2023diffusion">(Shi et al. 2023)</span>; <span class="citation" data-cites="de2021diffusion">(De Bortoli et al. 2021)</span>; <span class="citation" data-cites="vargas2021solving">(Vargas et al. 2021)</span>; <span class="citation" data-cites="chen2021likelihood">(Chen, Liu, and Theodorou 2021)</span>.</p>
+
 
 
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-chen2021likelihood" class="csl-entry">
+Chen, Tianrong, Guan-Horng Liu, and Evangelos A Theodorou. 2021. <span>“Likelihood Training of Schrodinger Bridge Using Forward-Backward Sdes Theory.”</span> <em>arXiv Preprint arXiv:2110.11291</em>.
+</div>
+<div id="ref-cuturi2013sinkhorn" class="csl-entry">
+Cuturi, Marco. 2013. <span>“Sinkhorn Distances: Lightspeed Computation of Optimal Transport.”</span> <em>Advances in Neural Information Processing Systems</em> 26.
+</div>
+<div id="ref-de2021diffusion" class="csl-entry">
+De Bortoli, Valentin, James Thornton, Jeremy Heng, and Arnaud Doucet. 2021. <span>“Diffusion Schrodinger Bridge with Applications to Score-Based Generative Modeling.”</span> <em>Advances in Neural Information Processing Systems</em> 34: 17695–709.
+</div>
+<div id="ref-shi2023diffusion" class="csl-entry">
+Shi, Yuyang, Valentin De Bortoli, Andrew Campbell, and Arnaud Doucet. 2023. <span>“Diffusion Schrodinger Bridge Matching.”</span> <em>Advances in Neural Information Processing Systems</em> 36: 62183–223.
+</div>
+<div id="ref-vargas2021solving" class="csl-entry">
+Vargas, Francisco, Pierre Thodoroff, Austen Lamacraft, and Neil Lawrence. 2021. <span>“Solving Schrodinger Bridges via Maximum Likelihood.”</span> <em>Entropy</em> 23 (9). MDPI: 1134.
+</div>
+</div></section></div> ]]></description>
   <category>SDE</category>
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/adjoint_samplers_draft/shrodinger.html</guid>
@@ -1909,7 +2397,7 @@ Pontryagin, Lev Semenovich. 1962. <em>Mathematical Theory of Optimal Processes</
 <p><span id="eq-adjoint-ode"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Bcases%7D%0A%5Cdot%7B%5Clambda%7D(t)%20=%20-%5Cnabla_x%20f%20-%20b_x%5E%5Ctop%20%5Clambda(t),%20%5C%5C%0A%5Clambda(T)%20=%20%5Cnabla_x%20g.%0A%5Cend%7Bcases%7D%0A%5Ctag%7B5%7D"></span></p>
 <p>This is a linear ODE with a terminal condition <img src="https://latex.codecogs.com/png.latex?%5Clambda(T)%20=%20%5Cnabla_x%20g"> that needs to be solved backward in time. This means that for computing the derivative of <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D">, one can first solve the forward ODE Equation&nbsp;4 to obtain <img src="https://latex.codecogs.com/png.latex?x(t)">, and then solve the adjoint system Equation&nbsp;5 backward in time to obtain <img src="https://latex.codecogs.com/png.latex?%5Clambda(t)">. The Jacobian (i.e.&nbsp;transpose of the gradient) of <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> is then given by</p>
 <p><span id="eq-gradient-ode"><img src="https://latex.codecogs.com/png.latex?%0AD_%5Ctheta%20%5Cmathcal%7BL%7D%0A=%20%5Cint_0%5ET%20%5Cleft(%20f_%5Ctheta%20+%20%5Clambda%5E%5Ctop%20b_%5Ctheta%20%5Cright)%20dt%20+%20g_%5Ctheta(%5Ctheta,%20x(T))%20+%20%5Clambda%5E%5Ctop(0)%20%5Cmu_%5Ctheta.%0A%5Ctag%7B6%7D"></span></p>
-<p>The term <img src="https://latex.codecogs.com/png.latex?%5Clambda%5E%5Ctop%20b_%5Ctheta"> is a vector jacobian product, and can be computed efficiently. This formulation is often referred to as the “continuous adjoint method” or “adjoint sensitivity analysis” or “optimize-then-discretize” and dates back to the work of <span class="citation" data-cites="pontryagin2018mathematical">(<strong>pontryagin2018mathematical?</strong>)</span>. A naive implementation of <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> can be inefficient memory-wise since quantities such as <img src="https://latex.codecogs.com/png.latex?f_%5Ctheta"> would typically be stored along the forward pass. When <img src="https://latex.codecogs.com/png.latex?d_%5Ctheta%20%5Cgg%201">, as is for example the case when the drift is parameterized by a neural network, this can be impractical. Instead, it may be more efficient to store the forward trajectory <img src="https://latex.codecogs.com/png.latex?x(t)"> only, and recompute all the other quantities during the backward pass; there is a slight computational cost but potentially very large memory savings. In machine-learning settings, this often means the possibility to exploit much larger batch sizes. Similarly, if implicit methods are used to solve the ODE instead of a simple <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler-Maruyama</a> scheme, backpropagation through the implicit solver can be tricky.</p>
+<p>The term <img src="https://latex.codecogs.com/png.latex?%5Clambda%5E%5Ctop%20b_%5Ctheta"> is a vector jacobian product, and can be computed efficiently. This formulation is often referred to as the “continuous adjoint method” or “adjoint sensitivity analysis” or “optimize-then-discretize” and dates back to the work of <span class="citation" data-cites="pontryagin2018mathematical">(Pontryagin 2018)</span>. A naive implementation of <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> can be inefficient memory-wise since quantities such as <img src="https://latex.codecogs.com/png.latex?f_%5Ctheta"> would typically be stored along the forward pass. When <img src="https://latex.codecogs.com/png.latex?d_%5Ctheta%20%5Cgg%201">, as is for example the case when the drift is parameterized by a neural network, this can be impractical. Instead, it may be more efficient to store the forward trajectory <img src="https://latex.codecogs.com/png.latex?x(t)"> only, and recompute all the other quantities during the backward pass; there is a slight computational cost but potentially very large memory savings. In machine-learning settings, this often means the possibility to exploit much larger batch sizes. Similarly, if implicit methods are used to solve the ODE instead of a simple <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler-Maruyama</a> scheme, backpropagation through the implicit solver can be tricky.</p>
 <p>Nothing really changes when considering a <a href="https://en.wikipedia.org/wiki/Stochastic_differential_equation">SDE</a> with additive noise instead,</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0Adx%20=%20b(t,%20%5Ctheta,%20x)%20%5C,%20dt%20+%20%5Csigma(t)%20%5C,%20dW_t.%0A"></p>
 <p>Informally, one can apply the same reasoning as previously to the controlled ODE: <img src="https://latex.codecogs.com/png.latex?%0A%5Cdot%7Bx%7D%20%5C,%20=%20%5C,%20b(t,%20%5Ctheta,%20x)%20+%20%5Csigma(t)%20%5C,%20dW_t/dt.%0A"></p>
@@ -1917,10 +2405,15 @@ Pontryagin, Lev Semenovich. 1962. <em>Mathematical Theory of Optimal Processes</
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Clambda(t)%20=%20%5Cnabla_%7Bx(t)%7D%20%5C,%20%20%7B%5Cleft%5C%7B%20%20%5Cint_t%5ET%20f(s,%20%5Ctheta,%20x(s))%20%5C,%20ds%20+%20g(%5Ctheta,%20x(T))%20%5Cright%5C%7D%7D%20.%0A"></p>
 
 
+
 </section>
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-pontryagin2018mathematical" class="csl-entry">
+Pontryagin, L. S. 2018. <em>Mathematical Theory of Optimal Processes</em>. Routledge. doi:<a href="https://doi.org/10.1201/9780203749319">10.1201/9780203749319</a>.
+</div>
+</div></section></div> ]]></description>
   <category>ODE</category>
   <category>PDE</category>
   <category>Adjoint</category>
@@ -2102,97 +2595,6 @@ Rosenbluth, Marshall N, and Arianna W Rosenbluth. 1955. <span>“Monte Carlo Cal
   <category>monte-carlo</category>
   <guid>https://alexxthiery.github.io/notes/SAW/SAW.html</guid>
   <pubDate>Fri, 04 Apr 2025 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Jarzynski and Crooks</title>
-  <link>https://alexxthiery.github.io/notes/jarzynski/jarzynski.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/jarzynski/jarzynski_crooks.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption><a href="https://en.wikipedia.org/wiki/Christopher_Jarzynski">Christopher Jarzynski</a> and <a href="https://en.wikipedia.org/wiki/Gavin_E._Crooks">Gavin Crooks</a></figcaption>
-</figure>
-</div>
-</div>
-<p>Consider a sequence of densities on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED"> indexed by time parameter <img src="https://latex.codecogs.com/png.latex?t%20%5Cin%20%5B0,T%5D">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cpi_t(x)%20%5C;%20=%20%5C;%20%5Cfrac%7B%20e%5E%7B-U_t(x)%7D%7D%7BZ_t%7D%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?U_t:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D"> is time-dependent potential function and <img src="https://latex.codecogs.com/png.latex?Z_t"> is the normalizing constant. We are in fact really interested in studying the final density <img src="https://latex.codecogs.com/png.latex?%5Cpi_T"> and the bridging sequence of densities <img src="https://latex.codecogs.com/png.latex?%5Cpi_t"> is just a tool to get there, starting from an initial and tractable density <img src="https://latex.codecogs.com/png.latex?%5Cpi_0">. If one initializes a particle <img src="https://latex.codecogs.com/png.latex?X_0%20%5Csim%20%5Cpi_0"> and evolves it according to the <a href="https://en.wikipedia.org/wiki/Langevin_equation">Langevin</a> dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX_t%20%5C;%20=%20%5C;%20-%5Cnabla%20U_t(X_t)%20%5C,%20dt%20+%20%5Csqrt%7B2%7D%20%5C,%20dW_t%0A"></p>
-<p>one can hope that the distribution of <img src="https://latex.codecogs.com/png.latex?X_T"> will be close to <img src="https://latex.codecogs.com/png.latex?%5Cpi_T">. This would be the case if one evolved the particle according <img src="https://latex.codecogs.com/png.latex?dX_t%20%5C;%20=%20%5C;%20-%5Cgamma%20%5Cnabla%20U_t(X_t)%20%5C,%20dt%20+%20%5Csqrt%7B2%20%5Cgamma%7D%20%5C,%20dW_t"> and let <img src="https://latex.codecogs.com/png.latex?%5Cgamma%20%5Cto%20%5Cinfty"> since in that case <img src="https://latex.codecogs.com/png.latex?X_t"> would be distributed according to <img src="https://latex.codecogs.com/png.latex?%5Cpi_t"> for all <img src="https://latex.codecogs.com/png.latex?t">. Can one correct the distribution of <img src="https://latex.codecogs.com/png.latex?X_T"> with importance sampling weights?</p>
-<p>I like the approach presented in <span class="citation" data-cites="vargas2023transport">(Vargas et al. 2024)</span> and these notes are my attempt to understand it. One very fruitful idea that has been used in a number of works in the Monte-Carlo literature is to look at a probability distribution of interest as the marginal of a joint distribution and to carry out computations and build numerical methods on the joint distribution <span class="citation" data-cites="del2006sequential">(Del Moral, Doucet, and Jasra 2006)</span>. Indeed, there is a lot of flexibility in the choice of the joint distribution.</p>
-<p>Here, we can also consider the diffusion process <img src="https://latex.codecogs.com/png.latex?Y_T"> that runs backward in times and that is initialized according to <img src="https://latex.codecogs.com/png.latex?%5Cpi_T"> and follows the same Langevin dynamics (backward in time). Again, one expects the distribution of <img src="https://latex.codecogs.com/png.latex?Y_t"> to be close to <img src="https://latex.codecogs.com/png.latex?%5Cpi_t">. It is more intuitive to discuss discretized version of the process. For a time discretization <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20=%20T/N">, we consider the forward Markov chain <img src="https://latex.codecogs.com/png.latex?X_t"> defined as:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0Ax_%7Bt%20+%20%5Cdelta%7D%20&amp;=%20x_t%20-%20%5Cnabla%20U_t(x_t)%20%5C,%20%5Cdelta%20+%20%5Csqrt%7B2%20%5Cdelta%7D%20%5C,%20%5Cxi_t%5C%5C%0Ax_0%20&amp;%5Csim%20%5Cpi_0%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
-<p>as well as the backward Markov chain <img src="https://latex.codecogs.com/png.latex?Y_t"> defined as <img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0Ay_%7Bt%7D%20&amp;=%20y_%7Bt%20+%20%5Cdelta%7D%20-%20%5Cnabla%20U_%7Bt%20+%20%5Cdelta%7D(y_%7Bt%20+%20%5Cdelta%7D)%20%5C,%20%5Cdelta%20+%20%5Csqrt%7B2%20%5Cdelta%7D%20%5C,%20%5Cxi_t%5C%5C%0Ay_T%20&amp;%5Csim%20%5Cpi_T.%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
-<p>The quantities <img src="https://latex.codecogs.com/png.latex?%5Cxi_t%20%5Csim%20%5Cmathcal%7BN%7D(0,I)"> are i.i.d. standard Gaussian random variables. Let us continue with these discretized versions and denote by <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5E%7BX%7D"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5E%7BY%7D"> the probability measures associated with the discretized processes. For a discretized path <img src="https://latex.codecogs.com/png.latex?%5Cunderline%7Bz%7D%20=%20(z_0,%20z_%7B%5Cdelta%7D,%20%5Cldots,%20z_%7BT%7D)"> and notation <img src="https://latex.codecogs.com/png.latex?t_k%20=%20k%20%5Cdelta">, we have:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Cmathbb%7BP%7D%5EX(%5Cunderline%7Bz%7D)%20&amp;=%0A%5Cpi_0(z_0)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20-%5Cfrac%7B1%7D%7B4%20%5Cdelta%7D%20%5Csum_%7Bk=0%7D%5E%7BN-1%7D%20%5C%7Cz_%7Bt_%7Bk+1%7D%7D%20-%20%5Bz_%7Bt_k%7D%20-%20%5Cnabla%20U_%7Bt_k%7D(z_%7Bt_k%7D)%5C,%5Cdelta%5D%5C%7C%5E2%20%5Cright%5C%7D%7D%20%5C%5C%0A%5Cmathbb%7BP%7D%5EY(%5Cunderline%7Bz%7D)%20&amp;=%0A%5Cpi_T(z_T)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20-%5Cfrac%7B1%7D%7B4%20%5Cdelta%7D%20%5Csum_%7Bk=0%7D%5E%7BN-1%7D%20%5C%7Cz_%7Bt_%7Bk%7D%7D%20-%20%5Bz_%7Bt_%7Bk+1%7D%7D%20-%20%5Cnabla%20U_%7Bt_%7Bk+1%7D%7D(z_%7Bt_%7Bk+1%7D%7D)%5C,%5Cdelta%5D%5C%7C%5E2%20%5Cright%5C%7D%7D%20.%0A%5Cend%7Baligned%7D%0A"></p>
-<p>One can compute the ratio <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D%5EY(z)%20/%20%5Cmathbb%7BP%7D%5EX(z)"> and examine its limit as <img src="https://latex.codecogs.com/png.latex?N%20%5Cto%20%5Cinfty">. Algebra gives:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7B%5Cmathbb%7BP%7D%5EY%7D%7B%5Cmathbb%7BP%7D%5EX%7D(%5Cunderline%7Bz%7D)%20=%0A%5Cfrac%7B%5Cpi_T(z_T)%7D%7B%5Cpi_0(z_0)%7D%20%5C,%0A%5Cexp%20%7B%5Cleft%5C%7B%20%5Csum_%7Bk=0%7D%5E%7BN-1%7D%20%5Cleft%3C%20z_%7Bt_%7Bk+1%7D%7D%20-%20z_%7Bt_k%7D,%20%5Cfrac%7B%5Cnabla%20U_%7Bt_k%7D(z_%7Bt_k%7D)%20+%20%5Cnabla%20U_%7Bt_%7Bk+1%7D%7D(z_%7Bt_%7Bk+1%7D%7D)%7D%7B2%7D%20%20%5Cright%3E%20%5Cright%5C%7D%7D%20%20%20+%20%5Cmathcal%7BO%7D(%5Cdelta%5E%7B1/2%7D).%0A"></p>
-<p>One could probably use some <a href="https://en.wikipedia.org/wiki/Stratonovich_integral">Stratonovich</a> calculus to study this, but I always forget these things, so let’s use Ito instead. Write</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Cfrac%7B%5Cnabla%20U_%7Bt_k%7D(z_%7Bt_k%7D)%20+%20%5Cnabla%20U_%7Bt_%7Bk+1%7D%7D(z_%7Bt_%7Bk+1%7D%7D)%7D%7B2%7D%0A=%0A%5Cnabla%20U_%7Bt_k%7D(z_%7Bt_k%7D)%20+%20%5Cfrac%7B1%7D%7B2%7D%20%5Cmathrm%7BHess%7D_%7BU_%7Bt_%7Bk%7D%7D%7D%20(z_%7Bt_%7Bk%7D%7D)%20(z_%7Bt_%7Bk+1%7D%7D%20-%20z_%7Bt_k%7D)%0A+%0A%5Cmathcal%7BO%7D(%5Cdelta).%0A"></p>
-<p>Consequently, in the limit <img src="https://latex.codecogs.com/png.latex?N%20%5Cto%20%5Cinfty">, the quantity converges to:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%5Cmathbb%7BP%7D%5EY%7D%7Bd%5Cmathbb%7BP%7D%5EX%7D(%5Cunderline%7Bz%7D)%20%5C;%20=%20%5C;%0A%5Cfrac%7B%5Cpi_T(z_T)%7D%7B%5Cpi_0(z_0)%7D%20%5C,%0A%5Cexp%20%7B%5Cleft%5C%7B%20%20%5Cint_%7Bt=0%7D%5ET%20%5Cnabla%20U_t(z_t)%20%5C,%20dz_t%0A+%0A%5Cfrac%7B1%7D%7B2%7D%20%5Cint_0%5ET%20%5Cleft%3C%20dz_t,%20%5Cmathrm%7BHess%7D_%7BU_t%7D(z_t)%20%5C,%20dz_t%20%5Cright%3E%0A%5Cright%5C%7D%7D%20.%0A"></p>
-<p>One can obtain a slightly simpler formuler using Ito’s lemma. Since <img src="https://latex.codecogs.com/png.latex?d%20U_t(z_t)%20=%20%5Cpartial_t%20U_t(z_T)%20%5C,%20dt%20+%20%5Cleft%3C%20%5Cnabla%20U_t(z_t),%20dz_t%20%5Cright%3E%20+%20%5Cfrac%7B1%7D%7B2%7D%20%5Cleft%3C%20dz_t,%20%5Cmathrm%7BHess%7D_%7BU_t%7D(z_t)%20%5C,%20dz_t%20%5Cright%3E">, we also have:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%20%5Cmathbb%7BP%7D%5EY%7D%7Bd%20%5Cmathbb%7BP%7D%5EX%7D(%5Cunderline%7Bz%7D)%0A=%0A%5Cfrac%7B%5Cpi_T(z_T)%7D%7B%5Cpi_0(z_0)%7D%20%5C,%0A%5Cexp%20%7B%5Cleft%5C%7B%20%20U_T(z_T)%20-%20U_0(z_0)%20-%20%5Cint_0%5ET%20%5Cpartial_t%20U_t(z_t)%20%5C,%20dt%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>Since <img src="https://latex.codecogs.com/png.latex?%5Cpi_t(z_t)%20=%20%5Cexp(-U_t(z_t))%20/%20Z_t">, this gives the <a href="https://en.wikipedia.org/wiki/Crooks_fluctuation_theorem">Crooks relation</a>:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%20%5Cmathbb%7BP%7D%5EY%7D%7Bd%20%5Cmathbb%7BP%7D%5EX%7D(%5Cunderline%7Bz%7D)%0A=%0A%5Cfrac%7BZ_0%7D%7BZ_T%7D%20%5C,%0A%5Cexp%20%7B%5Cleft%5C%7B%20%20-%20%5Cint_0%5ET%20%5Cpartial_t%20U_t(z_t)%20%5C,%20dt%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>Integrating over trajectories of <img src="https://latex.codecogs.com/png.latex?X_t">, since <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D_%7BX%7D%5B(d%20%5Cmathbb%7BP%7D%5EY%20/%20d%20%5Cmathbb%7BP%7D%5EX)(X)%5D%20=%201">, one obtains the <a href="https://en.wikipedia.org/wiki/Jarzynski_equality">Jarzynski equality</a> <img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7BZ_T%7D%7BZ_0%7D%20%5C;%20=%20%5C;%20%5Cmathbb%7BE%7D_%7BX%7D%20%20%7B%5Cleft%5B%20%20%5Cexp%20%7B%5Cleft%5C%7B%20%20-%20%5Cint_0%5ET%20%5Cpartial_t%20U_t(X_t)%20%5C,%20dt%20%5Cright%5C%7D%7D%20%20%5Cright%5D%7D%0A"></p>
-<p>which is indeed also central to sequential Monte-Carlo methods. As described in <span class="citation" data-cites="vargas2023transport">(Vargas et al. 2024)</span>, the same approach can be used to slightly generalize the Crooks relation. Indeed, suppose that one instead consider the dynamics:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX_t%20%5C;%20=%20%5C;%20-%5Cnabla%20U_t(X_t)%20%5C,%20dt%20%20%5Ctextcolor%7Bblue%7D%7B+%20b_t(X_t)%20%5C,%20dt%7D%20+%20%5Csqrt%7B2%7D%20%5C,%20dW_t%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?b:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5ED"> is a control function. One can consider the backward dynamics <img src="https://latex.codecogs.com/png.latex?Y_t"> that is initialized according to <img src="https://latex.codecogs.com/png.latex?%5Cpi_T"> and follows the dynamics <img src="https://latex.codecogs.com/png.latex?dY_t%20=%20-%5Cnabla%20U_t(Y_t)%20%5C,%20dt%20%20%5Ctextcolor%7Bred%7D%7B-%7D%20b(Y_t)%20%5C,%20dt%20+%20%5Csqrt%7B2%7D%20%5C,%20dW_t"> backward in time, i.e.</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0Ax_%7Bt%20+%20%5Cdelta%7D%20&amp;=%20x_t%20-%20%5Cnabla%20U_t(x_t)%20%5C,%20%5Cdelta%20+%20b_t(x_t)%20%5C,%20%5Cdelta%20+%20%5Csqrt%7B2%20%5Cdelta%7D%20%5C,%20%5Cxi_t%5C%5C%0Ay_%7Bt%7D%20&amp;=%20y_%7Bt%20+%20%5Cdelta%7D%20-%20%5Cnabla%20U_%7Bt%20+%20%5Cdelta%7D(y_%7Bt%20+%20%5Cdelta%7D)%20%5C,%20%5Cdelta%20%20%5Ctextcolor%7Bred%7D%7B-%7D%20b_%7Bt%20+%20%5Cdelta%7D(y_%7Bt%20+%20%5Cdelta%7D)%20%5C,%20%5Cdelta%20+%20%5Csqrt%7B2%20%5Cdelta%7D%20%5C,%20%5Cxi_t.%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
-<p>The minus sign for the backward dynamics <img src="https://latex.codecogs.com/png.latex?Y_t"> is natural. Indeed, one would like the dynamics of <img src="https://latex.codecogs.com/png.latex?Y_t"> to be as close as possible to the time-reversal of the dynamics of <img src="https://latex.codecogs.com/png.latex?X_t">. Furthermore, one knows that the <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">backward dynamics</a> of <img src="https://latex.codecogs.com/png.latex?X_t"> is given by</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdY_t%20=%20%20%5Ctextcolor%7Bred%7D%7B+%7D%20%5Cnabla%20U_t(Y_t)%20%5C,%20dt%20%20%5Ctextcolor%7Bred%7D%7B-%7D%20b_t(Y_t)%20%5C,%20dt%20+%202%20%5Cnabla%20%5Clog%20p_t(Y_t)%20%5C,%20dt%20+%20%5Csqrt%7B2%7D%20%5C,%20dW_t%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?p_t"> is the marginal distribution of <img src="https://latex.codecogs.com/png.latex?X_t"> at time <img src="https://latex.codecogs.com/png.latex?t">. Since we would like <img src="https://latex.codecogs.com/png.latex?p_t%20=%20%5Cpi_t%20=%20%5Cexp(-U_t)%20/%20Z_t">, in that case this gives</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdY_t%20=%20-%5Cnabla%20U_t(Y_t)%20%5C,%20dt%20%20%5Ctextcolor%7Bred%7D%7B-%7D%20b_t(Y_t)%20%5C,%20dt%20+%20%5Csqrt%7B2%7D%20%5C,%20dW_t,%0A"></p>
-<p>which is exactly the dynamics we chose for <img src="https://latex.codecogs.com/png.latex?Y_t">.One can then follow the exact same steps as done previously, using that the quadratic variation is <img src="https://latex.codecogs.com/png.latex?%5Cleft%3C%20dz_t,%20dz_t%20%5Cright%3E%20=%202%20%5C,%20dt">, to obtain that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%20%5Cmathbb%7BP%7D%5EY%7D%7Bd%20%5Cmathbb%7BP%7D%5EX%7D(%5Cunderline%7Bz%7D)%0A=%0A%5Cfrac%7BZ_0%7D%7BZ_T%7D%20%5C,%0A%5Cexp%20%7B%5Cleft%5C%7B%20%20%5Cint_0%5ET%20-%5Cpartial_t%20U_t(z_t)%20%20%5Ctextcolor%7Bblue%7D%7B+%20%5Cnabla%20%5Ccdot%20b_t(z_t)%20-%20%5Cleft%3C%20%5Cnabla%20U_t(z_t),%20b_t(z_t)%20%5Cright%3E%7D%20%5C,%20dt%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>This for example shows that, for <img src="https://latex.codecogs.com/png.latex?dX_t%20%5C;%20=%20%5C;%20-%5Cnabla%20U_t(X_t)%20%5C,%20dt%20%20%5Ctextcolor%7Bblue%7D%7B+%20b_t(X_t)%20%5C,%20dt%7D%20+%20%5Csqrt%7B2%7D%20%5C,%20dW_t"> initialized according to <img src="https://latex.codecogs.com/png.latex?%5Cpi_0">, we have:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7BZ_T%7D%7BZ_0%7D%20%5C;%20=%20%5C;%20%5Cmathbb%7BE%7D_%7BX%7D%20%20%7B%5Cleft%5C%7B%20%20%5Cexp%20%7B%5Cleft%5C%7B%20%20%5Cint_0%5ET%20-%5Cpartial_t%20U_t(X_t)%20%20%5Ctextcolor%7Bblue%7D%7B+%20%5Cnabla%20%5Ccdot%20b_t(X_t)%20-%20%5Cleft%3C%20%5Cnabla%20U_t(X_t),%20b_t(X_t)%20%5Cright%3E%7D%20%5C,%20dt%20%5Cright%5C%7D%7D%20%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>This generalization of the Crooks relation is also explored in <span class="citation" data-cites="albergo2024nets">(Albergo and Vanden-Eijnden 2024)</span> where an alternative derivation by directly exploiting the <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation. Crucially, <span class="citation" data-cites="albergo2024nets">(Albergo and Vanden-Eijnden 2024)</span> note that, if the control function <img src="https://latex.codecogs.com/png.latex?b_t:%20%5Cmathbb%7BR%7D%5ED%20%5Cto%20%5Cmathbb%7BR%7D%5ED"> is chosen so that</p>
-<p><span id="eq-nets"><img src="https://latex.codecogs.com/png.latex?%0A-%5Cpartial_t%20U_t(x)%20+%20%5Cnabla%20%5Ccdot%20b_t(x)%20-%20%5Cleft%3C%20%5Cnabla%20U_t(x),%20b_t(x)%20%5Cright%3E%0A=%0A%5Cfrac%7Bd%7D%7Bdt%7D%20%5C,%20%5Clog%20Z_t%0A%5Ctag%7B1%7D"></span></p>
-<p>then the term <img src="https://latex.codecogs.com/png.latex?%5Cint_0%5ET%20-%5Cpartial_t%20U_t(X_t)%20+%20%5Cnabla%20%5Ccdot%20b_t(X_t)%20-%20%5Cleft%3C%20%5Cnabla%20U_t(X_t),%20b_t(X_t)%20%5Cright%3E%20%5C,%20dt"> is indeed constant, which gives a zero-variance estimator of the free energy difference <img src="https://latex.codecogs.com/png.latex?%5Clog(Z_T/Z_0)">. Indeed, it is a formidable challenge to solve the high-dimensional PDE Equation&nbsp;1 and <span class="citation" data-cites="albergo2024nets">(Albergo and Vanden-Eijnden 2024)</span> propose interesting <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks">PINNs</a>-based methods to do so.</p>
-<section id="some-references" class="level3">
-<h3 class="anchored" data-anchor-id="some-references">Some References:</h3>
-<ul>
-<li>The original papers by Jarzynski <span class="citation" data-cites="jarzynski1997nonequilibrium">(Jarzynski 1997)</span> and Crooks <span class="citation" data-cites="crooks1999entropy">(Crooks 1999)</span>.</li>
-<li>The book <span class="citation" data-cites="stoltz2010free">(Stoltz, Rousset, et al. 2010)</span> is excellent!</li>
-<li>The two papers that prompted these notes: <span class="citation" data-cites="vargas2023transport">(Vargas et al. 2024)</span> and <span class="citation" data-cites="albergo2024nets">(Albergo and Vanden-Eijnden 2024)</span>.</li>
-</ul>
-
-
-
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
-<div id="ref-albergo2024nets" class="csl-entry">
-Albergo, Michael S, and Eric Vanden-Eijnden. 2024. <span>“Nets: A Non-Equilibrium Transport Sampler.”</span> <em>arXiv Preprint arXiv:2410.02711</em>.
-</div>
-<div id="ref-crooks1999entropy" class="csl-entry">
-Crooks, Gavin E. 1999. <span>“Entropy Production Fluctuation Theorem and the Nonequilibrium Work Relation for Free Energy Differences.”</span> <em>Physical Review E</em> 60 (3). APS: 2721.
-</div>
-<div id="ref-del2006sequential" class="csl-entry">
-Del Moral, Pierre, Arnaud Doucet, and Ajay Jasra. 2006. <span>“Sequential Monte Carlo Samplers.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 68 (3). Oxford University Press: 411–36.
-</div>
-<div id="ref-jarzynski1997nonequilibrium" class="csl-entry">
-Jarzynski, Christopher. 1997. <span>“Nonequilibrium Equality for Free Energy Differences.”</span> <em>Physical Review Letters</em> 78 (14). APS: 2690.
-</div>
-<div id="ref-stoltz2010free" class="csl-entry">
-Stoltz, Gabriel, Mathias Rousset, et al. 2010. <em>Free Energy Computations: A Mathematical Perspective</em>. World Scientific.
-</div>
-<div id="ref-vargas2023transport" class="csl-entry">
-Vargas, Francisco, Shreyas Padhy, Denis Blessing, and Nikolas Nüsken. 2024. <span>“Transport Meets Variational Inference: Controlled Monte Carlo Diffusions.”</span> <em>ICLR 2024</em>.
-</div>
-</div></section></div> ]]></description>
-  <category>SDE</category>
-  <category>markov</category>
-  <guid>https://alexxthiery.github.io/notes/jarzynski/jarzynski.html</guid>
-  <pubDate>Fri, 21 Feb 2025 16:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

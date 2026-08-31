@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -225,7 +245,7 @@ window.Quarto = {
 <p>where <span class="math inline">\(\mathbf{n}\sim \mathcal{N}(0,1)\)</span> represents a noise term independent from <span class="math inline">\(X_{t}\)</span>, and <span class="math inline">\(\delta \ll 1\)</span> is a time increment. Re-arranging terms and making the approximation <span class="math inline">\(\mu(X_t) \approx \mu(X_{t+\delta})\)</span> gives that</p>
 <p><span id="eq-rev-euler-wrong"><span class="math display">\[X_{t} \approx X_{t+\delta} - \mu(X_{t+\delta})\, \delta + \sigma \, \sqrt{\delta} \, (-\mathbf{n}). \tag{2}\]</span></span></p>
 <p>This seems to suggest that the time-reversed process follows the dynamics <span class="math inline">\(d\overleftarrow{X} = -\mu(\overleftarrow{X}) \, dt + \sigma \, dW\)</span> started from <span class="math inline">\(\overleftarrow{X}_0 \sim p_T(dx)\)</span>. However, this conclusion is incorrect because this would suggest that the time-reversed of a standard Brownian motion (where <span class="math inline">\(\mu(x) \equiv 0\)</span>) starting at zero is also a Brownian motion starting at <span class="math inline">\(p_T(dx) = \mathcal{N}(0,T)\)</span>, which is clearly not the case. The flaw in this argument lies in assuming that the noise term <span class="math inline">\(Z\)</span> is independent of <span class="math inline">\(X_{t+\delta}\)</span>, which is not true, rendering the Euler discretization argument invalid.</p>
-<p>Deriving the dynamics of the backward process in a rigorous manner is not straightforward <span class="citation" data-cites="anderson1982reverse">(<a href="#ref-anderson1982reverse" role="doc-biblioref"><strong>anderson1982reverse?</strong></a>)</span> <span class="citation" data-cites="haussmann1986time">(<a href="#ref-haussmann1986time" role="doc-biblioref"><strong>haussmann1986time?</strong></a>)</span>. What follows is a heuristic derivation that proceeds by estimating the mean and variance of <span class="math inline">\(X_{t}\)</span> given <span class="math inline">\(X_{t+\delta} = x_{t+\delta}\)</span>, assuming <span class="math inline">\(\delta \ll 1\)</span>. Here, <span class="math inline">\(x_{t+\delta}\)</span> is treated as a fixed and constant value, and we are only interested in the conditional distribution of <span class="math inline">\(X_t\)</span> given <span class="math inline">\(x_{t+\delta}\)</span>. Bayes’ law gives</p>
+<p>Deriving the dynamics of the backward process in a rigorous manner is not straightforward <span class="citation" data-cites="anderson1982reverse">(<a href="#ref-anderson1982reverse" role="doc-biblioref">Anderson 1982</a>)</span> <span class="citation" data-cites="haussmann1986time">(<a href="#ref-haussmann1986time" role="doc-biblioref">Haussmann and Pardoux 1986</a>)</span>. What follows is a heuristic derivation that proceeds by estimating the mean and variance of <span class="math inline">\(X_{t}\)</span> given <span class="math inline">\(X_{t+\delta} = x_{t+\delta}\)</span>, assuming <span class="math inline">\(\delta \ll 1\)</span>. Here, <span class="math inline">\(x_{t+\delta}\)</span> is treated as a fixed and constant value, and we are only interested in the conditional distribution of <span class="math inline">\(X_t\)</span> given <span class="math inline">\(x_{t+\delta}\)</span>. Bayes’ law gives</p>
 <p><span class="math display">\[\mathbb{P}(X_t \in dx | x_{t+\delta}) \propto p_t(x) \, \exp\left\{ -\frac{\left( x_{t+\delta} - [x + \mu(x) \, \delta] \right)^2}{2 \sigma^2 \, \delta} \right\},\]</span></p>
 <p>where the exponential term corresponds to the transition of the forward diffusion for <span class="math inline">\(\delta \ll 1\)</span>. Using the 1st order approximation</p>
 <p><span class="math display">\[p_t(x) \approx p_t(x_{t+\delta}) \,\exp\left( \langle \nabla \log p_t(x_{t+\delta}), (x-x_{t+\delta})\rangle\right),\]</span></p>
@@ -254,7 +274,7 @@ dX_t = \tfrac{\sigma^2}{2} \, \nabla \log \pi_t(X_t) \, dt  \textcolor{blue}{+ c
 <p><span class="math display">\[
 d\overleftarrow{X}_t =  \tfrac{\sigma^2}{2} \, \nabla \log \pi_{T-t}(\overleftarrow{X}_t) \, dt  \textcolor{red}{- c_{T-t}(\overleftarrow{X}_t)} \, dt + \sigma \, dB.
 \]</span></p>
-<p>A discussion on how his relates to a generalizations of the <a href="https://en.wikipedia.org/wiki/Crooks_fluctuation_theorem">Crooks fluctuation theorem</a> can be found in this other <a href="../../notes/jarzynski/jarzynski.html">note</a>. The popular “denoising diffusion models” <span class="citation" data-cites="ho2020denoising">(<a href="#ref-ho2020denoising" role="doc-biblioref"><strong>ho2020denoising?</strong></a>)</span> can be seen as discretizations of the backward process <a href="#eq-rev-diffusion" class="quarto-xref">Equation&nbsp;3</a>, employing various techniques to estimate the additional drift term from data.</p>
+<p>A discussion on how his relates to a generalizations of the <a href="https://en.wikipedia.org/wiki/Crooks_fluctuation_theorem">Crooks fluctuation theorem</a> can be found in this other <a href="../../notes/jarzynski/jarzynski.html">note</a>. The popular “denoising diffusion models” <span class="citation" data-cites="ho2020denoising">(<a href="#ref-ho2020denoising" role="doc-biblioref">Ho, Jain, and Abbeel 2020</a>)</span> can be seen as discretizations of the backward process <a href="#eq-rev-diffusion" class="quarto-xref">Equation&nbsp;3</a>, employing various techniques to estimate the additional drift term from data.</p>
 </section>
 <section id="denoising-score-matching-tweedie-formula" class="level2">
 <h2 class="anchored" data-anchor-id="denoising-score-matching-tweedie-formula">Denoising Score Matching &amp; Tweedie formula</h2>
@@ -277,7 +297,7 @@ d\overleftarrow{X}_t =  \tfrac{\sigma^2}{2} \, \nabla \log \pi_{T-t}(\overleftar
 <p><span id="eq-rev-tweedie"><span class="math display">\[
 \mathbb{E}[X_0 \, | X_{\delta} = y] \; { \color{\red} \approx} \; y + \nabla \log p_{\delta}(y) \, \sigma^2 \delta.
 \tag{4}\]</span></span></p>
-<p>Maybe surprisingly, in the case of Brownian dynamics (no drift), this relationship holds exactly, even for arbitrarily large time increments <span class="math inline">\(\delta&gt;0\)</span>. This observation attributed in <span class="citation" data-cites="efron2011tweedie">(<a href="#ref-efron2011tweedie" role="doc-biblioref"><strong>efron2011tweedie?</strong></a>)</span> to <a href="https://en.wikipedia.org/wiki/Maurice_Tweedie">Maurice Tweedie (1919–1996)</a> has a straightforward proof. Specifically, if <span class="math inline">\(X \sim p_0(dx)\)</span>, then <span class="math inline">\(Y = X + \mathcal{N}(0, \Gamma^2)\)</span> has a density given by:</p>
+<p>Maybe surprisingly, in the case of Brownian dynamics (no drift), this relationship holds exactly, even for arbitrarily large time increments <span class="math inline">\(\delta&gt;0\)</span>. This observation attributed in <span class="citation" data-cites="efron2011tweedie">(<a href="#ref-efron2011tweedie" role="doc-biblioref">Efron 2011</a>)</span> to <a href="https://en.wikipedia.org/wiki/Maurice_Tweedie">Maurice Tweedie (1919–1996)</a> has a straightforward proof. Specifically, if <span class="math inline">\(X \sim p_0(dx)\)</span>, then <span class="math inline">\(Y = X + \mathcal{N}(0, \Gamma^2)\)</span> has a density given by:</p>
 <p><span class="math display">\[
 p_Y(dy) = \int p_0(x) \, \rho_{\Gamma}(y-x) \, dx
 \]</span></p>
@@ -297,7 +317,7 @@ p_Y(dy) = \int p_0(x) \, \rho_{\Gamma}(y-x) \, dx
 <p><span class="math display">\[
 \mathbb{E}[X \, | Y = y] \; {\color{red} =} \; y + \Gamma^2 \, \nabla \log p_Y(y),
 \]</span></p>
-<p>which is exactly the same as <a href="#eq-rev-tweedie" class="quarto-xref">Equation&nbsp;4</a> but with an equality sign: no approximation needed! Interestingly, this is what Machine-Learners often refer to as “denoising score matching” <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref"><strong>vincent2011connection?</strong></a>)</span>: if we have access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, where <span class="math inline">\(X_i \sim p_0(dx)\)</span> and <span class="math inline">\(Y_i = X_i + \mathcal{N}(0, \Gamma^2)\)</span>, and fit a regression model <span class="math inline">\(F_{\theta}\)</span> by minimizing the mean-squared error <span class="math inline">\(\theta \mapsto \mathbb{E} \|X - F_{\theta}(Y)\|^2\)</span>, then Tweedie formula shows that in the limit of infinite samples and with sufficient flexibility in the regression model <span class="math inline">\(F_{\theta_\star}(y) = y + \Gamma^2 \nabla \log p_Y(y)\)</span>. This allows one to estimate <span class="math inline">\(\nabla \log p_Y\)</span> from data, which is often a good approximation of <span class="math inline">\(\nabla \log p_0\)</span> if the variance <span class="math inline">\(\Gamma^2\)</span> of the added noise is not too large. Indeed, things can go bad if <span class="math inline">\(\Gamma^2 \ll 1\)</span> and the number of training data is not large enough, no free lunch!</p>
+<p>which is exactly the same as <a href="#eq-rev-tweedie" class="quarto-xref">Equation&nbsp;4</a> but with an equality sign: no approximation needed! Interestingly, this is what Machine-Learners often refer to as “denoising score matching” <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref">Vincent 2011</a>)</span>: if we have access to a large number of samples <span class="math inline">\((X_i,Y_i)\)</span>, where <span class="math inline">\(X_i \sim p_0(dx)\)</span> and <span class="math inline">\(Y_i = X_i + \mathcal{N}(0, \Gamma^2)\)</span>, and fit a regression model <span class="math inline">\(F_{\theta}\)</span> by minimizing the mean-squared error <span class="math inline">\(\theta \mapsto \mathbb{E} \|X - F_{\theta}(Y)\|^2\)</span>, then Tweedie formula shows that in the limit of infinite samples and with sufficient flexibility in the regression model <span class="math inline">\(F_{\theta_\star}(y) = y + \Gamma^2 \nabla \log p_Y(y)\)</span>. This allows one to estimate <span class="math inline">\(\nabla \log p_Y\)</span> from data, which is often a good approximation of <span class="math inline">\(\nabla \log p_0\)</span> if the variance <span class="math inline">\(\Gamma^2\)</span> of the added noise is not too large. Indeed, things can go bad if <span class="math inline">\(\Gamma^2 \ll 1\)</span> and the number of training data is not large enough, no free lunch!</p>
 <section id="generalizations-of-tweedies-formula" class="level3">
 <h3 class="anchored" data-anchor-id="generalizations-of-tweedies-formula">Generalizations of Tweedie’s formula</h3>
 <p>Tweedie’s formula can be slightly generalized, which can be useful in practice. Suppose one would like to estimate the score <span class="math inline">\(\nabla_y \log p_Y(y)\)</span> of the marginal distribution <span class="math inline">\(p_y(y) = \int_{\mathcal{X}} p_{(X,Y)}(x,y) \, dx\)</span>. Since <span class="math inline">\(\mathbb{E}[\nabla_y \log p_{X|Y}(X) | Y=y] = 0\)</span>, we have that</p>
@@ -313,7 +333,7 @@ p_Y(dy) = \int p_0(x) \, \rho_{\Gamma}(y-x) \, dx
 <p><span class="math display">\[
 Y = \alpha X + Z
 \]</span></p>
-<p>for additive noise <span class="math inline">\(Z \sim p_Z(dz)\)</span> independent of <span class="math inline">\(X\)</span>. Then, <span class="citation" data-cites="de2024target">(<a href="#ref-de2024target" role="doc-biblioref"><strong>de2024target?</strong></a>)</span> shows that</p>
+<p>for additive noise <span class="math inline">\(Z \sim p_Z(dz)\)</span> independent of <span class="math inline">\(X\)</span>. Then, <span class="citation" data-cites="de2024target">(<a href="#ref-de2024target" role="doc-biblioref">De Bortoli et al. 2024</a>)</span> shows that</p>
 <p><span class="math display">\[
 \nabla_y \log p_Y(y) = \alpha^{-1} \, \times \, \mathbb{E}[\nabla_x \log p_X(X) | Y=y].
 \]</span></p>
@@ -323,10 +343,30 @@ Y = \alpha X + Z
 \]</span></p>
 
 
+
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-anderson1982reverse" class="csl-entry" role="listitem">
+Anderson, Brian DO. 1982. <span>“Reverse-Time Diffusion Equation Models.”</span> <em>Stochastic Processes and Their Applications</em> 12 (3): 313–26.
+</div>
+<div id="ref-de2024target" class="csl-entry" role="listitem">
+De Bortoli, Valentin, Michael Hutchinson, Peter Wirnsberger, and Arnaud Doucet. 2024. <span>“Target Score Matching.”</span> <em>arXiv Preprint arXiv:2402.08667</em>.
+</div>
+<div id="ref-efron2011tweedie" class="csl-entry" role="listitem">
+Efron, Bradley. 2011. <span>“Tweedie’s Formula and Selection Bias.”</span> <em>Journal of the American Statistical Association</em> 106 (496): 1602–14.
+</div>
+<div id="ref-haussmann1986time" class="csl-entry" role="listitem">
+Haussmann, Ulrich G, and Etienne Pardoux. 1986. <span>“Time Reversal of Diffusions.”</span> <em>The Annals of Probability</em>, 1188–1205.
+</div>
+<div id="ref-ho2020denoising" class="csl-entry" role="listitem">
+Ho, Jonathan, Ajay Jain, and Pieter Abbeel. 2020. <span>“Denoising Diffusion Probabilistic Models.”</span> <em>Advances in Neural Information Processing Systems</em> 33: 6840–51.
+</div>
+<div id="ref-vincent2011connection" class="csl-entry" role="listitem">
+Vincent, Pascal. 2011. <span>“A Connection Between Score Matching and Denoising Autoencoders.”</span> <em>Neural Computation</em> 23 (7): 1661–74.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

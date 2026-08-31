@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -222,7 +242,7 @@ window.Quarto = {
 dX_t \; = \; -\nabla U_t(X_t) \, dt + \sqrt{2} \, dW_t
 \]</span></p>
 <p>one can hope that the distribution of <span class="math inline">\(X_T\)</span> will be close to <span class="math inline">\(\pi_T\)</span>. This would be the case if one evolved the particle according <span class="math inline">\(dX_t \; = \; -\gamma \nabla U_t(X_t) \, dt + \sqrt{2 \gamma} \, dW_t\)</span> and let <span class="math inline">\(\gamma \to \infty\)</span> since in that case <span class="math inline">\(X_t\)</span> would be distributed according to <span class="math inline">\(\pi_t\)</span> for all <span class="math inline">\(t\)</span>. Can one correct the distribution of <span class="math inline">\(X_T\)</span> with importance sampling weights?</p>
-<p>I like the approach presented in <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref"><strong>vargas2023transport?</strong></a>)</span> and these notes are my attempt to understand it. One very fruitful idea that has been used in a number of works in the Monte-Carlo literature is to look at a probability distribution of interest as the marginal of a joint distribution and to carry out computations and build numerical methods on the joint distribution <span class="citation" data-cites="del2006sequential">(<a href="#ref-del2006sequential" role="doc-biblioref"><strong>del2006sequential?</strong></a>)</span>. Indeed, there is a lot of flexibility in the choice of the joint distribution.</p>
+<p>I like the approach presented in <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref">Vargas et al. 2024</a>)</span> and these notes are my attempt to understand it. One very fruitful idea that has been used in a number of works in the Monte-Carlo literature is to look at a probability distribution of interest as the marginal of a joint distribution and to carry out computations and build numerical methods on the joint distribution <span class="citation" data-cites="del2006sequential">(<a href="#ref-del2006sequential" role="doc-biblioref">Del Moral, Doucet, and Jasra 2006</a>)</span>. Indeed, there is a lot of flexibility in the choice of the joint distribution.</p>
 <p>Here, we can also consider the diffusion process <span class="math inline">\(Y_T\)</span> that runs backward in times and that is initialized according to <span class="math inline">\(\pi_T\)</span> and follows the same Langevin dynamics (backward in time). Again, one expects the distribution of <span class="math inline">\(Y_t\)</span> to be close to <span class="math inline">\(\pi_t\)</span>. It is more intuitive to discuss discretized version of the process. For a time discretization <span class="math inline">\(\delta = T/N\)</span>, we consider the forward Markov chain <span class="math inline">\(X_t\)</span> defined as:</p>
 <p><span class="math display">\[
 \left\{
@@ -288,7 +308,7 @@ y_T &amp;\sim \pi_T.
 <p>Integrating over trajectories of <span class="math inline">\(X_t\)</span>, since <span class="math inline">\(\mathbb{E}_{X}[(d \mathbb{P}^Y / d \mathbb{P}^X)(X)] = 1\)</span>, one obtains the <a href="https://en.wikipedia.org/wiki/Jarzynski_equality">Jarzynski equality</a> <span class="math display">\[
 \frac{Z_T}{Z_0} \; = \; \mathbb{E}_{X}  {\left[  \exp {\left\{  - \int_0^T \partial_t U_t(X_t) \, dt \right\}}  \right]}
 \]</span></p>
-<p>which is indeed also central to sequential Monte-Carlo methods. As described in <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref"><strong>vargas2023transport?</strong></a>)</span>, the same approach can be used to slightly generalize the Crooks relation. Indeed, suppose that one instead consider the dynamics:</p>
+<p>which is indeed also central to sequential Monte-Carlo methods. As described in <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref">Vargas et al. 2024</a>)</span>, the same approach can be used to slightly generalize the Crooks relation. Indeed, suppose that one instead consider the dynamics:</p>
 <p><span class="math display">\[
 dX_t \; = \; -\nabla U_t(X_t) \, dt  \textcolor{blue}{+ b_t(X_t) \, dt} + \sqrt{2} \, dW_t
 \]</span></p>
@@ -320,25 +340,45 @@ dY_t = -\nabla U_t(Y_t) \, dt  \textcolor{red}{-} b_t(Y_t) \, dt + \sqrt{2} \, d
 <p><span class="math display">\[
 \frac{Z_T}{Z_0} \; = \; \mathbb{E}_{X}  {\left\{  \exp {\left\{  \int_0^T -\partial_t U_t(X_t)  \textcolor{blue}{+ \nabla \cdot b_t(X_t) - \left&lt; \nabla U_t(X_t), b_t(X_t) \right&gt;} \, dt \right\}}  \right\}} .
 \]</span></p>
-<p>This generalization of the Crooks relation is also explored in <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref"><strong>albergo2024nets?</strong></a>)</span> where an alternative derivation by directly exploiting the <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation. Crucially, <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref"><strong>albergo2024nets?</strong></a>)</span> note that, if the control function <span class="math inline">\(b_t: \mathbb{R}^D \to \mathbb{R}^D\)</span> is chosen so that</p>
+<p>This generalization of the Crooks relation is also explored in <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref">Albergo and Vanden-Eijnden 2024</a>)</span> where an alternative derivation by directly exploiting the <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation. Crucially, <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref">Albergo and Vanden-Eijnden 2024</a>)</span> note that, if the control function <span class="math inline">\(b_t: \mathbb{R}^D \to \mathbb{R}^D\)</span> is chosen so that</p>
 <p><span id="eq-nets"><span class="math display">\[
 -\partial_t U_t(x) + \nabla \cdot b_t(x) - \left&lt; \nabla U_t(x), b_t(x) \right&gt;
 =
 \frac{d}{dt} \, \log Z_t
 \tag{1}\]</span></span></p>
-<p>then the term <span class="math inline">\(\int_0^T -\partial_t U_t(X_t) + \nabla \cdot b_t(X_t) - \left&lt; \nabla U_t(X_t), b_t(X_t) \right&gt; \, dt\)</span> is indeed constant, which gives a zero-variance estimator of the free energy difference <span class="math inline">\(\log(Z_T/Z_0)\)</span>. Indeed, it is a formidable challenge to solve the high-dimensional PDE <a href="#eq-nets" class="quarto-xref">Equation&nbsp;1</a> and <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref"><strong>albergo2024nets?</strong></a>)</span> propose interesting <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks">PINNs</a>-based methods to do so.</p>
+<p>then the term <span class="math inline">\(\int_0^T -\partial_t U_t(X_t) + \nabla \cdot b_t(X_t) - \left&lt; \nabla U_t(X_t), b_t(X_t) \right&gt; \, dt\)</span> is indeed constant, which gives a zero-variance estimator of the free energy difference <span class="math inline">\(\log(Z_T/Z_0)\)</span>. Indeed, it is a formidable challenge to solve the high-dimensional PDE <a href="#eq-nets" class="quarto-xref">Equation&nbsp;1</a> and <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref">Albergo and Vanden-Eijnden 2024</a>)</span> propose interesting <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks">PINNs</a>-based methods to do so.</p>
 <section id="some-references" class="level3">
 <h3 class="anchored" data-anchor-id="some-references">Some References:</h3>
 <ul>
-<li>The original papers by Jarzynski <span class="citation" data-cites="jarzynski1997nonequilibrium">(<a href="#ref-jarzynski1997nonequilibrium" role="doc-biblioref"><strong>jarzynski1997nonequilibrium?</strong></a>)</span> and Crooks <span class="citation" data-cites="crooks1999entropy">(<a href="#ref-crooks1999entropy" role="doc-biblioref"><strong>crooks1999entropy?</strong></a>)</span>.</li>
-<li>The book <span class="citation" data-cites="stoltz2010free">(<a href="#ref-stoltz2010free" role="doc-biblioref"><strong>stoltz2010free?</strong></a>)</span> is excellent!</li>
-<li>The two papers that prompted these notes: <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref"><strong>vargas2023transport?</strong></a>)</span> and <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref"><strong>albergo2024nets?</strong></a>)</span>.</li>
+<li>The original papers by Jarzynski <span class="citation" data-cites="jarzynski1997nonequilibrium">(<a href="#ref-jarzynski1997nonequilibrium" role="doc-biblioref">Jarzynski 1997</a>)</span> and Crooks <span class="citation" data-cites="crooks1999entropy">(<a href="#ref-crooks1999entropy" role="doc-biblioref">Crooks 1999</a>)</span>.</li>
+<li>The book <span class="citation" data-cites="stoltz2010free">(<a href="#ref-stoltz2010free" role="doc-biblioref">Stoltz, Rousset, et al. 2010</a>)</span> is excellent!</li>
+<li>The two papers that prompted these notes: <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref">Vargas et al. 2024</a>)</span> and <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref">Albergo and Vanden-Eijnden 2024</a>)</span>.</li>
 </ul>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-albergo2024nets" class="csl-entry" role="listitem">
+Albergo, Michael S, and Eric Vanden-Eijnden. 2024. <span>“Nets: A Non-Equilibrium Transport Sampler.”</span> <em>arXiv Preprint arXiv:2410.02711</em>.
+</div>
+<div id="ref-crooks1999entropy" class="csl-entry" role="listitem">
+Crooks, Gavin E. 1999. <span>“Entropy Production Fluctuation Theorem and the Nonequilibrium Work Relation for Free Energy Differences.”</span> <em>Physical Review E</em> 60 (3). APS: 2721.
+</div>
+<div id="ref-del2006sequential" class="csl-entry" role="listitem">
+Del Moral, Pierre, Arnaud Doucet, and Ajay Jasra. 2006. <span>“Sequential Monte Carlo Samplers.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 68 (3). Oxford University Press: 411–36.
+</div>
+<div id="ref-jarzynski1997nonequilibrium" class="csl-entry" role="listitem">
+Jarzynski, Christopher. 1997. <span>“Nonequilibrium Equality for Free Energy Differences.”</span> <em>Physical Review Letters</em> 78 (14). APS: 2690.
+</div>
+<div id="ref-stoltz2010free" class="csl-entry" role="listitem">
+Stoltz, Gabriel, Mathias Rousset, et al. 2010. <em>Free Energy Computations: A Mathematical Perspective</em>. World Scientific.
+</div>
+<div id="ref-vargas2023transport" class="csl-entry" role="listitem">
+Vargas, Francisco, Shreyas Padhy, Denis Blessing, and Nikolas Nüsken. 2024. <span>“Transport Meets Variational Inference: Controlled Monte Carlo Diffusions.”</span> <em>ICLR 2024</em>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

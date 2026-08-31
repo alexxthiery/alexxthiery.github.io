@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Notes – Alexandre Thiéry</title>
+<title>citation_plan – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,22 +20,57 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../data/dice.png" rel="icon" type="image/png">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../../data/dice.png" rel="icon" type="image/png">
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "language": {
     "search-no-results-text": "No results",
@@ -62,11 +97,11 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
 
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Notes – Alexandre Thiéry">
+<link rel="stylesheet" href="../../../styles.css">
+<meta property="og:title" content="Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Notes – Alexandre Thiéry">
+<meta name="twitter:title" content="Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
@@ -79,7 +114,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
@@ -89,29 +124,29 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../people/index_people.html"> 
+    <a class="nav-link" href="../../../people/index_people.html"> 
 <span class="menu-text">Research Team</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../publications/index_pubs.html"> 
+    <a class="nav-link" href="../../../publications/index_pubs.html"> 
 <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../teaching/teaching.html"> 
+    <a class="nav-link" href="../../../teaching/teaching.html"> 
 <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../notes/index_notes.html" aria-current="page"> 
+    <a class="nav-link" href="../../../notes/index_notes.html"> 
 <span class="menu-text">Notes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/about.html"> 
+    <a class="nav-link" href="../../../about/about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -123,32 +158,7 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Notes</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">index</div>
-              </div>
-                  </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">01 01 2023</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -156,12 +166,25 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#denoising-diffusion-probabilistic-models" id="toc-denoising-diffusion-probabilistic-models" class="nav-link active" data-scroll-target="#denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</a></li>
-  <li><a href="#information-theorygeometry" id="toc-information-theorygeometry" class="nav-link" data-scroll-target="#information-theorygeometry">Information Theory/Geometry</a></li>
-  <li><a href="#monte-carlo-methods" id="toc-monte-carlo-methods" class="nav-link" data-scroll-target="#monte-carlo-methods">Monte-Carlo methods</a></li>
-  <li><a href="#probability-misc" id="toc-probability-misc" class="nav-link" data-scroll-target="#probability-misc">Probability Misc</a></li>
-  <li><a href="#optimization" id="toc-optimization" class="nav-link" data-scroll-target="#optimization">Optimization</a></li>
-  <li><a href="#other" id="toc-other" class="nav-link" data-scroll-target="#other">Other</a></li>
+  <li><a href="#citation-plan" id="toc-citation-plan" class="nav-link active" data-scroll-target="#citation-plan">Citation Plan</a>
+  <ul class="collapse">
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">Bibliography</a></li>
+  <li><a href="#section-citations" id="toc-section-citations" class="nav-link" data-scroll-target="#section-citations">Section Citations</a>
+  <ul class="collapse">
+  <li><a href="#opening" id="toc-opening" class="nav-link" data-scroll-target="#opening">Opening</a></li>
+  <li><a href="#cheap-feedback" id="toc-cheap-feedback" class="nav-link" data-scroll-target="#cheap-feedback">Cheap Feedback</a></li>
+  <li><a href="#proof-is-three-tasks" id="toc-proof-is-three-tasks" class="nav-link" data-scroll-target="#proof-is-three-tasks">Proof Is Three Tasks</a></li>
+  <li><a href="#the-importance-oracle" id="toc-the-importance-oracle" class="nav-link" data-scroll-target="#the-importance-oracle">The Importance Oracle</a></li>
+  <li><a href="#synthesis-debt" id="toc-synthesis-debt" class="nav-link" data-scroll-target="#synthesis-debt">Synthesis Debt</a></li>
+  <li><a href="#the-community-layer" id="toc-the-community-layer" class="nav-link" data-scroll-target="#the-community-layer">The Community Layer</a></li>
+  <li><a href="#acquisition-asymmetry" id="toc-acquisition-asymmetry" class="nav-link" data-scroll-target="#acquisition-asymmetry">Acquisition Asymmetry</a></li>
+  <li><a href="#measurability-distortion" id="toc-measurability-distortion" class="nav-link" data-scroll-target="#measurability-distortion">Measurability Distortion</a></li>
+  <li><a href="#the-conjecture-economy" id="toc-the-conjecture-economy" class="nav-link" data-scroll-target="#the-conjecture-economy">The Conjecture Economy</a></li>
+  <li><a href="#feedback-cost-map-of-science" id="toc-feedback-cost-map-of-science" class="nav-link" data-scroll-target="#feedback-cost-map-of-science">Feedback Cost Map Of Science</a></li>
+  <li><a href="#plateau-agi-and-labor" id="toc-plateau-agi-and-labor" class="nav-link" data-scroll-target="#plateau-agi-and-labor">Plateau, AGI, And Labor</a></li>
+  </ul></li>
+  <li><a href="#sources-to-keep-out-of-draft-1" id="toc-sources-to-keep-out-of-draft-1" class="nav-link" data-scroll-target="#sources-to-keep-out-of-draft-1">Sources To Keep Out Of Draft 1</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -171,81 +194,93 @@ gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 
 
 
+<section id="citation-plan" class="level1">
+<h1>Citation Plan</h1>
+<p>Use this file when drafting <code>../ai_views_blog.qmd</code>. The public draft should cite only sources present in <code>../ref.bib</code>.</p>
+<section id="bibliography" class="level2">
+<h2 class="anchored" data-anchor-id="bibliography">Bibliography</h2>
+<p>Use:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bibliography</span><span class="kw">:</span><span class="at"> ref.bib</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Available citation keys:</p>
+<ul>
+<li><code>@Avigad2026</code>: “Mathematicians in the age of AI”.</li>
+<li><code>@Avigad2025</code>: “Is Mathematics Obsolete?”</li>
+<li><code>@Klowden2026</code>: “Mathematical methods and human thought in the age of AI”.</li>
+<li><code>@Commelin2026</code>: “Shaping the Future of Mathematics in the Age of AI”.</li>
+<li><code>@Alon2026</code>: “Remarks on the disproof of the unit distance conjecture”.</li>
+<li><code>@Schwer2026</code>: “The meaning of doing mathematics”.</li>
+<li><code>@Gwern2025</code>: “Guardian Angels: LLM Personalization for Productivity and Security”.</li>
+</ul>
+</section>
+<section id="section-citations" class="level2">
+<h2 class="anchored" data-anchor-id="section-citations">Section Citations</h2>
+<section id="opening" class="level3">
+<h3 class="anchored" data-anchor-id="opening">Opening</h3>
+<p>Default: No citation.</p>
+<p>If mentioning current AI-for-math discussion: Use <code>@Avigad2026</code> or <code>@Klowden2026</code>.</p>
+</section>
+<section id="cheap-feedback" class="level3">
+<h3 class="anchored" data-anchor-id="cheap-feedback">Cheap Feedback</h3>
+<p>Use: <code>@Avigad2026</code></p>
+<p>Optional: <code>@Alon2026</code> if the unit-distance example is already introduced.</p>
+</section>
+<section id="proof-is-three-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="proof-is-three-tasks">Proof Is Three Tasks</h3>
+<p>Use: <code>@Alon2026</code> for the unit-distance example. Use <code>@Avigad2026</code> for understanding, explanation, and mathematical practice.</p>
+</section>
+<section id="the-importance-oracle" class="level3">
+<h3 class="anchored" data-anchor-id="the-importance-oracle">The Importance Oracle</h3>
+<p>Use: <code>@Avigad2026</code> <code>@Schwer2026</code></p>
+<p>Do not cite unverified MathOverflow or Aaronson here.</p>
+</section>
+<section id="synthesis-debt" class="level3">
+<h3 class="anchored" data-anchor-id="synthesis-debt">Synthesis Debt</h3>
+<p>Use: <code>@Alon2026</code> <code>@Avigad2026</code></p>
+<p>This section also rests on internal synthesis; present the “synthesis debt” term as the author’s framing unless a later verified source is added.</p>
+</section>
+<section id="the-community-layer" class="level3">
+<h3 class="anchored" data-anchor-id="the-community-layer">The Community Layer</h3>
+<p>Use: <code>@Commelin2026</code> <code>@Schwer2026</code></p>
+</section>
+<section id="acquisition-asymmetry" class="level3">
+<h3 class="anchored" data-anchor-id="acquisition-asymmetry">Acquisition Asymmetry</h3>
+<p>Use: <code>@Commelin2026</code> <code>@Klowden2026</code></p>
+<p>Do not cite the Tao EMS webinar unless verified later.</p>
+</section>
+<section id="measurability-distortion" class="level3">
+<h3 class="anchored" data-anchor-id="measurability-distortion">Measurability Distortion</h3>
+<p>Use: <code>@Commelin2026</code></p>
+<p>Do not cite the Leiden Declaration unless verified later.</p>
+</section>
+<section id="the-conjecture-economy" class="level3">
+<h3 class="anchored" data-anchor-id="the-conjecture-economy">The Conjecture Economy</h3>
+<p>Use: <code>@Avigad2026</code> <code>@Alon2026</code></p>
+<p>Do not cite MathOverflow unless verified later.</p>
+</section>
+<section id="feedback-cost-map-of-science" class="level3">
+<h3 class="anchored" data-anchor-id="feedback-cost-map-of-science">Feedback Cost Map Of Science</h3>
+<p>Use: <code>@Alon2026</code> for the formal-math anchor.</p>
+<p>This section is partly internal synthesis. Avoid citing Max Welling until the interview is verified.</p>
+</section>
+<section id="plateau-agi-and-labor" class="level3">
+<h3 class="anchored" data-anchor-id="plateau-agi-and-labor">Plateau, AGI, And Labor</h3>
+<p>Use: <code>@Avigad2026</code> <code>@Klowden2026</code> <code>@Gwern2025</code></p>
+<p>Use <code>@Gwern2025</code> only for the Amdahl’s-law / assistant-to-autonomy pressure, not for mathematics-specific claims.</p>
+</section>
+</section>
+<section id="sources-to-keep-out-of-draft-1" class="level2">
+<h2 class="anchored" data-anchor-id="sources-to-keep-out-of-draft-1">Sources To Keep Out Of Draft 1</h2>
+<ul>
+<li>Scott Aaronson, “Dispatches (Possibly Last Days)”.</li>
+<li>Leiden Declaration on Mathematics and AI.</li>
+<li>Terence Tao EMS webinar.</li>
+<li>Anonymous 2026 AI-in-physics public lecture.</li>
+<li>MathOverflow question 511562.</li>
+<li>Max Welling Information Bottleneck interview.</li>
+</ul>
 
-<!-- <h1 style="text-align: center;">Notes</h3> -->
-<p>Notes for students, half-baked write-ups for myself, and probably other random maths/stats/ML texts. Certainly full of typos, comments welcome!</p>
-<!-- ### Statistics: Foundations
-* [Natural Gradients](./stats_basics/natural_gradients.qmd) -->
-<hr>
-<p>Notes indexed by <a href="../notes/index_notes_as_list.html">dates</a>.</p>
-<hr>
-<section id="denoising-diffusion-probabilistic-models" class="level3">
-<h3 class="anchored" data-anchor-id="denoising-diffusion-probabilistic-models">Denoising Diffusion Probabilistic Models</h3>
-<ul>
-<li><a href="../notes/DDPM/DDPM.html">Noising and Reverse Ornstein-Uhlenbeck</a></li>
-<li><a href="../notes/DDPM_deterministic/DDPM_deterministic.html">From Denoising Diffusion to ODEs</a></li>
-<li><a href="../notes/reverse_and_tweedie/reverse_and_tweedie.html">Reverse diffusions, Score &amp; Tweedie</a></li>
-<li><a href="../notes/VIASM_2024/VIASM_2024.html">VIASM mini-course on diffusions and flows</a></li>
-</ul>
-</section>
-<section id="information-theorygeometry" class="level3">
-<h3 class="anchored" data-anchor-id="information-theorygeometry">Information Theory/Geometry</h3>
-<ul>
-<li><a href="../notes/information_theory_references/information_theory_references.html">References &amp; Readings</a></li>
-<li><a href="../notes/information_theory_basics/information_theory_entropy.html">Entropy and Basic Definitions</a></li>
-<li><a href="../notes/information_theory_shannon_coding/information_theory_shannon_coding.html">Shannon Source Coding Theorem</a></li>
-<li><a href="../notes/information_theory_fano/information_theory_fano.html">Fano’s inequality</a></li>
-<li><a href="../notes/information_theory_shearer_lemma/shearer_lemma.html">Shearer’s Lemma</a></li>
-<li><a href="../notes/fisher-rao/distance.html">Fisher-Rao Geometry</a></li>
-</ul>
-</section>
-<section id="monte-carlo-methods" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-methods">Monte-Carlo methods</h3>
-<ul>
-<li><a href="../notes/on_Langevin_MCMC/on_Langevin_MCMC.html">Deriving the Langevin MCMC algorithm</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation.html">Gaussian Assimilation &amp; the EnKF</a></li>
-<li><a href="../notes/Gaussian_Assimilation/gaussian_assimilation_smoothing.html">Ensemble Kalman Smoothers</a></li>
-<li><a href="../notes/MCMC_deterministic_proposals/MCMC_deterministic.html">MCMC with deterministic proposals</a></li>
-<li><a href="../notes/MCMC_on_manifold/mcmc_manifold.html">RWM &amp; HMC on Manifolds</a></li>
-<li><a href="../notes/SAW/SAW.html">Self-Avoiding-Walks</a></li>
-</ul>
-</section>
-<section id="probability-misc" class="level3">
-<h3 class="anchored" data-anchor-id="probability-misc">Probability Misc</h3>
-<ul>
-<li><a href="../notes/auxiliary_variable_trick/auxiliary_variable_trick.html">Auxiliary variable trick</a></li>
-<li><a href="../notes/sanov/sanov.html">Sanov’s Theorem</a></li>
-<li><a href="../notes/wasserstein_langevin/wasserstein_langevin.html">Wasserstein Gradients &amp; Langevin Diffusions</a></li>
-<li><a href="../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson Equation &amp; Asymptotic Variance</a></li>
-<li><a href="../notes/averaging_homogenization/averaging_homogenization.html">Averaging and Homogenization</a></li>
-<li><a href="../notes/doob_transforms/doob.html">Joe Doob &amp; Change of measures on path space</a></li>
-<li><a href="../notes/girsanov/girsanov.html">Girsanov and importance sampling</a></li>
-<li><a href="../notes/HJB/HJB.html">Doob, Girsanov and Bellman</a></li>
-<li><a href="../notes/conformal_inference/conformal.html">Basic Conformal Inference</a></li>
-<li><a href="../notes/jarzynski/jarzynski.html">Jarzynski and Crooks</a></li>
-<li><a href="../notes/sparse_GP/sparse_gp.html">Sparse Gaussian Processes</a></li>
-<li><a href="../notes/shrodinger_bridge/shrodinger.html">Shrodinger Bridges</a></li>
-<li><a href="../notes/DiscreteDiff/DiscreteDiff.html">Masked Discrete Diffusion</a></li>
-<li><a href="../notes/scoring_rules/scoring.html">Scoring Rules for Probabilistic Forecasts</a></li>
-<li><a href="../notes/potts_transition/potts.html">Mean Field Potts Model</a></li>
-<li><a href="../notes/predictive_posterior/predictive_posterior.html">Predictive Posteriors</a></li>
-</ul>
-</section>
-<section id="optimization" class="level3">
-<h3 class="anchored" data-anchor-id="optimization">Optimization</h3>
-<ul>
-<li><a href="../notes/cvxpy/cvxpy.html">Introduction to CVXPY</a></li>
-</ul>
-</section>
-<section id="other" class="level3">
-<h3 class="anchored" data-anchor-id="other">Other</h3>
-<ul>
-<li><a href="../notes/adjoint_method/adjoint.html">Adjoint Method for Sensitivities</a></li>
-<li><a href="../notes/infinite_products/inft_prod.html">Infinite Products</a></li>
-<li><a href="../notes/gegenbauer/gegenbauer.html">Gegenbauer Polynomials</a></li>
-</ul>
 
-
+</section>
 </section>
 
 </main> <!-- /main -->

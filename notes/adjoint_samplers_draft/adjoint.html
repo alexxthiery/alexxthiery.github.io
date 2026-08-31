@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -352,7 +372,7 @@ D_\theta \mathcal{L}
 D_\theta \mathcal{L}
 = \int_0^T \left( f_\theta + \lambda^\top b_\theta \right) dt + g_\theta(\theta, x(T)) + \lambda^\top(0) \mu_\theta.
 \tag{6}\]</span></span></p>
-<p>The term <span class="math inline">\(\lambda^\top b_\theta\)</span> is a vector jacobian product, and can be computed efficiently. This formulation is often referred to as the “continuous adjoint method” or “adjoint sensitivity analysis” or “optimize-then-discretize” and dates back to the work of <span class="citation" data-cites="pontryagin2018mathematical">(<a href="#ref-pontryagin2018mathematical" role="doc-biblioref"><strong>pontryagin2018mathematical?</strong></a>)</span>. A naive implementation of <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> can be inefficient memory-wise since quantities such as <span class="math inline">\(f_\theta\)</span> would typically be stored along the forward pass. When <span class="math inline">\(d_\theta \gg 1\)</span>, as is for example the case when the drift is parameterized by a neural network, this can be impractical. Instead, it may be more efficient to store the forward trajectory <span class="math inline">\(x(t)\)</span> only, and recompute all the other quantities during the backward pass; there is a slight computational cost but potentially very large memory savings. In machine-learning settings, this often means the possibility to exploit much larger batch sizes. Similarly, if implicit methods are used to solve the ODE instead of a simple <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler-Maruyama</a> scheme, backpropagation through the implicit solver can be tricky.</p>
+<p>The term <span class="math inline">\(\lambda^\top b_\theta\)</span> is a vector jacobian product, and can be computed efficiently. This formulation is often referred to as the “continuous adjoint method” or “adjoint sensitivity analysis” or “optimize-then-discretize” and dates back to the work of <span class="citation" data-cites="pontryagin2018mathematical">(<a href="#ref-pontryagin2018mathematical" role="doc-biblioref">Pontryagin 2018</a>)</span>. A naive implementation of <a href="https://en.wikipedia.org/wiki/Backpropagation">backpropagation</a> can be inefficient memory-wise since quantities such as <span class="math inline">\(f_\theta\)</span> would typically be stored along the forward pass. When <span class="math inline">\(d_\theta \gg 1\)</span>, as is for example the case when the drift is parameterized by a neural network, this can be impractical. Instead, it may be more efficient to store the forward trajectory <span class="math inline">\(x(t)\)</span> only, and recompute all the other quantities during the backward pass; there is a slight computational cost but potentially very large memory savings. In machine-learning settings, this often means the possibility to exploit much larger batch sizes. Similarly, if implicit methods are used to solve the ODE instead of a simple <a href="https://en.wikipedia.org/wiki/Euler–Maruyama_method">Euler-Maruyama</a> scheme, backpropagation through the implicit solver can be tricky.</p>
 <p>Nothing really changes when considering a <a href="https://en.wikipedia.org/wiki/Stochastic_differential_equation">SDE</a> with additive noise instead,</p>
 <p><span class="math display">\[
 dx = b(t, \theta, x) \, dt + \sigma(t) \, dW_t.
@@ -366,10 +386,15 @@ dx = b(t, \theta, x) \, dt + \sigma(t) \, dW_t.
 \]</span></p>
 
 
+
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-pontryagin2018mathematical" class="csl-entry" role="listitem">
+Pontryagin, L. S. 2018. <em>Mathematical Theory of Optimal Processes</em>. Routledge. doi:<a href="https://doi.org/10.1201/9780203749319">10.1201/9780203749319</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
