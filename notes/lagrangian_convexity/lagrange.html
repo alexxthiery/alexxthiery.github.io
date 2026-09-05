@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lagrange multipliers &amp; Convex duality – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Lagrange multipliers &amp; Convex duality – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/lagrangian_convexity/rockafellar.jpg">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Lagrange multipliers &amp; Convex duality – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/lagrangian_convexity/rockafellar.jpg">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Lagrange multipliers &amp; Convex duality</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">optimization</div>
+                <div class="quarto-category">convexity</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">05 09 2026</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">05 09 2026</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#equality-constraints" id="toc-equality-constraints" class="nav-link active" data-scroll-target="#equality-constraints">Equality constraints</a></li>
+  <li><a href="#inequality-constraints" id="toc-inequality-constraints" class="nav-link" data-scroll-target="#inequality-constraints">Inequality constraints</a></li>
+  <li><a href="#the-lagrangian" id="toc-the-lagrangian" class="nav-link" data-scroll-target="#the-lagrangian">The Lagrangian</a></li>
+  <li><a href="#a-small-pathology" id="toc-a-small-pathology" class="nav-link" data-scroll-target="#a-small-pathology">A small pathology</a></li>
+  <li><a href="#the-convex-case" id="toc-the-convex-case" class="nav-link" data-scroll-target="#the-convex-case">The convex case</a></li>
+  <li><a href="#the-dual-problem" id="toc-the-dual-problem" class="nav-link" data-scroll-target="#the-dual-problem">The dual problem</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./rockafellar.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/R._Tyrrell_Rockafellar">Tyrrell Rockafellar (1935-)</a></figcaption>
+</figure>
+</div>
+</div>
+<p>These notes are a broef introduction to <a href="https://en.wikipedia.org/wiki/Lagrange_multiplier">Lagrange multipliers</a> and convex <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">duality</a>, with as little technical detail as possible since the epsilon-delta proofs can be found in many places. Consider the problem of minimizing a smooth function <span class="math inline">\(f:\mathbb{R}^d \to \mathbb{R}\)</span>. In the absence of constraints, the first-order condition is of course</p>
+<p><span class="math display">\[
+\nabla f(x_\star)=0.
+\]</span></p>
+<p>Indeed, if the gradient is non-zero, one can move a little in the direction <span class="math inline">\(-\nabla f\)</span> and decrease the function. In some sense, a lot of these notes are about generalizing this simple remark to the case of equality and inequality constraints. Constraints only change one thing: some directions are no longer available, which indeed means that the condition <span class="math inline">\(\nabla f(x_\star)=0\)</span> will need to be relaxed in different ways. As we will see, the notion of <a href="https://en.wikipedia.org/wiki/Lagrange_multiplier">Lagrange multipliers</a> and Lagrange duality are the natural generalizations of this simple idea.</p>
+<section id="equality-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="equality-constraints">Equality constraints</h2>
+<p>Suppose first that the feasible set is described by <span class="math inline">\(r \geq 1\)</span> smooth equality constraints. Near a regular point <span class="math inline">\(x\)</span>, this is a smooth surface of dimension <span class="math inline">\(d-r\)</span>. Along any vector <span class="math inline">\(v\)</span> in the tangent space and a local minimum <span class="math inline">\(x_\star\)</span>, the function <span class="math inline">\(f\)</span> cannot decrease to first order, which readily gives that <span class="math inline">\(\nabla f(x_\star)\)</span> must be orthogonal to the tangent space. Since the tangent space is orthogonal to each of the constraint gradients <span class="math inline">\(\nabla h_a(x_\star)\)</span>, the gradient of <span class="math inline">\(f\)</span> must be a linear combination of the <span class="math inline">\(\nabla h_a(x_\star)\)</span>, i.e.&nbsp;there exist multipliers <span class="math inline">\(\nu_a \in \mathbb{R}\)</span> such that <span class="math inline">\(\nabla f(x_\star) = \sum_{a=1}^r \nu_a \, \nabla h_a(x_\star)\)</span>. This is because for any linear subspace <span class="math inline">\(V\)</span> of <span class="math inline">\(\mathbb{R}^d\)</span>, we have that <span class="math inline">\((V^\perp)^\perp = V\)</span>. Equivalently, after changing the signs of the coefficients, we have that</p>
+<p><span id="eq-equality-lagrange"><span class="math display">\[
+\textcolor{green}{
+\nabla f(x_\star)
++
+\sum_{a=1}^r \nu_a \, \nabla h_a(x_\star)
+=0}
+\tag{1}\]</span></span></p>
+<p>for some <span class="math inline">\( \textcolor{green}{\nu_a \in \mathbb{R}}\)</span>. This is the whole derivation of Lagrange multipliers for equality constraints: at an optimum, the objective gradient has no tangent component.</p>
+</section>
+<section id="inequality-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="inequality-constraints">Inequality constraints</h2>
+<p>Now, we can do more or less the same thing for inequality constraints, except that the geometry is a little more complicated. Consider <span class="math inline">\(m \geq 1\)</span> smooth inequality constraints <span class="math inline">\(g_i(x)\leq 0\)</span>. The feasible set is now a manifold whose boundary is described by the active constraints, i.e.&nbsp;those for which <span class="math inline">\(g_i(x_\star)=0\)</span>. The tangent space is now replaced by the tangent cone, which locally looks like a half-space. Consider a local minimum <span class="math inline">\(x_\star\)</span> and the set of active constraints <span class="math inline">\(\mathcal{A}(x_\star) = \{i: g_i(x_\star)=0\}\)</span>. Exactly the same argument as for equality constraints shows that <span class="math inline">\(\nabla f(x_\star)\)</span> must be a linear combination of the active constraint gradients <span class="math inline">\(\nabla g_i(x_\star)\)</span>. Nevertheless, the coefficients are not arbitrary since the feasible set is a cone, not a linear space. Since the inequality constraints are given by <span class="math inline">\(g_i(x)\leq 0\)</span>, this means that if one follows the direction <span class="math inline">\(-\nabla g_i(x_\star)\)</span>, one is moving into the feasible region and consequently, to first order, the objective function should be increasing since we assumed that <span class="math inline">\(x_\star\)</span> is a local minimum. This means that <span class="math inline">\(\nabla f(x_\star)\)</span> must be a linear combination of the active constraint gradients <span class="math inline">\(\nabla g_i(x_\star)\)</span> with non-positive coefficients. The non-active constraints do not contribute since the span of the active constraint gradients is already describing all the available directions. Assuming that there are also <span class="math inline">\(r\)</span> equality constraints, we have that the first-order condition at a local minimum <span class="math inline">\(x_\star\)</span> is <span class="math inline">\(\nabla f(x_\star) + \sum_{a=1}^r \nu_a \, \nabla h_a(x_\star) + \sum_{i \in \mathcal{A}(x_\star)} \lambda_i \, \nabla g_i(x_\star) =0\)</span> with coefficients <span class="math inline">\(\nu_a \in \mathbb{R}\)</span> and <span class="math inline">\( \textcolor{green}{\lambda_i \geq 0}\)</span>. It is more convenient to write the sum over all constraints instead of only the active ones, with the understanding that <span class="math inline">\(\lambda_i=0\)</span> for inactive constraints. This are the so-called complementary slackness condition and means that, at a local minimum <span class="math inline">\(x_\star\)</span> we have:</p>
+<p><span id="eq-kkt-stationarity"><span class="math display">\[
+\textcolor{green}{
+\nabla f(x_\star) +
+\sum_{a=1}^r \nu_a \, \nabla h_a(x_\star) + \sum_{i=1}^m \lambda_i \, \nabla g_i(x_\star) = 0}
+\tag{2}\]</span></span></p>
+<p>where <span class="math inline">\(\nu_a \in \mathbb{R}\)</span> and <span class="math inline">\( \textcolor{green}{\lambda_i \geq 0}\)</span> and:</p>
+<p><span id="eq-kkt-complementarity"><span class="math display">\[
+\textcolor{green}{\lambda_i \, g_i(x_\star) = 0.}
+\tag{3}\]</span></span></p>
+<p>In words, this means that either the constraint <span class="math inline">\(g_i\)</span> has some slack, in which case its multiplier <span class="math inline">\(\lambda_i\)</span> vanishes, or the multiplier is non-zero, in which case the constraint is active.</p>
+</section>
+<section id="the-lagrangian" class="level2">
+<h2 class="anchored" data-anchor-id="the-lagrangian">The Lagrangian</h2>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./lagrange.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/Joseph_Louis_Lagrange">Joseph Louis Lagrange (1736 – 1813)</a></figcaption>
+</figure>
+</div>
+</div>
+<p>It can quickly becoming tiresome to keep writing <a href="#eq-kkt-stationarity" class="quarto-xref">Equation&nbsp;2</a> so it is convenient to introduce the <a href="https://en.wikipedia.org/wiki/Lagrangian_function">Lagrangian</a> function</p>
+<p><span class="math display">\[
+\mathcal{L}(x,\lambda,\nu)
+=
+f(x)
++
+\sum_{i=1}^m \lambda_i g_i(x)
++
+\sum_{a=1}^r \nu_a h_a(x).
+\]</span></p>
+<p>The discussion proves that at a local minimum we have:</p>
+<p><span class="math display">\[
+\nabla_x \mathcal{L}(x_\star,\lambda,\nu)=0.
+\]</span></p>
+<p>Together with the satisfaction of the constraints and complementary slackness conditions. These are ususally called the <a href="https://en.wikipedia.org/wiki/Karush–Kuhn–Tucker_conditions">Karush–Kuhn–Tucker (KKT)</a> conditions and reads:</p>
+<p><span id="eq-kkt-conditions"><span class="math display">\[
+\textcolor{green}{
+\begin{aligned}
+g_i(x_\star)&amp;\leq 0, &amp; h_a(x_\star)&amp;=0,\\
+\lambda_i&amp;\geq 0, &amp; \lambda_i g_i(x_\star)&amp;=0,
+\end{aligned}
+}
+\tag{4}\]</span></span></p>
+<p>Naturally, as in the unconstrained case and as the reasoning above clearly shows it, these are only necessary conditions for a local minimum and absolutely no guarantee that a point satisfying them is indeed a local minimum, and even less a global minimum. Naturally and as expected, a lot changes if the problem has some convexity structure, which is the topic of the next section.</p>
+</section>
+<section id="a-small-pathology" class="level2">
+<h2 class="anchored" data-anchor-id="a-small-pathology">A small pathology</h2>
+<p>We have quietly assumed that the gradients of the constraints describe the local geometry of the feasible set. Above, we simply said that the tangent space is orthogonal to the constraint gradients, but this is not always true and it’s worth giving a small example of what can go wrong. Consider the problem of minimizing <span class="math inline">\(f(x)=x\)</span> subject to the constraint <span class="math inline">\(g(x)=x^2\leq 0\)</span>. In that case, the feasible set is simply <span class="math inline">\(\{0\}\)</span>, the global minimum is certainly <span class="math inline">\(x_\star=0\)</span>, and the gradient of the constraint vanishes at the optimum so that the KKT conditions <span class="math inline">\(\nabla f(0) = 1 + \lambda \cdot 0 = 0\)</span> cannot be satisfied. What went wrong is that the constraint <span class="math inline">\(g(x)=x^2\leq 0\)</span> is degenerate and the gradient of the constraint does not faithfully describe the local geometry of the feasible set. This shows that one has to be a bit careful when using the KKT conditions and a few “regularity” conditions are certainly needed to guarantee that the KKT conditions are indeed necessary for a local minimum. These are called <a href="https://en.wikipedia.org/wiki/Constraint_qualification">constraint qualifications</a> and intuitively ensure that the gradients of the constraints faithfully describe the local geometry of the feasible set. The simplest and most common constraint qualification is the <a href="https://en.wikipedia.org/wiki/Constraint_qualification#Linear_independence_constraint_qualification_(LICQ)">linear independence constraint qualification (LICQ)</a>, which simply requires that the gradients of the active constraints are linearly independent. This is a very mild condition and is satisfied in most practical problems. Quite nicely, in the case where all constraints are affine then constraint qualifications are automatically satisfied.</p>
+</section>
+<section id="the-convex-case" class="level2">
+<h2 class="anchored" data-anchor-id="the-convex-case">The convex case</h2>
+<p>It is standard that, in the unconstrained case, a stationary point of a convex function is a global minimum. As we will see, this is also true in the constrained case. Consider the convex program: <span id="eq-convex-program"><span class="math display">\[
+\begin{aligned}
+\textrm{minimize} \qquad &amp; f(x),\\
+\textrm{subject to} \qquad &amp; g_i(x)\leq 0,\\
+&amp; Ax=b,
+\end{aligned}
+\tag{5}\]</span></span></p>
+<p>where <span class="math inline">\(f\)</span> and the functions <span class="math inline">\(g_i\)</span> are convex. Indeed, in that case the feasible set is convex (note that we need the equality constraints to be affine for this to be true, not just convex). The Lagrangian is then also convex in <span class="math inline">\(x\)</span> for any choice of multipliers <span class="math inline">\(\lambda \geq 0\)</span> and <span class="math inline">\(\nu\)</span>:</p>
+<p><span class="math display">\[
+\mathcal{L}(x,\lambda,\nu)
+=
+f(x)+\sum_i \lambda_i g_i(x)+\nu^\top(Ax-b).
+\]</span></p>
+<p>Now, assume that a feasible point <span class="math inline">\(x_\star\)</span> and multipliers <span class="math inline">\((\lambda_\star,\nu_\star)\)</span> satisfy the KKT conditions <a href="#eq-kkt-conditions" class="quarto-xref">Equation&nbsp;4</a>. Since the Lagrangian is convex in <span class="math inline">\(x\)</span>, stationarity <span class="math inline">\(\nabla_x \mathcal{L}(x_\star,\lambda_\star,\nu_\star) = 0\)</span> implies that the function <span class="math inline">\(x \mapsto \mathcal{L}(x,\lambda_\star,\nu_\star)\)</span> has a global minimum at <span class="math inline">\(x_\star\)</span>:</p>
+<p><span class="math display">\[
+\mathcal{L}(x_\star,\lambda_\star,\nu_\star)
+\leq
+\mathcal{L}(x,\lambda_\star,\nu_\star)
+\]</span></p>
+<p>for every <span class="math inline">\(x\)</span>. Furthermore, <span class="math inline">\(f(x_\star) = \mathcal{L}(x_\star,\lambda_\star,\nu_\star)\)</span> by complementary slackness and feasibility. Even better, for any feasible <span class="math inline">\(x\)</span>, we have that <span class="math inline">\(\mathcal{L}(x,\lambda_\star,\nu_\star) \leq f(x)\)</span> since <span class="math inline">\(\lambda_\star \geq 0\)</span> and <span class="math inline">\(g_i(x)\leq 0\)</span>. Combining these two inequalities gives:</p>
+<p><span class="math display">\[
+\textcolor{green}{f(x_\star)
+=
+\mathcal{L}(x_\star,\lambda_\star,\nu_\star)
+\leq
+\mathcal{L}(x,\lambda_\star,\nu_\star)
+\leq
+f(x)}
+\]</span></p>
+<p>for every feasible <span class="math inline">\(x\)</span>. Thus, in a convex problem, the KKT conditions are sufficient for global optimality:</p>
+<p><span id="eq-kkt-sufficient"><span class="math display">\[
+\textcolor{green}{\textrm{KKT} \quad \Longrightarrow \quad \textrm{global optimum}.}
+\tag{6}\]</span></span></p>
+<p>No constraint qualification is needed for this direction. Convexity alone turns the local balance of gradients into a global certificate of optimality.</p>
+<p>The converse direction is more delicate. We would like to say that, under some conditions, a global optimum necessarily admits KKT multipliers. Naturally, the discussions of the constraint <span class="math inline">\(x^2\leq 0\)</span> above shows that this is not true in general and we need some constraint qualification conditions as described above. For a convex problem, the standard convenient condition is Slater’s condition: there exists a feasible point <span class="math inline">\(\bar x\)</span> that lies strictly inside the feasible set, i.e.&nbsp;such that</p>
+<p><span class="math display">\[
+\textcolor{blue}{
+\textrm{Slater:} \qquad \qquad
+A\bar x=b
+\quad
+\text{and}
+\quad
+g_i(\bar x)&lt;0 \; \text{for all } \; 1 \leq i \leq m.
+}
+\]</span></p>
+<p>Note that <a href="https://www.genealogy.math.ndsu.nodak.edu/id.php?id=11987">Morton Slater</a> is <strong>not</strong> the same person as <a href="https://en.wikipedia.org/wiki/John_C._Slater">John Slater</a> for the famous Slater determinant in quantum mechanics, but I have not been able to find much information about Morton Slater. Under Slater’s condition, an optimal point necessarily admits KKT multipliers. Combining this with <a href="#eq-kkt-sufficient" class="quarto-xref">Equation&nbsp;6</a> gives the useful equivalence</p>
+<p><span id="eq-kkt-equivalence"><span class="math display">\[
+\textcolor{green}{
+\textrm{global optimum}
+\quad \Longleftrightarrow \quad
+\textrm{KKT}.}
+\tag{7}\]</span></span></p>
+<p>The two ingredients have different jobs. Convexity makes KKT sufficient; good constraint geometry makes KKT necessary.</p>
+</section>
+<section id="the-dual-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-dual-problem">The dual problem</h2>
+<p>The discussion above hints at a more general principle. For multipliers <span class="math inline">\(\lambda \geq 0\)</span> and arbitrary <span class="math inline">\(\nu\)</span>, the dual function is defined as the infimum of the Lagrangian over <span class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[
+q(\lambda,\nu)
+=
+\inf_x \mathcal{L}(x,\lambda,\nu).
+\]</span></p>
+<p>Furthermore, for any feasible <span class="math inline">\(x\)</span> and <span class="math inline">\(\lambda_i\geq 0\)</span>, we have <span class="math inline">\(\mathcal{L}(x,\lambda,\nu) \leq f(x)\)</span> Consequently, the dual function is always a lower bound on the optimal value of the original problem:</p>
+<p><span class="math display">\[
+q(\lambda,\nu)
+\leq
+f(x)
+\]</span></p>
+<p>for every feasible <span class="math inline">\(x\)</span>. And no convexity is needed for this inequality to hold. Taking the infimum over all feasible <span class="math inline">\(x\)</span> gives that, for any choice of dual-feasible multipliers <span class="math inline">\(\lambda \geq 0\)</span> and <span class="math inline">\(\nu\)</span>, the dual function is a lower bound on the optimal value of the original problem:</p>
+<p><span class="math display">\[
+\textcolor{green}{q(\lambda,\nu) \leq p_\star}
+\]</span></p>
+<p>where <span class="math inline">\(p_\star\)</span> is the optimal value of the original problem. Naturally, one can try to find the best lower bound by maximizing the dual function in order to get as close as possible to the optimal value of the original problem. This gives the dual problem:</p>
+<p><span class="math display">\[
+d_\star
+=
+\sup_{\lambda\geq 0,\,\nu} q(\lambda,\nu)
+\]</span></p>
+<p>and, as described above, the optimal value of the dual problem is always a lower bound on the optimal value of the original problem <span class="math inline">\(d_\star\leq p_\star\)</span>. This is called weak duality, and it does not require convexity. Naturally, convexity gives a stronger result, as we will see in moment. For example, one can show that in the convex case and under Slater’s condition,</p>
+<p><span id="eq-strong-duality"><span class="math display">\[
+\textcolor{green}{d_\star=p_\star.}
+\tag{8}\]</span></span></p>
+<p>The best lower bound produced by the dual problem touches the primal optimum exactly. This is <a href="https://en.wikipedia.org/wiki/Strong_duality">strong duality</a> and the proof is a relatively simple argument that boils down to exhibiting a supporting hyperplane to a convex set.</p>
+<details>
+<summary>
+Proof:
+</summary>
+<p>There is a simple geometric picture behind this result. Consider the set <span class="math inline">\(\mathcal{C}\)</span> of all <span class="math inline">\((u,v,t)\)</span> such that there exists some <span class="math inline">\(x\)</span> with</p>
+<p><span class="math display">\[
+g_i(x)\leq u_i, \quad Ax-b=v, \quad f(x)\leq t.
+\]</span></p>
+<p>Under convexity of <span class="math inline">\(f\)</span> and the <span class="math inline">\(g_i\)</span>, this set is convex. Furthermore, the intersection of <span class="math inline">\(\mathcal{C}\)</span> with the plane <span class="math inline">\(P=\{(u,v,t): u=0, v=0\}\)</span> is the set of all <span class="math inline">\((0,0,t)\)</span> such that there exists a feasible <span class="math inline">\(x\)</span> with <span class="math inline">\(f(x)\leq t\)</span>. This means that the optimal value <span class="math inline">\(p_\star\)</span> is the infimum of <span class="math inline">\(t\)</span> such that <span class="math inline">\((0,0,t)\in \mathcal{C}\)</span>. This means that the point <span class="math inline">\((0,0,p_\star)\)</span> lies on the boundary of <span class="math inline">\(\mathcal{C}\)</span>. This means that there exists a <a href="https://en.wikipedia.org/wiki/Supporting_hyperplane">supporting hyperplane</a> <span class="math inline">\(H\)</span> to <span class="math inline">\(\mathcal{C}\)</span> at this point, i.e.&nbsp;</p>
+<p><span class="math display">\[
+H: \{ (u,v,t): \sum_i \lambda_i u_i + \sum_j \nu_j v_j + \mu t = \mu p_\star\}
+\]</span></p>
+such that <span class="math inline">\(\mathcal{C}\)</span> lies entirely on one side of <span class="math inline">\(H\)</span>. This means that for every <span class="math inline">\((u,v,t)\in \mathcal{C}\)</span>, we have <span class="math inline">\(\sum_i \lambda_i u_i + \sum_j \nu_j v_j + \mu t \geq \mu p_\star\)</span>. Now, one can easily see that necessarily <span class="math inline">\(\mu \geq 0\)</span> and <span class="math inline">\(\lambda_i \geq 0\)</span> for all <span class="math inline">\(1 \leq i \leq m\)</span> by definition of <span class="math inline">\(\mathcal{C}\)</span>. The interesting question is whether <span class="math inline">\(\mu\)</span> can be zero. If <span class="math inline">\(\mu &gt; 0\)</span> then we can normalize and assume <span class="math inline">\(\mu=1\)</span> and the inequality reads <span class="math inline">\(\sum_i \lambda_i u_i + \sum_j \nu_j v_j + t \geq p_\star\)</span> for all <span class="math inline">\((u,v,t)\in \mathcal{C}\)</span>. This means that for every <span class="math inline">\(x\)</span> we have <span class="math inline">\(f(x) + \sum_i \lambda_i g_i(x) + \sum_j \nu_j (Ax-b) \geq p_\star\)</span> and in particular, taking the infimum over <span class="math inline">\(x\)</span> gives <span class="math inline">\(q(\lambda,\nu) \geq p_\star\)</span>. Since we already know that <span class="math inline">\(q(\lambda,\nu) \leq p_\star\)</span>, this gives <span class="math inline">\(d_\star = q(\lambda,\nu) = p_\star\)</span> and strong duality holds. Now, let us show that the Slater condition ensures that <span class="math inline">\(\mu\)</span> cannot be zero. To see this, note that if <span class="math inline">\(\mu=0\)</span> then <span class="math inline">\(\sum_i \lambda_i u_i + \sum_j \nu_j v_j \geq 0\)</span> holds for all <span class="math inline">\((u,v,t)\in \mathcal{C}\)</span>. But the Slater condition ensures that there exists a strictly feasible point <span class="math inline">\((\bar u, \bar v, \bar t)\in \mathcal{C}\)</span> with <span class="math inline">\(\bar u_i &lt; 0\)</span> and <span class="math inline">\(\bar v_j = 0\)</span> for all <span class="math inline">\(1 \leq j \leq p\)</span> and <span class="math inline">\(1 \leq i \leq m\)</span>. This means that <span class="math inline">\(\sum_i \lambda_i \bar u_i + \sum_j \nu_j \bar v_j = \sum_i \lambda_i \bar u_i \leq 0\)</span>. Furthermore, one can easily see that the coefficients <span class="math inline">\(\lambda_i\)</span> cannot be all zero so that in fact <span class="math inline">\(\sum_i \lambda_i \bar u_i &lt; 0\)</span>, which is a contradiction. In conclusion, Slater’s condition ensures that <span class="math inline">\(\mu &gt; 0\)</span> and after normalization, the corresponding hyperplane gives a dual lower bound equal to <span class="math inline">\(p_\star\)</span>.
+</details>
+<p>In conclusion, the whole story may be summarized as follows. Equality constraints contribute a linear space of normals; active inequalities contribute a cone of outward normals. The Lagrangian records the balance of these normals with the objective gradient. Constraint qualifications ensure that the normals describe the true feasible geometry. Convexity then turns this local balance into a global certificate, while duality turns the same multipliers into an exact lower bound on the optimum.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

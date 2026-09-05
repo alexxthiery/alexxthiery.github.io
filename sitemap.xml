@@ -438,7 +438,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2026-08-31T16:43:53.521Z</lastmod>
+    <lastmod>2026-09-05T10:35:33.912Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/doob_transforms/doob.html</loc>
@@ -675,5 +675,9 @@
   <url>
     <loc>https://alexxthiery.github.io/notes/cvxpy/cvxpy.html</loc>
     <lastmod>2026-08-31T16:21:38.612Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/lagrangian_convexity/lagrange.html</loc>
+    <lastmod>2026-09-05T10:35:49.676Z</lastmod>
   </url>
 </urlset>
