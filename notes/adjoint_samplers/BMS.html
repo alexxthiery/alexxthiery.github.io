@@ -241,7 +241,7 @@ window.Quarto = {
 <p><span id="eq-controlled-sde"><span class="math display">\[
 dX_t = \sigma_t \, u(X_t, t) \, dt + \sigma_t \, dW_t, \quad X_0 \sim p_0.
 \tag{1}\]</span></span></p>
-<p>The goal: find <span class="math inline">\(u\)</span> such that <span class="math inline">\(X_T \sim \pi\)</span>, where <span class="math inline">\(\pi(x) = \rho(x)/\mathcal{Z}\)</span> is a target density known up to normalization. <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">Adjoint sampling</a> solves this with a Dirac prior and memoryless condition; adding a corrector for arbitrary priors requires alternating optimization. The <em>Bridge Matching Sampler</em> (BMS) identifies a single coupling, the <em>independent coupling</em>, that makes the regression target fully tractable and removes the need for alternation.</p>
+<p>The goal: find <span class="math inline">\(u\)</span> such that <span class="math inline">\(X_T \sim \pi\)</span>, where <span class="math inline">\(\pi(x) = \rho(x)/\mathcal{Z}\)</span> is a target density known up to normalization. <a href="../../notes/adjoint_samplers/adjoint_sampling.html">Adjoint sampling</a> solves this with a Dirac prior and memoryless condition; adding a corrector for arbitrary priors requires alternating optimization. The <em>Bridge Matching Sampler</em> (BMS) identifies a single coupling, the <em>independent coupling</em>, that makes the regression target fully tractable and removes the need for alternation.</p>
 <section id="nelsons-relation" class="level3">
 <h3 class="anchored" data-anchor-id="nelsons-relation">Nelson’s relation</h3>
 <p>Let <span class="math inline">\(\mathbb{P}^u\)</span> denote the path measure of <a href="#eq-controlled-sde" class="quarto-xref">Equation&nbsp;1</a> with time marginals <span class="math inline">\(p_t\)</span>. Write the Euler discretization with step <span class="math inline">\(\delta\)</span>:</p>
@@ -370,7 +370,7 @@ v^\star(x,t) = \mathbb{E}_{\Pi^\star_{0|t}} {\left[ \sigma_t \, \nabla_{X_t} \lo
 </section>
 <section id="three-couplings-three-algorithms" class="level3">
 <h3 class="anchored" data-anchor-id="three-couplings-three-algorithms">Three couplings, three algorithms</h3>
-<p><strong>Half-bridge / <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling</a>.</strong> Set <span class="math inline">\(\Pi^\star_{0,T} = \delta_{x_0} \otimes \pi\)</span> (Dirac prior, memoryless condition). With <span class="math inline">\(x_0 = 0\)</span> and <span class="math inline">\(c(t) = \gamma_t\)</span>: since <span class="math inline">\(\Pi^\star_0 = \delta_0\)</span>, we use only the <span class="math inline">\(X_T\)</span> branch of the TSI (the <span class="math inline">\(X_0\)</span> integration-by-parts is not needed when <span class="math inline">\(X_0\)</span> is deterministic), and <a href="#eq-xi-general" class="quarto-xref">Equation&nbsp;11</a> reduces to <a href="#eq-xi-as" class="quarto-xref">Equation&nbsp;12</a>. The paper derives this in Prop 4 (Appendix C.2); the key steps are below.</p>
+<p><strong>Half-bridge / <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a>.</strong> Set <span class="math inline">\(\Pi^\star_{0,T} = \delta_{x_0} \otimes \pi\)</span> (Dirac prior, memoryless condition). With <span class="math inline">\(x_0 = 0\)</span> and <span class="math inline">\(c(t) = \gamma_t\)</span>: since <span class="math inline">\(\Pi^\star_0 = \delta_0\)</span>, we use only the <span class="math inline">\(X_T\)</span> branch of the TSI (the <span class="math inline">\(X_0\)</span> integration-by-parts is not needed when <span class="math inline">\(X_0\)</span> is deterministic), and <a href="#eq-xi-general" class="quarto-xref">Equation&nbsp;11</a> reduces to <a href="#eq-xi-as" class="quarto-xref">Equation&nbsp;12</a>. The paper derives this in Prop 4 (Appendix C.2); the key steps are below.</p>
 <details>
 <summary>
 Reduction from <a href="#eq-xi-general" class="quarto-xref">Equation&nbsp;11</a> to <a href="#eq-xi-as" class="quarto-xref">Equation&nbsp;12</a>:
@@ -396,7 +396,7 @@ Alternatively: the paper shows directly that setting <span class="math inline">\
 \sigma_t^{-1} \, \xi(X,t) = \nabla_{X_T} \log \frac{\pi(X_T)}{\mathbb{P}_T(X_T)},
 \tag{12}\]</span></span></p>
 <p>where <span class="math inline">\(\mathbb{P}_T = \mathcal{N}(0, \nu_T I)\)</span> (the terminal marginal of the reference). Simple, but requires Dirac prior and large <span class="math inline">\(\sigma_t\)</span> for exploration.</p>
-<p><strong>Full Schrodinger bridge / <a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">adjoint sampling with corrector</a>.</strong> Set <span class="math inline">\(\Pi^\star_{0,T} = \hat\varphi_0(x_0) \, \mathbb{P}_{T|0}(x_T \mid x_0) \, \varphi_T(x_T)\)</span>, the <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> coupling. The drift becomes</p>
+<p><strong>Full Schrodinger bridge / <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling with corrector</a>.</strong> Set <span class="math inline">\(\Pi^\star_{0,T} = \hat\varphi_0(x_0) \, \mathbb{P}_{T|0}(x_T \mid x_0) \, \varphi_T(x_T)\)</span>, the <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrodinger bridge</a> coupling. The drift becomes</p>
 <p><span id="eq-xi-asbs"><span class="math display">\[
 \sigma_t^{-1} \, \xi(X,t) = \nabla_{X_T} \log \frac{\pi(X_T)}{\hat\varphi_T(X_T)},
 \tag{13}\]</span></span></p>
@@ -463,13 +463,13 @@ Pointwise first-order condition: <span class="math inline">\(-(\Phi(u_i) - u) - 
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">AS</a></td>
+<td><a href="../../notes/adjoint_samplers/adjoint_sampling.html">AS</a></td>
 <td><span class="math inline">\(\delta_{x_0} \otimes \mathbb{P}^{u_i}_T\)</span></td>
 <td><span class="math inline">\(\nabla \log [\pi/\mathbb{P}_T](X_T)\)</span></td>
 <td>Dirac prior</td>
 </tr>
 <tr class="even">
-<td><a href="../../notes/adjoint_samplers_draft/adjoint_sampling.html">AS + corrector</a></td>
+<td><a href="../../notes/adjoint_samplers/adjoint_sampling.html">AS + corrector</a></td>
 <td><span class="math inline">\(\mathbb{P}^{u_i}_{0,T}\)</span></td>
 <td><span class="math inline">\(\nabla \log [\pi/\hat\varphi_T](X_T)\)</span></td>
 <td>Alternating opt.</td>

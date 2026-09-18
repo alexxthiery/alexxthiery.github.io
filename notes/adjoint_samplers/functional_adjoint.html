@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Jarzynski and Crooks – Alexandre Thiéry</title>
+<title>Functional Adjoint Sampler – Alexandre Thiéry</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,15 +112,13 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Jarzynski and Crooks – Alexandre Thiéry">
+<meta property="og:title" content="Functional Adjoint Sampler – Alexandre Thiéry">
 <meta property="og:description" content="Alex Thiery Notes">
-<meta property="og:image" content="https://alexxthiery.github.io/notes/adjoint_samplers_draft/jarzynski_crooks.png">
 <meta property="og:site_name" content="Alexandre Thiéry">
-<meta name="twitter:title" content="Jarzynski and Crooks – Alexandre Thiéry">
+<meta name="twitter:title" content="Functional Adjoint Sampler – Alexandre Thiéry">
 <meta name="twitter:description" content="Alex Thiery Notes">
-<meta name="twitter:image" content="https://alexxthiery.github.io/notes/adjoint_samplers_draft/jarzynski_crooks.png">
 <meta name="twitter:creator" content="@alexxthiery">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -177,10 +175,11 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Jarzynski and Crooks</h1>
+      <h1 class="title">Functional Adjoint Sampler</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">SDE</div>
-                <div class="quarto-category">markov</div>
+                <div class="quarto-category">sampling</div>
+                <div class="quarto-category">optimal control</div>
               </div>
                   </div>
   </div>
@@ -192,14 +191,14 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">22 02 2025</p>
+        <p class="date">23 03 2026</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">22 02 2025</p>
+        <p class="date-modified">23 03 2026</p>
       </div>
     </div>
       
@@ -214,7 +213,11 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#some-references" id="toc-some-references" class="nav-link active" data-scroll-target="#some-references">Some References:</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#setup-soc-on-path-space" id="toc-setup-soc-on-path-space" class="nav-link" data-scroll-target="#setup-soc-on-path-space">Setup: SOC on path space</a></li>
+  <li><a href="#the-adjoint-on-path-space" id="toc-the-adjoint-on-path-space" class="nav-link" data-scroll-target="#the-adjoint-on-path-space">The adjoint on path space</a></li>
+  <li><a href="#boundary-conditions-for-free" id="toc-boundary-conditions-for-free" class="nav-link" data-scroll-target="#boundary-conditions-for-free">Boundary conditions for free</a></li>
+  <li><a href="#connection-to-existing-framework" id="toc-connection-to-existing-framework" class="nav-link" data-scroll-target="#connection-to-existing-framework">Connection to existing framework</a></li>
   </ul>
 </nav>
     </div>
@@ -225,158 +228,75 @@ window.Quarto = {
 
 
 
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./jarzynski_crooks.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption><a href="https://en.wikipedia.org/wiki/Christopher_Jarzynski">Christopher Jarzynski</a> and <a href="https://en.wikipedia.org/wiki/Gavin_E._Crooks">Gavin Crooks</a></figcaption>
-</figure>
-</div>
-</div>
-<p>Consider a sequence of densities on <span class="math inline">\(\mathbb{R}^D\)</span> indexed by time parameter <span class="math inline">\(t \in [0,T]\)</span>,</p>
-<p><span class="math display">\[
-\pi_t(x) \; = \; \frac{ e^{-U_t(x)}}{Z_t}
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<p><a href="../../notes/adjoint_samplers/adjoint_sampling.html">Adjoint sampling</a> learns a control drift <span class="math inline">\(u(t,x)\)</span> that steers a Brownian motion in <span class="math inline">\(\mathbb{R}^d\)</span> toward a target <span class="math inline">\(\pi(x) \propto \exp(-E(x))\)</span>. Some problems require sampling <em>paths</em> rather than points. Transition path sampling (TPS) is the canonical example: a molecular system has two metastable states <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, and the goal is to sample reactive trajectories <span class="math inline">\(\mathbf{x}: [0,L] \to \mathbb{R}^d\)</span> connecting them. The target is a Gibbs measure over paths, <span class="math display">\[
+\pi[\mathbf{x}] \propto \exp {\left( -S[\mathbf{x}] \right)} , \qquad S[\mathbf{x}] = \int_0^L E(\mathbf{x}(s)) \, ds.
 \]</span></p>
-<p>where <span class="math inline">\(U_t: \mathbb{R}^D \to \mathbb{R}\)</span> is time-dependent potential function and <span class="math inline">\(Z_t\)</span> is the normalizing constant. We are in fact really interested in studying the final density <span class="math inline">\(\pi_T\)</span> and the bridging sequence of densities <span class="math inline">\(\pi_t\)</span> is just a tool to get there, starting from an initial and tractable density <span class="math inline">\(\pi_0\)</span>. If one initializes a particle <span class="math inline">\(X_0 \sim \pi_0\)</span> and evolves it according to the <a href="https://en.wikipedia.org/wiki/Langevin_equation">Langevin</a> dynamics</p>
-<p><span class="math display">\[
-dX_t \; = \; -\nabla U_t(X_t) \, dt + \sqrt{2} \, dW_t
-\]</span></p>
-<p>one can hope that the distribution of <span class="math inline">\(X_T\)</span> will be close to <span class="math inline">\(\pi_T\)</span>. This would be the case if one evolved the particle according <span class="math inline">\(dX_t \; = \; -\gamma \nabla U_t(X_t) \, dt + \sqrt{2 \gamma} \, dW_t\)</span> and let <span class="math inline">\(\gamma \to \infty\)</span> since in that case <span class="math inline">\(X_t\)</span> would be distributed according to <span class="math inline">\(\pi_t\)</span> for all <span class="math inline">\(t\)</span>. Can one correct the distribution of <span class="math inline">\(X_T\)</span> with importance sampling weights?</p>
-<p>I like the approach presented in <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref">Vargas et al. 2024</a>)</span> and these notes are my attempt to understand it. One very fruitful idea that has been used in a number of works in the Monte-Carlo literature is to look at a probability distribution of interest as the marginal of a joint distribution and to carry out computations and build numerical methods on the joint distribution <span class="citation" data-cites="del2006sequential">(<a href="#ref-del2006sequential" role="doc-biblioref">Del Moral, Doucet, and Jasra 2006</a>)</span>. Indeed, there is a lot of flexibility in the choice of the joint distribution.</p>
-<p>Here, we can also consider the diffusion process <span class="math inline">\(Y_T\)</span> that runs backward in times and that is initialized according to <span class="math inline">\(\pi_T\)</span> and follows the same Langevin dynamics (backward in time). Again, one expects the distribution of <span class="math inline">\(Y_t\)</span> to be close to <span class="math inline">\(\pi_t\)</span>. It is more intuitive to discuss discretized version of the process. For a time discretization <span class="math inline">\(\delta = T/N\)</span>, we consider the forward Markov chain <span class="math inline">\(X_t\)</span> defined as:</p>
-<p><span class="math display">\[
-\left\{
-\begin{aligned}
-x_{t + \delta} &amp;= x_t - \nabla U_t(x_t) \, \delta + \sqrt{2 \delta} \, \xi_t\\
-x_0 &amp;\sim \pi_0
-\end{aligned}
-\right.
-\]</span></p>
-<p>as well as the backward Markov chain <span class="math inline">\(Y_t\)</span> defined as <span class="math display">\[
-\left\{
-\begin{aligned}
-y_{t} &amp;= y_{t + \delta} - \nabla U_{t + \delta}(y_{t + \delta}) \, \delta + \sqrt{2 \delta} \, \xi_t\\
-y_T &amp;\sim \pi_T.
-\end{aligned}
-\right.
-\]</span></p>
-<p>The quantities <span class="math inline">\(\xi_t \sim \mathcal{N}(0,I)\)</span> are i.i.d. standard Gaussian random variables. Let us continue with these discretized versions and denote by <span class="math inline">\(\mathbb{P}^{X}\)</span> and <span class="math inline">\(\mathbb{P}^{Y}\)</span> the probability measures associated with the discretized processes. For a discretized path <span class="math inline">\(\underline{z} = (z_0, z_{\delta}, \ldots, z_{T})\)</span> and notation <span class="math inline">\(t_k = k \delta\)</span>, we have:</p>
-<p><span class="math display">\[
-\begin{aligned}
-\mathbb{P}^X(\underline{z}) &amp;=
-\pi_0(z_0) \, \exp {\left\{ -\frac{1}{4 \delta} \sum_{k=0}^{N-1} \|z_{t_{k+1}} - [z_{t_k} - \nabla U_{t_k}(z_{t_k})\,\delta]\|^2 \right\}} \\
-\mathbb{P}^Y(\underline{z}) &amp;=
-\pi_T(z_T) \, \exp {\left\{ -\frac{1}{4 \delta} \sum_{k=0}^{N-1} \|z_{t_{k}} - [z_{t_{k+1}} - \nabla U_{t_{k+1}}(z_{t_{k+1}})\,\delta]\|^2 \right\}} .
-\end{aligned}
-\]</span></p>
-<p>One can compute the ratio <span class="math inline">\(\mathbb{P}^Y(z) / \mathbb{P}^X(z)\)</span> and examine its limit as <span class="math inline">\(N \to \infty\)</span>. Algebra gives:</p>
-<p><span class="math display">\[
-\frac{\mathbb{P}^Y}{\mathbb{P}^X}(\underline{z}) =
-\frac{\pi_T(z_T)}{\pi_0(z_0)} \,
-\exp {\left\{ \sum_{k=0}^{N-1} \left&lt; z_{t_{k+1}} - z_{t_k}, \frac{\nabla U_{t_k}(z_{t_k}) + \nabla U_{t_{k+1}}(z_{t_{k+1}})}{2}  \right&gt; \right\}}   + \mathcal{O}(\delta^{1/2}).
-\]</span></p>
-<p>One could probably use some <a href="https://en.wikipedia.org/wiki/Stratonovich_integral">Stratonovich</a> calculus to study this, but I always forget these things, so let’s use Ito instead. Write</p>
-<p><span class="math display">\[\frac{\nabla U_{t_k}(z_{t_k}) + \nabla U_{t_{k+1}}(z_{t_{k+1}})}{2}
-=
-\nabla U_{t_k}(z_{t_k}) + \frac{1}{2} \mathrm{Hess}_{U_{t_{k}}} (z_{t_{k}}) (z_{t_{k+1}} - z_{t_k})
-+
-\mathcal{O}(\delta).
-\]</span></p>
-<p>Consequently, in the limit <span class="math inline">\(N \to \infty\)</span>, the quantity converges to:</p>
-<p><span class="math display">\[
-\frac{d\mathbb{P}^Y}{d\mathbb{P}^X}(\underline{z}) \; = \;
-\frac{\pi_T(z_T)}{\pi_0(z_0)} \,
-\exp {\left\{  \int_{t=0}^T \nabla U_t(z_t) \, dz_t
-+
-\frac{1}{2} \int_0^T \left&lt; dz_t, \mathrm{Hess}_{U_t}(z_t) \, dz_t \right&gt;
-\right\}} .
-\]</span></p>
-<p>One can obtain a slightly simpler formuler using Ito’s lemma. Since <span class="math inline">\(d U_t(z_t) = \partial_t U_t(z_T) \, dt + \left&lt; \nabla U_t(z_t), dz_t \right&gt; + \frac{1}{2} \left&lt; dz_t, \mathrm{Hess}_{U_t}(z_t) \, dz_t \right&gt;\)</span>, we also have:</p>
-<p><span class="math display">\[
-\frac{d \mathbb{P}^Y}{d \mathbb{P}^X}(\underline{z})
-=
-\frac{\pi_T(z_T)}{\pi_0(z_0)} \,
-\exp {\left\{  U_T(z_T) - U_0(z_0) - \int_0^T \partial_t U_t(z_t) \, dt \right\}} .
-\]</span></p>
-<p>Since <span class="math inline">\(\pi_t(z_t) = \exp(-U_t(z_t)) / Z_t\)</span>, this gives the <a href="https://en.wikipedia.org/wiki/Crooks_fluctuation_theorem">Crooks relation</a>:</p>
-<p><span class="math display">\[
-\frac{d \mathbb{P}^Y}{d \mathbb{P}^X}(\underline{z})
-=
-\frac{Z_0}{Z_T} \,
-\exp {\left\{  - \int_0^T \partial_t U_t(z_t) \, dt \right\}} .
-\]</span></p>
-<p>Integrating over trajectories of <span class="math inline">\(X_t\)</span>, since <span class="math inline">\(\mathbb{E}_{X}[(d \mathbb{P}^Y / d \mathbb{P}^X)(X)] = 1\)</span>, one obtains the <a href="https://en.wikipedia.org/wiki/Jarzynski_equality">Jarzynski equality</a> <span class="math display">\[
-\frac{Z_T}{Z_0} \; = \; \mathbb{E}_{X}  {\left[  \exp {\left\{  - \int_0^T \partial_t U_t(X_t) \, dt \right\}}  \right]}
-\]</span></p>
-<p>which is indeed also central to sequential Monte-Carlo methods. As described in <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref">Vargas et al. 2024</a>)</span>, the same approach can be used to slightly generalize the Crooks relation. Indeed, suppose that one instead consider the dynamics:</p>
-<p><span class="math display">\[
-dX_t \; = \; -\nabla U_t(X_t) \, dt  \textcolor{blue}{+ b_t(X_t) \, dt} + \sqrt{2} \, dW_t
-\]</span></p>
-<p>where <span class="math inline">\(b: \mathbb{R}^D \to \mathbb{R}^D\)</span> is a control function. One can consider the backward dynamics <span class="math inline">\(Y_t\)</span> that is initialized according to <span class="math inline">\(\pi_T\)</span> and follows the dynamics <span class="math inline">\(dY_t = -\nabla U_t(Y_t) \, dt  \textcolor{red}{-} b(Y_t) \, dt + \sqrt{2} \, dW_t\)</span> backward in time, i.e.</p>
-<p><span class="math display">\[
-\left\{
-\begin{aligned}
-x_{t + \delta} &amp;= x_t - \nabla U_t(x_t) \, \delta + b_t(x_t) \, \delta + \sqrt{2 \delta} \, \xi_t\\
-y_{t} &amp;= y_{t + \delta} - \nabla U_{t + \delta}(y_{t + \delta}) \, \delta  \textcolor{red}{-} b_{t + \delta}(y_{t + \delta}) \, \delta + \sqrt{2 \delta} \, \xi_t.
-\end{aligned}
-\right.
-\]</span></p>
-<p>The minus sign for the backward dynamics <span class="math inline">\(Y_t\)</span> is natural. Indeed, one would like the dynamics of <span class="math inline">\(Y_t\)</span> to be as close as possible to the time-reversal of the dynamics of <span class="math inline">\(X_t\)</span>. Furthermore, one knows that the <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">backward dynamics</a> of <span class="math inline">\(X_t\)</span> is given by</p>
-<p><span class="math display">\[
-dY_t =  \textcolor{red}{+} \nabla U_t(Y_t) \, dt  \textcolor{red}{-} b_t(Y_t) \, dt + 2 \nabla \log p_t(Y_t) \, dt + \sqrt{2} \, dW_t
-\]</span></p>
-<p>where <span class="math inline">\(p_t\)</span> is the marginal distribution of <span class="math inline">\(X_t\)</span> at time <span class="math inline">\(t\)</span>. Since we would like <span class="math inline">\(p_t = \pi_t = \exp(-U_t) / Z_t\)</span>, in that case this gives</p>
-<p><span class="math display">\[
-dY_t = -\nabla U_t(Y_t) \, dt  \textcolor{red}{-} b_t(Y_t) \, dt + \sqrt{2} \, dW_t,
-\]</span></p>
-<p>which is exactly the dynamics we chose for <span class="math inline">\(Y_t\)</span>.One can then follow the exact same steps as done previously, using that the quadratic variation is <span class="math inline">\(\left&lt; dz_t, dz_t \right&gt; = 2 \, dt\)</span>, to obtain that</p>
-<p><span class="math display">\[
-\frac{d \mathbb{P}^Y}{d \mathbb{P}^X}(\underline{z})
-=
-\frac{Z_0}{Z_T} \,
-\exp {\left\{  \int_0^T -\partial_t U_t(z_t)  \textcolor{blue}{+ \nabla \cdot b_t(z_t) - \left&lt; \nabla U_t(z_t), b_t(z_t) \right&gt;} \, dt \right\}} .
-\]</span></p>
-<p>This for example shows that, for <span class="math inline">\(dX_t \; = \; -\nabla U_t(X_t) \, dt  \textcolor{blue}{+ b_t(X_t) \, dt} + \sqrt{2} \, dW_t\)</span> initialized according to <span class="math inline">\(\pi_0\)</span>, we have:</p>
-<p><span class="math display">\[
-\frac{Z_T}{Z_0} \; = \; \mathbb{E}_{X}  {\left\{  \exp {\left\{  \int_0^T -\partial_t U_t(X_t)  \textcolor{blue}{+ \nabla \cdot b_t(X_t) - \left&lt; \nabla U_t(X_t), b_t(X_t) \right&gt;} \, dt \right\}}  \right\}} .
-\]</span></p>
-<p>This generalization of the Crooks relation is also explored in <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref">Albergo and Vanden-Eijnden 2024</a>)</span> where an alternative derivation by directly exploiting the <a href="https://en.wikipedia.org/wiki/Fokker–Planck_equation">Fokker-Planck</a> equation. Crucially, <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref">Albergo and Vanden-Eijnden 2024</a>)</span> note that, if the control function <span class="math inline">\(b_t: \mathbb{R}^D \to \mathbb{R}^D\)</span> is chosen so that</p>
-<p><span id="eq-nets"><span class="math display">\[
--\partial_t U_t(x) + \nabla \cdot b_t(x) - \left&lt; \nabla U_t(x), b_t(x) \right&gt;
-=
-\frac{d}{dt} \, \log Z_t
-\tag{1}\]</span></span></p>
-<p>then the term <span class="math inline">\(\int_0^T -\partial_t U_t(X_t) + \nabla \cdot b_t(X_t) - \left&lt; \nabla U_t(X_t), b_t(X_t) \right&gt; \, dt\)</span> is indeed constant, which gives a zero-variance estimator of the free energy difference <span class="math inline">\(\log(Z_T/Z_0)\)</span>. Indeed, it is a formidable challenge to solve the high-dimensional PDE <a href="#eq-nets" class="quarto-xref">Equation&nbsp;1</a> and <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref">Albergo and Vanden-Eijnden 2024</a>)</span> propose interesting <a href="https://en.wikipedia.org/wiki/Physics-informed_neural_networks">PINNs</a>-based methods to do so.</p>
-<section id="some-references" class="level3">
-<h3 class="anchored" data-anchor-id="some-references">Some References:</h3>
-<ul>
-<li>The original papers by Jarzynski <span class="citation" data-cites="jarzynski1997nonequilibrium">(<a href="#ref-jarzynski1997nonequilibrium" role="doc-biblioref">Jarzynski 1997</a>)</span> and Crooks <span class="citation" data-cites="crooks1999entropy">(<a href="#ref-crooks1999entropy" role="doc-biblioref">Crooks 1999</a>)</span>.</li>
-<li>The book <span class="citation" data-cites="stoltz2010free">(<a href="#ref-stoltz2010free" role="doc-biblioref">Stoltz, Rousset, et al. 2010</a>)</span> is excellent!</li>
-<li>The two papers that prompted these notes: <span class="citation" data-cites="vargas2023transport">(<a href="#ref-vargas2023transport" role="doc-biblioref">Vargas et al. 2024</a>)</span> and <span class="citation" data-cites="albergo2024nets">(<a href="#ref-albergo2024nets" role="doc-biblioref">Albergo and Vanden-Eijnden 2024</a>)</span>.</li>
-</ul>
+<p>The Functional Adjoint Sampler (FAS) <span class="citation" data-cites="park2025functional">(<a href="#ref-park2025functional" role="doc-biblioref">Park, Lee, and Liu 2025</a>)</span> applies <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a> to this setting with an OU reference process instead of Brownian motion. After discretization, the “path” is just a vector in <span class="math inline">\(\mathbb{R}^{dK}\)</span>. FAS is adjoint sampling in <span class="math inline">\(\mathbb{R}^{dK}\)</span> with an OU reference process. The infinite-dimensional formulation in the original paper is a presentation choice, not a mathematical necessity. Strip away the infinite-dimensional machinery and the core idea is: adjoint sampling on paths instead of points, with an OU reference instead of Brownian motion, and Dirichlet boundary conditions to pin endpoints.</p>
+<p>(The other notes use <span class="math inline">\([0,1]\)</span>; here we use <span class="math inline">\([0,T]\)</span> to match the FAS paper.)</p>
+</section>
+<section id="setup-soc-on-path-space" class="level2">
+<h2 class="anchored" data-anchor-id="setup-soc-on-path-space">Setup: SOC on path space</h2>
+<p>Discretize the path into <span class="math inline">\(K\)</span> interior nodes: <span class="math inline">\(\mathbf{x} = (x_1, \ldots, x_K) \in \mathbb{R}^{dK}\)</span>, with boundary conditions <span class="math inline">\(x_0 = a \in A\)</span> and <span class="math inline">\(x_{K+1} = b \in B\)</span> fixed. The target density on the interior nodes is <span class="math inline">\(\pi(\mathbf{x}) \propto \exp(-S(\mathbf{x})) \, \nu(\mathbf{x})\)</span> for some reference measure <span class="math inline">\(\nu\)</span>. As in <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a>, the terminal cost absorbs the mismatch: <span class="math inline">\(g(\mathbf{x}) = S(\mathbf{x}) + \log q_T(\mathbf{x}_0, \mathbf{x}) - \log \nu_\infty(\mathbf{x})\)</span>, where <span class="math inline">\(q_T\)</span> is the Radon-Nikodym derivative of the OU marginal at time <span class="math inline">\(T\)</span> against the invariant measure <span class="math inline">\(\nu_\infty\)</span>. The log-RND term <span class="math inline">\(\log q_T\)</span> corrects for the mismatch between the OU marginal and the invariant measure, analogous to the path-space reweighting in the <a href="../../notes/jarzynski/jarzynski.html">Jarzynski notes</a>.</p>
+<p>(Sign convention: <span class="math inline">\(g\)</span> is a cost, minimized; consistent with <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a>. The <a href="../../notes/adjoint_samplers/adjoint_matching.html">adjoint matching</a> note uses a reward <span class="math inline">\(r = -g\)</span>.)</p>
+<p>The reference process in <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a> is Brownian motion. For paths, the natural reference is an <strong>Ornstein-Uhlenbeck (OU) process</strong>. Compared to Brownian motion, the OU reference adds a mean-reverting drift <span class="math inline">\(-A\mathbf{x}\)</span>. Two reasons to prefer it: (a) the eigenbasis parameterization with Dirichlet eigenfunctions enforces boundary conditions exactly, and (b) the OU invariant measure concentrates on smooth paths, providing a better prior for path sampling than Brownian motion (which generates rough paths). The reference SDE on <span class="math inline">\(\mathbb{R}^{dK}\)</span> is <span id="eq-ou-ref"><span class="math display">\[
+d\mathbf{X}_t = -A \, \mathbf{X}_t \, dt + \sigma_t \, dW_t^Q,
+\tag{1}\]</span></span> where <span class="math inline">\(A = -\Delta_h\)</span> is the negative discrete Laplacian (positive-definite, eigenvalues <span class="math inline">\(\lambda_k &gt; 0\)</span>): the <span class="math inline">\(K \times K\)</span> tridiagonal matrix with <span class="math inline">\(2\)</span> on the diagonal and <span class="math inline">\(-1\)</span> on the off-diagonals, incorporating Dirichlet boundary conditions. Here <span class="math inline">\(W_t^Q\)</span> is a <span class="math inline">\(Q\)</span>-Wiener process with <span class="math inline">\(\text{Cov}(dW^Q) = Q\,dt\)</span> and <span class="math inline">\(Q = A^{-s}\)</span> for some <span class="math inline">\(s &gt; d/2\)</span>.</p>
+<p>The Laplacian <span class="math inline">\(A\)</span> has eigenvectors <span class="math inline">\(\varphi_k\)</span> (discrete sine functions) with eigenvalues <span class="math inline">\(\lambda_k &gt; 0\)</span>. Expanding <span class="math inline">\(\mathbf{X}_t = \sum_k c_k(t) \, \varphi_k\)</span>, each mode evolves independently: <span id="eq-mode-sde"><span class="math display">\[
+dc_k(t) = -\lambda_k \, c_k(t) \, dt + \sigma_t \, \lambda_k^{-s/2} \, dB_k(t),
+\tag{2}\]</span></span> where <span class="math inline">\(B_k\)</span> are independent scalar Brownian motions and <span class="math inline">\(\lambda_k^{-s/2}\)</span> is the noise amplitude from the covariance operator <span class="math inline">\(Q = A^{-s}\)</span>. Each coefficient follows a scalar OU process. In the eigenbasis, the problem decomposes into <span class="math inline">\(K\)</span> independent 1D SDEs, each a standard scalar SOC problem.</p>
+<p>The controlled SDE adds a drift: <span id="eq-controlled-ou"><span class="math display">\[
+d\mathbf{X}_t =  {\left[ -A \, \mathbf{X}_t + \sigma_t \, Q^{1/2} \, u(t, \mathbf{X}_t) \right]}  \, dt + \sigma_t \, dW_t^Q.
+\tag{3}\]</span></span> Same structure as <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a>, with base drift <span class="math inline">\(b(\mathbf{x}) = -A\mathbf{x}\)</span> instead of <span class="math inline">\(b = 0\)</span>. The optimal control <span class="math inline">\(u^\star = \sigma_t \nabla V\)</span> is a <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> of the OU process, conditioning it to produce paths with low action.</p>
+</section>
+<section id="the-adjoint-on-path-space" class="level2">
+<h2 class="anchored" data-anchor-id="the-adjoint-on-path-space">The adjoint on path space</h2>
+<p>The lean adjoint from the <a href="../../notes/adjoint_samplers/adjoint_matching.html">adjoint matching</a> notes satisfies <span class="math inline">\(\dot{\tilde{a}}(t) = -(\nabla_{\mathbf{x}} b)^\top \tilde{a}(t)\)</span> with <span class="math inline">\(\tilde{a}(T) = \nabla g(\mathbf{X}_T)\)</span>.</p>
+<p>Here <span class="math inline">\(b(\mathbf{x}) = -A\mathbf{x}\)</span>, so <span class="math inline">\(\nabla_{\mathbf{x}} b = -A\)</span> and the lean adjoint ODE becomes: <span id="eq-lean-adjoint-ou"><span class="math display">\[
+\dot{\tilde{a}}(t) = A^\top \tilde{a}(t), \qquad \tilde{a}(T) = \nabla g(\mathbf{X}_T).
+\tag{4}\]</span></span> This is a linear ODE with solution <span id="eq-adjoint-solution"><span class="math display">\[
+\tilde{a}(t) = e^{ \textcolor{red}{-(T-t)}A^\top} \nabla g(\mathbf{X}_T).
+\tag{5}\]</span></span></p>
+<p>Since <span class="math inline">\(A\)</span> is symmetric positive-definite with eigenvalues <span class="math inline">\(\lambda_k\)</span>, the matrix exponential <span class="math inline">\(e^{-(T-t)A^\top}\)</span> has eigenvalues <span class="math inline">\(e^{-(T-t)\lambda_k}\)</span>. It is diagonal in the eigenbasis: just multiply each mode by the scalar <span class="math inline">\(e^{-(T-t)\lambda_k}\)</span>, no matrix operations needed. In the eigenbasis: <span class="math display">\[
+\tilde{a}_k(t) = e^{-(T-t)\lambda_k} \cdot [\nabla g(\mathbf{X}_T)]_k.
+\]</span> Low-frequency modes (small <span class="math inline">\(\lambda_k\)</span>) get weight close to 1, nearly identical to the Brownian case. High-frequency modes (large <span class="math inline">\(\lambda_k\)</span>) are exponentially : their adjoint contribution at early times is negligible.</p>
+<p>Why is the adjoint no longer constant? For Brownian motion (<span class="math inline">\(b = 0\)</span>), perturbing <span class="math inline">\(X_t\)</span> by <span class="math inline">\(\delta X_t\)</span> shifts <span class="math inline">\(X_T\)</span> by the same amount (independent increments), so <span class="math inline">\(\tilde{a}(t) = \nabla g(X_T)\)</span> for all <span class="math inline">\(t\)</span>. For OU, the drift <span class="math inline">\(-A\mathbf{x}\)</span> pulls perturbations back toward zero. A perturbation <span class="math inline">\(\delta X_t\)</span> at time <span class="math inline">\(t\)</span> decays by <span class="math inline">\(e^{-(T-t)A}\)</span> before reaching <span class="math inline">\(T\)</span>. The terminal cost’s sensitivity to that perturbation is therefore <span class="math inline">\(e^{-(T-t)A^\top} \nabla g(X_T)\)</span>, not <span class="math inline">\(\nabla g(X_T)\)</span>. High-frequency modes are strongly damped by the OU reference, so the control has less leverage over them at early times: perturbing them costs energy but has minimal terminal effect.</p>
+<p>The FAS loss is the <a href="../../notes/adjoint_samplers/adjoint_matching.html">adjoint matching</a> loss with this non-constant adjoint: <span id="eq-fas-loss"><span class="math display">\[
+L_\text{FAS}(u) = \mathbb{E} {\left[ \int_0^T \big\|u(t, \mathbf{X}_t) + \sigma_t \, Q^{1/2} \,  \textcolor{blue}{e^{-(T-t)A^\top}} \, \nabla g(\mathbf{X}_T)\big\|^2 \, dt \right]} ,
+\tag{6}\]</span></span> where the expectation is over trajectories of the controlled SDE <a href="#eq-controlled-ou" class="quarto-xref">Equation&nbsp;3</a> (with stop-gradient). The <span class="math inline">\(Q^{1/2}\)</span> factor appears because the control enters the SDE as <span class="math inline">\(\sigma_t Q^{1/2} u\)</span>; the Girsanov change of measure produces <span class="math inline">\(\|Q^{1/2} u\|^2\)</span>, not <span class="math inline">\(\|u\|^2\)</span>, so the adjoint target picks up <span class="math inline">\(Q^{1/2}\)</span>. The <span class="math inline">\( \textcolor{blue}{e^{-(T-t)A^\top}}\)</span> factor is the OU semigroup, which damps the terminal gradient according to how much the base dynamics attenuate perturbations.</p>
+</section>
+<section id="boundary-conditions-for-free" class="level2">
+<h2 class="anchored" data-anchor-id="boundary-conditions-for-free">Boundary conditions for free</h2>
+<p>The Dirichlet eigenfunctions of <span class="math inline">\(A\)</span> satisfy <span class="math inline">\(\varphi_k(0) = \varphi_k(L) = 0\)</span>. Any linear combination <span class="math inline">\(\mathbf{x} = \sum_k c_k \, \varphi_k\)</span> automatically satisfies <span class="math inline">\(\mathbf{x}(0) = 0\)</span> and <span class="math inline">\(\mathbf{x}(L) = 0\)</span>.</p>
+<p>To enforce <span class="math inline">\(\mathbf{x}(0) = a\)</span> and <span class="math inline">\(\mathbf{x}(L) = b\)</span>, write <span class="math inline">\(\mathbf{x}(s) = \bar{\mathbf{x}}(s) + \sum_k c_k \, \varphi_k(s)\)</span> where <span class="math inline">\(\bar{\mathbf{x}}\)</span> is any fixed path connecting <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span> (e.g., linear interpolation). The OU process evolves the <span class="math inline">\(c_k\)</span> coefficients; the boundary values are fixed by <span class="math inline">\(\bar{\mathbf{x}}\)</span>. No penalty terms, no projections. The controlled process respects boundary conditions by construction.</p>
+<p><strong>Discretization-invariant sampling.</strong> Train the control <span class="math inline">\(u\)</span> on a coarse grid (small <span class="math inline">\(K\)</span>). At inference, sample at arbitrary resolution by adding more eigenmodes. The high-frequency modes (<span class="math inline">\(k &gt; K\)</span>) receive zero control and simply follow the OU reference, which already assigns them low variance (<span class="math inline">\(\lambda_k^{-s}\)</span> decays with <span class="math inline">\(k\)</span>). This is a standard property of Galerkin truncation for linear reference processes; FAS inherits it rather than inventing it.</p>
+</section>
+<section id="connection-to-existing-framework" class="level2">
+<h2 class="anchored" data-anchor-id="connection-to-existing-framework">Connection to existing framework</h2>
+<p>Set <span class="math inline">\(A = 0\)</span>: the OU reference becomes Brownian motion, <span class="math inline">\(Q^{1/2} = I\)</span>, <span class="math inline">\(e^{0} = I\)</span>, and the FAS loss <a href="#eq-fas-loss" class="quarto-xref">Equation&nbsp;6</a> reduces to the <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a> loss <span class="math inline">\(\|u + \sigma_t \nabla g(X_1)\|^2\)</span>. Standard adjoint sampling is the special case with no spatial structure in the base dynamics.</p>
+<p>The reciprocal projection from <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a> carries over directly. Replace the Brownian bridge with an OU bridge: given terminal state <span class="math inline">\(\mathbf{X}_T\)</span>, sample <span class="math inline">\(\mathbf{X}_t \mid \mathbf{X}_T\)</span> from the OU bridge. Since each mode <span class="math inline">\(c_k\)</span> is an independent scalar OU process, the bridge decomposes into <span class="math inline">\(K\)</span> independent 1D Gaussian conditionals:</p>
+<details>
+<summary>
+<p style="color: blue;">
+OU bridge formula in the eigenbasis
+</p>
+</summary>
+<p style="color: blue;">
+For a scalar OU process <span class="math inline">\(dc_k = -\lambda_k c_k \, dt + \sigma_t \lambda_k^{-s/2} \, dB_k\)</span> started at <span class="math inline">\(c_k(0) = 0\)</span>, the bridge is standard Gaussian conditioning (cf.&nbsp;<a href="../../notes/adjoint_samplers/adjoint_sampling.html#eq-bridge">the Brownian-bridge formula</a>): <span class="math display">\[
+c_k(t) \mid c_k(T) \;\sim\; \mathcal{N} {\left( \frac{\mathop{\mathrm{Cov}}(c_k(t), c_k(T))}{v_k(T)} \, c_k(T), \;\; v_k(t) - \frac{\mathop{\mathrm{Cov}}(c_k(t), c_k(T))^2}{v_k(T)} \right)} ,
+\]</span> with <span class="math inline">\(v_k(t) = \lambda_k^{-s} \int_0^t \sigma_r^2 \, e^{-2\lambda_k(t-r)} \, dr\)</span> and <span class="math inline">\(\mathop{\mathrm{Cov}}(c_k(t), c_k(T)) = e^{-\lambda_k(T-t)} v_k(t)\)</span>.
+</p>
+</details>
+<p>The buffer-based training from <a href="../../notes/adjoint_samplers/adjoint_sampling.html">adjoint sampling</a> transfers directly: simulate forward to fill a replay buffer, then sample from the OU bridge for cheap inner-loop gradient steps.</p>
 
 
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-albergo2024nets" class="csl-entry" role="listitem">
-Albergo, Michael S, and Eric Vanden-Eijnden. 2024. <span>“<span class="nocase">Nets: A non-equilibrium transport sampler</span>.”</span> <em>arXiv Preprint arXiv:2410.02711</em>. <a href="https://arxiv.org/abs/2410.02711">https://arxiv.org/abs/2410.02711</a>.
-</div>
-<div id="ref-crooks1999entropy" class="csl-entry" role="listitem">
-Crooks, Gavin E. 1999. <span>“<span class="nocase">Entropy production fluctuation theorem and the nonequilibrium work relation for free energy differences</span>.”</span> <em>Physical Review E</em> 60 (3). APS: 2721. <a href="https://doi.org/10.1103/physreve.60.2721">https://doi.org/10.1103/physreve.60.2721</a>.
-</div>
-<div id="ref-del2006sequential" class="csl-entry" role="listitem">
-Del Moral, Pierre, Arnaud Doucet, and Ajay Jasra. 2006. <span>“<span class="nocase">Sequential monte carlo samplers</span>.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 68 (3). Oxford University Press: 411–36.
-</div>
-<div id="ref-jarzynski1997nonequilibrium" class="csl-entry" role="listitem">
-Jarzynski, Christopher. 1997. <span>“<span class="nocase">Nonequilibrium equality for free energy differences</span>.”</span> <em>Physical Review Letters</em> 78 (14). APS: 2690. <a href="https://doi.org/10.1103/physrevlett.78.2690">https://doi.org/10.1103/physrevlett.78.2690</a>.
-</div>
-<div id="ref-stoltz2010free" class="csl-entry" role="listitem">
-Stoltz, Gabriel, Mathias Rousset, et al. 2010. <em><span class="nocase">Free energy computations: A mathematical perspective</span></em>. World Scientific.
-</div>
-<div id="ref-vargas2023transport" class="csl-entry" role="listitem">
-Vargas, Francisco, Shreyas Padhy, Denis Blessing, and Nikolas Nüsken. 2024. <span>“<span class="nocase">Transport meets variational inference: Controlled monte carlo diffusions</span>.”</span> <em>ICLR 2024</em>.
+<div id="ref-park2025functional" class="csl-entry" role="listitem">
+Park, Byoungwoo, Juho Lee, and Guan-Horng Liu. 2025. <span>“<span class="nocase">Functional Adjoint Sampler: Scalable Sampling on Infinite Dimensional Spaces</span>.”</span> arXiv. <a href="https://arxiv.org/abs/2511.06239">https://arxiv.org/abs/2511.06239</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

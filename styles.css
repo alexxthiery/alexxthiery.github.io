@@ -31,3 +31,15 @@ mjx-container[jax="CHTML"][display="true"] {
 .list li em {
   display: inline !important;
 }
+
+/* Bibliography: show a short clickable word instead of a bare URL. */
+#refs .csl-entry a[href*="arxiv.org"] { font-size: 0; }
+#refs .csl-entry a[href*="arxiv.org"]::before {
+  content: "arXiv";
+  font-size: var(--bs-body-font-size, 1rem);
+}
+#refs .csl-entry a[href*="doi.org"] { font-size: 0; }
+#refs .csl-entry a[href*="doi.org"]::before {
+  content: "DOI";
+  font-size: var(--bs-body-font-size, 1rem);
+}

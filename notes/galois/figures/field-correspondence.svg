@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 340" role="img" aria-labelledby="title desc">
+<title id="title">Intermediate fields and fixing subgroups</title><desc id="desc">On the left Q is contained in Q square root 2, Q square root 3, and Q square root 6, which are contained in L. On the right the fixing group G contains three subgroups of order two, each containing the identity. Corresponding objects occupy the same positions; inclusion arrows are reversed.</desc>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#263340} .label{font-size:18px} .small{font-size:14px;fill:#596674} .heading{font-size:19px;font-weight:600} .node{fill:#fff;stroke:#263340;stroke-width:1.5} .edge{fill:none;stroke:#546572;stroke-width:1.4}</style>
+<rect width="100%" height="100%" fill="#fff"/>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="#546572"/></marker></defs>
+<text x="240" y="30" text-anchor="middle" class="heading">Fields</text>
+<text x="240" y="53" text-anchor="middle" class="small">Arrows point toward larger fields</text>
+<path d="M240,273 L85,197" class="edge" marker-end="url(#arrow)"/>
+<path d="M85,157 L240,105" class="edge" marker-end="url(#arrow)"/>
+<path d="M240,273 L240,197" class="edge" marker-end="url(#arrow)"/>
+<path d="M240,157 L240,105" class="edge" marker-end="url(#arrow)"/>
+<path d="M240,273 L395,197" class="edge" marker-end="url(#arrow)"/>
+<path d="M395,157 L240,105" class="edge" marker-end="url(#arrow)"/>
+<text x="240" y="94" text-anchor="middle" class="label">L = Q(√2, √3)</text>
+<text x="85" y="181" text-anchor="middle" class="label">Q(√2)</text>
+<text x="240" y="181" text-anchor="middle" class="label">Q(√3)</text>
+<text x="395" y="181" text-anchor="middle" class="label">Q(√6)</text>
+<text x="240" y="299" text-anchor="middle" class="label">Q</text>
+<text x="720" y="30" text-anchor="middle" class="heading">Fixing subgroups</text>
+<text x="720" y="53" text-anchor="middle" class="small">Arrows point toward larger groups</text>
+<path d="M565,197 L720,273" class="edge" marker-end="url(#arrow)"/>
+<path d="M720,105 L565,157" class="edge" marker-end="url(#arrow)"/>
+<path d="M720,197 L720,273" class="edge" marker-end="url(#arrow)"/>
+<path d="M720,105 L720,157" class="edge" marker-end="url(#arrow)"/>
+<path d="M875,197 L720,273" class="edge" marker-end="url(#arrow)"/>
+<path d="M720,105 L875,157" class="edge" marker-end="url(#arrow)"/>
+<text x="720" y="94" text-anchor="middle" class="label">{1}</text>
+<text x="565" y="181" text-anchor="middle" class="label">{1, σ₃}</text>
+<text x="720" y="181" text-anchor="middle" class="label">{1, σ₂}</text>
+<text x="875" y="181" text-anchor="middle" class="label">{1, σ₂σ₃}</text>
+<text x="720" y="299" text-anchor="middle" class="label">G = {1, σ₂, σ₃, σ₂σ₃}</text>
+<path d="M480,68 V313" stroke="#dce1e5" stroke-width="1"/>
+</svg>

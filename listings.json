@@ -64,6 +64,8 @@
     "items": [
       "/notes/adjoint_samplers_draft/discrete_adjoint_audit.html",
       "/notes/adjoint_samplers_draft/functional_adjoint_audit.html",
+      "/notes/LLM_reasoning/llm_reasoning.html",
+      "/notes/galois/galois.html",
       "/notes/lagrangian_convexity/lagrange.html",
       "/notes/cvxpy/cvxpy.html",
       "/notes/predictive_posterior/predictive_posterior.html",

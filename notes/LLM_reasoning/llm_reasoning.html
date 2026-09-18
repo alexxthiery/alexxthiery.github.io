@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Why long-horizon mathematical reasoning is not just a longer chain of thought">
+
+<title>Spending a day on one theorem – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Spending a day on one theorem – Alexandre Thiéry">
+<meta property="og:description" content="Why long-horizon mathematical reasoning is not just a longer chain of thought">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Spending a day on one theorem – Alexandre Thiéry">
+<meta name="twitter:description" content="Why long-horizon mathematical reasoning is not just a longer chain of thought">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Spending a day on one theorem</h1>
+                  <div>
+        <div class="description">
+          Why long-horizon mathematical reasoning is not just a longer chain of thought
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">18 09 2026</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">18 09 2026</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link active" data-scroll-target="#sec-background">From pretraining to a deployed assistant</a></li>
+  <li><a href="#sec-rlvr" id="toc-sec-rlvr" class="nav-link" data-scroll-target="#sec-rlvr">The workhorse: where the reward comes from</a></li>
+  <li><a href="#sec-two-facts" id="toc-sec-two-facts" class="nav-link" data-scroll-target="#sec-two-facts">Two facts that break the naive picture</a></li>
+  <li><a href="#sec-notation" id="toc-sec-notation" class="nav-link" data-scroll-target="#sec-notation">The parts</a></li>
+  <li><a href="#sec-frontier" id="toc-sec-frontier" class="nav-link" data-scroll-target="#sec-frontier">Where verification stops</a></li>
+  <li><a href="#sec-certification-selection" id="toc-sec-certification-selection" class="nav-link" data-scroll-target="#sec-certification-selection">Certification and selection are different jobs</a></li>
+  <li><a href="#sec-persistence" id="toc-sec-persistence" class="nav-link" data-scroll-target="#sec-persistence">What survives a context window</a></li>
+  <li><a href="#sec-families" id="toc-sec-families" class="nav-link" data-scroll-target="#sec-families">Five ways to live with one bit</a></li>
+  <li><a href="#sec-scorecard" id="toc-sec-scorecard" class="nav-link" data-scroll-target="#sec-scorecard">What we actually know</a></li>
+  <li><a href="#sec-boundary" id="toc-sec-boundary" class="nav-link" data-scroll-target="#sec-boundary">A dispute that dissolves</a></li>
+  <li><a href="#sec-constraint" id="toc-sec-constraint" class="nav-link" data-scroll-target="#sec-constraint">The constraint underneath</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>A language model answers a competition problem in thirty seconds, while another system is handed a theorem and works on it for a day, sometimes returning a proof. These look like the same activity run at two budgets, and the natural extrapolation is that a day is simply a longer chain of thought: sample for longer, sample more often, train the policy harder. That reading is a fair summary of the public literature, and it is where most of us start.</p>
+<p>It breaks for two reasons, both of which concern what a single trajectory cannot do. A chain of thought retains nothing once its context ends; and two half-finished chains of thought cannot be combined into one. Everything in this design space is a response to those two deficits.</p>
+<p>What follows is an attempt to put the current crop of systems into a single frame. I will not describe any optimiser, any architecture variant, or any of the policy-gradient bookkeeping, since that material is well covered elsewhere and is not where the interesting differences live. Those differences are about where truth is cheap, where it is unavailable, and what survives between contexts.</p>
+<section id="sec-background" class="level2">
+<h2 class="anchored" data-anchor-id="sec-background">From pretraining to a deployed assistant</h2>
+<p>The systems below sit on top of the standard pipeline rather than replacing it, so this section fixes vocabulary rather than explaining anything. The first stage needs no introduction at all.</p>
+<p><em>Pretraining</em> fits a model to predict the next token over an enormous corpus, and what comes out is a distribution over continuations. Nothing in that objective asks for a system that answers a question, follows an instruction, or stops when it is done. The remaining stages exist to supply those.</p>
+<p><em>Supervised finetuning</em> supplies them. Collect demonstrations of the behaviour you want, prompts paired with good responses, and continue training on those. A continuation engine thereby becomes something that behaves like an assistant, and this stage is cheap, stable, and limited by how many demonstrations you are willing to write.</p>
+<p><em>Preference tuning</em> handles what demonstrations cannot. For questions of helpfulness, tone, verbosity or refusal there is often no single correct response, but people can reliably say which of two responses they prefer. So collect comparisons, fit a reward model to them, and use reinforcement learning to push the policy toward responses the reward model scores highly <span class="citation" data-cites="Ouyang2022">(<a href="#ref-Ouyang2022" role="doc-biblioref">Ouyang et al. 2022</a>)</span>. This is the stage usually meant by <a href="https://en.wikipedia.org/wiki/Reinforcement_learning_from_human_feedback">RLHF</a>, and it is what turns a competent model into one people are willing to use.</p>
+<p>Those three stages have been the standard recipe for several years, and they produce the assistants everyone is familiar with. The reasoning models are what you get when a fourth stage is added: more reinforcement learning, on problems whose answers can be checked automatically, at very large scale. That stage is the subject of the next section and the foundation of everything after it.</p>
+<p>Two observations before moving on. First, these stages compose rather than compete; a reasoning model has typically been through all four, and a deployed product then wraps the result in further scaffolding, such as system prompts, tool access and sampling settings. Second, and more important for what follows, every one of these stages produces the same kind of object. A policy. Given a prompt it returns a distribution over responses. Everything in the rest of this post concerns what one builds <em>around</em> such a policy once the questions get hard enough that a single response will not do.</p>
+</section>
+<section id="sec-rlvr" class="level2">
+<h2 class="anchored" data-anchor-id="sec-rlvr">The workhorse: where the reward comes from</h2>
+<p>That fourth stage is a variation on the loop we just met, so here it is in one paragraph. Anyone who has done preference tuning will recognise the machinery, because the machinery is the same. What changes, and what the whole post turns on, is where the reward comes from.</p>
+<p>Take a prompt <span class="math inline">\(x\)</span>. Sample a group of <span class="math inline">\(G\)</span> completions from the current policy,</p>
+<p><span class="math display">\[
+y_1, \ldots, y_G \;\sim\; \pi_\theta(\cdot \mid x),
+\]</span></p>
+<p>score each one to get a reward <span class="math inline">\(r_i\)</span>, then increase the probability of the completions that scored well relative to the others in their own group, and repeat. The only structural novelty worth mentioning is that the baseline comes from the group itself: with <span class="math inline">\(G\)</span> samples of the same prompt, the mean reward within the group estimates how hard that prompt is, so no separate value network is needed. This is what GRPO <span class="citation" data-cites="Shao2024">(<a href="#ref-Shao2024" role="doc-biblioref">Shao et al. 2024</a>)</span> does, and the details beyond it are bookkeeping I will not dwell on.</p>
+<p>Everything interesting sits in the scoring step, and the options form a spectrum rather than a single choice.</p>
+<p>At one end the reward is a <em>program</em>. A competition problem with a short answer can be scored by extracting the boxed expression and comparing it to a reference; a coding task can be scored by compiling the program and running its tests. The reward is then a bit, produced by code, and this is the case that acquired the name <em>reinforcement learning with verifiable rewards</em>.</p>
+<p>In the middle sits a <em>learned preference model</em>, trained on human comparisons. That is ordinary preference tuning, it long predates the reasoning era, and it remains what one uses for helpfulness, tone and safety, where no program can settle the question.</p>
+<p>Further along, the scorer is <em>another language model</em> reading the output against a written rubric. This is how one attacks domains that have no checker but do have criteria, such as medical advice or open-ended writing <span class="citation" data-cites="Gunjal2025">(<a href="#ref-Gunjal2025" role="doc-biblioref">Gunjal et al. 2025</a>)</span>, and we will meet it again in an unexpected place: a formal theorem prover whose most important component is supervised this way, because the kernel has nothing to say about the thing being judged.</p>
+<p>At the far end the reward is a <em>vote</em>, with a model’s own agreement across samples standing in for a label it does not have.</p>
+<p>Only the first of these is safe under heavy optimisation, and that is the whole reason the program end matters. A learned scorer can be fooled, so pushing hard against one finds the places where it is wrong rather than the places where it is right. A unit test cannot be flattered, and neither can an arithmetic check. Since the reward is code, running a policy against it a hundred million times is safe in a way that running against a critic is not.</p>
+<p>Two clarifications, since both matter later.</p>
+<p>First, verifiable does not mean mathematical. The territory is large and commercially important: code against test suites, SQL that either returns the right rows or does not, formatting and instruction-following constraints that can be checked syntactically, tool calls that either parse or fail. This loop is the workhorse behind most of what the last two years called reasoning, and within its territory it is genuinely general.</p>
+<p>Second, the checker is a <em>training-time</em> object. It needs the reference answer, so it exists while you are building the model and is gone the moment a user asks a real question. At deployment the policy generates and nothing checks it. That distinction explains a great deal of what follows, including why a system can be demonstrably capable of producing a correct answer and still fail to give you one.</p>
+<p>Now notice what the program end of the spectrum requires: a finished artifact the code can run, and a reference to compare it against. A proof has neither, since there is no reference string, and checking it means checking an argument rather than an output. The rest of this post is about that boundary, and the first thing to observe is that the field’s flagship result ran straight into it and said so.</p>
+</section>
+<section id="sec-two-facts" class="level2">
+<h2 class="anchored" data-anchor-id="sec-two-facts">Two facts that break the naive picture</h2>
+<p>DeepSeek-R1 <span class="citation" data-cites="Guo2025">(<a href="#ref-Guo2025" role="doc-biblioref">Guo et al. 2025</a>)</span> is the paper that defined the field’s current phase, and it showed that reinforcement learning against a verified final answer produces long chains of thought, with backtracking and self-checking emerging without ever being specified. Buried in its supplementary material, however, is one sentence that should stop anyone reading it with proofs in mind:</p>
+<blockquote class="blockquote">
+<p>Mathematical proofs are excluded because it is difficult to determine their correctness.</p>
+</blockquote>
+<p>The training set is competition problems with short checkable answers, and proofs were left out because correctness could not be established. The capability boundary and the verifier boundary are therefore the same boundary, and the most celebrated result in reasoning RL defines the task we care about here as out of scope.</p>
+<p>The second fact concerns the other obvious move, which is to sample more. Brown and coauthors <span class="citation" data-cites="Brown2024">(<a href="#ref-Brown2024" role="doc-biblioref">Brown et al. 2024</a>)</span> measured what repeated sampling actually buys. Solving MATH problems with Llama-3-8B-Instruct, they report, “coverage increases from 82.9% with 100 samples to 98.44% with 10,000 samples”. Yet “when using majority voting or reward models to select final answers, the biggest performance increase is only from 40.50% to 41.41% over the same sample range”. Two orders of magnitude of inference compute therefore bought nine tenths of a point, and every selection method they tried, majority voting included, plateaus before a hundred samples.</p>
+<p>Put together, these foreclose both easy roads. Thinking longer runs into a verifier that cannot check what you produced, and sampling more runs into a selector that cannot tell you which sample was right. Whatever these systems are doing, then, it is something else, and naming it requires first naming the parts.</p>
+</section>
+<section id="sec-notation" class="level2">
+<h2 class="anchored" data-anchor-id="sec-notation">The parts</h2>
+<p>There are six objects, and every system below is a choice of the six.</p>
+<p>A <em>goal</em> <span class="math inline">\(g \in \mathcal{G}\)</span> is a statement to establish or a question to answer, and a <em>policy</em> <span class="math inline">\(\pi_\theta(a \mid g, c)\)</span> generates an artifact <span class="math inline">\(a\)</span> for that goal in some context <span class="math inline">\(c\)</span>. A <em>hard verifier</em> <span class="math inline">\(V(g,a) \in  {\left\{ 0,1,\bot \right\}} \)</span> is the trusted oracle, where <span class="math inline">\(\bot\)</span> means that the oracle has nothing to say rather than that the artifact is wrong; that third value is the subject of most of this post. Against it sits a <em>soft evaluator</em> <span class="math inline">\(\widetilde{V}(g,a) \in [0,1]\)</span>, which is anything that scores without being trusted: a learned value function, a neural judge, a vote. Finally, a <em>persistent store</em> <span class="math inline">\(\Sigma\)</span> is whatever survives when a context window ends, and an <em>allocation</em> <span class="math inline">\(\mathsf{A}\)</span> distributes a compute budget over goals and over time.</p>
+<p>One operator does more work than the rest. A <em>decomposition</em></p>
+<p><span id="eq-decomposition"><span class="math display">\[
+D : \mathcal{G} \longrightarrow \mathcal{G}^{k},
+\qquad
+g \longmapsto (g_1, \ldots, g_k)
+\tag{1}\]</span></span></p>
+<p>turns one goal into several, and it comes with an obligation that does the real work: a proof of <span class="math inline">\(g\)</span> conditional on <span class="math inline">\(g_1, \ldots, g_k\)</span>. Without that obligation, a decomposition is merely a list of wishes.</p>
+<p>A system is then the tuple</p>
+<p><span id="eq-system"><span class="math display">\[
+\mathcal{M} \;=\;  {\left( \pi_\theta, \; V, \; \widetilde{V}, \; D, \; \Sigma, \; \mathsf{A} \right)} ,
+\tag{2}\]</span></span></p>
+<p>and the claim I want to make is that the differences between the systems in this literature are choices of slots rather than differences of scale.</p>
+</section>
+<section id="sec-frontier" class="level2">
+<h2 class="anchored" data-anchor-id="sec-frontier">Where verification stops</h2>
+<p>The hard verifier <span class="math inline">\(V\)</span> is defined on finished artifacts and on nothing else. Call that boundary the <em>verification frontier</em>. Below it, truth is free; above it, we are guessing.</p>
+<p>Where the frontier sits depends on what we are willing to accept as an artifact. For a <a href="https://en.wikipedia.org/wiki/Lean_%28proof_assistant%29">Lean</a> proof it sits at a complete proof term, and the kernel’s verdict is about as close to absolute as anything in this business gets. For a final-answer matcher it sits at the boxed answer, so everything above it, meaning the entire reasoning trace, goes unchecked. For code it sits at a program that runs against tests.</p>
+<p>Now consider a system that decomposes a hard theorem into lemmas, writing a proof sketch in Lean with the lemmas stated and their proofs left as <code>sorry</code>. That sketch compiles. A file full of <code>sorry</code> is perfectly valid Lean, so <span class="math inline">\(V(g, \text{sketch}) = 1\)</span>, and the verdict carries no information whatsoever.</p>
+<p>The decision that matters most in a long run is how to break the problem apart, and it is precisely the decision that no oracle can score. Perfect verification at the leaves, in short, buys no verification of the plan. Since this holds in the one domain that has a genuinely trustworthy verifier, it is interesting rather than merely inconvenient.</p>
+<p>Every system therefore needs a soft evaluator at its weakest point, whether or not its designers wanted one, and <span class="math inline">\(\widetilde{V}\)</span> is always neural, always gameable, and always the component you would least like to depend on.</p>
+<p>This casts the field’s retreat from process reward models in a rather different light. R1 removed neural reward models from its reasoning loop and said exactly why. The authors “abstain from applying neural reward models, whether outcome-based or process-based, to reasoning tasks”, because such models “are susceptible to reward hacking during large-scale reinforcement learning”. What replaced them was an answer matcher and a compiler, both of which sit firmly below the frontier. Read through the frontier, this was not a discovery that dense intermediate signal is unnecessary. It was a retreat from the region where signal cannot be trusted into the region where it can, and the price was paid in scope. The proofs went out of the training set in the same move.</p>
+</section>
+<section id="sec-certification-selection" class="level2">
+<h2 class="anchored" data-anchor-id="sec-certification-selection">Certification and selection are different jobs</h2>
+<p>While the frontier tells us that plans cannot be verified, it does not yet explain why anything works at all, and for that we need to separate two questions that look alike.</p>
+<p><em>Certification</em> asks whether a candidate <span class="math inline">\(a\)</span> is correct, whereas <em>selection</em> asks which of <span class="math inline">\(a_1, \ldots, a_k\)</span> to return. Certification demands an absolute judgement and its errors are unbounded in consequence, since a wrong accept ships a false result and nothing downstream is obliged to catch it. Selection demands only an ordering, so a badly calibrated scorer costs nothing provided its ranking survives the miscalibration; the scores are discarded the moment we take the argmax. Certification can also be supplied from outside, by a referee or a kernel at the end of the run, while selection cannot be outsourced at all, because it has to happen while the candidates are still in hand.</p>
+<p>These two jobs have different difficulty, and the gap between them is measurable.</p>
+<p>Recent work on generative verifiers <span class="citation" data-cites="Mahdavi2025">(<a href="#ref-Mahdavi2025" role="doc-biblioref">Mahdavi et al. 2025</a>)</span> trains a model to write out a verification rationale and emit a verdict, then uses that verdict to rank sampled proofs. At selection the approach works well: on a hard problem set, pass@1 moves from <span class="math inline">\(47.07\)</span> to <span class="math inline">\(96.05\)</span> with no hard verifier anywhere in the loop. Two caveats belong in the same breath as that number, though. The set is nineteen problems with integer final answers, chosen so the generator solves some but fewer than seventy percent of them. A single problem is therefore worth more than five points, and the baseline is partly a selection artefact. The lift also costs roughly a thousand model calls per problem, about half of them spent judging rather than generating. Selection at this quality is an inference system in its own right, not a post-process bolted onto the generator.</p>
+<p>Point the same machinery at certification, however, and it stalls. Reinforcement learning on the verifier nearly doubles proof-level <span class="math inline">\(F_1\)</span>, yet final-answer precision moves only from <span class="math inline">\(60.41\)</span> to <span class="math inline">\(62.59\)</span>, a difference the authors themselves describe as lying within the standard deviation. Worse, that flat precision is bought at collapsing recall, which falls from <span class="math inline">\(67.43\)</span> to <span class="math inline">\(17.18\)</span>; the trained judge became far more willing to reject, and no better at telling right from wrong when it did accept. Reading these together tells us what the training actually did. The judge got better at producing verdicts shaped like a grader’s verdicts, and no better at deciding whether the mathematics holds.</p>
+<p>The decisive experiment in that paper is small and brutal. Taking forty-eight olympiad-level proofs, every one of which contained a critical error, the authors asked a strong general model to grade them, and it accepted seven. The paper reports <span class="math inline">\(41/48 = 87.2\%\)</span>, which goes wrong twice over. First, the arithmetic is wrong, since <span class="math inline">\(41/48\)</span> is <span class="math inline">\(85.4\%\)</span> while <span class="math inline">\(41/47\)</span> is <span class="math inline">\(87.23\%\)</span>, so a wrong denominator made it into the headline. Set that aside, though, because the honest number is the worse problem: on a set where every candidate is flawed, the constant policy “always reject” scores <span class="math inline">\(100\%\)</span>. A certifier at <span class="math inline">\(85.4\%\)</span> is not nearly perfect; it is below trivial.</p>
+<p>Given how much turns on the distance between the two jobs, it deserves a name. Write</p>
+<p><span class="math display">\[
+c(k) \;=\; \mathbb{P} {\left[ \exists \, i \leq k \, : \, V(g,a_i) = 1 \right]}
+\]</span></p>
+<p>for the <em>coverage</em>, meaning the probability that <span class="math inline">\(k\)</span> independent samples contain at least one correct answer, and write <span class="math inline">\(s(k)\)</span> for the <em>selection yield</em>, the accuracy we actually obtain when <span class="math inline">\(\widetilde{V}\)</span> alone decides what to return. Their difference</p>
+<p><span id="eq-gap"><span class="math display">\[
+\Gamma(k) \;=\; c(k) - s(k)
+\tag{3}\]</span></span></p>
+<p>is exactly what we lose by not having a hard verifier at deployment. The numbers above give <span class="math inline">\(\Gamma(10^4) \approx 57\)</span> percentage points on MATH, and the gap is not closing as <span class="math inline">\(k\)</span> grows. Brown and coauthors put it well when they gloss coverage as performance with a perfect verifier; <span class="math inline">\(\Gamma\)</span> is the price of not having one.</p>
+<p>Which job a system needs, finally, decides what it is allowed to look like. If certification arrives from outside at the end, a system needs only a ranker, and rankers are what neural judges turn out to be good at. If certification has to be internal, the system needs a kernel, and it inherits everything that comes with formalisation. That is a genuine fork in the design space, and where a system sits on it explains more about its architecture than anything else we could ask.</p>
+</section>
+<section id="sec-persistence" class="level2">
+<h2 class="anchored" data-anchor-id="sec-persistence">What survives a context window</h2>
+<p>Both previous sections concern signal at a single instant, but a day is a great many instants, which raises the question of what is carried between them.</p>
+<p>There are four rungs, and they map almost exactly onto timescales.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\Sigma\)</span></th>
+<th>Horizon</th>
+<th>What it costs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>nothing, independent samples</td>
+<td>seconds</td>
+<td>progress is never additive</td>
+</tr>
+<tr class="even">
+<td>the context window</td>
+<td>minutes</td>
+<td>dies when the window does</td>
+</tr>
+<tr class="odd">
+<td>a file, a lemma library</td>
+<td>hours</td>
+<td>needs <span class="math inline">\(V\)</span> to stay honest</td>
+</tr>
+<tr class="even">
+<td>the weights</td>
+<td>days</td>
+<td>needs training per problem</td>
+</tr>
+</tbody>
+</table>
+<p>The thesis of this post, in one line, is that compute compounds only where verification makes state durable.</p>
+<p>A context window cannot compound, since nothing in it is checked before it is discarded. A lemma library compounds because a kernel-checked lemma is permanently true and permanently reusable. Weights compound whether or not the update was a good idea, which is both the appeal and the danger.</p>
+<p>The property doing the work at the third rung is <em>composability</em>, and prose does not have it. Two partial chains of thought cannot be merged into one, whereas two proved lemmas can. Seed-Prover <span class="citation" data-cites="Chen2025">(<a href="#ref-Chen2025" role="doc-biblioref">L. Chen et al. 2025</a>)</span> makes this mechanical, promoting <code>have</code> blocks inside a proof to top-level <code>lemma</code> declarations. One bit per attempt thereby becomes a vector of bits over a decomposition, and in the authors’ words such lemmas “serve as shared knowledge” across separate attempts. Partial results thereby become addressable, storable, and mergeable across trajectories that never saw each other. A kernel, then, buys more than trust: it buys the ability to add.</p>
+<p>One consequence falls out before we meet any systems. The horizon of a system is set by <span class="math inline">\(\Sigma\)</span> and not by the quality of its policy. A frontier model with nothing but a context window still stops at the context window, while a weaker model with a file runs for hours. We will even see a case where nothing is trained at all and the system still closes open problems, which is difficult to explain on any account where capability lives in the weights alone.</p>
+</section>
+<section id="sec-families" class="level2">
+<h2 class="anchored" data-anchor-id="sec-families">Five ways to live with one bit</h2>
+<p>With the slots in hand, the literature sorts itself into five families, each an answer to the same question: what do you do when the only trustworthy signal arrives once, at the very end?</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Family</th>
+<th><span class="math inline">\(D\)</span></th>
+<th><span class="math inline">\(\Sigma\)</span></th>
+<th><span class="math inline">\(\widetilde{V}\)</span></th>
+<th>Horizon</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>trajectory as search</td>
+<td>identity</td>
+<td>context</td>
+<td>none, by choice</td>
+<td>minutes</td>
+</tr>
+<tr class="even">
+<td>sample and select</td>
+<td>identity</td>
+<td>none</td>
+<td>vote, reward model</td>
+<td>seconds</td>
+</tr>
+<tr class="odd">
+<td>decompose against a kernel</td>
+<td>lemmas</td>
+<td>lemma library</td>
+<td>judge on sketches</td>
+<td>hours</td>
+</tr>
+<tr class="even">
+<td>environment as memory</td>
+<td>file edits</td>
+<td>a file</td>
+<td>subagent rating</td>
+<td>hours</td>
+</tr>
+<tr class="odd">
+<td>move the weights</td>
+<td>identity</td>
+<td>the weights</td>
+<td>majority vote</td>
+<td>a benchmark</td>
+</tr>
+</tbody>
+</table>
+<p>One caveat before we walk the rows. No two systems in this table were evaluated at matched compute on a shared benchmark, so the comparisons are unnormalised by construction, and we will come back to what that does to the field’s claims.</p>
+<section id="sec-trajectory" class="level3">
+<h3 class="anchored" data-anchor-id="sec-trajectory">The trajectory carries the search</h3>
+<p>The first family bets that a long enough trajectory can implement search internally. There is no decomposition, the store is the context window, and the soft evaluator is deliberately absent, so backtracking and switching strategy become token patterns rather than components. R1, Kimi k1.5 <span class="citation" data-cites="Team2025">(<a href="#ref-Team2025" role="doc-biblioref">Team et al. 2025</a>)</span> and s1 <span class="citation" data-cites="Muennighoff2025">(<a href="#ref-Muennighoff2025" role="doc-biblioref">Muennighoff et al. 2025</a>)</span> all live here.</p>
+<p>The mechanism is short, which is much of its appeal: sample, check the final answer, increase the probability of whatever worked. No value network, no process model, nothing scoring intermediate steps. Its boundary is the one we met above, since everything the family can do is downstream of what a matcher can check, and proofs are not.</p>
+<p>Kimi makes the strongest version of the family’s claim, arguing that sufficiently long contexts allow planning and correction without tree search, value functions, or process rewards. It is a real position and may well be right, but it is never tested. The paper does have an ablation section, which covers model size, context length, the use of negative gradients, and sampling strategies; it does not ablate any of the three techniques it dismisses. What the paper establishes is that strong performance is reachable without them, and their own phrasing is careful about this, saying performance “can be achieved without relying on” the three. Whether any of them would have helped is a question nobody asked. Proof-style problems are also excluded from the prompt set by construction, so the family is never evaluated on the task this post is about.</p>
+<p>The sharpest detail sits in their benchmark appendix. Kimi’s strongest single number is a Codeforces percentile, obtained, in their words, by “majority voting on the code snippets generated by the k1.5 long-CoT model, employing test cases that are also generated by the same model”. That is search over candidates with a soft evaluator, in the paper arguing that candidates need no search.</p>
+<p>R1’s emergent-length curve deserves a note of a different kind. The paper reports that outputs were capped at 32,768 tokens before training step 8.2k and 65,536 afterwards. It then observes that “as a result, both the performance and response length of DeepSeek-R1-Zero exhibit a significant jump” at that point. The confound, in other words, is disclosed plainly by the authors; it is the retelling that drops it, and the retelling is where most of us met the result. The lengthening is real and the emergence story may well survive it, but a ceiling that moves at the same moment as the quantity it bounds weakens the curve as evidence.</p>
+<p>The tempting reading of this family is that long reasoning is mostly cheap data plus a decoding trick, and s1 is usually cited for it. A thousand carefully chosen examples, a supervised finetune, and a crude intervention that forces the model to keep thinking by appending the token “Wait”. Their own appendix does not support that reading. Holding the same thousand questions, the same selection pipeline and the same training recipe fixed, and swapping only the teacher that generated the traces, AIME 2025 moves from <span class="math inline">\(26.7\)</span> to <span class="math inline">\(50.0\)</span>. That swing is larger than the selection pipeline, worth <span class="math inline">\(13.3\)</span> points over a random baseline, and budget forcing, worth <span class="math inline">\(6.7\)</span>, put together. Budget forcing then stops working altogether, since the improved model scores <span class="math inline">\(56.7\)</span> and <span class="math inline">\(50.0\)</span> on the two AIME sets identically at zero, one and two insertions of “Wait”. The ceiling, it turns out, is the teacher, and the teacher was trained with reinforcement learning.</p>
+<p>Where the family stops is structural. Nothing survives the context and nothing is checked before it is discarded, so progress is never additive; the horizon is a context window, and no amount of model quality changes that.</p>
+</section>
+<section id="sec-sample-select" class="level3">
+<h3 class="anchored" data-anchor-id="sec-sample-select">Many attempts, then a choice</h3>
+<p>If one trajectory cannot carry the search, the obvious move is many trajectories. Here the store is nothing at all, every attempt starts from scratch, and the run is embarrassingly parallel, so the whole family is governed by <span class="math inline">\(\Gamma(k)\)</span> from <a href="#eq-gap" class="quarto-xref">Equation&nbsp;3</a>.</p>
+<p>We have already seen the shape of the problem, since coverage climbs while selection does not. Two further facts sharpen it.</p>
+<p>First, coverage has a floor that sampling does not lift. In the same experiments, all eight Pythia models score zero coverage on CodeContests even at ten thousand samples; zero, not small. Sampling multiplies a nonzero probability, after all, and it cannot create one.</p>
+<p>Second, allocation is a genuine design variable, and the compute-optimal result is usually remembered backwards. Snell and coauthors <span class="citation" data-cites="Snell2024">(<a href="#ref-Snell2024" role="doc-biblioref">Snell et al. 2024</a>)</span> asked when test-time compute beats simply training a larger model. To match the FLOPs of a model with <span class="math inline">\(M\)</span> times more parameters, we may multiply the small model’s inference compute by</p>
+<p><span id="eq-exchange"><span class="math display">\[
+M + 3 \,  {\left( \frac{D_{\text{pretrain}}}{D_{\text{inference}}} \right)}  \, (M-1),
+\tag{4}\]</span></span></p>
+<p>where the ratio that matters is <span class="math inline">\(R = D_{\text{inference}} / D_{\text{pretrain}}\)</span>. Taking <span class="math inline">\(M \approx 14\)</span> and <span class="math inline">\(R \in  {\left\{ 0.16, \, 0.79, \, 22 \right\}} \)</span>, equation <a href="#eq-exchange" class="quarto-xref">Equation&nbsp;4</a> allows roughly <span class="math inline">\(258\)</span>, <span class="math inline">\(63\)</span> and <span class="math inline">\(16\)</span> generations respectively. Their conclusion is stated plainly: “on the harder questions or in settings with a higher inference load (<span class="math inline">\(R \gg 1\)</span>), pretraining is a more effective way to improve performance”. A heavy inference load therefore favours the <em>bigger</em> model, because the pretraining surcharge amortises over all those queries. Test-time compute wins when <span class="math inline">\(R \lesssim 1\)</span>, which is the self-improvement and synthetic-data regime rather than the serving regime, and that is close to the reverse of the usual pitch about small models with clever inference.</p>
+<p>Two caveats keep the result honest, and both cut toward the pretraining side being understated. The larger-model baseline is greedy pass@1, with no verifier and no sampling of its own. And the difficulty estimate that makes their allocation optimal costs 2048 samples per question, against allocated budgets of 4 to 256 generations. The router is therefore between eight and five hundred times more expensive than the thing it routes. That cost is excluded from the analysis; an appendix notes it “would be problematic” in production, which is fair but easy to miss.</p>
+<p>Generative verification, from <a href="#sec-certification-selection" class="quarto-xref">Section&nbsp;6</a>, narrows <span class="math inline">\(\Gamma\)</span> for selection and not for certification, and that is the design consequence for this family. It can be made to work when something downstream supplies certification, and it cannot when it must certify itself. The family converts compute into coverage efficiently and into accuracy poorly, with the exchange rate set entirely by the quality of <span class="math inline">\(\widetilde{V}\)</span>.</p>
+</section>
+<section id="sec-decompose" class="level3">
+<h3 class="anchored" data-anchor-id="sec-decompose">Decomposing against a kernel</h3>
+<p>Both families so far treat the goal as atomic. The third breaks it, and this is where an hour becomes possible, because the durable unit stops being a token and becomes a checked lemma. The DeepSeek-Prover-V2 <span class="citation" data-cites="Ren2025">(<a href="#ref-Ren2025" role="doc-biblioref">Ren et al. 2025</a>)</span> line, the Seed-Prover line, and Aristotle <span class="citation" data-cites="Achim2025">(<a href="#ref-Achim2025" role="doc-biblioref">Achim et al. 2025</a>)</span> all belong here.</p>
+<p>Seed-Prover 1.5 <span class="citation" data-cites="Chen2025a">(<a href="#ref-Chen2025a" role="doc-biblioref">J. Chen et al. 2025</a>)</span> has the clearest mechanism in this literature. A sketch model turns a natural-language proof into a lemma-style Lean sketch, and each lemma is then attacked in parallel by a prover. What happens on failure is the design. There are two distinct failure signals, and they trigger two distinct responses. If a lemma exhausts its budget without being proved, it was too hard, so the system goes <em>deeper</em>, generating a fresh natural-language proof and a fresh sketch for that lemma alone and turning a leaf into an internal node. If instead a lemma is <em>disproved</em>, the plan was wrong rather than hard, so the system goes <em>sideways</em>, returning control to the parent for a new decomposition. Recursion runs to depth four; the whole run then restarts from scratch with every lemma proved so far injected into the Lean context, which makes the effective depth eight. Reassembly needs no separate stitching step, since the sketch model must write a genuine <code>main_proof</code> body at every node before any child is attempted.</p>
+<p>The scale of such a run is concrete. On the 2025 olympiad problems the reported per-problem solve times are <span class="math inline">\(0.01\)</span>, <span class="math inline">\(1\)</span>, <span class="math inline">\(5\)</span>, <span class="math inline">\(8\)</span> and <span class="math inline">\(16.5\)</span> hours, with the sixth problem unsolved. The figure usually quoted for this system is the slowest of these, and that the fastest was handled by a separate geometry solver rather than by the prover. A day on one theorem, then, is not a figure of speech.</p>
+<p>Now the part I find genuinely surprising. The sketch model is the most important component in the system, since everything downstream is conditioned on the decomposition it proposes, yet it sits above the verification frontier, because a sketch full of <code>sorry</code> compiles. It is therefore trained against a rubric, described in the paper as an “LLM-as-a-Judge Rubric” acting as “a semantic value model”, with explicit vetoes on hollow bodies that delegate everything to their children. In a domain equipped with a perfect oracle, the component that matters most is supervised by a neural judge. That is not a compromise anyone made by preference; it is what <a href="#sec-frontier" class="quarto-xref">Section&nbsp;5</a> forces.</p>
+<p>The other branch of this family makes the search explicit rather than recursive. Aristotle runs a Monte Carlo Graph Search over Lean proof states. The AND/OR structure makes proof search a minimax problem, so it takes an upper confidence bound on actions and a lower confidence bound on states. Each goal is additionally augmented with its logical negation, so budget can be spent on disproving it. That sentence names every component and specifies none of them, since there is no exploration formula, no backup rule, no pseudocode and no hyperparameter anywhere in the paper. It is precise enough to tell you what was built, and far too thin to let you build it. We will come back to what else it does not contain.</p>
+<p>One correction in passing, because this family’s best-known member is often miscited. DeepSeek-Prover-V2’s subgoal decomposition runs at <em>training</em> time, where it manufactures cold-start chain-of-thought data from verified decompositions; at inference the large model does plain i.i.d. whole-proof sampling, with no search, no state and no adaptation. By the columns of our table, then, it belongs in the second family rather than this one. Its PutnamBench figure is <span class="math inline">\(47\)</span> of <span class="math inline">\(658\)</span> rather than the <span class="math inline">\(49\)</span> that circulates, two statements having been withdrawn as misformulated.</p>
+<p>Where this family stops is the formalisation tax. Every problem must be restated in the kernel’s language before any of this applies. That means human labour, the risk that a formal statement quietly fails to capture the informal one, and a restriction to the mathematics current libraries can express. That tax is what keeps the family narrow, and it is the price of being the only family whose progress genuinely adds up.</p>
+</section>
+<section id="sec-environment" class="level3">
+<h3 class="anchored" data-anchor-id="sec-environment">The environment as memory</h3>
+<p>The fourth family is cruder than the third and works better than it has any right to, because the state is a single document and the subagents share nothing else.</p>
+<p>AlphaProof Nexus <span class="citation" data-cites="Tsoukalas2026">(<a href="#ref-Tsoukalas2026" role="doc-biblioref">Tsoukalas et al. 2026</a>)</span> describes its basic agent as a “Ralph loop”, and the loop is something one could write in an afternoon. A frontier general model is given a Lean file containing the target theorem and the regions it may edit. It reasons, edits the file with a search-and-replace tool, and the compiler checks the result; errors then steer the next turn. When an episode ends with the proof incomplete, the agent appends a comment summarising what it learned, and that file becomes the input to the next episode. Independent copies of the loop run in parallel with no shared state.</p>
+<p>Nothing was trained for any of this. The paper uses a general model off the shelf. Its closing sentence then draws the conclusion I would have hesitated to draw for it: the results “point to an ongoing shift from specialized trained systems toward simple agentic loops as LLMs become more capable”.</p>
+<p>The results are what make this more than a curiosity. Run on formalised open problems from the <a href="https://www.erdosproblems.com/">Erdős problems</a> collection, the agent resolved nine. For comparison, AlphaProof itself is a reinforcement-learned prover with tree search. Run standalone at roughly 64 TPU-hours per problem, it solved none of the nine. An off-the-shelf commercial coding agent, pointed at the same problems in a mode where it keeps working toward a compiling proof, solved seven. Lest that suggest any model will do, a second commercial agent solved none, and variants of the loop built on smaller models also solved none.</p>
+<p>There is a nuance here that is easy to overstate in either direction. The paper’s full system wraps the basic loop in an evolutionary framework coordinating subagents. What does that buy? On two of the nine problems it beats the basic loop with two to five times the monetary saving, while on the remaining seven it is, in the paper’s words, “roughly half as cost-efficient”. Those two problems happen to be exactly the two that the off-the-shelf agent could not solve. So the elaborate machinery is neither useless nor free: it earns its keep at the top of the difficulty range and costs roughly a factor of two everywhere else.</p>
+<p>The store here is a file rather than a lemma library, which means the state does not transfer between problems, and each new theorem starts from an empty document.</p>
+</section>
+<section id="sec-weights" class="level3">
+<h3 class="anchored" data-anchor-id="sec-weights">Moving the weights</h3>
+<p>Four families keep the policy fixed during the attempt. The last one does not, and it completes the ladder at its fourth rung.</p>
+<p>TTRL <span class="citation" data-cites="Zuo2025">(<a href="#ref-Zuo2025" role="doc-biblioref">Zuo et al. 2025</a>)</span> manufactures a reward where no label exists: sample many answers to a test question, take the majority answer as a pseudo-label, and run reinforcement learning against it. The obvious objection is that this should simply amplify whatever the model already believed, errors included, and the reason it does not is worth understanding. Label accuracy and reward accuracy come apart. On AIME 2024 the majority vote starts out picking the right answer about <span class="math inline">\(37\%\)</span> of the time, while the reward signal derived from it is correct about <span class="math inline">\(92\%\)</span> of the time. The reason is that when the pseudo-label is wrong, every sample disagreeing with it is still correctly marked wrong, since it also disagrees with the truth. One bad label bit thus becomes many mostly-correct reward bits, and only the second quantity ever reaches the gradient.</p>
+<p>The granularity, however, is coarser than the framing suggests. Adaptation is per benchmark rather than per instance, since the weights persist across all the test questions and the evaluation happens on those same questions. This is a specialist for a distribution, not a specialist for a theorem.</p>
+<p>The targeted variant, test-time curricula <span class="citation" data-cites="Hbotter2025">(<a href="#ref-Hbotter2025" role="doc-biblioref">Hübotter et al. 2025</a>)</span>, gets closer to the latter. Given a target problem, it assembles a curriculum of related tasks and trains on them before attacking the target, which raises the question of where those tasks come from, since generated problems would have no ground truth. The answer is that they are retrieved from an existing corpus rather than generated, so every item arrives with a golden answer or a set of unit tests already attached, checked by one of a handful of shared verifiers. That dissolves the problem neatly, at the cost of capping the method at the coverage of whatever corpus is being searched. Much of the headline gain also turns out to be generic reinforcement learning on the corpus rather than targeting. Against a matched baseline trained on a thousand uniformly sampled tasks, the baseline recovers between <span class="math inline">\(56\%\)</span> and <span class="math inline">\(83\%\)</span> of the gain on their main backbone, depending on the benchmark. Across their other two backbones the share runs from <span class="math inline">\(13\%\)</span> to over <span class="math inline">\(100\%\)</span>, and the upper end means the untargeted baseline simply won.</p>
+<p>This is the most durable state in the table and the least controlled result, since no study here isolates the mechanism against a matched-compute arm that does not adapt.</p>
+</section>
+</section>
+<section id="sec-scorecard" class="level2">
+<h2 class="anchored" data-anchor-id="sec-scorecard">What we actually know</h2>
+<p>Having walked the families, sort their claims by how well supported they are. I found the exercise more sobering than expected.</p>
+<p>Several things look solid, in the sense of being measured directly or corroborated across independent papers. Reinforcement learning against a verified answer produces long chains of thought and lifts single-sample accuracy. Coverage scales log-linearly in the number of samples, while selection does not scale without a hard verifier, so <span class="math inline">\(\Gamma\)</span> stays wide. A kernel plus decomposition reaches horizons that a single trajectory does not. And a frontier general model in a compile-check loop closes genuinely open problems.</p>
+<p>A second tier is claimed without support in the paper making the claim, and here I would encourage some scepticism.</p>
+<p>Aristotle’s abstract reports “state-of-the-art performance with favorable scaling properties for automated theorem proving”. Yet the paper contains no benchmark table, no benchmark numbers at all, and across twenty-three pages not a single percentage sign. There are two figures, both diagrams, and no plot of any kind, so there is no scaling curve to accompany the scaling claim. The only number resembling a result is five out of six. None of which makes the architecture uninteresting; it simply means the headline has nothing behind it that a reader can inspect.</p>
+<p>Kimi argues that explicit search is unnecessary, ablates four other things instead, and obtains its best number through an outer search loop. Seed-Prover makes architectural claims with no controlled comparison isolating any component, and discloses no model size, no GPU count and no wall-clock for its competition runs, which leaves every baseline comparison unnormalised.</p>
+<p>There is a third failure mode that is not in the papers at all. Seed-Prover is widely cited as having achieved a certified silver medal with 30 points at the 2025 olympiad, yet the words “silver”, “medal” and “30/42” appear nowhere in its body. What the paper claims is four problems by the submission deadline; it notes a fifth was finished afterwards and never mentions the sixth at any point. Since four complete problems is 28 points, the circulated figure implies partial credit the paper does not describe. The number comes from a company blog post instead. This is a lesson about provenance rather than about that system, and I include it because I repeated the claim myself before checking.</p>
+<p>The pattern here is not carelessness, I think, but the absence of shared evaluation. No two systems in our table were run at matched compute on a common benchmark, so architectural claims survive without ablations because nothing forces the comparison.</p>
+<p>The most interesting tier, though, is what nobody has tried. Plan-level verification that is not a neural judge. Lemma libraries that transfer between problems, given that every system we have seen starts each new theorem with an empty store. Closing the informal-to-formal loop without human formalisation. And any controlled comparison of these five families at matched compute, which would settle a surprising number of open arguments at once.</p>
+</section>
+<section id="sec-boundary" class="level2">
+<h2 class="anchored" data-anchor-id="sec-boundary">A dispute that dissolves</h2>
+<p>One question in this literature gets more attention than any other. Does reinforcement learning create reasoning capability, or does it only concentrate probability mass on solutions the base model could already produce given enough samples?</p>
+<p>Both positions are published and both are credible. One side <span class="citation" data-cites="Chen2025b">(<a href="#ref-Chen2025b" role="doc-biblioref">Z. Chen et al. 2025</a>)</span> finds that base models match or beat their RL-trained descendants once <span class="math inline">\(k\)</span> is large enough, which would make RL an elicitation procedure rather than a capability-creating one. ProRL <span class="citation" data-cites="Liu2025">(<a href="#ref-Liu2025" role="doc-biblioref">Liu et al. 2025</a>)</span> finds the opposite, reporting problems where prolonged RL reaches solutions that extensive sampling from the base model never finds.</p>
+<p>The dispute is more tractable than it looks, because ProRL released the per-benchmark pass@<span class="math inline">\(k\)</span> curves behind its claim. Reading the data labels off those figures is instructive. On AIME 2025 at <span class="math inline">\(k=256\)</span>, the base model scores <span class="math inline">\(0.704\)</span> against ProRL’s final model at <span class="math inline">\(0.665\)</span>; the base model starts well below the trained model at <span class="math inline">\(k=1\)</span> and finishes above it. That is the sceptical paper’s result, sitting inside the affirmative paper’s own appendix.</p>
+<p>Across the figures I was able to read, the pattern is a split by domain rather than by method. On the real mathematics and coding benchmarks, the base model wins at large <span class="math inline">\(k\)</span>. On the synthetic puzzle tasks drawn from the training distribution, which the base model has essentially never seen, the trained model wins and often by a lot.</p>
+<p>ProRL states the reconciling law itself, and prominently: it appears in the abstract, the introduction, a section of its own and the conclusion, always as the observation that gains are largest where the base model’s pass@128 is lowest. No correlation coefficient or fitted statistic accompanies it, only a scatter plot with a line through it. What the paper never does is connect the observation to the argument it is having. Reinforcement learning expands the reachable set where the base model had almost no mass to begin with, and redistributes mass where it already had plenty; competition mathematics sits firmly in the second regime. Both papers are right about their own domains, and the question was posed at the wrong grain.</p>
+<p>I should be honest about the limits of that check. Most of the fifty figures resisted machine reading, so the domain pattern above rests on a handful of confirmed cases together with the regression the paper reports itself. It is a careful read of published plots, not a reanalysis.</p>
+</section>
+<section id="sec-constraint" class="level2">
+<h2 class="anchored" data-anchor-id="sec-constraint">The constraint underneath</h2>
+<p>Looking back at the five families, they are all workarounds for the same thing.</p>
+<p>The first avoids decomposition entirely, so it never has to value a plan, and pays by stopping at the context window. The second decomposes nothing and pushes the whole problem into selection, where <span class="math inline">\(\Gamma\)</span> is the tax. The third decomposes, then discovers that the kernel cannot score a decomposition, and trains a neural judge anyway. The fourth lets a compiler and a document stand in for valuation, and works better than it should. The fifth moves the weights instead of valuing anything.</p>
+<p>The constraint is this. Hard verification is defined only on finished artifacts, so the decision that matters most in a long run, which is how to break the problem apart, is the one decision no oracle can score. Perfect verification at the leaves buys no verification of the plan.</p>
+<p>This is also why compute compounds where it does and nowhere else. Durable state requires checking, checking requires finished artifacts, and so the only state that compounds is state reduced to something checkable. A proved lemma qualifies; a promising direction does not.</p>
+<p>If I had to guess where effort pays, I would order it roughly as follows. Any trustworthy signal above the verification frontier would be worth more than everything else on this list, since it is the binding constraint in all five families. Lemma libraries that transfer across problems come second, because composability is the one property that makes compute accumulate and nobody currently exploits it beyond a single theorem. Reducing the formalisation tax comes third, since that is what keeps the only additive family narrow. Treating test-time weight updates as a first-class axis, with the controls nobody has run, comes fourth. And finally, the field is a collection of ad hoc responses to the single fact that generation is hard while checking is easy, which suggests room for a more deliberate exploitation of that asymmetry than anyone has attempted.</p>
+<p>What I take from all this is a fairly simple diagnostic. Given a new system, ask what its hard verifier accepts, ask what survives when its context window closes, and ask which component sits above its verification frontier without an oracle. The first answer bounds what the system can learn from. The second bounds how long it can usefully run. The third is where it will fail, and it is almost always the part the paper describes with the most confidence.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Achim2025" class="csl-entry" role="listitem">
+Achim, Tudor et al. 2025. <span>“<span class="nocase">Aristotle: IMO-level Automated Theorem Proving</span>.”</span> <a href="https://arxiv.org/abs/2510.01346">https://arxiv.org/abs/2510.01346</a>.
+</div>
+<div id="ref-Brown2024" class="csl-entry" role="listitem">
+Brown, Bradley et al. 2024. <span>“<span class="nocase">Large Language Monkeys: Scaling Inference Compute with Repeated Sampling</span>.”</span> <a href="https://arxiv.org/abs/2407.21787">https://arxiv.org/abs/2407.21787</a>.
+</div>
+<div id="ref-Chen2025a" class="csl-entry" role="listitem">
+Chen, Jiangjie et al. 2025. <span>“<span class="nocase">Seed-Prover 1.5: Mastering Undergraduate-Level Theorem Proving via Learning from Experience</span>.”</span> <a href="https://arxiv.org/abs/2512.17260">https://arxiv.org/abs/2512.17260</a>.
+</div>
+<div id="ref-Chen2025" class="csl-entry" role="listitem">
+Chen, Luoxin et al. 2025. <span>“<span class="nocase">Seed-Prover: Deep and Broad Reasoning for Automated Theorem Proving</span>.”</span> <a href="https://arxiv.org/abs/2507.23726">https://arxiv.org/abs/2507.23726</a>.
+</div>
+<div id="ref-Chen2025b" class="csl-entry" role="listitem">
+Chen, Zhiqi et al. 2025. <span>“<span class="nocase">Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?</span>”</span> In <em>Advances in Neural Information Processing Systems 38</em>, 64304–39. NeurIPS 2025. Neural Information Processing Systems Foundation, Inc. (NeurIPS). <a href="https://arxiv.org/abs/2504.13837">https://arxiv.org/abs/2504.13837</a>.
+</div>
+<div id="ref-Gunjal2025" class="csl-entry" role="listitem">
+Gunjal, Anisha et al. 2025. <span>“<span class="nocase">Rubrics as Rewards: Reinforcement Learning Beyond Verifiable Domains</span>.”</span> <a href="https://arxiv.org/abs/2507.17746">https://arxiv.org/abs/2507.17746</a>.
+</div>
+<div id="ref-Guo2025" class="csl-entry" role="listitem">
+Guo, Daya et al. 2025. <span>“<span class="nocase">DeepSeek-R1 incentivizes reasoning in LLMs through reinforcement learning</span>.”</span> <em>Nature</em> 645 (8081). Springer Science; Business Media LLC: 633–38. <a href="https://arxiv.org/abs/2501.12948">https://arxiv.org/abs/2501.12948</a>.
+</div>
+<div id="ref-Hbotter2025" class="csl-entry" role="listitem">
+Hübotter, Jonas, Leander Diaz-Bone, Ido Hakimi, Andreas Krause, and Moritz Hardt. 2025. <span>“<span class="nocase">Learning on the Job: Test-Time Curricula for Targeted Reinforcement Learning</span>.”</span> <a href="https://arxiv.org/abs/2510.04786">https://arxiv.org/abs/2510.04786</a>.
+</div>
+<div id="ref-Liu2025" class="csl-entry" role="listitem">
+Liu, Mingjie et al. 2025. <span>“<span class="nocase">ProRL: Prolonged Reinforcement Learning Expands Reasoning Boundaries in Large Language Models</span>.”</span> In <em>Advances in Neural Information Processing Systems 38</em>, 20475–508. NeurIPS 2025. Neural Information Processing Systems Foundation, Inc. (NeurIPS). <a href="https://arxiv.org/abs/2505.24864">https://arxiv.org/abs/2505.24864</a>.
+</div>
+<div id="ref-Mahdavi2025" class="csl-entry" role="listitem">
+Mahdavi, Sadegh et al. 2025. <span>“<span>Scaling Generative Verifiers For Natural Language Mathematical Proof Verification And Selection</span>.”</span> <a href="https://arxiv.org/abs/2511.13027">https://arxiv.org/abs/2511.13027</a>.
+</div>
+<div id="ref-Muennighoff2025" class="csl-entry" role="listitem">
+Muennighoff, Niklas et al. 2025. <span>“<span class="nocase">s1: Simple test-time scaling</span>.”</span> In <em>Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing</em>, 20286–332. Association for Computational Linguistics. <a href="https://arxiv.org/abs/2501.19393">https://arxiv.org/abs/2501.19393</a>.
+</div>
+<div id="ref-Ouyang2022" class="csl-entry" role="listitem">
+Ouyang, Long et al. 2022. <span>“<span class="nocase">Training language models to follow instructions with human feedback</span>.”</span> <a href="https://arxiv.org/abs/2203.02155">https://arxiv.org/abs/2203.02155</a>.
+</div>
+<div id="ref-Ren2025" class="csl-entry" role="listitem">
+Ren, Z. Z. et al. 2025. <span>“<span class="nocase">DeepSeek-Prover-V2: Advancing Formal Mathematical Reasoning via Reinforcement Learning for Subgoal Decomposition</span>.”</span> <a href="https://arxiv.org/abs/2504.21801">https://arxiv.org/abs/2504.21801</a>.
+</div>
+<div id="ref-Shao2024" class="csl-entry" role="listitem">
+Shao, Zhihong et al. 2024. <span>“<span class="nocase">DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models</span>.”</span> <a href="https://arxiv.org/abs/2402.03300">https://arxiv.org/abs/2402.03300</a>.
+</div>
+<div id="ref-Snell2024" class="csl-entry" role="listitem">
+Snell, Charlie, Jaehoon Lee, Kelvin Xu, and Aviral Kumar. 2024. <span>“<span class="nocase">Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters</span>.”</span> <a href="https://arxiv.org/abs/2408.03314">https://arxiv.org/abs/2408.03314</a>.
+</div>
+<div id="ref-Team2025" class="csl-entry" role="listitem">
+Team, Kimi et al. 2025. <span>“<span class="nocase">Kimi k1.5: Scaling Reinforcement Learning with LLMs</span>.”</span> <a href="https://arxiv.org/abs/2501.12599">https://arxiv.org/abs/2501.12599</a>.
+</div>
+<div id="ref-Tsoukalas2026" class="csl-entry" role="listitem">
+Tsoukalas, George et al. 2026. <span>“<span class="nocase">Advancing Mathematics Research with AI-Driven Formal Proof Search</span>.”</span> <a href="https://arxiv.org/abs/2605.22763">https://arxiv.org/abs/2605.22763</a>.
+</div>
+<div id="ref-Zuo2025" class="csl-entry" role="listitem">
+Zuo, Yuxin et al. 2025. <span>“<span>TTRL: Test-Time Reinforcement Learning</span>.”</span> In <em>Advances in Neural Information Processing Systems 38</em>, 145667–91. NeurIPS 2025. Neural Information Processing Systems Foundation, Inc. (NeurIPS). <a href="https://arxiv.org/abs/2504.16084">https://arxiv.org/abs/2504.16084</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
