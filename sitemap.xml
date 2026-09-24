@@ -314,7 +314,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/index_pubs.html</loc>
-    <lastmod>2025-12-06T06:08:30.326Z</lastmod>
+    <lastmod>2026-09-24T03:20:53.579Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/publications/pub_list_applications/2018_Probabilistic_forecasting_of_day_ahead_solar_irradiance_using_quantile_gradient_boosting.html</loc>
@@ -686,7 +686,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/LLM_reasoning/llm_reasoning.html</loc>
-    <lastmod>2026-09-18T16:32:27.464Z</lastmod>
+    <lastmod>2026-09-19T09:15:35.566Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers/adjoint_matching.html</loc>
@@ -707,5 +707,17 @@
   <url>
     <loc>https://alexxthiery.github.io/notes/adjoint_samplers/BMS.html</loc>
     <lastmod>2026-03-22T15:54:31.022Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/adjoint_samplers/adjoint_samplers.html</loc>
+    <lastmod>2026-09-19T15:34:57.348Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/LLM_reasoning/llm_reasoning_v2.html</loc>
+    <lastmod>2026-09-19T09:15:35.566Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/publications/pub_list_theory/2026_FlowEF.html</loc>
+    <lastmod>2026-09-24T03:19:05.207Z</lastmod>
   </url>
 </urlset>

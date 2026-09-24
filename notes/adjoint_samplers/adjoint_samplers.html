@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Training a diffusion model without data – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Training a diffusion model without data – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta name="twitter:title" content="Training a diffusion model without data – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Training a diffusion model without data</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">SDE</div>
+                <div class="quarto-category">markov</div>
+                <div class="quarto-category">sampling</div>
+                <div class="quarto-category">score</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">19 09 2026</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">19 09 2026</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#a-noise-process-that-ends-at-pi" id="toc-a-noise-process-that-ends-at-pi" class="nav-link active" data-scroll-target="#a-noise-process-that-ends-at-pi">A noise process that ends at <span class="math inline">\(\pi\)</span></a></li>
+  <li><a href="#the-drift-is-an-average" id="toc-the-drift-is-an-average" class="nav-link" data-scroll-target="#the-drift-is-an-average">The drift is an average</a></li>
+  <li><a href="#samples-or-scores" id="toc-samples-or-scores" class="nav-link" data-scroll-target="#samples-or-scores">Samples or scores</a></li>
+  <li><a href="#pulling-yourself-up-by-your-own-samples" id="toc-pulling-yourself-up-by-your-own-samples" class="nav-link" data-scroll-target="#pulling-yourself-up-by-your-own-samples">Pulling yourself up by your own samples</a></li>
+  <li><a href="#a-recipe-with-three-dials" id="toc-a-recipe-with-three-dials" class="nav-link" data-scroll-target="#a-recipe-with-three-dials">A recipe with three dials</a></li>
+  <li><a href="#the-start-remembers-the-end" id="toc-the-start-remembers-the-end" class="nav-link" data-scroll-target="#the-start-remembers-the-end">The start remembers the end</a></li>
+  <li><a href="#how-nudges-travel" id="toc-how-nudges-travel" class="nav-link" data-scroll-target="#how-nudges-travel">How nudges travel</a></li>
+  <li><a href="#where-did-the-stochastic-control-go" id="toc-where-did-the-stochastic-control-go" class="nav-link" data-scroll-target="#where-did-the-stochastic-control-go">Where did the stochastic control go?</a></li>
+  <li><a href="#mental-models-to-keep" id="toc-mental-models-to-keep" class="nav-link" data-scroll-target="#mental-models-to-keep">Mental models to keep</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>The <a href="../../notes/DDPM/DDPM.html">DDPM note</a> describes how a diffusion model turns a finite set of samples into a sampler: one learns the drift of a reversed noising process, and this drift is fitted by least-squares regression <span class="citation" data-cites="ho2020denoising song2020score">(<a href="#ref-ho2020denoising" role="doc-biblioref">Ho, Jain, and Abbeel 2020</a>; <a href="#ref-song2020score" role="doc-biblioref">Song et al. 2020</a>)</span>. The usual Monte Carlo situation is the mirror image. We are given a target distribution <span class="math inline">\(\pi(x) = \widetilde{\pi}(x) / \mathcal{Z}_\pi\)</span> on <span class="math inline">\(\mathbb{R}^D\)</span> with <span class="math inline">\(\widetilde{\pi}(x) = e^{-E(x)}\)</span> and an unknown normalizing constant <span class="math inline">\(\mathcal{Z}_\pi\)</span>. We can evaluate the energy <span class="math inline">\(E\)</span> and its gradient, and we do not have a single sample. MCMC and SMC methods exploit the energy directly, but each new batch of samples requires a new run and nothing reusable is learned along the way. Diffusion models, on the other hand, learn a transport from noise to data that can be reused at no cost, but they need data to do so.</p>
+<p>Can one train the diffusion model of <span class="math inline">\(\pi\)</span> from its energy alone? A recent line of work does exactly this, under names such as <em>adjoint matching</em> and <em>adjoint sampling</em> <span class="citation" data-cites="domingoenrich2024adjoint havens2025adjoint liu2025adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>; <a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>; <a href="#ref-liu2025adjoint" role="doc-biblioref">G.-H. Liu et al. 2025</a>)</span>. These notes are my attempt to understand the simple structure underneath, and to phrase it in the language of Monte Carlo. Three facts do most of the work. First, the drift of the diffusion model of <span class="math inline">\(\pi\)</span> is a conditional expectation of a functional of the future path, what one would call a <em>delta</em> in option pricing. Second, this delta has a pathwise and a likelihood-ratio representation, related by an integration by parts, and it is this integration by parts that trades samples of <span class="math inline">\(\pi\)</span> for the score of <span class="math inline">\(\pi\)</span>. Third, the conditional expectation can be estimated by least-squares regression on paths that we simulate ourselves, so that the sampler bootstraps from its own output. There is one subtlety: on a finite time horizon, the start of the process remembers its end, and even a perfect drift leaves non-trivial importance weights. Most of the variety in the recent literature comes from the different ways of dealing with this.</p>
+<section id="a-noise-process-that-ends-at-pi" class="level3">
+<h3 class="anchored" data-anchor-id="a-noise-process-that-ends-at-pi">A noise process that ends at <span class="math inline">\(\pi\)</span></h3>
+<section id="the-reference-process" class="level4">
+<h4 class="anchored" data-anchor-id="the-reference-process">The reference process</h4>
+<p>Consider the Ornstein–Uhlenbeck (OU) process of the <a href="../../notes/DDPM/DDPM.html">DDPM note</a>, started from its stationary distribution,</p>
+<p><span id="eq-ou"><span class="math display">\[
+dX_t = -\tfrac12 X_t \, dt + dW_t, \qquad X_0 \sim \pi_{\mathrm{ref}} = \mathcal{N}(0, I),
+\tag{1}\]</span></span></p>
+<p>on the time interval <span class="math inline">\([0,T]\)</span>, and denote by <span class="math inline">\(\mathbb{P}\)</span> its law on path-space. Contrary to the DDPM note, time runs here from noise at <span class="math inline">\(t=0\)</span> to the target at <span class="math inline">\(t=T\)</span>. With <span class="math inline">\(\alpha_s = e^{-s/2}\)</span> and <span class="math inline">\(\sigma_s^2 = 1 - \alpha_s^2\)</span>, the transitions read</p>
+<p><span id="eq-ou-transition"><span class="math display">\[
+X_{t+s} = \alpha_s \, X_t + \sigma_s \, \mathbf{n}
+\tag{2}\]</span></span></p>
+<p>for a standard Gaussian <span class="math inline">\(\mathbf{n}\sim \mathcal{N}(0,I)\)</span> independent of <span class="math inline">\(X_t\)</span>. In other words, the transition density is <span class="math inline">\(p_s(y \mid x) = \mathcal{N}(y; \alpha_s x, \sigma_s^2 I)\)</span>: shrink, then blur. When the current time <span class="math inline">\(t\)</span> is fixed, I will write <span class="math inline">\(\alpha \equiv \alpha_{T-t}\)</span> and <span class="math inline">\(\sigma \equiv \sigma_{T-t}\)</span> for the shrinkage factor and noise level over the remaining time <span class="math inline">\(T-t\)</span>.</p>
+<p>Three properties of <a href="#eq-ou" class="quarto-xref">Equation&nbsp;1</a> are used over and over. First, <em>nudges fade</em>. By <a href="#eq-ou-transition" class="quarto-xref">Equation&nbsp;2</a> we have <span class="math inline">\(X_T = \alpha X_t + \sigma \mathbf{n}'\)</span> with <span class="math inline">\(\mathbf{n}'\)</span> independent of <span class="math inline">\(X_t\)</span>; holding <span class="math inline">\(\mathbf{n}'\)</span> fixed and moving <span class="math inline">\(X_t\)</span> by <span class="math inline">\(\delta\)</span> moves <span class="math inline">\(X_T\)</span> by <span class="math inline">\(\alpha \, \delta\)</span>. Second, the process is <em>reversible</em>: its path distribution is invariant under time reversal, so that, conditionally on the future <span class="math inline">\(X_{t+s} = y\)</span>, the past <span class="math inline">\(X_t\)</span> is distributed as <span class="math inline">\(\mathcal{N}(\alpha_s y, \sigma_s^2 I)\)</span>. Looking backward, one again shrinks and blurs. Third, <em>bridges are Gaussian</em>: conditionally on both endpoints,</p>
+<p><span id="eq-ou-bridge"><span class="math display">\[
+X_t \mid (X_0, X_T) = (x_0,x_T)
+\;\sim\;
+\mathcal{N} {\left(  \alpha_t \, x_0 + \frac{\alpha_{T-t} \, \sigma_t^2}{\sigma_T^2} \, (x_T - \alpha_T \, x_0), \; \frac{\sigma_t^2 \, \sigma_{T-t}^2}{\sigma_T^2} \, I \right)} .
+\tag{3}\]</span></span></p>
+<p>Sampling an intermediate point given the two endpoints costs a single Gaussian draw; no SDE needs to be simulated. Two special cases will be useful: when the process is started at <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> and only the endpoint is given, reversibility gives <span class="math inline">\(X_t \mid X_T \sim \mathcal{N}(\alpha_{T-t} X_T, \sigma_{T-t}^2 I)\)</span>; when the process is started at <span class="math inline">\(X_0 = 0\)</span>, <a href="#eq-ou-bridge" class="quarto-xref">Equation&nbsp;3</a> gives <span class="math inline">\(X_t \mid X_T \sim \mathcal{N}(\alpha_{T-t}\sigma_t^2 X_T / \sigma_T^2, \, \sigma_t^2 \sigma_{T-t}^2 I / \sigma_T^2)\)</span>.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+The transitions follow from the variation of constants formula <span class="math inline">\(X_{t+s} = e^{-s/2} X_t + \int_t^{t+s} e^{-(t+s-r)/2} \, dW_r\)</span>; the stochastic integral is a centred Gaussian with covariance <span class="math inline">\(\int_0^s e^{-(s-r)} \, dr \, I = (1-e^{-s}) \, I\)</span>. For reversibility, the joint density of <span class="math inline">\((X_t, X_{t+s})\)</span> at stationarity is <span class="math display">\[
+\pi_{\mathrm{ref}}(x) \, p_s(y \mid x) \; \propto \; \exp {\left\{  -\frac{\sigma_s^2 \|x\|^2 + \|y - \alpha_s x\|^2}{2 \sigma_s^2}  \right\}}  = \exp {\left\{  -\frac{\|x\|^2 + \|y\|^2 - 2 \alpha_s \left&lt; x,y \right&gt;}{2\sigma_s^2}  \right\}} ,
+\]</span> where we have used that <span class="math inline">\(\alpha_s^2 + \sigma_s^2 = 1\)</span>; this expression is symmetric in <span class="math inline">\((x,y)\)</span>. For the bridge, conditionally on <span class="math inline">\(X_0 = x_0\)</span> we have <span class="math inline">\(X_t = \alpha_t x_0 + \sigma_t \mathbf{n}_1\)</span> and <span class="math inline">\(X_T = \alpha_{T-t} X_t + \sigma_{T-t} \mathbf{n}_2\)</span>. The pair <span class="math inline">\((X_t, X_T)\)</span> is Gaussian with <span class="math inline">\(\mathbb{E}[X_t] = \alpha_t x_0\)</span>, <span class="math inline">\(\mathop{\mathrm{Var}}(X_t) = \sigma_t^2 I\)</span>, <span class="math inline">\(\mathop{\mathrm{Cov}}(X_t, X_T) = \alpha_{T-t} \sigma_t^2 I\)</span> and <span class="math inline">\(\mathop{\mathrm{Var}}(X_T) = (\alpha_{T-t}^2 \sigma_t^2 + \sigma_{T-t}^2) I = \sigma_T^2 I\)</span>. Gaussian conditioning gives the mean in <a href="#eq-ou-bridge" class="quarto-xref">Equation&nbsp;3</a>, and the variance <span class="math inline">\(\sigma_t^2 - \alpha_{T-t}^2 \sigma_t^4 / \sigma_T^2 = \sigma_t^2 \sigma_{T-t}^2 / \sigma_T^2\)</span> since <span class="math inline">\(\sigma_T^2 - \alpha_{T-t}^2 \sigma_t^2 = \sigma_{T-t}^2\)</span>.
+</p>
+</details>
+<p>Several of the papers cited below use a Brownian motion as reference instead of <a href="#eq-ou" class="quarto-xref">Equation&nbsp;1</a>. This changes nothing conceptually: the OU process is a Brownian motion in moving coordinates, since <span class="math inline">\(Y_t = e^{t/2} X_t\)</span> satisfies <span class="math inline">\(dY_t = e^{t/2} \, dW_t\)</span>. All the formulas below translate to the Brownian case by replacing <span class="math inline">\(\alpha_s\)</span> by <span class="math inline">\(1\)</span> and <span class="math inline">\(\sigma_s^2\)</span> by <span class="math inline">\(s\)</span>. I use the OU process because it comes with a natural reference distribution <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>, because it is reversible, and because it is the noising process of diffusion models, which makes the identification of the next section exact.</p>
+</section>
+<section id="reweighting-the-end" class="level4">
+<h4 class="anchored" data-anchor-id="reweighting-the-end">Reweighting the end</h4>
+<p>As in these notes on <a href="../../notes/doob_transforms/doob.html">Doob h-transforms</a>, reweight each path of the reference process by a function of its endpoint,</p>
+<p><span id="eq-reweight"><span class="math display">\[
+\frac{d\mathbb{Q}}{d\mathbb{P}}(X) = \frac{1}{\mathcal{Z}_\pi} \, \frac{\widetilde{\pi}(X_T)}{\pi_{\mathrm{ref}}(X_T)} = e^{g(X_T)}
+\qquad \text{with} \qquad
+g(x) = \log \frac{\pi(x)}{\pi_{\mathrm{ref}}(x)} = -E(x) + \tfrac12 \|x\|^2 + \text{const}.
+\tag{4}\]</span></span></p>
+<p>The normalizing constant is exactly the unknown <span class="math inline">\(\mathcal{Z}_\pi\)</span> since <span class="math inline">\(\mathbb{E}_{\mathbb{P}}[\widetilde{\pi}(X_T)/\pi_{\mathrm{ref}}(X_T)] = \int \widetilde{\pi}(x) \, dx\)</span>, the endpoint <span class="math inline">\(X_T\)</span> being distributed as <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> under <span class="math inline">\(\mathbb{P}\)</span>. It shifts <span class="math inline">\(g\)</span> by a constant and will never enter any of the drifts below. The endpoint of the reweighted process is distributed as <span class="math inline">\(\pi_{\mathrm{ref}} \times \pi / \pi_{\mathrm{ref}} = \pi\)</span>: simulating <span class="math inline">\(\mathbb{Q}\)</span> is sampling from <span class="math inline">\(\pi\)</span>.</p>
+<p>What does <span class="math inline">\(\mathbb{Q}\)</span> look like? A weight that only depends on the endpoint does not modify the distribution of a path given its endpoint. Indeed, Bayes’ rule gives <span class="math inline">\(\mathbb{Q}(dX \mid X_T = y) = \mathbb{P}(dX) \, e^{g(y)} / [\mathbb{P}(X_T \in dy) \, e^{g(y)}] = \mathbb{P}(dX \mid X_T = y)\)</span>. By reversibility, <span class="math inline">\(\mathbb{P}(\cdot \mid X_T = y)\)</span> is the OU process started at <span class="math inline">\(y\)</span> and read backward in time. This means that <span class="math inline">\(\mathbb{Q}\)</span> is obtained by drawing <span class="math inline">\(X_T \sim \pi\)</span> and running the noising process backward from it: <strong><span class="math inline">\(\mathbb{Q}\)</span> is the diffusion model of <span class="math inline">\(\pi\)</span></strong>, as described in the <a href="../../notes/DDPM/DDPM.html">DDPM note</a>, with noise at <span class="math inline">\(t=0\)</span> and the target at <span class="math inline">\(t=T\)</span>. In particular, the marginal <span class="math inline">\(\mathbb{Q}_t\)</span> at time <span class="math inline">\(t\)</span> is the distribution <span class="math inline">\(\pi\)</span> noised for a duration <span class="math inline">\(T-t\)</span>, i.e.&nbsp;the law of <span class="math inline">\(\alpha_{T-t} Y + \sigma_{T-t} \mathbf{n}\)</span> with <span class="math inline">\(Y \sim \pi\)</span>.</p>
+<p>The <a href="../../notes/doob_transforms/doob.html">Doob h-transform</a> describes the dynamics of <span class="math inline">\(\mathbb{Q}\)</span> as a diffusion with an additional drift,</p>
+<p><span id="eq-doob-drift"><span class="math display">\[
+dX_t = -\tfrac12 X_t \, dt +  \textcolor{blue}{\nabla \log h(t, X_t)} \, dt + dW_t
+\qquad \text{with} \qquad
+h(t,x) = \mathbb{E}_{\mathbb{P}} {\left[  e^{g(X_T)} \mid X_t = x  \right]} .
+\tag{5}\]</span></span></p>
+<p>In the language of the <a href="../../notes/HJB/HJB.html">HJB note</a>, the optimal control is <span class="math inline">\(u^\star = \nabla \log h = \nabla V\)</span> with value function <span class="math inline">\(V = \log h\)</span>. The rest of these notes is about learning this single vector field. As a sanity check, integrating <a href="#eq-reweight" class="quarto-xref">Equation&nbsp;4</a> over everything but <span class="math inline">\(X_t\)</span> gives the marginal</p>
+<p><span id="eq-qt"><span class="math display">\[
+\mathbb{Q}_t(x) = \pi_{\mathrm{ref}}(x) \, h(t,x),
+\tag{6}\]</span></span></p>
+<p>so that <span class="math inline">\(\nabla \log h(t,x) = \nabla \log \mathbb{Q}_t(x) + x\)</span> and the total drift in <a href="#eq-doob-drift" class="quarto-xref">Equation&nbsp;5</a> equals <span class="math inline">\(\tfrac12 x + \nabla \log \mathbb{Q}_t(x)\)</span>. This is exactly the drift of the reverse diffusion in the <a href="../../notes/DDPM/DDPM.html">DDPM note</a>, with the noised data replaced by the noised target.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+Integrating out everything but <span class="math inline">\(X_t\)</span> gives <span class="math inline">\(\mathbb{Q}_t(x) = \int \pi_{\mathrm{ref}}(x) \, p_{T-t}(y \mid x) \, e^{g(y)} \, dy = \pi_{\mathrm{ref}}(x) \, h(t,x)\)</span>. By reversibility <span class="math inline">\(\pi_{\mathrm{ref}}(x) \, p_{T-t}(y \mid x) = \pi_{\mathrm{ref}}(y) \, p_{T-t}(x \mid y)\)</span>, and since <span class="math inline">\(\pi_{\mathrm{ref}} \, e^{g} = \pi\)</span> this also reads <span class="math inline">\(\mathbb{Q}_t(x) = \int \pi(y) \, p_{T-t}(x \mid y) \, dy\)</span>, the distribution <span class="math inline">\(\pi\)</span> noised for a duration <span class="math inline">\(T-t\)</span>.
+</p>
+</details>
+</section>
+<section id="the-look-ahead-function" class="level4">
+<h4 class="anchored" data-anchor-id="the-look-ahead-function">The look-ahead function</h4>
+<p>The function <span class="math inline">\(h(t,x)\)</span> measures how promising the position <span class="math inline">\(x\)</span> is at time <span class="math inline">\(t\)</span>, and the drift climbs its logarithm. By <a href="#eq-ou-transition" class="quarto-xref">Equation&nbsp;2</a>,</p>
+<p><span id="eq-h-blur"><span class="math display">\[
+h(t,x) = \int \mathcal{N}(y; \alpha x, \sigma^2 I) \, e^{g(y)} \, dy :
+\tag{7}\]</span></span></p>
+<p>the weight <span class="math inline">\(e^{g} = \pi / \pi_{\mathrm{ref}}\)</span> blurred by a Gaussian kernel of width <span class="math inline">\(\sigma\)</span> and evaluated at the shrunk point <span class="math inline">\(\alpha x\)</span>. Far from the end (<span class="math inline">\(\alpha \approx 0\)</span>, <span class="math inline">\(\sigma \approx 1\)</span>), the drift sees a heavily blurred version of the target; close to the end (<span class="math inline">\(\alpha \approx 1\)</span>, <span class="math inline">\(\sigma \approx 0\)</span>), it sees its fine details. This can be made precise. Writing <span class="math inline">\(m_\pi\)</span> and <span class="math inline">\(C_\pi\)</span> for the mean and covariance of <span class="math inline">\(\pi\)</span>, an expansion in powers of <span class="math inline">\(\alpha = e^{-(T-t)/2}\)</span> gives</p>
+<p><span id="eq-early-drift"><span class="math display">\[
+\nabla \log h(t,x) = \alpha \, m_\pi + \alpha^2 \, (C_\pi - I) \, x + O(\alpha^3).
+\tag{8}\]</span></span></p>
+<p>Far from the end, the drift only knows the mean of <span class="math inline">\(\pi\)</span>; one order later it knows its covariance, and finer features of <span class="math inline">\(\pi\)</span> only appear at higher orders.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+Completing the square and using <span class="math inline">\(\sigma^2 = 1 - \alpha^2\)</span> gives <span class="math inline">\(\mathcal{N}(y; \alpha x, \sigma^2 I) / \pi_{\mathrm{ref}}(y) = \sigma^{-D} \exp {\left\{  (2\alpha \left&lt; x,y \right&gt; - \alpha^2 \|x\|^2 - \alpha^2 \|y\|^2) / (2\sigma^2)  \right\}} \)</span>, so that <span class="math display">\[
+h(t,x) = \sigma^{-D} \, e^{-\alpha^2 \|x\|^2 / (2\sigma^2)} \; \mathbb{E}_{\pi} {\left[  \exp {\left\{  \frac{\alpha \left&lt; x,Y \right&gt;}{\sigma^2} - \frac{\alpha^2 \|Y\|^2}{2\sigma^2}  \right\}}   \right]} .
+\]</span> Differentiating gives <span class="math inline">\(\nabla \log h(t,x) = \frac{\alpha}{\sigma^2}  {\left(  \widehat{x} - \alpha x  \right)} \)</span> where <span class="math inline">\(\widehat{x}\)</span> is the mean of <span class="math inline">\(\pi\)</span> tilted by the exponential factor above; this tilted distribution is the conditional distribution of <span class="math inline">\(X_T\)</span> given <span class="math inline">\(X_t = x\)</span> under <span class="math inline">\(\mathbb{Q}\)</span>, and this formula will reappear in the next section. For small <span class="math inline">\(\alpha\)</span>, the tilted mean is <span class="math inline">\(m_\pi + \alpha \, C_\pi \, x + O(\alpha^2)\)</span> and <span class="math inline">\(\sigma^2 = 1 + O(\alpha^2)\)</span>, which gives <a href="#eq-early-drift" class="quarto-xref">Equation&nbsp;8</a>.
+</p>
+</details>
+<p>The marginals <span class="math inline">\(\mathbb{Q}_t\)</span> form a path of distributions from (nearly) <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> to <span class="math inline">\(\pi\)</span>, just as the tempering path <span class="math inline">\(\pi_\beta \propto \pi_{\mathrm{ref}}^{1-\beta} \, \pi^{\beta}\)</span> used in annealed importance sampling and SMC (see these notes on <a href="../../notes/jarzynski/jarzynski.html">Jarzynski and Crooks</a>). The difference is that the diffusion path <em>blurs</em> the target instead of <em>flattening</em> it. Since <span class="math inline">\(\mathbb{Q}_t\)</span> is the law of <span class="math inline">\(\alpha Y + \sigma \mathbf{n}\)</span> with <span class="math inline">\(Y \sim \pi\)</span>, its mean is <span class="math inline">\(\alpha \, m_\pi\)</span>, its covariance is <span class="math inline">\(I + \alpha^2 (C_\pi - I)\)</span>, and its cumulants of order <span class="math inline">\(k \geq 3\)</span> scale as <span class="math inline">\(\alpha^k\)</span>. The modes of <span class="math inline">\(\pi\)</span> are merged into a single Gaussian-looking blob early on and only separate close to the end, whereas tempering keeps the modes where they are and lowers the barriers between them. A diffusion sampler decides “which mode” early, when the modes are merged, and “where in the mode” late.</p>
+</section>
+<section id="a-perfect-sampler-is-a-perfect-proposal" class="level4">
+<h4 class="anchored" data-anchor-id="a-perfect-sampler-is-a-perfect-proposal">A perfect sampler is a perfect proposal</h4>
+<p>For a Monte Carlo reader, <span class="math inline">\(\mathbb{Q}\)</span> is also the zero-variance importance sampling proposal on path-space for estimating <span class="math inline">\(\mathcal{Z}_\pi = \mathbb{E}_{\mathbb{P}}[\widetilde{\pi}(X_T) / \pi_{\mathrm{ref}}(X_T)]\)</span>, a remark already made at the end of the <a href="../../notes/girsanov/girsanov.html">Girsanov note</a>. Any drift <span class="math inline">\(u(t,x)\)</span> defines a proposal <span class="math inline">\(\mathbb{P}^u\)</span>, the law of <span class="math inline">\(dX_t = -\tfrac12 X_t \, dt + u(t,X_t) \, dt + dW_t\)</span> started at <span class="math inline">\(X_0 \sim \pi_{\mathrm{ref}}\)</span>, and the Girsanov theorem gives computable importance weights,</p>
+<p><span id="eq-path-weights"><span class="math display">\[
+w(X) = \frac{\widetilde{\pi}(X_T)}{\pi_{\mathrm{ref}}(X_T)} \, \exp {\left\{  -\int_0^T u(t,X_t)^\top \, dW_t - \frac 12 \int_0^T \|u(t,X_t)\|^2 \, dt  \right\}}
+\qquad \text{with} \qquad
+\mathbb{E}_{\mathbb{P}^u}[w] = \mathcal{Z}_\pi,
+\tag{9}\]</span></span></p>
+<p>where <span class="math inline">\(dW_t\)</span> denotes the noise increments used to simulate the path. Self-normalized importance sampling with these weights removes the bias of any learned sampler and estimates <span class="math inline">\(\mathcal{Z}_\pi\)</span>; resampling along the way gives an SMC sampler <span class="citation" data-cites="phillips2024particle">(<a href="#ref-phillips2024particle" role="doc-biblioref">Phillips et al. 2024</a>)</span>. The weights are constant, i.e.&nbsp;the proposal is perfect, exactly when <span class="math inline">\(\mathbb{P}^u = \mathbb{Q}\)</span>, start included. The effective sample size of the weights <a href="#eq-path-weights" class="quarto-xref">Equation&nbsp;9</a> is the natural diagnostic of a learned sampler, and “start included” is the catch discussed at length further below.</p>
+</section>
+</section>
+<section id="the-drift-is-an-average" class="level3">
+<h3 class="anchored" data-anchor-id="the-drift-is-an-average">The drift is an average</h3>
+<p>Under <span class="math inline">\(\mathbb{Q}\)</span> and conditionally on <span class="math inline">\(X_t = x\)</span>, the endpoint <span class="math inline">\(X_T\)</span> is distributed as</p>
+<p><span id="eq-q-cond"><span class="math display">\[
+\mathbb{Q}(X_T \in dy \mid X_t = x) = \frac{p_{T-t}(y \mid x) \, e^{g(y)}}{h(t,x)} \, dy .
+\tag{10}\]</span></span></p>
+<p>This is the <a href="../../notes/doob_transforms/doob.html">Doob</a> recipe: condition the reference on <span class="math inline">\(X_t = x\)</span>, then reweight the future by the endpoint weight <span class="math inline">\(e^{g}\)</span>, the look-ahead function <span class="math inline">\(h(t,x)\)</span> being the normalizing constant. Equivalently, by reversibility, <span class="math inline">\(\mathbb{Q}(X_T \in dy \mid X_t = x) \propto \pi(y) \, \mathcal{N}(x; \alpha y, \sigma^2 I)\)</span>: the posterior of a clean sample <span class="math inline">\(y\)</span> given its noisy version <span class="math inline">\(x\)</span>, exactly as in the <a href="../../notes/DDPM/DDPM.html">DDPM note</a>. The drift <span class="math inline">\(\nabla \log h\)</span> can be written as an average under <a href="#eq-q-cond" class="quarto-xref">Equation&nbsp;10</a> in (at least) two ways.</p>
+<section id="push-the-endpoint" class="level4">
+<h4 class="anchored" data-anchor-id="push-the-endpoint">Push the endpoint</h4>
+<p>By <a href="#eq-ou-transition" class="quarto-xref">Equation&nbsp;2</a>, the look-ahead function reads <span class="math inline">\(h(t,x) = \mathbb{E}[ e^{g(\alpha x + \sigma \mathbf{n})} ]\)</span> for a standard Gaussian <span class="math inline">\(\mathbf{n}\)</span>. Differentiating under the expectation while holding the noise <span class="math inline">\(\mathbf{n}\)</span> fixed gives <span class="math inline">\(\nabla h(t,x) = \alpha \, \mathbb{E}[ \nabla g(\alpha x + \sigma \mathbf{n}) \, e^{g(\alpha x + \sigma \mathbf{n})} ] = \alpha \int p_{T-t}(y \mid x) \, e^{g(y)} \, \nabla g(y) \, dy\)</span>. Dividing by <span class="math inline">\(h(t,x)\)</span> and recognizing <a href="#eq-q-cond" class="quarto-xref">Equation&nbsp;10</a>,</p>
+<p><span id="eq-push"><span class="math display">\[
+\nabla \log h(t,x)
+= \alpha \; \mathbb{E}_{\mathbb{Q}} {\left[  \nabla g(X_T) \mid X_t = x  \right]}
+= \alpha \; \mathbb{E}_{\mathbb{Q}} {\left[   \textcolor{blue}{\nabla \log \pi(X_T) + X_T} \mid X_t = x  \right]} ,
+\tag{11}\]</span></span></p>
+<p>where the second expression uses <span class="math inline">\(\nabla g(y) = \nabla \log \pi(y) + y\)</span>. Only the gradient of the energy is needed, since <span class="math inline">\(\nabla \log \pi = -\nabla E\)</span> does not involve <span class="math inline">\(\mathcal{Z}_\pi\)</span>. The interpretation is intuitive: the drift at time <span class="math inline">\(t\)</span> is the average force <span class="math inline">\(\nabla g\)</span> felt at the endpoint, transported back to the present by the factor <span class="math inline">\(\alpha = \alpha_{T-t}\)</span> by which a nudge at time <span class="math inline">\(t\)</span> survives until time <span class="math inline">\(T\)</span>.</p>
+<p>The reader of these notes has in fact already seen <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a>: it is the last formula of the note on <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">Tweedie’s formula</a>, the generalized Tweedie formula for a reversible AR(1) model <span class="math inline">\(Y = \alpha X + Z\)</span>. The dictionary is as follows: their <span class="math inline">\(X\)</span> is our endpoint <span class="math inline">\(X_T \sim \pi\)</span>, their <span class="math inline">\(Y\)</span> is our <span class="math inline">\(X_t\)</span> (by reversibility), their reference distribution <span class="math inline">\(\mathcal{N}(0, \sigma^2/(1-\alpha^2))\)</span> is our <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> since <span class="math inline">\(\sigma^2 = 1 - \alpha^2\)</span>, and their <span class="math inline">\(p_Y / \rho\)</span> is our <span class="math inline">\(\mathbb{Q}_t / \pi_{\mathrm{ref}} = h\)</span> by <a href="#eq-qt" class="quarto-xref">Equation&nbsp;6</a>. The identity is a version of the target score identity of <span class="citation" data-cites="de2024target">(<a href="#ref-de2024target" role="doc-biblioref">De Bortoli et al. 2024</a>)</span>. In the control literature, the pathwise sensitivity <span class="math inline">\(\alpha \, \nabla g(X_T)\)</span> is an <em>adjoint</em> (or costate), and the methods that regress onto it are called adjoint matching and adjoint sampling <span class="citation" data-cites="domingoenrich2024adjoint havens2025adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>; <a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span>; we will come back to the name later.</p>
+</section>
+<section id="pull-toward-the-endpoint" class="level4">
+<h4 class="anchored" data-anchor-id="pull-toward-the-endpoint">Pull toward the endpoint</h4>
+<p>One can also differentiate the Gaussian kernel instead of the path: <span class="math inline">\(\nabla h(t,x) = \int \nabla_x p_{T-t}(y \mid x) \, e^{g(y)} \, dy\)</span> with <span class="math inline">\(\nabla_x \log p_{T-t}(y \mid x) = \alpha (y - \alpha x) / \sigma^2\)</span>. Dividing by <span class="math inline">\(h(t,x)\)</span> gives</p>
+<p><span id="eq-pull"><span class="math display">\[
+\nabla \log h(t,x)
+= \mathbb{E}_{\mathbb{Q}} {\left[   \textcolor{blue}{\frac{\alpha \, (X_T - \alpha x)}{\sigma^2}} \;\Big|\; X_t = x  \right]}
+= \frac{\alpha}{\sigma^2}  {\left(  \widehat{x}(t,x) - \alpha x  \right)}
+\qquad \text{with} \qquad
+\widehat{x}(t,x) = \mathbb{E}_{\mathbb{Q}}[X_T \mid X_t = x].
+\tag{12}\]</span></span></p>
+<p>The quantity <span class="math inline">\(\alpha (y - \alpha x)/\sigma^2\)</span> is the additional drift of the OU bridge pinned at <span class="math inline">\(X_T = y\)</span>, the OU analogue of the drift <span class="math inline">\(-(x - x_\star)/(T-t)\)</span> of the Brownian bridge in the <a href="../../notes/doob_transforms/doob.html">Doob note</a>. Each endpoint that the process might reach pulls it toward itself, and the drift is the average pull. Equivalently, the process guesses its endpoint with the denoiser <span class="math inline">\(\widehat{x}(t,x)\)</span>, the time-reversed version of the denoiser <span class="math inline">\(\widehat{x}_0\)</span> of the DDPM note, and moves toward that guess: this is Tweedie’s formula read as a drift.</p>
+</section>
+<section id="why-the-two-agree" class="level4">
+<h4 class="anchored" data-anchor-id="why-the-two-agree">Why the two agree</h4>
+<p>The Gaussian kernel <span class="math inline">\(p_{T-t}(y \mid x)\)</span> depends on <span class="math inline">\((x,y)\)</span> only through <span class="math inline">\(y - \alpha x\)</span>, so that <span class="math inline">\(\nabla_x p_{T-t}(y \mid x) = -\alpha \, \nabla_y p_{T-t}(y \mid x)\)</span>. An integration by parts in <span class="math inline">\(y\)</span> then moves the derivative from the kernel onto the weight,</p>
+<p><span id="eq-ibp"><span class="math display">\[
+\int \nabla_x p_{T-t}(y \mid x) \, e^{g(y)} \, dy
+= -\alpha \int \nabla_y p_{T-t}(y \mid x) \, e^{g(y)} \, dy
+= \alpha \int p_{T-t}(y \mid x) \, \nabla_y e^{g(y)} \, dy,
+\tag{13}\]</span></span></p>
+<p>and <a href="#eq-pull" class="quarto-xref">Equation&nbsp;12</a> becomes <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a>. In Monte Carlo terms, <span class="math inline">\(h(t,x)\)</span> is the price of the payoff <span class="math inline">\(e^{g(X_T)}\)</span> from state <span class="math inline">\(x\)</span> and <span class="math inline">\(\nabla \log h\)</span> is a normalized <em>delta</em>: <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> is the pathwise delta estimator and <a href="#eq-pull" class="quarto-xref">Equation&nbsp;12</a> is the likelihood-ratio (score function) estimator <span class="citation" data-cites="glasserman2003monte">(<a href="#ref-glasserman2003monte" role="doc-biblioref">Glasserman 2003</a>)</span>. For general diffusions, the link between the two is the Malliavin integration by parts used to compute Greeks <span class="citation" data-cites="fournie1999applications">(<a href="#ref-fournie1999applications" role="doc-biblioref">Fournié et al. 1999</a>)</span>; with Gaussian transitions it is the one line <a href="#eq-ibp" class="quarto-xref">Equation&nbsp;13</a>.</p>
+<p>Integrating by parts “the other way”, on the marginal <span class="math inline">\(\mathbb{Q}_t(x) = \int \pi(y) \, p_{T-t}(x \mid y) \, dy\)</span>, gives a third representation. The kernel <span class="math inline">\(p_{T-t}(x \mid y)\)</span> depends on <span class="math inline">\(x - \alpha y\)</span>, so that <span class="math inline">\(\nabla_x p_{T-t}(x \mid y) = -\alpha^{-1} \nabla_y p_{T-t}(x \mid y)\)</span> and <span class="math inline">\(\nabla \log \mathbb{Q}_t(x) = \alpha^{-1} \, \mathbb{E}_{\mathbb{Q}}[ \nabla \log \pi(X_T) \mid X_t = x]\)</span>, which is the target score identity as quoted in the <a href="../../notes/reverse_and_tweedie/reverse_and_tweedie.html">Tweedie note</a>. With <a href="#eq-qt" class="quarto-xref">Equation&nbsp;6</a>,</p>
+<p><span id="eq-tsi"><span class="math display">\[
+\nabla \log h(t,x) = \mathbb{E}_{\mathbb{Q}} {\left[   \textcolor{blue}{\frac{\nabla \log \pi(X_T)}{\alpha} + x} \;\Big|\; X_t = x  \right]} .
+\tag{14}\]</span></span></p>
+<p>These are three different integrands with the same conditional expectation; they differ in their variance, as discussed below.</p>
+</section>
+</section>
+<section id="samples-or-scores" class="level3">
+<h3 class="anchored" data-anchor-id="samples-or-scores">Samples or scores</h3>
+<p>A conditional expectation is a least-squares projection, as already exploited in the <a href="../../notes/DDPM/DDPM.html">DDPM note</a>. If <span class="math inline">\(\xi_t\)</span> is any random variable such that <span class="math inline">\(\mathbb{E}[\xi_t \mid X_t] = \nabla \log h(t, X_t)\)</span>, and <span class="math inline">\(\omega(t) &gt; 0\)</span> is any time weighting, then</p>
+<p><span id="eq-reg"><span class="math display">\[
+\nabla \log h = \mathop{\mathrm{argmin}}_{u} \; \int_0^T \omega(t) \; \mathbb{E}_{\mathbb{Q}} \big\| u(t, X_t) - \xi_t \big\|^2 \, dt .
+\tag{15}\]</span></span></p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+For any function <span class="math inline">\(u\)</span>, we have <span class="math inline">\(\mathbb{E}\|u(X) - \xi\|^2 = \mathbb{E}\|u(X) - \mathbb{E}[\xi \mid X]\|^2 + \mathbb{E}\|\mathbb{E}[\xi \mid X] - \xi\|^2\)</span>. Only the first term depends on <span class="math inline">\(u\)</span>, and it vanishes for <span class="math inline">\(u(X) = \mathbb{E}[\xi \mid X]\)</span>. The time weighting <span class="math inline">\(\omega(t)\)</span> changes the variance of stochastic gradient estimates of the loss, never its minimizer.
+</p>
+</details>
+<p>The two representations <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> and <a href="#eq-pull" class="quarto-xref">Equation&nbsp;12</a> give two regression problems with the same solution, with integrands</p>
+<p><span id="eq-reg-integrands"><span class="math display">\[
+\xi^{\text{push}}_t =  \textcolor{blue}{\alpha_{T-t} \,  {\left(  \nabla \log \pi(X_T) + X_T  \right)} }
+\qquad \text{and} \qquad
+\xi^{\text{pull}}_t =  \textcolor{blue}{\frac{\alpha_{T-t} \, (X_T - \alpha_{T-t} X_t)}{\sigma_{T-t}^2}}.
+\tag{16}\]</span></span></p>
+<p>Training pairs under <span class="math inline">\(\mathbb{Q}\)</span> are cheap to generate: draw <span class="math inline">\(X_T \sim \pi\)</span> and set <span class="math inline">\(X_t = \alpha_{T-t} X_T + \sigma_{T-t} \mathbf{n}\)</span>, which is correct by reversibility. The pull regression needs samples of <span class="math inline">\(\pi\)</span> and nothing else: it is denoising score matching <span class="citation" data-cites="vincent2011connection">(<a href="#ref-vincent2011connection" role="doc-biblioref">Vincent 2011</a>)</span>, i.e.&nbsp;the way diffusion models are trained. The push regression needs no sample of <span class="math inline">\(\pi\)</span> at the endpoints (we will see below where the endpoints come from), but it needs the gradient <span class="math inline">\(\nabla \log \pi\)</span> there: it is the regression behind adjoint matching and adjoint sampling <span class="citation" data-cites="domingoenrich2024adjoint havens2025adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>; <a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span>. <strong>Samples tell us where <span class="math inline">\(\pi\)</span> is, the score tells us which way is uphill, and an integration by parts trades one for the other.</strong> A diffusion sampler of this type is a diffusion model trained with <span class="math inline">\(\nabla \log \pi\)</span> instead of data.</p>
+<p>In Monte Carlo language, <a href="#eq-reg" class="quarto-xref">Equation&nbsp;15</a> is least-squares Monte Carlo, the regression step of Longstaff and Schwartz <span class="citation" data-cites="longstaff2001valuing">(<a href="#ref-longstaff2001valuing" role="doc-biblioref">Longstaff and Schwartz 2001</a>)</span>: simulate paths, compute a noisy functional of each path, regress it on the current state, and read off the conditional expectation. The neural network acts as a Rao-Blackwellizer that averages many one-sample estimates of the drift into a smooth vector field. Particle methods estimate the same conditional expectations state by state, with importance sampling or SMC <span class="citation" data-cites="phillips2024particle">(<a href="#ref-phillips2024particle" role="doc-biblioref">Phillips et al. 2024</a>)</span>; the regression amortizes this over all states at once.</p>
+<p>The integrands <span class="math inline">\(\xi^{\text{push}}\)</span>, <span class="math inline">\(\xi^{\text{pull}}\)</span> and the integrand of <a href="#eq-tsi" class="quarto-xref">Equation&nbsp;14</a> have the same conditional mean but very different fluctuations. The push integrand is of order <span class="math inline">\(\alpha\)</span>: it is small far from the end, stays bounded close to the end, and inherits the roughness of <span class="math inline">\(\nabla \log \pi\)</span> (stiff molecular energies require gradient clipping in practice <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span>). The fluctuations of the pull integrand equal <span class="math inline">\(\alpha / \sigma^2\)</span> times the spread of <span class="math inline">\(X_T\)</span> given <span class="math inline">\(X_t\)</span>; far from the end this spread is of order one and the variance is of order <span class="math inline">\(\alpha^2\)</span>, but close to the end the spread is about <span class="math inline">\(\sigma / \alpha\)</span> and the variance blows up as <span class="math inline">\(1/\sigma^2\)</span>. The integrand of <a href="#eq-tsi" class="quarto-xref">Equation&nbsp;14</a> is of order <span class="math inline">\(1/\alpha\)</span>, so its variance grows like <span class="math inline">\(e^{T-t}\)</span> far from the end. As an illustration, for a one-dimensional bimodal target with <span class="math inline">\(T=3\)</span> and <span class="math inline">\(x = 1/2\)</span>, the conditional variances of the push, pull and <a href="#eq-tsi" class="quarto-xref">Equation&nbsp;14</a> integrands are <span class="math inline">\(0.21\)</span>, <span class="math inline">\(0.16\)</span> and <span class="math inline">\(47.7\)</span> at time-to-go <span class="math inline">\(2.8\)</span>; <span class="math inline">\(0.62\)</span>, <span class="math inline">\(0.53\)</span> and <span class="math inline">\(11.4\)</span> at time-to-go <span class="math inline">\(1.5\)</span>; and <span class="math inline">\(0.17\)</span>, <span class="math inline">\(8.3\)</span> and <span class="math inline">\(0.57\)</span> at time-to-go <span class="math inline">\(0.1\)</span>. This suggests pulling early and pushing late. Any mixture <span class="math inline">\(\lambda_t \, \xi^{\text{push}}_t + (1-\lambda_t) \, \xi^{\text{pull}}_t\)</span> is also a valid integrand: the difference of two unbiased integrands is a control variate in the most literal sense, and the variance-minimizing weight is <span class="math inline">\(\lambda_t = [\mathop{\mathrm{Var}}\xi^{\text{pull}} - \mathop{\mathrm{Cov}}(\xi^{\text{push}}, \xi^{\text{pull}})] / \mathop{\mathrm{Var}}(\xi^{\text{push}} - \xi^{\text{pull}})\)</span>, with all moments conditional on <span class="math inline">\(X_t\)</span>. The family of integrands indexed by a function <span class="math inline">\(c(t)\)</span> in <span class="citation" data-cites="blessing2026bridge">(<a href="#ref-blessing2026bridge" role="doc-biblioref">Blessing et al. 2026</a>)</span> is this freedom. In the sampling setting, the pull integrand cannot be used on its own, for a reason explained in the next section.</p>
+</section>
+<section id="pulling-yourself-up-by-your-own-samples" class="level3">
+<h3 class="anchored" data-anchor-id="pulling-yourself-up-by-your-own-samples">Pulling yourself up by your own samples</h3>
+<p>Both regressions average over <span class="math inline">\(\mathbb{Q}\)</span>, and therefore require endpoints <span class="math inline">\(X_T \sim \pi\)</span>, which is precisely what we do not have. Two observations get around this.</p>
+<p>First, only the endpoints matter. Given its endpoint, a path of <span class="math inline">\(\mathbb{Q}\)</span> is a reference path conditioned on that endpoint, so a training pair <span class="math inline">\((X_t, X_T)\)</span> is a stored endpoint plus a single Gaussian draw, <span class="math inline">\(X_t = \alpha_{T-t} X_T + \sigma_{T-t} \mathbf{n}\)</span> (or the bridge <a href="#eq-ou-bridge" class="quarto-xref">Equation&nbsp;3</a> when the reference is started from a point). This is used in <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span> to decouple expensive energy evaluations from cheap gradient steps.</p>
+<p>Second, one can use the endpoints produced by the current model. Simulate the current model <span class="math inline">\(dX_t = -\tfrac12 X_t \, dt + u_\theta(t,X_t) \, dt + dW_t\)</span> from <span class="math inline">\(X_0 \sim \pi_{\mathrm{ref}}\)</span>, store the endpoints <span class="math inline">\(X_T^{(k)}\)</span> together with the gradients <span class="math inline">\(\nabla \log \pi(X_T^{(k)})\)</span> in a replay buffer, perform many regression steps on pairs built from the buffer, and refresh the buffer from time to time.</p>
+<details>
+<summary>
+The algorithm in a few lines:
+</summary>
+<pre><code>repeat
+    simulate K paths of dX = (-X/2 + u_theta(t, X)) dt + dW from X_0 ~ N(0, I)    # no gradient needed
+    add the pairs (X_T, grad log pi(X_T)) to the buffer                          # K energy gradients
+    repeat M times                                                               # M &gt;&gt; K
+        draw (X_T, G) from the buffer, t ~ Unif[0, T] and n ~ N(0, I)
+        set X_t = alpha_{T-t} X_T + sigma_{T-t} n
+        take a gradient step on  omega(t) * | u_theta(t, X_t) - alpha_{T-t} (G + X_T) |^2</code></pre>
+</details>
+<p>What does one round of this procedure compute? Let <span class="math inline">\(\rho\)</span> denote the distribution of the endpoints produced by the current model, and let <span class="math inline">\(\mathbb{Q}^{\rho}\)</span> be the reference reweighted by <span class="math inline">\((\rho / \pi_{\mathrm{ref}})(X_T)\)</span>, i.e.&nbsp;the diffusion model of <span class="math inline">\(\rho\)</span>, with look-ahead function <span class="math inline">\(h^{\rho}\)</span>. The training pairs are exactly pairs of <span class="math inline">\(\mathbb{Q}^{\rho}\)</span>, so the regression returns <span class="math inline">\(u_{\text{new}}(t,x) = \alpha \, \mathbb{E}_{\mathbb{Q}^\rho}[\nabla \log \pi(X_T) + X_T \mid X_t = x]\)</span>. Writing <span class="math inline">\(\log(\pi / \pi_{\mathrm{ref}}) = \log(\rho / \pi_{\mathrm{ref}}) + \log(\pi / \rho)\)</span> and applying <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> to <span class="math inline">\(\rho\)</span> gives</p>
+<p><span id="eq-bootstrap-map"><span class="math display">\[
+u_{\text{new}}(t,x)
+= \nabla \log h^{\rho}(t,x) \; + \;  \textcolor{blue}{\alpha \, \mathbb{E}_{\mathbb{Q}^{\rho}} {\left[  \nabla \log \frac{\pi}{\rho}(X_T) \;\Big|\; X_t = x  \right]} }.
+\tag{17}\]</span></span></p>
+<p>The update is the diffusion model of what the current model produces, plus a correction that points from <span class="math inline">\(\rho\)</span> toward <span class="math inline">\(\pi\)</span>, averaged over where the path is heading. If <span class="math inline">\(\rho = \pi\)</span> the correction vanishes: the target is a fixed point. Conversely, suppose that the model is already the diffusion model of its own output, <span class="math inline">\(u = \nabla \log h^{\rho}\)</span>; it is a fixed point only if <span class="math inline">\(\mathbb{E}_{\mathbb{Q}^\rho}[\nabla \log(\pi/\rho)(X_T) \mid X_t = x] = 0\)</span> for all <span class="math inline">\((t,x)\)</span>. Letting <span class="math inline">\(t \to T\)</span>, the conditional distribution of <span class="math inline">\(X_T\)</span> given <span class="math inline">\(X_t = x\)</span> concentrates at <span class="math inline">\(x\)</span>, so that <span class="math inline">\(\nabla \log(\pi / \rho) = 0\)</span> and <span class="math inline">\(\rho = \pi\)</span>. This is the same condition under which uniqueness is established in <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span>; I do not know of a general argument without it. In a Gaussian toy example where everything is exact (Brownian reference started at zero, Gaussian target, affine drifts), the iteration converges to the target from every initialization I tried, and a grid search finds no other fixed point.</p>
+<p>Equation <a href="#eq-bootstrap-map" class="quarto-xref">Equation&nbsp;17</a> also explains why the score is indispensable. Running the same procedure with the pull integrand <span class="math inline">\(\xi^{\text{pull}}\)</span> returns <span class="math inline">\(\nabla \log h^{\rho}\)</span> exactly, by <a href="#eq-pull" class="quarto-xref">Equation&nbsp;12</a> applied to <span class="math inline">\(\rho\)</span>: the diffusion model of the current output, which reproduces the current output. Every <span class="math inline">\(\rho\)</span> is then a fixed point and <span class="math inline">\(\pi\)</span> never enters the computation. With self-generated samples, the data-driven way of training a diffusion model learns nothing new; the gradient <span class="math inline">\(\nabla \log \pi\)</span> is the only channel through which the target enters. Mixtures of the pull and push integrands remain legitimate, but they must keep some push.</p>
+<p>In Monte Carlo terms, this is adaptive importance sampling in the spirit of the cross-entropy method <span class="citation" data-cites="rubinstein2004cross">(<a href="#ref-rubinstein2004cross" role="doc-biblioref">Rubinstein and Kroese 2004</a>)</span>: sample from the current proposal, refit the proposal, repeat. Here the refit is a regression of the drift instead of a weighted maximum likelihood fit, and no importance weights are used; the replay buffer is deliberately off-policy, mixing endpoints from successive models.</p>
+<p>The price of this bootstrap is that one only learns where one looks. In <a href="#eq-bootstrap-map" class="quarto-xref">Equation&nbsp;17</a>, the target enters only through <span class="math inline">\(\nabla \log \pi\)</span> evaluated at the model’s own endpoints, and a mode of <span class="math inline">\(\pi\)</span> never visited by <span class="math inline">\(\rho\)</span> contributes nothing. Far from the end, the conditional distribution of <span class="math inline">\(X_T\)</span> given <span class="math inline">\(X_t\)</span> under <span class="math inline">\(\mathbb{Q}^\rho\)</span> is close to <span class="math inline">\(\rho\)</span> itself, so that</p>
+<p><span class="math display">\[
+u_{\text{new}}(t,x) \approx \alpha \,  {\left(  \mathbb{E}_{\rho}[\nabla \log \pi(Y)] + \mathbb{E}_{\rho}[Y]  \right)} .
+\]</span></p>
+<p>Everything the early “which mode” stage of the dynamics learns about <span class="math inline">\(\pi\)</span> is the Stein-type moment <span class="math inline">\(\mathbb{E}_\rho[\nabla \log \pi]\)</span>, which vanishes for <span class="math inline">\(\rho = \pi\)</span> by Stein’s identity and can be small when <span class="math inline">\(\rho\)</span> misses a mode altogether. This is the mode-seeking behaviour familiar from adaptive importance sampling and variational methods, and the usual remedies apply: broad reference distributions, long horizons (more blurring), and the importance weights <a href="#eq-path-weights" class="quarto-xref">Equation&nbsp;9</a>. It also helps to move slowly. Replacing the model by <span class="math inline">\((1-\lambda) \, u_{\text{old}} + \lambda \, u_{\text{new}}\)</span>, a Robbins–Monro step on the fixed-point map, is equivalent to adding a penalty <span class="math inline">\(\eta \, \mathbb{E}\|u - u_{\text{old}}\|^2\)</span> to the regression with <span class="math inline">\(\lambda = 1/(1+\eta)\)</span>, and <span class="citation" data-cites="blessing2026bridge">(<a href="#ref-blessing2026bridge" role="doc-biblioref">Blessing et al. 2026</a>)</span> report that this damping helps to preserve modes.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+Adding <span class="math inline">\(\eta \, \mathbb{E}\|u(t,X_t) - u_{\text{old}}(t,X_t)\|^2\)</span> to the regression, the minimizer satisfies the pointwise condition <span class="math inline">\((u - u_{\text{new}}) + \eta \, (u - u_{\text{old}}) = 0\)</span>, i.e.&nbsp;<span class="math inline">\(u = (u_{\text{new}} + \eta \, u_{\text{old}}) / (1 + \eta)\)</span>.
+</p>
+</details>
+<p>The computational structure is attractive. Each endpoint costs one gradient of the energy and is reused for many pairs <span class="math inline">\((t, X_t)\)</span>; no backpropagation through the SDE solver is required, and the SDE is only simulated to refresh the buffer. The number of gradient steps per energy evaluation can be in the hundreds, which is what makes these methods applicable to large molecular systems <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span>.</p>
+</section>
+<section id="a-recipe-with-three-dials" class="level3">
+<h3 class="anchored" data-anchor-id="a-recipe-with-three-dials">A recipe with three dials</h3>
+<p>Everything so far fits in one sentence: take a reference noise process, tie its start and its end to a prior and to <span class="math inline">\(\pi\)</span> by reweighting, write the resulting drift as an average over where the path is heading, and learn it by regression on endpoints that one simulates oneself. The recipe has three dials. The first is the estimator of the average: push the endpoint back to the present, pull toward it, or a mixture of the two. The second is the way the start and the end are tied together: only the end reweighted, both ends reweighted, or the two ends paired independently. The third is the reference process itself: a Brownian motion, an OU process, a linear process on a space of paths, a pretrained generative model, or a jump process. Most recent diffusion samplers are settings of these three dials. The second dial is where most of the variety comes from, because of a subtlety ignored so far.</p>
+</section>
+<section id="the-start-remembers-the-end" class="level3">
+<h3 class="anchored" data-anchor-id="the-start-remembers-the-end">The start remembers the end</h3>
+<section id="the-leak" class="level4">
+<h4 class="anchored" data-anchor-id="the-leak">The leak</h4>
+<p>On a finite horizon, the reference process still remembers where it started: <span class="math inline">\(\mathop{\mathrm{Cov}}(X_0, X_T) = \alpha_T \, I\)</span> with <span class="math inline">\(\alpha_T = e^{-T/2}\)</span>. Reweighting the end of the path therefore also reweights its start, as already noted in the <a href="../../notes/doob_transforms/doob.html">Doob note</a> where the conditioned process starts from <span class="math inline">\(\mu_0 \, h(0,\cdot)/\mathcal{Z}\)</span>. Here, by <a href="#eq-qt" class="quarto-xref">Equation&nbsp;6</a> at <span class="math inline">\(t=0\)</span>,</p>
+<p><span id="eq-q0"><span class="math display">\[
+\mathbb{Q}_0(x_0) = \pi_{\mathrm{ref}}(x_0) \, h(0, x_0),
+\tag{18}\]</span></span></p>
+<p>the distribution <span class="math inline">\(\pi\)</span> noised for a duration <span class="math inline">\(T\)</span>, which is close to but not equal to <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>. Good endpoints are easier to reach from some starting points than from others, and the reweighting leaks backward in time. The algorithm of the previous section starts all its paths from <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> instead of <span class="math inline">\(\mathbb{Q}_0\)</span>. Even with the exact drift, it therefore simulates the path distribution <span class="math inline">\(R(dX) = \pi_{\mathrm{ref}}(dX_0) \, \mathbb{Q}(dX \mid X_0)\)</span>, and since <span class="math inline">\(R\)</span> and <span class="math inline">\(\mathbb{Q}\)</span> share the same dynamics given the starting point,</p>
+<p><span id="eq-residual-weight"><span class="math display">\[
+\frac{d\mathbb{Q}}{dR}(X) = \frac{\mathbb{Q}_0(X_0)}{\pi_{\mathrm{ref}}(X_0)} = h(0, X_0).
+\tag{19}\]</span></span></p>
+<p><strong>The leak is the part of the importance weights that no drift can remove.</strong> With the weights <a href="#eq-path-weights" class="quarto-xref">Equation&nbsp;9</a>, it disappears: the weighted endpoint distribution is exactly <span class="math inline">\(\pi\)</span>, whatever the horizon <span class="math inline">\(T\)</span>. Without weights, it is a bias. A Monte Carlo simulation of the exact drift in the one-dimensional bimodal example with <span class="math inline">\(T=1\)</span> confirms <a href="#eq-residual-weight" class="quarto-xref">Equation&nbsp;19</a>: the path weights have correlation <span class="math inline">\(0.997\)</span> with <span class="math inline">\(h(0,X_0)\)</span>, and both have an effective sample size of <span class="math inline">\(0.725\)</span>.</p>
+<p>How large is the bias? The endpoint distribution of <span class="math inline">\(R\)</span> is</p>
+<p><span id="eq-leak-endlaw"><span class="math display">\[
+R_T(y) = \pi(y) \; \mathbb{E} {\left[  \frac{1}{h(0, \alpha_T \, y + \sigma_T \, \mathbf{n})}  \right]}
+= \pi(y) \, \Big( 1 - e^{-T} \, \left&lt; m_\pi, y - m_\pi \right&gt; + O(e^{-3T/2}) \Big).
+\tag{20}\]</span></span></p>
+<p>The unweighted sampler is biased toward the mean of the reference: its mean is <span class="math inline">\(m_\pi - e^{-T} \, C_\pi \, m_\pi\)</span> to leading order, and the residual weights <span class="math inline">\(h(0, X_0)\)</span> have an effective sample size <span class="math inline">\(1 - e^{-T}\|m_\pi\|^2\)</span> to leading order. In the one-dimensional example with <span class="math inline">\(T = 7\)</span>, the measured shift of the mean is <span class="math inline">\(-1.191 \times 10^{-3}\)</span> against a prediction of <span class="math inline">\(-1.195 \times 10^{-3}\)</span>, and the measured loss of effective sample size is <span class="math inline">\(1.865 \times 10^{-4}\)</span> against <span class="math inline">\(1.847 \times 10^{-4}\)</span>.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+The endpoint distribution is <span class="math inline">\(R_T(y) = \int \pi_{\mathrm{ref}}(x_0) \, p_T(y \mid x_0) \, e^{g(y)} / h(0,x_0) \, dx_0\)</span>. By reversibility <span class="math inline">\(\pi_{\mathrm{ref}}(x_0) \, p_T(y \mid x_0) = \pi_{\mathrm{ref}}(y) \, p_T(x_0 \mid y)\)</span>, and <span class="math inline">\(\pi_{\mathrm{ref}} \, e^{g} = \pi\)</span>, which gives the first expression in <a href="#eq-leak-endlaw" class="quarto-xref">Equation&nbsp;20</a>. For the expansion, the computation leading to <a href="#eq-early-drift" class="quarto-xref">Equation&nbsp;8</a> gives <span class="math inline">\(h(0,x_0) = 1 + \alpha_T \left&lt; x_0, m_\pi \right&gt; + \alpha_T^2 \, q(x_0) + O(\alpha_T^3)\)</span> for a quadratic function <span class="math inline">\(q\)</span> with <span class="math inline">\(\mathbb{E}_{\pi_{\mathrm{ref}}}[q] = 0\)</span>; the latter holds because <span class="math inline">\(\mathbb{E}_{\pi_{\mathrm{ref}}}[h(0,X_0)] = 1\)</span> for every <span class="math inline">\(T\)</span>. Inverting and averaging over <span class="math inline">\(x_0 \sim \mathcal{N}(\alpha_T y, \sigma_T^2 I)\)</span>, the first-order term contributes <span class="math inline">\(-\alpha_T^2 \left&lt; m_\pi, y \right&gt;\)</span>, the square of the first-order term contributes <span class="math inline">\(\alpha_T^2 \|m_\pi\|^2\)</span>, and <span class="math inline">\(q\)</span> only contributes at higher order. Finally <span class="math inline">\(\alpha_T^2 = e^{-T}\)</span>.
+</p>
+</details>
+<p>The leading term is proportional to the mean of <span class="math inline">\(\pi\)</span> in the coordinates of the reference. Shifting coordinates so that <span class="math inline">\(m_\pi \approx 0\)</span>, using any rough estimate of the mean, removes it and the leak becomes of order <span class="math inline">\(e^{-2T}\)</span>. In the one-dimensional example, the error of the endpoint distribution at <span class="math inline">\(T = 6\)</span> drops from <span class="math inline">\(1.6 \times 10^{-3}\)</span> to <span class="math inline">\(1.3 \times 10^{-5}\)</span> after centering.</p>
+<p>Diffusion models live with the same mismatch when they start their reverse process from <span class="math inline">\(\mathcal{N}(0,I)\)</span> instead of the exactly noised data distribution. In the control literature it is called the initial value function bias <span class="citation" data-cites="domingoenrich2024adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>)</span>. In the <a href="../../notes/HJB/HJB.html">HJB note</a>, it appears in the joint optimization over the initial distribution <span class="math inline">\(q\)</span> and the control <span class="math inline">\(u\)</span>: the optimal initial distribution is <span class="math inline">\(p_0 \, h(0,\cdot)/\mathcal{Z}\)</span>, and fixing the initial distribution to <span class="math inline">\(p_0\)</span> is suboptimal. There are three ways out.</p>
+</section>
+<section id="make-the-reference-forget" class="level4">
+<h4 class="anchored" data-anchor-id="make-the-reference-forget">Make the reference forget</h4>
+<p>If the start and the end of the reference are independent, then <span class="math inline">\(h(0,\cdot) = \mathbb{E}_{\mathbb{P}}[e^{g(X_T)}]\)</span> is constant and nothing leaks. The first option is a long horizon, <span class="math inline">\(T = \infty\)</span> in theory and <span class="math inline">\(T\)</span> large in practice, which is what diffusion models do. The second option is to start the reference from a point, <span class="math inline">\(X_0 = 0\)</span>, as in <span class="citation" data-cites="havens2025adjoint">(<a href="#ref-havens2025adjoint" role="doc-biblioref">Havens et al. 2025</a>)</span>. The endpoint of the reference is then distributed as <span class="math inline">\(p_T(\cdot \mid 0) = \mathcal{N}(0, \sigma_T^2 I)\)</span>, one reweights by <span class="math inline">\(\pi / p_T(\cdot \mid 0)\)</span>, and <span class="math inline">\(\mathbb{Q}_0 = \delta_0\)</span>: the construction is exact for any horizon. The push representation <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> only used the transitions <a href="#eq-ou-transition" class="quarto-xref">Equation&nbsp;2</a>, not stationarity, and the integrand becomes</p>
+<p><span id="eq-point-target"><span class="math display">\[
+\xi^{\text{push}}_t = \alpha_{T-t}  {\left(  \nabla \log \pi(X_T) + \frac{X_T}{\sigma_T^2}  \right)} ,
+\tag{21}\]</span></span></p>
+<p>with training pairs obtained from the bridge <a href="#eq-ou-bridge" class="quarto-xref">Equation&nbsp;3</a> started at <span class="math inline">\(x_0 = 0\)</span>. With a Brownian reference, this reads <span class="math inline">\(\nabla \log \pi(X_T) + X_T / T\)</span> with <span class="math inline">\(X_t \mid X_T \sim \mathcal{N}(t X_T / T, \, t(T-t)/T \, I)\)</span>; for <span class="math inline">\(T = 1\)</span>, <span class="math inline">\(\mathbb{Q}\)</span> is the Föllmer process, a Brownian motion conditioned to be distributed as <span class="math inline">\(\pi\)</span> at time one.</p>
+<p>When the reference is a pretrained generative model, one cannot start from a point, but one can choose how much noise the model injects. The noise schedule that makes the start of such a model independent of its end, the <em>memoryless</em> schedule of <span class="citation" data-cites="domingoenrich2024adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>)</span>, has a simple description: it is an OU process run for an infinite time on a squeezed clock. Consider a generative model built on an interpolation <span class="math inline">\(X_t = a_t \, Y + b_t \, \mathbf{n}\)</span> between noise (<span class="math inline">\(a_0 = 0\)</span>, <span class="math inline">\(b_0 = 1\)</span>) and data <span class="math inline">\(Y\)</span> (<span class="math inline">\(a_1 = 1\)</span>, <span class="math inline">\(b_1 = 0\)</span>). After rescaling, <span class="math inline">\(Z_t = X_t / \sqrt{a_t^2 + b_t^2}\)</span> is distributed given <span class="math inline">\(Y\)</span> as <span class="math inline">\(\mathcal{N}(\kappa_t Y, (1 - \kappa_t^2) I)\)</span> with <span class="math inline">\(\kappa_t = a_t / \sqrt{a_t^2 + b_t^2}\)</span>: this is the OU transition <a href="#eq-ou-transition" class="quarto-xref">Equation&nbsp;2</a> from <span class="math inline">\(Y\)</span> after an OU time <span class="math inline">\(\tau_t = \log[(a_t^2 + b_t^2)/a_t^2]\)</span>. The OU time <span class="math inline">\(\tau_t\)</span> diverges as <span class="math inline">\(t \to 0\)</span>, so the noising process is an OU process started at the data and run forever, squeezed into the interval <span class="math inline">\([0,1]\)</span>, and its final value is independent of the data. Its time reversal is a generative SDE with the same diffusion coefficient, which in the original time variable is <span class="math inline">\(\sigma_t^2 = 2 \eta_t\)</span> with <span class="math inline">\(\eta_t = b_t  {\left(  \frac{\dot a_t}{a_t} b_t - \dot b_t  \right)} \)</span>: the memoryless schedule. For flow matching, <span class="math inline">\(a_t = t\)</span> and <span class="math inline">\(b_t = 1 - t\)</span> give <span class="math inline">\(\sigma_t^2 = 2(1-t)/t\)</span>, and the blow-up at <span class="math inline">\(t = 0\)</span> is the squeezing of an infinite OU time into a finite interval.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+Let <span class="math inline">\(t &lt; t'\)</span>. The noising process runs from data at <span class="math inline">\(t=1\)</span> toward noise at <span class="math inline">\(t=0\)</span>, and <span class="math inline">\(X_t \mid X_{t'} \sim \mathcal{N} {\left(  \frac{a_t}{a_{t'}} X_{t'},  {\left( b_t^2 - \frac{a_t^2}{a_{t'}^2} b_{t'}^2 \right)}  I  \right)} \)</span>. After rescaling, <span class="math inline">\(Z_t \mid Z_{t'}\)</span> is Gaussian with mean coefficient <span class="math inline">\(\frac{a_t}{a_{t'}} \frac{\sqrt{a_{t'}^2 + b_{t'}^2}}{\sqrt{a_t^2 + b_t^2}} = e^{-(\tau_t - \tau_{t'})/2}\)</span> and variance <span class="math inline">\(1 - e^{-(\tau_t - \tau_{t'})}\)</span>, the OU transition over an OU time <span class="math inline">\(\tau_t - \tau_{t'}\)</span>. Writing the noising process as an SDE in the time variable <span class="math inline">\(t\)</span> and matching the rate of growth of its conditional variance gives the squared diffusion coefficient <span class="math inline">\(-\frac{d}{dt} b_t^2 + 2 \frac{\dot a_t}{a_t} b_t^2 = 2 \eta_t\)</span>.
+</p>
+</details>
+</section>
+<section id="tilt-the-start" class="level4">
+<h4 class="anchored" data-anchor-id="tilt-the-start">Tilt the start</h4>
+<p>Keep any prior <span class="math inline">\(p_0\)</span> (a harmonic prior for molecules, or <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> itself at finite <span class="math inline">\(T\)</span>), start the reference from it, and reweight both ends, as in the note on <a href="../../notes/shrodinger_bridge/shrodinger.html">Schrödinger bridges</a>:</p>
+<p><span id="eq-sb-weights"><span class="math display">\[
+\frac{d\mathbb{Q}}{d\mathbb{P}}(X) \propto e^{g_0(X_0) + g(X_T)}
+\qquad \text{with} \qquad
+\mathbb{Q}_0 = p_0 \quad \text{and} \quad \mathbb{Q}_T = \pi.
+\tag{22}\]</span></span></p>
+<p>A factor that only depends on <span class="math inline">\(X_0\)</span> changes the distribution of the start, not the dynamics given the start. The drift is therefore still <span class="math inline">\(\nabla \log h\)</span> with <span class="math inline">\(h(t,x) = \mathbb{E}_{\mathbb{P}}[e^{g(X_T)} \mid X_t = x]\)</span>, and everything in the previous sections applies verbatim with the push integrand <span class="math inline">\(\alpha_{T-t} \nabla g(X_T)\)</span>. The two constraints determine the two weights. At the start, <span class="math inline">\(\mathbb{Q}_0 \propto p_0 \, e^{g_0} \, h(0,\cdot) = p_0\)</span> forces <span class="math inline">\(e^{g_0} = 1/h(0,\cdot)\)</span>: the start weight cancels the leak. At the end, <span class="math inline">\(\mathbb{Q}_T \propto e^{g} \, \psi = \pi\)</span> with</p>
+<p><span id="eq-psi"><span class="math display">\[
+\psi(y) = \int p_0(x_0) \, e^{g_0(x_0)} \, p_T(y \mid x_0) \, dx_0,
+\tag{23}\]</span></span></p>
+<p>the distribution produced at time <span class="math inline">\(T\)</span> by the reference once its start has been tilted, so that <span class="math inline">\(e^{g} = \pi / \psi\)</span> and the push integrand is <span class="math inline">\(\alpha_{T-t} [\nabla \log \pi(X_T) - \nabla \log \psi(X_T)]\)</span>. These are the Schrödinger equations of the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB note</a> in disguise: <span class="math inline">\(e^{g_0}\)</span> and <span class="math inline">\(e^{g}\)</span> are its potentials, and <span class="math inline">\(\psi = p^{\mathrm{ref}}_T \, \widehat{\varphi}_T\)</span>. The previous subsection is the special case where <span class="math inline">\(\psi\)</span> is the endpoint distribution of the reference. The function <span class="math inline">\(\psi\)</span> is unknown, but its score is again an average,</p>
+<p><span id="eq-psi-score"><span class="math display">\[
+\nabla \log \psi(y)
+= \mathbb{E}_{\mathbb{Q}} {\left[  \nabla_y \log p_T(y \mid X_0) \mid X_T = y  \right]}
+= \mathbb{E}_{\mathbb{Q}} {\left[  -\frac{y - \alpha_T X_0}{\sigma_T^2} \;\Big|\; X_T = y  \right]} ,
+\tag{24}\]</span></span></p>
+<p>since <a href="#eq-psi" class="quarto-xref">Equation&nbsp;23</a> is a mixture of Gaussians in <span class="math inline">\(y\)</span> and the score of a mixture is the average score of its components, weighted by the posterior of the component (see the <a href="../../notes/DDPM/DDPM.html">DDPM note</a>); here this posterior is <span class="math inline">\(\mathbb{Q}(X_0 \in dx_0 \mid X_T = y) \propto p_0(x_0) \, e^{g_0(x_0)} \, p_T(y \mid x_0) \, dx_0\)</span>. This is Tweedie’s formula from the start to the end, and <span class="math inline">\(\nabla \log \psi\)</span> can be learned by regressing <span class="math inline">\(-(X_T - \alpha_T X_0)/\sigma_T^2\)</span> on <span class="math inline">\(X_T\)</span> over endpoint pairs.</p>
+<p>This suggests alternating two regressions. For the current <span class="math inline">\(\psi\)</span>, fit the drift with the push integrand <span class="math inline">\(\alpha_{T-t}[\nabla \log \pi(X_T) - \nabla \log \psi(X_T)]\)</span>, drawing <span class="math inline">\(X_t\)</span> from the bridge <a href="#eq-ou-bridge" class="quarto-xref">Equation&nbsp;3</a> given both endpoints. Since the model is started from <span class="math inline">\(p_0\)</span>, its path distribution is automatically the reference tilted by <span class="math inline">\(e^{g_0} = 1/h(0,\cdot)\)</span> at the start and by <span class="math inline">\(e^{g}\)</span> at the end, so that the start constraint is enforced for free; its endpoint pairs then give a new <span class="math inline">\(\psi\)</span> through <a href="#eq-psi-score" class="quarto-xref">Equation&nbsp;24</a>, which updates the end potential <span class="math inline">\(g = \log(\pi / \psi)\)</span>. Alternately enforcing the two marginal constraints is the Sinkhorn algorithm of the <a href="../../notes/shrodinger_bridge/shrodinger.html">SB note</a>, on path-space. A natural initialization is <span class="math inline">\(\psi\)</span> equal to the endpoint distribution of the reference, i.e.&nbsp;the previous subsection. This is the construction of <span class="citation" data-cites="liu2025adjoint">(<a href="#ref-liu2025adjoint" role="doc-biblioref">G.-H. Liu et al. 2025</a>)</span>, with a Brownian reference and a harmonic prior, and of its discrete counterpart <span class="citation" data-cites="guo2026discrete">(<a href="#ref-guo2026discrete" role="doc-biblioref">Guo et al. 2026</a>)</span>; with samples instead of scores, the same alternation is the diffusion Schrödinger bridge of <span class="citation" data-cites="de2021diffusion">(<a href="#ref-de2021diffusion" role="doc-biblioref">De Bortoli et al. 2021</a>)</span>. Among all path distributions with the prescribed marginals at both ends, <span class="math inline">\(\mathbb{Q}\)</span> is the closest to the reference in Kullback–Leibler divergence.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+A model with drift <span class="math inline">\(\nabla \log h_g\)</span> started from <span class="math inline">\(p_0\)</span> has path distribution <span class="math inline">\(p_0(x_0) \, \mathbb{P}(dX \mid X_0 = x_0) \, e^{g(X_T)} / h_g(0, x_0)\)</span>, which is <span class="math inline">\(\mathbb{P}\)</span> tilted by <span class="math inline">\(e^{g_0(X_0) + g(X_T)}\)</span> with <span class="math inline">\(e^{g_0} = 1/h_g(0,\cdot)\)</span>. Its endpoint pairs have joint density proportional to <span class="math inline">\(p_0(x_0) \, e^{g_0(x_0)} \, p_T(y \mid x_0) \, e^{g(y)}\)</span>, so the conditional distribution of <span class="math inline">\(X_0\)</span> given <span class="math inline">\(X_T = y\)</span> is the posterior appearing in <a href="#eq-psi-score" class="quarto-xref">Equation&nbsp;24</a>.
+</p>
+</details>
+<p>With an OU reference, the correction fades with the memory: <span class="math inline">\(\nabla \log \psi(y) \to -y\)</span> as <span class="math inline">\(T\)</span> grows. In a one-dimensional example with a non-Gaussian prior, <span class="math inline">\(\max_y |\nabla \log \psi(y) + y|\)</span> equals <span class="math inline">\(0.54\)</span>, <span class="math inline">\(0.069\)</span> and <span class="math inline">\(0.0088\)</span> for <span class="math inline">\(T = 1, 3, 6\)</span>. A moderately long horizon makes the second regression almost redundant.</p>
+</section>
+<section id="pair-the-ends-independently" class="level4">
+<h4 class="anchored" data-anchor-id="pair-the-ends-independently">Pair the ends independently</h4>
+<p>A different option is to give up on reweighting the reference altogether. Draw <span class="math inline">\(X_0 \sim p_0\)</span> and <span class="math inline">\(X_T \sim \pi\)</span> independently and connect them with OU bridges <a href="#eq-ou-bridge" class="quarto-xref">Equation&nbsp;3</a>. The resulting path distribution <span class="math inline">\(\Pi\)</span> is a mixture of bridges; it is not a reweighting of the reference and it is not Markovian. Nonetheless, the Markov diffusion with drift</p>
+<p><span id="eq-avg-bridge"><span class="math display">\[
+b(t,x) = -\tfrac12 x + \mathbb{E}_{\Pi} {\left[  \nabla_x \log p_{T-t}(X_T \mid x) \mid X_t = x  \right]} ,
+\tag{25}\]</span></span></p>
+<p>the average of the drifts of the bridges passing through <span class="math inline">\(x\)</span> at time <span class="math inline">\(t\)</span>, has the same marginals as <span class="math inline">\(\Pi\)</span> at all times; started from <span class="math inline">\(p_0\)</span>, it ends at <span class="math inline">\(\pi\)</span> <span class="citation" data-cites="Brunick2013">(<a href="#ref-Brunick2013" role="doc-biblioref">Brunick and Shreve 2013</a>)</span>.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+By the tower property, <span class="math inline">\(\mathbb{E}[X_{t+\delta} - X_t \mid X_t = x] = \mathbb{E}\big[ \mathbb{E}[X_{t+\delta} - X_t \mid X_t, X_0, X_T] \mid X_t = x \big]\)</span>, and given <span class="math inline">\((X_t, X_T)\)</span> the bridge moves with drift <span class="math inline">\(-\tfrac12 x + \nabla_x \log p_{T-t}(X_T \mid x)\)</span>, the Doob transform of the OU process with <span class="math inline">\(h = p_{T-t}(X_T \mid \cdot)\)</span>. For the marginals, each bridge has marginals solving its own Fokker–Planck equation; averaging these equations over the endpoints gives a Fokker–Planck equation for the marginals <span class="math inline">\(\Pi_t\)</span> with drift equal to the conditional average <a href="#eq-avg-bridge" class="quarto-xref">Equation&nbsp;25</a>.
+</p>
+</details>
+<p>The same integration by parts as in <a href="#eq-ibp" class="quarto-xref">Equation&nbsp;13</a> gives an explicit integrand,</p>
+<p><span id="eq-indep-target"><span class="math display">\[
+b(t,x) + \tfrac12 x = \alpha_{T-t} \; \mathbb{E}_{\Pi} {\left[   \textcolor{blue}{\nabla \log \pi(X_T) + \frac{X_T - \alpha_T X_0}{\sigma_T^2}} \;\Big|\; X_t = x  \right]} ,
+\tag{26}\]</span></span></p>
+<p>a special case of the general formula of the last subsection. Everything is explicit: there is no second regression and no alternation. Where the Schrödinger construction learns <span class="math inline">\(\nabla \log \psi(X_T)\)</span>, the explicit transition score appears inside the average, because the path distribution is never required to be a reweighting of the reference. The algorithm is the one of the previous section, except that current start samples and current end samples are paired at random and <span class="math inline">\(X_t\)</span> is drawn from the bridge given both. This is the route of <span class="citation" data-cites="blessing2026bridge">(<a href="#ref-blessing2026bridge" role="doc-biblioref">Blessing et al. 2026</a>)</span> (with a Brownian reference, and the damping mentioned earlier); with samples instead of scores, it is bridge matching, or flow matching with independent coupling <span class="citation" data-cites="lipman2022flow albergo2023stochastic liu2022let peluchetti2023diffusion">(<a href="#ref-lipman2022flow" role="doc-biblioref">Lipman et al. 2022</a>; <a href="#ref-albergo2023stochastic" role="doc-biblioref">Albergo, Boffi, and Vanden-Eijnden 2023</a>; <a href="#ref-liu2022let" role="doc-biblioref">X. Liu et al. 2022</a>; <a href="#ref-peluchetti2023diffusion" role="doc-biblioref">Peluchetti 2023</a>)</span>. The price is that <span class="math inline">\(\Pi\)</span> is not the path distribution closest to the reference, and the learned process only matches it one time at a time. The flow matching literature suggests that couplings closer to that of the reference (Schrödinger, or optimal transport) lead to straighter and easier-to-learn dynamics; the independent pairing is the simplest and the least economical.</p>
+</section>
+<section id="with-a-long-horizon-all-three-agree" class="level4">
+<h4 class="anchored" data-anchor-id="with-a-long-horizon-all-three-agree">With a long horizon, all three agree</h4>
+<p>As <span class="math inline">\(T \to \infty\)</span>, <span class="math inline">\(\alpha_T \to 0\)</span> and <span class="math inline">\(\sigma_T \to 1\)</span>. The point-start integrand <a href="#eq-point-target" class="quarto-xref">Equation&nbsp;21</a> tends to <span class="math inline">\(\alpha_{T-t}(\nabla \log \pi(X_T) + X_T)\)</span>, the function <span class="math inline">\(\psi\)</span> tends to a multiple of <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> so that the Schrödinger integrand has the same limit, the independent integrand <a href="#eq-indep-target" class="quarto-xref">Equation&nbsp;26</a> as well, and the leak <a href="#eq-leak-endlaw" class="quarto-xref">Equation&nbsp;20</a> vanishes. All three constructions become the diffusion model of <span class="math inline">\(\pi\)</span>. In the one-dimensional example with prior <span class="math inline">\(\pi_{\mathrm{ref}}\)</span> and a fixed time-to-go of <span class="math inline">\(1/2\)</span>, the three drifts differ from the drift of the diffusion model by at most <span class="math inline">\(0.6\)</span>, <span class="math inline">\(0.14\)</span>, <span class="math inline">\(0.017\)</span> and <span class="math inline">\(3 \times 10^{-4}\)</span> for <span class="math inline">\(T = 1, 2, 4, 8\)</span>. Forgetting, tilting and independent pairing are three ways of paying for a finite horizon: the first is the simplest, the second stays closest to the reference, and the third is fully explicit.</p>
+</section>
+<section id="one-formula-for-all-ties" class="level4">
+<h4 class="anchored" data-anchor-id="one-formula-for-all-ties">One formula for all ties</h4>
+<p>The three constructions are instances of a single formula. For any endpoint distribution <span class="math inline">\(\Gamma(x_0, y)\)</span> whose first marginal is the prior <span class="math inline">\(p_0\)</span>, connected with reference bridges, the Markov drift is <span class="math inline">\(-\tfrac12 x + u(t,x)\)</span> with</p>
+<p><span id="eq-master"><span class="math display">\[
+u(t,x) = \alpha_{T-t} \; \mathbb{E} {\left[  \nabla_y \log w(X_0, y) \big|_{y = X_T} \;\Big|\; X_t = x  \right]}
+\qquad \text{where} \qquad
+w(x_0, y) = \frac{\Gamma(x_0, y)}{p_0(x_0) \, p_T(y \mid x_0)}
+\tag{27}\]</span></span></p>
+<p>is the endpoint weight relative to the reference. Choose how the ends are tied, compare with how the reference ties them, transport the comparison back to the present, and average. Tilting both ends gives <span class="math inline">\(w = e^{g_0(x_0) + g(y)}\)</span> and the integrand <span class="math inline">\(\alpha_{T-t} \nabla g(X_T)\)</span>; a point start gives <span class="math inline">\(w = \pi(y) / p_T(y \mid 0)\)</span> and <a href="#eq-point-target" class="quarto-xref">Equation&nbsp;21</a>; independent pairing gives <span class="math inline">\(w = \pi(y) / p_T(y \mid x_0)\)</span> and <a href="#eq-indep-target" class="quarto-xref">Equation&nbsp;26</a>.</p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+The density of a bridge at time <span class="math inline">\(t\)</span> is <span class="math inline">\(p_t(x \mid x_0) \, p_{T-t}(y \mid x) / p_T(y \mid x_0)\)</span>, so that the density of <span class="math inline">\((X_t, X_T) = (x,y)\)</span> is <span class="math inline">\(p_{T-t}(y \mid x) \, W(x,y)\)</span> with <span class="math inline">\(W(x,y) = \int \Gamma(x_0, y) \, p_t(x \mid x_0) / p_T(y \mid x_0) \, dx_0\)</span>. The average bridge drift equals <span class="math inline">\(\int \nabla_x p_{T-t}(y \mid x) \, W(x,y) \, dy / \Pi_t(x)\)</span>, and the integration by parts <a href="#eq-ibp" class="quarto-xref">Equation&nbsp;13</a> in the variable <span class="math inline">\(y\)</span> turns it into <span class="math inline">\(\alpha_{T-t} \, \mathbb{E}[\nabla_y \log W(x, X_T) \mid X_t = x]\)</span>. Finally, <span class="math inline">\(\nabla_y \log W(x,y)\)</span> is the average of <span class="math inline">\(\nabla_y \log[\Gamma(X_0, y) / p_T(y \mid X_0)]\)</span> under the conditional distribution of <span class="math inline">\(X_0\)</span> given <span class="math inline">\((X_t, X_T) = (x,y)\)</span>, the tower property removes this inner conditioning, and the factor <span class="math inline">\(p_0(X_0)\)</span> does not depend on <span class="math inline">\(y\)</span>.
+</p>
+</details>
+</section>
+</section>
+<section id="how-nudges-travel" class="level3">
+<h3 class="anchored" data-anchor-id="how-nudges-travel">How nudges travel</h3>
+<p>The reference process enters the push representation <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> only through the way a nudge at time <span class="math inline">\(t\)</span> propagates to the endpoint, and it enters the algorithm through two conveniences: explicit bridges and an explicit endpoint distribution. Changing the reference changes these three things and nothing else.</p>
+<section id="linear-references-and-paths-as-states" class="level4">
+<h4 class="anchored" data-anchor-id="linear-references-and-paths-as-states">Linear references, and paths as states</h4>
+<p>For a linear reference <span class="math inline">\(dX_t = -A X_t \, dt + C \, dW_t\)</span> with a control entering as <span class="math inline">\(C \, u\)</span>, the transitions read <span class="math inline">\(X_T = e^{-A(T-t)} X_t + \xi\)</span> with a Gaussian <span class="math inline">\(\xi\)</span> independent of <span class="math inline">\(X_t\)</span>, and a nudge travels through the matrix <span class="math inline">\(e^{-A(T-t)}\)</span>. The computation leading to <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> gives</p>
+<p><span id="eq-linear-push"><span class="math display">\[
+\nabla \log h(t,x) = e^{-A^\top (T-t)} \; \mathbb{E}_{\mathbb{Q}} {\left[  \nabla g(X_T) \mid X_t = x  \right]} ,
+\tag{28}\]</span></span></p>
+<p>and the Doob control is <span class="math inline">\(u^\star = C^\top \nabla \log h\)</span>. In the eigenbasis of a symmetric matrix <span class="math inline">\(A\)</span>, each mode forgets at its own rate: a nudge along the <span class="math inline">\(k\)</span>-th eigenvector is multiplied by <span class="math inline">\(e^{-\lambda_k (T-t)}\)</span>. This is useful when the unknown is itself a path, for example a transition path of a molecule between two metastable states. Discretize the path, <span class="math inline">\(x = (x_1, \ldots, x_K)\)</span>, with its two ends fixed, and take <span class="math inline">\(A\)</span> a discrete Laplacian with Dirichlet boundary conditions: the reference then favours smooth paths and its high-frequency modes forget fastest. Writing <span class="math inline">\(x = \bar{x} + \sum_k c_k \, \varphi_k\)</span>, with <span class="math inline">\(\bar{x}\)</span> any fixed path between the two states and <span class="math inline">\(\varphi_k\)</span> the Dirichlet eigenvectors, the boundary conditions are satisfied by construction and the reference acts on the coefficients <span class="math inline">\(c_k\)</span> only. With a point start, this is the construction of <span class="citation" data-cites="park2025functional">(<a href="#ref-park2025functional" role="doc-biblioref">Park, Lee, and Liu 2025</a>)</span>, whose infinite-dimensional formulation is the <span class="math inline">\(K \to \infty\)</span> limit of this picture; bridges are Gaussian mode by mode and everything else is unchanged.</p>
+</section>
+<section id="a-pretrained-model-as-reference" class="level4">
+<h4 class="anchored" data-anchor-id="a-pretrained-model-as-reference">A pretrained model as reference</h4>
+<p>For fine-tuning a pretrained diffusion or flow model <span class="math inline">\(dX_t = b(t, X_t) \, dt + \sigma_t \, dW_t\)</span> toward a reward <span class="math inline">\(r\)</span>, reweight its paths by <span class="math inline">\(e^{r(X_T)}\)</span>, the model being run with a memoryless noise schedule so that nothing leaks. The endpoint distribution of <span class="math inline">\(\mathbb{Q}\)</span> is the output of the model tilted by <span class="math inline">\(e^{r}\)</span>. The endpoint distribution of the reference cancels from the weight; sampling from a given target <span class="math inline">\(\pi\)</span> with a nonlinear reference would instead require the weight <span class="math inline">\(\pi / p_T\)</span>, and <span class="math inline">\(p_T\)</span> is unknown. This is the setting of <span class="citation" data-cites="domingoenrich2024adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>)</span>.</p>
+<p>Holding the noise fixed, <span class="math inline">\(X_T\)</span> is a function of <span class="math inline">\(X_t\)</span> with Jacobian <span class="math inline">\(J_{t \to T} = \partial X_T / \partial X_t\)</span>, which solves <span class="math inline">\(\frac{d}{ds} J_{t \to s} = \nabla b(s, X_s) \, J_{t \to s}\)</span> with <span class="math inline">\(J_{t \to t} = I\)</span>; there is no noise term since the noise is additive. Nudges travel through this Jacobian, and the computation leading to <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> gives</p>
+<p><span id="eq-jacobian-push"><span class="math display">\[
+\nabla \log h(t,x) = \mathbb{E}_{\mathbb{Q}} {\left[  a(t) \mid X_t = x  \right]}
+\qquad \text{with} \qquad
+a(t) = J_{t \to T}^\top \, \nabla r(X_T), \quad \dot{a}(t) = -\nabla b(t, X_t)^\top a(t), \quad a(T) = \nabla r(X_T).
+\tag{29}\]</span></span></p>
+<p>The backward equation for <span class="math inline">\(a(t)\)</span> follows from <span class="math inline">\(J_{t \to T} = J_{s \to T} \, J_{t \to s}\)</span>, which gives <span class="math inline">\(\frac{d}{dt} J_{t \to T} = -J_{t \to T} \, \nabla b(t, X_t)\)</span>. It is the adjoint equation of the <a href="../../notes/adjoint_method/adjoint.html">adjoint method note</a>, and <span class="math inline">\(a(t)\)</span> is what <span class="citation" data-cites="domingoenrich2024adjoint">(<a href="#ref-domingoenrich2024adjoint" role="doc-biblioref">Domingo-Enrich et al. 2024</a>)</span> call the <em>lean adjoint</em>; regressing <span class="math inline">\(u\)</span> onto <span class="math inline">\(\sigma_t \, a(t)\)</span> is their adjoint matching loss. The identity <a href="#eq-jacobian-push" class="quarto-xref">Equation&nbsp;29</a> is exact: the derivative is taken along the reference flow, inside an average under <span class="math inline">\(\mathbb{Q}\)</span>, so derivatives of the control never appear, and there is no need to start from the full adjoint of the controlled flow and drop terms that vanish at the optimum. For the OU reference, <span class="math inline">\(\nabla b = -\tfrac12 I\)</span> and <span class="math inline">\(a(t) = \alpha_{T-t} \nabla r(X_T)\)</span>, which is <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a>. The price of a nonlinear reference is the absence of explicit bridges: whole trajectories must be simulated and stored, and <span class="math inline">\(a(t)\)</span> must be computed along each of them by a backward pass of vector-Jacobian products, so that the endpoint buffer of the previous sections is not available.</p>
+</section>
+<section id="jumps" class="level4">
+<h4 class="anchored" data-anchor-id="jumps">Jumps</h4>
+<p>Consider now a continuous-time Markov chain on a finite set with rate matrix <span class="math inline">\(R_t(x,y)\)</span> for jumps from <span class="math inline">\(x\)</span> to <span class="math inline">\(y\)</span> (the <a href="../../notes/DiscreteDiff/DiscreteDiff.html">note on discrete diffusions</a> calls it <span class="math inline">\(Q_t\)</span>; the letter <span class="math inline">\(R\)</span> avoids a clash with <span class="math inline">\(\mathbb{Q}\)</span>). The <a href="../../notes/doob_transforms/doob.html">Doob note</a> is written for general Markov processes, and for jump processes the reweighting multiplies the rates,</p>
+<p><span id="eq-jump-rates"><span class="math display">\[
+\text{rates of } \mathbb{Q}: \qquad R_t(x,y) \; \frac{h(t,y)}{h(t,x)}.
+\tag{30}\]</span></span></p>
+<details>
+<summary>
+Some details:
+</summary>
+<p style="color: blue;">
+With <span class="math inline">\(f=0\)</span>, the conditioned generator of the Doob note reads <span class="math inline">\(\mathcal{L}^\star \varphi= (\partial_t + \mathcal{L})[h \varphi] / h\)</span>. Since <span class="math inline">\((\partial_t + \mathcal{L}) h = 0\)</span>, this equals <span class="math inline">\(\mathcal{L}[h\varphi]/h - \varphi\, \mathcal{L}h / h\)</span>, and with <span class="math inline">\(\mathcal{L}\varphi(x) = \sum_y R_t(x,y) [\varphi(y) - \varphi(x)]\)</span> one obtains <span class="math inline">\(\mathcal{L}^\star \varphi(x) = \sum_y R_t(x,y) \frac{h(t,y)}{h(t,x)} [\varphi(y) - \varphi(x)]\)</span>.
+</p>
+</details>
+<p>Gradients become ratios, and the task is to write <span class="math inline">\(h(t,y)/h(t,x)\)</span> as an average under <span class="math inline">\(\mathbb{Q}\)</span> for the neighbours <span class="math inline">\(y\)</span> of <span class="math inline">\(x\)</span>. When the state space is a group such as <span class="math inline">\(\mathbb{Z}_N^D\)</span> and the reference noise is a translation (uniform rates to neighbouring states), the increment <span class="math inline">\(X_T - X_t\)</span> is independent of <span class="math inline">\(X_t\)</span>, so that shifting the present by <span class="math inline">\(y - x\)</span> shifts the endpoint by <span class="math inline">\(y - x\)</span>. Then <span class="math inline">\(h(t,y) = \mathbb{E}_{\mathbb{P}}[e^{g(X_T + y - x)} \mid X_t = x]\)</span> and</p>
+<p><span id="eq-shift"><span class="math display">\[
+\frac{h(t,y)}{h(t,x)} = \mathbb{E}_{\mathbb{Q}} {\left[  e^{g(X_T + y - x) - g(X_T)} \mid X_t = x  \right]} ,
+\tag{31}\]</span></span></p>
+<p>the discrete analogue of the push representation <span class="citation" data-cites="guo2026discrete">(<a href="#ref-guo2026discrete" role="doc-biblioref">Guo et al. 2026</a>)</span>. When <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> differ in a single coordinate, so do <span class="math inline">\(X_T + y - x\)</span> and <span class="math inline">\(X_T\)</span>, and only single-coordinate ratios of <span class="math inline">\(\pi\)</span> are needed. For references without a group structure, such as masked diffusion, one can use instead</p>
+<p><span id="eq-product"><span class="math display">\[
+\frac{h(t,y)}{h(t,x)} = \mathbb{E}_{\mathbb{P}} {\left[  e^{g(X_T)} \mid X_t = y  \right]}  \times \mathbb{E}_{\mathbb{Q}} {\left[  e^{-g(X_T)} \mid X_t = x  \right]} ,
+\tag{32}\]</span></span></p>
+<p>since <span class="math inline">\(\mathbb{E}_{\mathbb{Q}}[e^{-g(X_T)} \mid X_t = x] = \sum_z p(z \mid x) \, e^{g(z)} \, e^{-g(z)} / h(t,x) = 1/h(t,x)\)</span>: a product of two independent averages, one obtained by simulating the reference from <span class="math inline">\(y\)</span> and one along a path of <span class="math inline">\(\mathbb{Q}\)</span> from <span class="math inline">\(x\)</span>. This is the discrete adjoint of <span class="citation" data-cites="so2026dam">(<a href="#ref-so2026dam" role="doc-biblioref">So et al. 2026</a>)</span>, and the backward equation they derive for it is the backward Kolmogorov equation satisfied by <span class="math inline">\(h\)</span>. Rates must remain positive, so the squared loss is replaced by a Bregman divergence; for any Bregman divergence <span class="math inline">\(D_\varphi\)</span>, the minimizer of <span class="math inline">\(c \mapsto \mathbb{E}[D_\varphi(\xi, c)]\)</span> is <span class="math inline">\(\mathbb{E}[\xi]\)</span> <span class="citation" data-cites="banerjee2005optimality">(<a href="#ref-banerjee2005optimality" role="doc-biblioref">Banerjee, Guo, and Wang 2005</a>)</span>, and nothing else changes. The usual choice is the generalized Kullback–Leibler divergence <span class="math inline">\(D(\xi, c) = \xi \log(\xi / c) - \xi + c\)</span>. The tilted rates inherit the sparsity of the reference, since <span class="math inline">\(R_t(x,y) = 0\)</span> implies that the tilted rate vanishes, so that the structure of masked models (one coordinate unmasked at a time) is preserved. Tilting the start also carries over, with the same two devices applied to the ratios of <span class="math inline">\(\psi\)</span> <span class="citation" data-cites="guo2026discrete">(<a href="#ref-guo2026discrete" role="doc-biblioref">Guo et al. 2026</a>)</span>. Changing the reference therefore changes a single factor, the way a nudge travels (a number, a matrix, a Jacobian, a shift), and possibly the cost of obtaining bridges.</p>
+</section>
+</section>
+<section id="where-did-the-stochastic-control-go" class="level3">
+<h3 class="anchored" data-anchor-id="where-did-the-stochastic-control-go">Where did the stochastic control go?</h3>
+<p>Many of the papers cited above are written in the language of stochastic optimal control. By the <a href="../../notes/girsanov/girsanov.html">Girsanov theorem</a>, if the controlled process <span class="math inline">\(\mathbb{P}^u\)</span> is started like <span class="math inline">\(\mathbb{P}\)</span>, then <span class="math inline">\(\mathbb{E}_{\mathbb{P}^u}\log(d\mathbb{P}^u / d\mathbb{P}) = \tfrac12 \mathbb{E}_{\mathbb{P}^u} \int_0^T \|u(t,X_t)\|^2 \, dt\)</span>, and since <span class="math inline">\(\log(d\mathbb{Q}/d\mathbb{P}) = g(X_T) - \log \mathcal{Z}\)</span>,</p>
+<p><span id="eq-soc"><span class="math display">\[
+D_{\text{KL}} {\left( \mathbb{P}^u \,\|\, \mathbb{Q} \right)}  = \mathbb{E}_{\mathbb{P}^u} {\left[  \frac 12 \int_0^T \|u(t,X_t)\|^2 \, dt - g(X_T)  \right]}  + \log \mathcal{Z}.
+\tag{33}\]</span></span></p>
+<p>The target <span class="math inline">\(\mathbb{Q}\)</span> therefore solves the control problem <span class="math inline">\(\max_u \mathbb{E}[g(X_T) - \tfrac12 \int_0^T \|u\|^2 \, dt]\)</span> of the <a href="../../notes/HJB/HJB.html">HJB note</a>, whose solution is the Bellman control <span class="math inline">\(u^\star = \nabla V\)</span> with <span class="math inline">\(V = \log h\)</span>. If the initial distribution is optimized as well, the optimal one is <span class="math inline">\(p_0 \, h(0,\cdot)/\mathcal{Z}\)</span>: the leak discussed above is this optimal initial distribution.</p>
+<p>The direct approach minimizes <a href="#eq-soc" class="quarto-xref">Equation&nbsp;33</a> over a parametrized drift by gradient descent, differentiating through simulated trajectories with the <a href="../../notes/adjoint_method/adjoint.html">adjoint method</a>; this is what earlier diffusion samplers do <span class="citation" data-cites="zhang2021path vargas2023denoising">(<a href="#ref-zhang2021path" role="doc-biblioref">Zhang and Chen 2021</a>; <a href="#ref-vargas2023denoising" role="doc-biblioref">Vargas, Grathwohl, and Doucet 2023</a>)</span>. For a Monte Carlo reader, this is variational inference on path-space, the minimization of a reverse Kullback–Leibler divergence, with its mode-seeking behaviour and with a simulation and a backward pass at every optimization step.</p>
+<p>The methods described in these notes never minimize <a href="#eq-soc" class="quarto-xref">Equation&nbsp;33</a>. Kullback–Leibler control is linearly solvable <span class="citation" data-cites="kappen2005path todorov2009efficient">(<a href="#ref-kappen2005path" role="doc-biblioref">Kappen 2005</a>; <a href="#ref-todorov2009efficient" role="doc-biblioref">Todorov 2009</a>)</span>: the look-ahead function <span class="math inline">\(h\)</span> solves the linear backward equation <span class="math inline">\((\partial_t + \mathcal{L}) h = 0\)</span> of the <a href="../../notes/doob_transforms/doob.html">Doob note</a>, and <span class="math inline">\(V = \log h\)</span> solves the nonlinear HJB equation only through the Cole–Hopf change of variables discussed in the HJB note. The optimal control is therefore the gradient of the logarithm of an expectation, which <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> writes as a conditional expectation, which <a href="#eq-reg" class="quarto-xref">Equation&nbsp;15</a> turns into a least-squares problem. This is why these methods are called <em>matching</em> methods. Kappen’s path integral control estimates the same conditional expectations state by state by reweighting reference paths <span class="citation" data-cites="kappen2005path">(<a href="#ref-kappen2005path" role="doc-biblioref">Kappen 2005</a>)</span>; the regression amortizes this over all states at once.</p>
+<p>The word <em>adjoint</em> has the same origin. The <a href="../../notes/adjoint_method/adjoint.html">adjoint method note</a> shows that, along a path with its noise held fixed, Pontryagin’s costate <span class="math inline">\(\lambda(t) = \nabla_{x(t)} g(x(T))\)</span> solves <span class="math inline">\(\dot\lambda = -\nabla b^\top \lambda\)</span> with <span class="math inline">\(\lambda(T) = \nabla g(x(T))\)</span>. Here <span class="math inline">\(\lambda(t) = J_{t \to T}^\top \nabla g(X_T)\)</span>, and <span class="math inline">\(\lambda(t) = \alpha_{T-t} \nabla g(X_T)\)</span> for the OU reference. The push representation <a href="#eq-push" class="quarto-xref">Equation&nbsp;11</a> reads</p>
+<p><span class="math display">\[
+u^\star(t,x) = \mathbb{E}_{\mathbb{Q}} {\left[  \lambda(t) \mid X_t = x  \right]} ,
+\]</span></p>
+<p>which is the stochastic maximum principle <span class="citation" data-cites="bismut1973conjugate peng1990general">(<a href="#ref-bismut1973conjugate" role="doc-biblioref">Bismut 1973</a>; <a href="#ref-peng1990general" role="doc-biblioref">Peng 1990</a>)</span>, obtained here in one line. Bellman’s <span class="math inline">\(\nabla V\)</span>, Pontryagin’s <span class="math inline">\(\mathbb{E}[\lambda(t) \mid X_t]\)</span> and Doob’s <span class="math inline">\(\nabla \log h\)</span> are the same vector field, and adjoint matching regresses the control onto the costate.</p>
+</section>
+<section id="mental-models-to-keep" class="level3">
+<h3 class="anchored" data-anchor-id="mental-models-to-keep">Mental models to keep</h3>
+<ul>
+<li>To sample from <span class="math inline">\(\pi\)</span> with a diffusion, reweight a noise process by where it ends. With an OU reference started at <span class="math inline">\(\pi_{\mathrm{ref}}\)</span>, the result is the diffusion model of <span class="math inline">\(\pi\)</span>, which blurs <span class="math inline">\(\pi\)</span> where annealing would temper it.</li>
+<li>The drift is a delta: a conditional average over where the path is heading, computed pathwise (push the endpoint back) or by likelihood ratio (pull toward the endpoint).</li>
+<li>Samples tell us where <span class="math inline">\(\pi\)</span> is, the score tells us which way is uphill, and an integration by parts trades one for the other.</li>
+<li>Averages are regressions (least-squares Monte Carlo): train on your own endpoints and redraw the middle from bridges.</li>
+<li>Training on your own samples is adaptive importance sampling without weights: one only learns where one looks, so move slowly.</li>
+<li>A learned sampler is a proposal, and path weights correct it.</li>
+<li>On a finite horizon the start remembers the end, and even the exact drift leaves weights <span class="math inline">\(h(0, X_0)\)</span>: make the reference forget, tilt the start, or pair the ends independently.</li>
+<li>Changing the reference changes how nudges travel: a number, a matrix, a Jacobian, a shift.</li>
+<li>Bellman, Pontryagin and Doob describe the same vector field, and no control problem is ever solved by optimization.</li>
+</ul>
+<p>A few things I would try, none of which I have tested. Center (and roughly whiten) the reference at a crude estimate of the mean of <span class="math inline">\(\pi\)</span>, since the leak is driven by <span class="math inline">\(m_\pi\)</span>. Mix the integrands with a time-dependent weight, pulling early and pushing late while always keeping some push. Use the path weights <a href="#eq-path-weights" class="quarto-xref">Equation&nbsp;9</a> not only to evaluate a learned sampler but to correct it with SMC, which also removes the leak. When a non-trivial prior matters, prefer a moderately long OU horizon to a point start, since the Schrödinger correction then nearly vanishes.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-albergo2023stochastic" class="csl-entry" role="listitem">
+Albergo, Michael S., Nicholas M. Boffi, and Eric Vanden-Eijnden. 2023. <span>“Stochastic Interpolants: A Unifying Framework for Flows and Diffusions.”</span> arXiv preprint arXiv:2303.08797.
+</div>
+<div id="ref-banerjee2005optimality" class="csl-entry" role="listitem">
+Banerjee, A., X. Guo, and H. Wang. 2005. <span>“On the Optimality of Conditional Expectation as a Bregman Predictor.”</span> <em>IEEE Transactions on Information Theory</em> 51 (7). Institute of Electrical; Electronics Engineers (IEEE): 2664–69. doi:<a href="https://doi.org/10.1109/tit.2005.850145">10.1109/tit.2005.850145</a>.
+</div>
+<div id="ref-bismut1973conjugate" class="csl-entry" role="listitem">
+Bismut, Jean-Michel. 1973. <span>“Conjugate Convex Functions in Optimal Stochastic Control.”</span> <em>Journal of Mathematical Analysis and Applications</em> 44 (2). Elsevier BV: 384–404. doi:<a href="https://doi.org/10.1016/0022-247x(73)90066-8">10.1016/0022-247x(73)90066-8</a>.
+</div>
+<div id="ref-blessing2026bridge" class="csl-entry" role="listitem">
+Blessing, Denis, Lorenz Richter, Julius Berner, Egor Malitskiy, and Gerhard Neumann. 2026. <span>“Bridge Matching Sampler: Scalable Sampling via Generalized Fixed-Point Diffusion Matching.”</span> arXiv preprint arXiv:2603.00530.
+</div>
+<div id="ref-Brunick2013" class="csl-entry" role="listitem">
+Brunick, Gerard, and Steven Shreve. 2013. <span>“<span class="nocase">Mimicking an Itô process by a solution of a stochastic differential equation</span>.”</span> <em>The Annals of Applied Probability</em> 23 (4). Institute of Mathematical Statistics. <a href="https://doi.org/10.1214/12-aap881">https://doi.org/10.1214/12-aap881</a>.
+</div>
+<div id="ref-de2024target" class="csl-entry" role="listitem">
+De Bortoli, Valentin, Michael Hutchinson, Peter Wirnsberger, and Arnaud Doucet. 2024. <span>“<span class="nocase">Target score matching</span>.”</span> <em>arXiv Preprint arXiv:2402.08667</em>. <a href="https://arxiv.org/abs/2402.08667">https://arxiv.org/abs/2402.08667</a>.
+</div>
+<div id="ref-de2021diffusion" class="csl-entry" role="listitem">
+De Bortoli, Valentin, James Thornton, Jeremy Heng, and Arnaud Doucet. 2021. <span>“<span class="nocase">Diffusion schrodinger bridge with applications to score-based generative modeling</span>.”</span> <em>Advances in Neural Information Processing Systems</em> 34: 17695–709.
+</div>
+<div id="ref-domingoenrich2024adjoint" class="csl-entry" role="listitem">
+Domingo-Enrich, Carles, Michal Drozdzal, Brian Karrer, and Ricky T. Q. Chen. 2024. <span>“<span class="nocase">Adjoint Matching: Fine-tuning Flow and Diffusion Generative Models with Memoryless Stochastic Optimal Control</span>.”</span> arXiv. <a href="https://arxiv.org/abs/2409.08861">https://arxiv.org/abs/2409.08861</a>.
+</div>
+<div id="ref-fournie1999applications" class="csl-entry" role="listitem">
+Fournié, Eric, Jean-Michel Lasry, Jérôme Lebuchoux, Pierre-Louis Lions, and Nizar Touzi. 1999. <span>“Applications of Malliavin Calculus to Monte Carlo Methods in Finance.”</span> <em>Finance and Stochastics</em> 3 (4). Springer Science; Business Media LLC: 391–412. doi:<a href="https://doi.org/10.1007/s007800050068">10.1007/s007800050068</a>.
+</div>
+<div id="ref-glasserman2003monte" class="csl-entry" role="listitem">
+Glasserman, Paul. 2003. <em>Monte Carlo Methods in Financial Engineering</em>. Stochastic Modelling and Applied Probability. Springer New York. doi:<a href="https://doi.org/10.1007/978-0-387-21617-1">10.1007/978-0-387-21617-1</a>.
+</div>
+<div id="ref-guo2026discrete" class="csl-entry" role="listitem">
+Guo, Wei et al. 2026. <span>“<span>Discrete Adjoint Schrödinger Bridge Sampler</span>.”</span> arXiv. <a href="https://arxiv.org/abs/2602.08243">https://arxiv.org/abs/2602.08243</a>.
+</div>
+<div id="ref-havens2025adjoint" class="csl-entry" role="listitem">
+Havens, Aaron et al. 2025. <span>“<span class="nocase">Adjoint Sampling: Highly Scalable Diffusion Samplers via Adjoint Matching</span>.”</span> arXiv. <a href="https://arxiv.org/abs/2504.11713">https://arxiv.org/abs/2504.11713</a>.
+</div>
+<div id="ref-ho2020denoising" class="csl-entry" role="listitem">
+Ho, Jonathan, Ajay Jain, and Pieter Abbeel. 2020. <span>“<span class="nocase">Denoising diffusion probabilistic models</span>.”</span> <em>Advances in Neural Information Processing Systems</em> 33: 6840–51.
+</div>
+<div id="ref-kappen2005path" class="csl-entry" role="listitem">
+Kappen, H J. 2005. <span>“Path Integrals and Symmetry Breaking for Optimal Control Theory.”</span> <em>Journal of Statistical Mechanics: Theory and Experiment</em> 2005 (11). IOP Publishing: P11011–11. doi:<a href="https://doi.org/10.1088/1742-5468/2005/11/p11011">10.1088/1742-5468/2005/11/p11011</a>.
+</div>
+<div id="ref-lipman2022flow" class="csl-entry" role="listitem">
+Lipman, Yaron, Ricky T. Q. Chen, Heli Ben-Hamu, Maximilian Nickel, and Matt Le. 2022. <span>“Flow Matching for Generative Modeling.”</span> arXiv preprint arXiv:2210.02747.
+</div>
+<div id="ref-liu2025adjoint" class="csl-entry" role="listitem">
+Liu, Guan-Horng, Jaemoo Choi, Yongxin Chen, Benjamin Kurt Miller, and Ricky T. Q. Chen. 2025. <span>“<span>Adjoint Schrödinger Bridge Sampler</span>.”</span> arXiv. <a href="https://arxiv.org/abs/2506.22565">https://arxiv.org/abs/2506.22565</a>.
+</div>
+<div id="ref-liu2022let" class="csl-entry" role="listitem">
+Liu, Xingchao, Lemeng Wu, Mao Ye, and Qiang Liu. 2022. <span>“Let Us Build Bridges: Understanding and Extending Diffusion Generative Models.”</span> arXiv preprint arXiv:2208.14699.
+</div>
+<div id="ref-longstaff2001valuing" class="csl-entry" role="listitem">
+Longstaff, Francis A., and Eduardo S. Schwartz. 2001. <span>“Valuing American Options by Simulation: A Simple Least-Squares Approach.”</span> <em>Review of Financial Studies</em> 14 (1). Oxford University Press (OUP): 113–47. doi:<a href="https://doi.org/10.1093/rfs/14.1.113">10.1093/rfs/14.1.113</a>.
+</div>
+<div id="ref-park2025functional" class="csl-entry" role="listitem">
+Park, Byoungwoo, Juho Lee, and Guan-Horng Liu. 2025. <span>“<span class="nocase">Functional Adjoint Sampler: Scalable Sampling on Infinite Dimensional Spaces</span>.”</span> arXiv. <a href="https://arxiv.org/abs/2511.06239">https://arxiv.org/abs/2511.06239</a>.
+</div>
+<div id="ref-peluchetti2023diffusion" class="csl-entry" role="listitem">
+Peluchetti, Stefano. 2023. <span>“Diffusion Bridge Mixture Transports, Schrödinger Bridge Problems and Generative Modeling.”</span> arXiv preprint arXiv:2304.00917.
+</div>
+<div id="ref-peng1990general" class="csl-entry" role="listitem">
+Peng, Shige. 1990. <span>“A General Stochastic Maximum Principle for Optimal Control Problems.”</span> <em>SIAM Journal on Control and Optimization</em> 28 (4). Society for Industrial &amp; Applied Mathematics (SIAM): 966–79. doi:<a href="https://doi.org/10.1137/0328054">10.1137/0328054</a>.
+</div>
+<div id="ref-phillips2024particle" class="csl-entry" role="listitem">
+Phillips, Angus et al. 2024. <span>“<span>Particle Denoising Diffusion Sampler</span>.”</span> arXiv. <a href="https://arxiv.org/abs/2402.06320">https://arxiv.org/abs/2402.06320</a>.
+</div>
+<div id="ref-rubinstein2004cross" class="csl-entry" role="listitem">
+Rubinstein, Reuven Y., and Dirk P. Kroese. 2004. <em>The Cross-Entropy Method</em>. Information Science and Statistics. Springer New York. doi:<a href="https://doi.org/10.1007/978-1-4757-4321-0">10.1007/978-1-4757-4321-0</a>.
+</div>
+<div id="ref-so2026dam" class="csl-entry" role="listitem">
+So, Oswin, Brian Karrer, Chuchu Fan, Ricky T. Q. Chen, and Guan-Horng Liu. 2026. <span>“<span>Discrete Adjoint Matching</span>.”</span> arXiv. <a href="https://arxiv.org/abs/2602.07132">https://arxiv.org/abs/2602.07132</a>.
+</div>
+<div id="ref-song2020score" class="csl-entry" role="listitem">
+Song, Yang et al. 2020. <span>“<span class="nocase">Score-based generative modeling through stochastic differential equations</span>.”</span> <em><span>ICLR</span> 2021</em>. <a href="https://arxiv.org/abs/2011.13456">https://arxiv.org/abs/2011.13456</a>.
+</div>
+<div id="ref-todorov2009efficient" class="csl-entry" role="listitem">
+Todorov, Emanuel. 2009. <span>“Efficient Computation of Optimal Actions.”</span> <em>Proceedings of the National Academy of Sciences</em> 106 (28). National Academy of Sciences: 11478–83. doi:<a href="https://doi.org/10.1073/pnas.0710743106">10.1073/pnas.0710743106</a>.
+</div>
+<div id="ref-vargas2023denoising" class="csl-entry" role="listitem">
+Vargas, Francisco, Will Grathwohl, and Arnaud Doucet. 2023. <span>“Denoising Diffusion Samplers.”</span> arXiv preprint arXiv:2302.13834.
+</div>
+<div id="ref-vincent2011connection" class="csl-entry" role="listitem">
+Vincent, Pascal. 2011. <span>“<span class="nocase">A connection between score matching and denoising autoencoders</span>.”</span> <em>Neural Computation</em> 23 (7): 1661–74. <a href="https://doi.org/10.1162/neco_a_00142">https://doi.org/10.1162/neco_a_00142</a>.
+</div>
+<div id="ref-zhang2021path" class="csl-entry" role="listitem">
+Zhang, Qinsheng, and Yongxin Chen. 2021. <span>“Path Integral Sampler: A Stochastic Control Approach for Sampling.”</span> In <em>International Conference on Learning Representations</em>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
