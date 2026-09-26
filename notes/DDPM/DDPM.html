@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Ornstein–Uhlenbeck noising, reverse diffusions, and score estimation in denoising diffusion models.">
 
 <title>Denoising Diffusion Probabilistic Models (DDPM) – Alexandre Thiéry</title>
 <style>
@@ -24,8 +25,12 @@ ul.task-list li input[type="checkbox"] {
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -37,6 +42,17 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -60,6 +76,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
+<link rel="alternate" type="application/rss+xml" title="Alexandre Thiéry — Notes" href="https://alexxthiery.github.io/notes/index_notes_as_list.xml">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -93,10 +110,10 @@ window.Quarto = {
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Denoising Diffusion Probabilistic Models (DDPM) – Alexandre Thiéry">
-<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:description" content="Ornstein–Uhlenbeck noising, reverse diffusions, and score estimation in denoising diffusion models.">
 <meta property="og:site_name" content="Alexandre Thiéry">
 <meta name="twitter:title" content="Denoising Diffusion Probabilistic Models (DDPM) – Alexandre Thiéry">
-<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:description" content="Ornstein–Uhlenbeck noising, reverse diffusions, and score estimation in denoising diffusion models.">
 <meta name="twitter:creator" content="@alexxthiery">
 <meta name="twitter:card" content="summary">
 </head>
@@ -112,6 +129,7 @@ window.Quarto = {
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -156,7 +174,12 @@ window.Quarto = {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Denoising Diffusion Probabilistic Models (DDPM)</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Ornstein–Uhlenbeck noising, reverse diffusions, and score estimation in denoising diffusion models.
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">DDPM</div>
                 <div class="quarto-category">score</div>
               </div>
@@ -377,7 +400,7 @@ d\overleftarrow{X}_s =
 <p>In the animation below, the method described in these notes was used. This very small example trains in less than a minute on an old laptop without a GPU. The noise estimator was parametrized with an MLP with <span class="math inline">\(\mathrm{elu}(\ldots)\)</span> non-linearity and two hidden-layers with size <span class="math inline">\(H=128\)</span>. It was very useful to add a few Fourier features as input of the network, I could not make this work properly without.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><video src="sine_reverse.mp4" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%" controls=""><a href="sine_reverse.mp4">Video</a></video></p>
+<p><video src="sine_reverse.mp4" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%" loading="lazy" controls=""><a href="sine_reverse.mp4">Video</a></video></p>
 </figure>
 </div>
 <p>The literature on DDPM is <a href="https://github.com/heejkoo/Awesome-Diffusion-Models">enormous and still growing</a>!</p>

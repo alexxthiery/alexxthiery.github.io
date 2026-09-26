@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="The Fisher–Rao metric, geodesics, and gradient flows on spaces of probability distributions.">
 
 <title>Fisher-Rao Geometry – Alexandre Thiéry</title>
 <style>
@@ -44,8 +45,12 @@ div.csl-indent {
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -57,6 +62,17 @@ div.csl-indent {
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -80,6 +96,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
+<link rel="alternate" type="application/rss+xml" title="Alexandre Thiéry — Notes" href="https://alexxthiery.github.io/notes/index_notes_as_list.xml">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -113,13 +130,15 @@ window.Quarto = {
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Fisher-Rao Geometry – Alexandre Thiéry">
-<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:description" content="The Fisher–Rao metric, geodesics, and gradient flows on spaces of probability distributions.">
 <meta property="og:image" content="https://alexxthiery.github.io/notes/fisher-rao/rao.jpg">
 <meta property="og:site_name" content="Alexandre Thiéry">
+<meta property="og:image:alt" content="Calyampudi Radhakrishna Rao (1920 – 2023)">
 <meta name="twitter:title" content="Fisher-Rao Geometry – Alexandre Thiéry">
-<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:description" content="The Fisher–Rao metric, geodesics, and gradient flows on spaces of probability distributions.">
 <meta name="twitter:image" content="https://alexxthiery.github.io/notes/fisher-rao/rao.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:image:alt" content="Calyampudi Radhakrishna Rao (1920 – 2023)">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -134,6 +153,7 @@ window.Quarto = {
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -178,7 +198,12 @@ window.Quarto = {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Fisher-Rao Geometry</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          The Fisher–Rao metric, geodesics, and gradient flows on spaces of probability distributions.
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">probability</div>
                 <div class="quarto-category">information-geometry</div>
               </div>
@@ -223,7 +248,7 @@ window.Quarto = {
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./rao.jpg" class="img-fluid figure-img" style="width:60.0%"></p>
+<p><img src="./rao.jpg" class="img-fluid figure-img" style="width:60.0%" loading="lazy" alt="Calyampudi Radhakrishna Rao (1920 – 2023)"></p>
 <figcaption><a href="https://en.wikipedia.org/wiki/C._R._Rao">Calyampudi Radhakrishna Rao</a> (1920 – 2023)</figcaption>
 </figure>
 </div>
@@ -270,7 +295,7 @@ d_H(\rho_1, \rho_2)^2 = \int \left( \sqrt{\rho_1(x)} - \sqrt{\rho_2(x)} \right)^
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./FR_geodesic.gif" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="./FR_geodesic.gif" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Here is how a geodesic paths looks like under the Fisher-Rao metric"></p>
 <figcaption>Here is how a geodesic paths looks like under the Fisher-Rao metric</figcaption>
 </figure>
 </div>
@@ -295,7 +320,7 @@ w_i \mapsto \frac{ w_i \, (\pi(x_i) / \rho(x_i))^{\varepsilon}}{\sum_{j=1}^N w_j
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./FR_gradient_flow.gif" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="./FR_gradient_flow.gif" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Minimising D_{\text{KL}}(\rho, \pi) with Fisher-Rao gradient flow"></p>
 <figcaption>Minimising <span class="math inline">\(D_{\text{KL}}(\rho, \pi)\)</span> with Fisher-Rao gradient flow</figcaption>
 </figure>
 </div>

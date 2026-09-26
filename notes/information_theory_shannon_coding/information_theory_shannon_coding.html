@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Shannon’s coding theorem, channel capacity, and numerical experiments with random codebooks.">
 
 <title>Shannon Source Coding Theorem – Alexandre Thiéry</title>
 <style>
@@ -44,8 +45,12 @@ div.csl-indent {
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -57,6 +62,17 @@ div.csl-indent {
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -80,6 +96,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
+<link rel="alternate" type="application/rss+xml" title="Alexandre Thiéry — Notes" href="https://alexxthiery.github.io/notes/index_notes_as_list.xml">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -113,13 +130,15 @@ window.Quarto = {
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Shannon Source Coding Theorem – Alexandre Thiéry">
-<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:description" content="Shannon’s coding theorem, channel capacity, and numerical experiments with random codebooks.">
 <meta property="og:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
 <meta property="og:site_name" content="Alexandre Thiéry">
+<meta property="og:image:alt" content="Claude Shannon (1916 – 2001)">
 <meta name="twitter:title" content="Shannon Source Coding Theorem – Alexandre Thiéry">
-<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:description" content="Shannon’s coding theorem, channel capacity, and numerical experiments with random codebooks.">
 <meta name="twitter:image" content="https://alexxthiery.github.io/notes/information_theory_shannon_coding/shannon.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:image:alt" content="Claude Shannon (1916 – 2001)">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -134,6 +153,7 @@ window.Quarto = {
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -178,7 +198,12 @@ window.Quarto = {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Shannon Source Coding Theorem</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Shannon’s coding theorem, channel capacity, and numerical experiments with random codebooks.
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">infoTheory</div>
               </div>
                   </div>
@@ -230,7 +255,7 @@ window.Quarto = {
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="shannon.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="shannon.jpg" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Claude Shannon (1916 – 2001)"></p>
 <figcaption>Claude Shannon (1916 – 2001)</figcaption>
 </figure>
 </div>
@@ -242,7 +267,7 @@ window.Quarto = {
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="transmission.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="transmission.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="A Mathematical Theory of Communication"></p>
 <figcaption>A Mathematical Theory of Communication</figcaption>
 </figure>
 </div>
@@ -321,7 +346,7 @@ x_\star \; = \; \mathop{\mathrm{argmin}}_{x \in \mathcal{C}} \; \|x - y_\star\|_
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./shannon_code.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+<p><img src="./shannon_code.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" loading="lazy" alt="Block error rates for a random Gaussian codebook at different transmission rates."></p>
 </figure>
 </div>
 </div>

@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Random-walk Metropolis and Hamiltonian Monte Carlo constrained to manifolds, with projection and reversibility checks.">
 
 <title>RWM &amp; HMC on manifolds – Alexandre Thiéry</title>
 <style>
@@ -44,8 +45,12 @@ div.csl-indent {
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../data/dice.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -57,6 +62,17 @@ div.csl-indent {
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -80,6 +96,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
 </script>
+<link rel="alternate" type="application/rss+xml" title="Alexandre Thiéry — Notes" href="https://alexxthiery.github.io/notes/index_notes_as_list.xml">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -113,13 +130,15 @@ window.Quarto = {
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="RWM &amp; HMC on manifolds – Alexandre Thiéry">
-<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:description" content="Random-walk Metropolis and Hamiltonian Monte Carlo constrained to manifolds, with projection and reversibility checks.">
 <meta property="og:image" content="https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.jpg">
 <meta property="og:site_name" content="Alexandre Thiéry">
+<meta property="og:image:alt" content="A curved green surface above its contour plot.">
 <meta name="twitter:title" content="RWM &amp; HMC on manifolds – Alexandre Thiéry">
-<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:description" content="Random-walk Metropolis and Hamiltonian Monte Carlo constrained to manifolds, with projection and reversibility checks.">
 <meta name="twitter:image" content="https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.jpg">
 <meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:image:alt" content="A curved green surface above its contour plot.">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -134,6 +153,7 @@ window.Quarto = {
     <span class="navbar-title">Alexandre Thiéry</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -178,7 +198,12 @@ window.Quarto = {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">RWM &amp; HMC on manifolds</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Random-walk Metropolis and Hamiltonian Monte Carlo constrained to manifolds, with projection and reversibility checks.
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">MCMC</div>
                 <div class="quarto-category">manifold</div>
               </div>
@@ -230,7 +255,7 @@ window.Quarto = {
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="mcmc_manifold.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+<p><img src="mcmc_manifold.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" loading="lazy" alt="A curved green surface above its contour plot."></p>
 </figure>
 </div>
 </div>
@@ -245,7 +270,7 @@ window.Quarto = {
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="projection_onto_M.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="projection_onto_M.jpg" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Projection onto \mathcal{M} from [@zappa2018monte]"></p>
 <figcaption>Projection onto <span class="math inline">\(\mathcal{M}\)</span> from <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span></figcaption>
 </figure>
 </div>
@@ -262,7 +287,7 @@ C( \, x_n + v + J_{x_n}^\top \lambda) = 0 \in \mathbb{R}^d.
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="reverse_mcmc.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="reverse_mcmc.jpg" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Reversibility check [@zappa2018monte]"></p>
 <figcaption>Reversibility check <span class="citation" data-cites="zappa2018monte">(<a href="#ref-zappa2018monte" role="doc-biblioref">Zappa, Holmes-Cerfon, and Goodman 2018</a>)</span></figcaption>
 </figure>
 </div>
@@ -300,14 +325,13 @@ x_n = \text{Proj}(y_n + v', J_{y_n}).
 - G^{-1} \, \Phi(\lambda_k)
 \]</span></p>
 <p>with <strong>fixed</strong> positive definite matrix <span class="math inline">\(G = J_{x_n} \, J_{x_n}^\top\)</span> since one can then pre-compute a decomposition of <span class="math inline">\(G\)</span> and use it to solve the linear systems at each iterations. In some recent and related work <span class="citation" data-cites="au2020manifold">(<a href="#ref-au2020manifold" role="doc-biblioref">Au, Graham, and Thiery 2022</a>)</span>, we observed that the standard Newton method performed well in the settings we considered and there was most of the time no computational advantage to using a quasi-Newton method. In practice, the main computational bottleneck is to compute the Jacobian matrix <span class="math inline">\(J_{x_n}\)</span>, although it is problem-dependent and some structure can typically be exploited. In practice, only a relatively small number of iterations are performed and the root-finding algorithm is stopped as soon as <span class="math inline">\(\|\Phi(\lambda_k)\|\)</span> is below a certain threshold. If the stepsize is small, i.e.&nbsp;<span class="math inline">\(\|v\| \ll 1\)</span>, it is typically the case that the Newton’s method will converge to a solution in only a very small number of iterations – indeed, <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a> is quadratically convergent when close to a solution.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="RWM_double_torus.gif" class="img-fluid figure-img" style="width:90.0%"></p>
+<figure style="text-align:center;" class="figure">
+<video controls="" loop="" muted="" playsinline="" preload="none" poster="RWM_double_torus-poster.jpg" style="width:90%;max-width:100%;height:auto" aria-label="30k RWM chains ran in parallel to explore a double torus.">
+<source src="RWM_double_torus.mp4" type="video/mp4">
+<a href="RWM_double_torus.mp4">Download the animation</a>.
+</video>
 <figcaption>30k RWM chains ran in parallel to explore a double torus.</figcaption>
 </figure>
-</div>
-</div>
 <p>In the figure above, I have implemented the RWM algorithm above described to sample from the uniform distribution supported on a double torus described by the constraint function <span class="math inline">\(C: \mathbb{R}^3 \to \mathbb{R}\)</span> given as</p>
 <p><span class="math display">\[
 C(x,y,z) = (x^2 \, (x^2 - 1) + y^2)^2+z^2-0.03.
@@ -316,7 +340,7 @@ C(x,y,z) = (x^2 \, (x^2 - 1) + y^2)^2+z^2-0.03.
 <div style="text-align:center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="RWM_manifold_tuning.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="RWM_manifold_tuning.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Tuning of manifold-RWM"></p>
 <figcaption>Tuning of manifold-RWM</figcaption>
 </figure>
 </div>
@@ -366,14 +390,13 @@ p_{*} &amp;=  \textcolor{red}{\text{orthogonal project $\widetilde{p}_{*}$ onto 
 \right.
 \]</span></p>
 <p>If any of the projection operations fail, the proposal is rejected. If no failure occurs, a reversibility check is performed by running the algorithm backward starting from <span class="math inline">\((q_*, -p_*)\)</span>. If the reversibility check is successful, the proposal is accepted with the usual Metropolis-Hastings probability <span class="math inline">\(\min\left( 1, \bar{\pi}(q_*, p_*)/\bar{\pi}(q_n, p_n) \right)\)</span>.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="HMC_double_torus_compressed.gif" class="img-fluid figure-img" style="width:90.0%"></p>
+<figure style="text-align:center;" class="figure">
+<video controls="" loop="" muted="" playsinline="" preload="none" poster="HMC_double_torus_compressed-poster.jpg" style="width:90%;max-width:100%;height:auto" aria-label="5k HMC chains ran in parallel: the momentum is not refreshed">
+<source src="HMC_double_torus_compressed.mp4" type="video/mp4">
+<a href="HMC_double_torus_compressed.mp4">Download the animation</a>.
+</video>
 <figcaption>5k HMC chains ran in parallel: the momentum is not refreshed</figcaption>
 </figure>
-</div>
-</div>
 <p>The article <span class="citation" data-cites="lelievre2019hybrid">(<a href="#ref-lelievre2019hybrid" role="doc-biblioref">Lelièvre, Rousset, and Stoltz 2019</a>)</span> provides a detailed description of several of these ideas along with detailed analysis and extensions.</p>
 
 
