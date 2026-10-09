@@ -809,7 +809,7 @@
     "href": "teaching/guidelines/guidelines.html#report-and-submission",
     "title": "Assignment guidelines",
     "section": "Report and submission",
-    "text": "Report and submission\nMake one submission per group on Canvas, containing:\n\nA PDF report of at most 10 pages, including figures, references, and any appendix, with all group members’ names.\nThe GitHub repository URL matching the report – it should be clearly stated at the start of the report\nAll group members’ names and student numbers clearly indicated at the start of the report.\n\nDescribe your methods and experimental setup, interpret the results, and cite external sources. Do not include code in the main text. Larger figures and tables may be placed in an appendix."
+    "text": "Report and submission\nMake one submission per group on Canvas, containing:\n\nA PDF report of at most 10 pages, including figures, references, and any appendix, with all group members’ names. Here is an overleaf Latex template to get you started.\nThe GitHub repository URL matching the report – it should be clearly stated at the start of the report\nAll group members’ names and student numbers clearly indicated at the start of the report.\n\nDescribe your methods and experimental setup, interpret the results, and cite external sources. Do not include code in the main text. Larger figures and tables may be placed in an appendix."
   },
   {
     "objectID": "teaching/guidelines/guidelines.html#repository-and-reproducibility",
