@@ -6,7 +6,10 @@
   {
     "listing": "/notes/index_notes_as_list.html",
     "items": [
+      "/notes/lax/lax.html",
+      "/notes/lagrangian_convexity/lagrange.html",
       "/notes/cvxpy/cvxpy.html",
+      "/notes/predictive_posterior/predictive_posterior.html",
       "/notes/potts_transition/potts.html",
       "/notes/gegenbauer/gegenbauer.html",
       "/notes/scoring_rules/scoring.html",
@@ -46,7 +49,10 @@
   {
     "listing": "/posts/index_blog.html",
     "items": [
+      "/notes/lax/lax.html",
+      "/notes/lagrangian_convexity/lagrange.html",
       "/notes/cvxpy/cvxpy.html",
+      "/notes/predictive_posterior/predictive_posterior.html",
       "/notes/potts_transition/potts.html",
       "/notes/gegenbauer/gegenbauer.html",
       "/notes/scoring_rules/scoring.html",

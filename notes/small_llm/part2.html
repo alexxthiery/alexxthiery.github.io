@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Training a small language model, Part II – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+<link rel="alternate" type="application/rss+xml" title="Alexandre Thiéry — Notes" href="https://alexxthiery.github.io/notes/index_notes_as_list.xml">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Training a small language model, Part II – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/small_llm/figures/E07/early_stages.png">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta property="og:image:alt" content="Early loss crosses unigram and bigram baselines; distributional distances first decrease and then increase.">
+<meta property="og:image:height" content="1204">
+<meta property="og:image:width" content="2854">
+<meta name="twitter:title" content="Training a small language model, Part II – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/small_llm/figures/E07/early_stages.png">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:image:alt" content="Early loss crosses unigram and bigram baselines; distributional distances first decrease and then increase.">
+<meta name="twitter:image-height" content="1204">
+<meta name="twitter:image-width" content="2854">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Training a small language model, Part II</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">learning dynamics</div>
+                <div class="quarto-category">interpretability</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">10 10 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#before-the-model-pays-much-attention-to-the-prompt" id="toc-before-the-model-pays-much-attention-to-the-prompt" class="nav-link active" data-scroll-target="#before-the-model-pays-much-attention-to-the-prompt">Before the model pays much attention to the prompt</a></li>
+  <li><a href="#how-much-does-a-longer-context-help" id="toc-how-much-does-a-longer-context-help" class="nav-link" data-scroll-target="#how-much-does-a-longer-context-help">How much does a longer context help?</a></li>
+  <li><a href="#a-circuit-for-continuing-a-repeated-pattern" id="toc-a-circuit-for-continuing-a-repeated-pattern" class="nav-link" data-scroll-target="#a-circuit-for-continuing-a-repeated-pattern">A circuit for continuing a repeated pattern</a></li>
+  <li><a href="#grammar-facts-and-a-definition-of-learned" id="toc-grammar-facts-and-a-definition-of-learned" class="nav-link" data-scroll-target="#grammar-facts-and-a-definition-of-learned">Grammar, facts, and a definition of “learned”</a></li>
+  <li><a href="#knowing-a-fact-or-liking-an-answer" id="toc-knowing-a-fact-or-liking-an-answer" class="nav-link" data-scroll-target="#knowing-a-fact-or-liking-an-answer">Knowing a fact, or liking an answer?</a></li>
+  <li><a href="#an-answer-can-be-right-wrong-and-right-again" id="toc-an-answer-can-be-right-wrong-and-right-again" class="nav-link" data-scroll-target="#an-answer-can-be-right-wrong-and-right-again">An answer can be right, wrong, and right again</a></li>
+  <li><a href="#why-are-the-apples-still-missing" id="toc-why-are-the-apples-still-missing" class="nav-link" data-scroll-target="#why-are-the-apples-still-missing">Why are the apples still missing?</a>
+  <ul class="collapse">
+  <li><a href="#copying-is-often-a-good-prediction" id="toc-copying-is-often-a-good-prediction" class="nav-link" data-scroll-target="#copying-is-often-a-good-prediction">Copying is often a good prediction</a></li>
+  <li><a href="#other-ways-of-being-systematically-wrong" id="toc-other-ways-of-being-systematically-wrong" class="nav-link" data-scroll-target="#other-ways-of-being-systematically-wrong">Other ways of being systematically wrong</a></li>
+  </ul></li>
+  <li><a href="#six-billion-tokens-is-not-six-billion-arithmetic-examples" id="toc-six-billion-tokens-is-not-six-billion-arithmetic-examples" class="nav-link" data-scroll-target="#six-billion-tokens-is-not-six-billion-arithmetic-examples">Six billion tokens is not six billion arithmetic examples</a></li>
+  <li><a href="#very-large-activations-in-a-well-behaved-run" id="toc-very-large-activations-in-a-well-behaved-run" class="nav-link" data-scroll-target="#very-large-activations-in-a-well-behaved-run">Very large activations in a well-behaved run</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>At the end of training, the model could continue “Once upon a time, in a small village by the sea,” with a perfectly serviceable story about two curious animals named Max and Lily. It could also complete the following prompt:</p>
+<blockquote class="blockquote">
+<p>Tom has 5 apples. Tom buys 3 more apples. Now Tom has</p>
+</blockquote>
+<p>with:</p>
+<blockquote class="blockquote">
+<p>5 apples.</p>
+</blockquote>
+<p>The grammar is fine. The apples are less well accounted for.</p>
+<p>In <a href="../../notes/small_llm/part1.html">Part I</a>, I described training this model from scratch: 522 million parameters, 6 billion token presentations, and about sixteen hours on two GPUs. The main concern was how to choose the data, model size and training schedule. Here I want to understand what happened during the run. Did the model first learn grammar, then acquire facts, then begin to manipulate them? When did it start using its context? And why did elementary arithmetic remain so poor while the average prediction loss kept improving?</p>
+<p>To investigate these questions, I saved checkpoints densely at the beginning and then at regular intervals. There are 59 snapshots, including initialization and the final model. Each optimizer step processes 524,288 tokens, so step 100 already corresponds to about 52 million tokens. “Early in training” is a relative term.</p>
+<p>There is an immediate difficulty: a decreasing average loss need not mean that every behavior improves. If a class of examples accounts for a fraction <span class="math inline">\(\varepsilon\)</span> of the evaluation distribution, one can write</p>
+<p><span class="math display">\[
+\mathcal L=(1-\varepsilon)\mathcal L_{\rm common}
++\varepsilon\mathcal L_{\rm rare}.
+\]</span></p>
+<p>When <span class="math inline">\(\varepsilon\)</span> is small, a modest improvement on common examples can compensate for a large deterioration on the rare ones. There is nothing in maximum likelihood that assigns extra importance to an arithmetic error merely because it looks embarrassing to a human reader. To see what is being learned, we need to resolve the average into more informative measurements.</p>
+<section id="before-the-model-pays-much-attention-to-the-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="before-the-model-pays-much-attention-to-the-prompt">Before the model pays much attention to the prompt</h2>
+<p>Consider first a predictor that ignores its context and simply uses the frequency of each token in the training corpus. If <span class="math inline">\(q_1(x)\)</span> is this empirical <em>unigram</em> distribution, it predicts</p>
+<p><span class="math display">\[
+p(x_t\mid x_{&lt;t})=q_1(x_t).
+\]</span></p>
+<p>Such a model has no grammar, but it already knows that spaces and common word pieces are more likely than unusual symbols. A <em>bigram</em> predictor adds one token of context,</p>
+<p><span class="math display">\[
+p(x_t\mid x_{&lt;t})=q_2(x_t\mid x_{t-1}).
+\]</span></p>
+<p>It can learn frequent adjacent pairs, but cannot distinguish two contexts that end in the same token. These are useful reference points for the first few optimizer steps.</p>
+<p>I estimated unigram and bigram tables from 200M training tokens, and evaluated them on a small, fixed collection of validation windows. A uniform predictor over the model vocabulary has a loss of about <span class="math inline">\(10.82\)</span> nats per token. The unigram model reduces this to <span class="math inline">\(7.63\)</span>. An interpolated bigram model, combining conditional counts with the unigram distribution to handle rare or unseen pairs, reaches <span class="math inline">\(5.62\)</span>. The interpolation weight was selected on these same validation windows, so the last number is a convenient local baseline rather than a separately tuned test-set result.</p>
+<p>The transformer passed the unigram baseline by step 16, after about 8M tokens. It passed the bigram baseline around step 64, after about 34M tokens.</p>
+<div id="fig-early" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Early loss crosses unigram and bigram baselines; distributional distances first decrease and then increase.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-early-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E07/early_stages.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Early loss crosses unigram and bigram baselines; distributional distances first decrease and then increase.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-early-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The first stages of training compared with simple token-frequency models. The transformer initially moves closer to unigram and bigram distributions, then departs from both as its validation loss continues to fall. These diagnostics use a smaller validation subset than the main loss evaluation.
+</figcaption>
+</figure>
+</div>
+<p>Crossing a baseline loss does not mean that the transformer implements that baseline. Two very different predictive distributions can have the same cross-entropy. To look more directly at its predictions, I also measured quantities of the form</p>
+<p><span class="math display">\[
+\mathbb E_c\left[
+\operatorname{KL}\big(q(\cdot\mid c)\,\|\,p_\theta(\cdot\mid c)\big)
+\right],
+\]</span></p>
+<p>where <span class="math inline">\(q\)</span> is the unigram distribution, or the empirical conditional bigram distribution, and the average is over validation contexts. The bigram table used for this distance is the empirical table itself; the interpolated version above is used for the loss baseline.</p>
+<p>The distance to the unigram distribution was smallest near step 16. The distance to the bigram distribution was smallest near step 32, after about 17M tokens. Both distances then increased, while the prediction loss continued to decrease. The model was moving away from these simple distributions in a direction that made it a better predictor.</p>
+<p>The minimum distances were not zero. The network’s predictions pass through regions resembling these coarse statistics, with several kinds of learning occurring at once. This is more approximate than literally implementing one model and then the other, but the distances give us a way to measure the resemblance.</p>
+<p>The generated text makes the early limitation rather visible. At step 16, the prompts “The capital of Australia is”, “Black holes are regions of spacetime where”, and “Once upon a time, in a small village by the sea,” all led, after slightly different first words, to the fragment</p>
+<blockquote class="blockquote">
+<p>How to create better than a unique.</p>
+</blockquote>
+<p>The samples used the same random seed for each prompt, with temperature <span class="math inline">\(0.8\)</span> and top-<span class="math inline">\(50\)</span> sampling. When predictive distributions are nearly insensitive to the prompt, using the same random numbers exposes that similarity: unrelated beginnings can produce nearly identical continuations. These samples are an illustration, not a formal test of complete independence from context. By roughly steps 128 to 256, the continuations had become much more specific to their prompts, even when what they said was nonsense.</p>
+</section>
+<section id="how-much-does-a-longer-context-help" class="level2">
+<h2 class="anchored" data-anchor-id="how-much-does-a-longer-context-help">How much does a longer context help?</h2>
+<p>The simplest way to measure context use is to compare prediction loss near the beginning and near the end of a text window. Let</p>
+<p><span class="math display">\[
+\ell_\theta(j)
+=\mathbb E\left[-\log p_\theta(X_{j+1}\mid X_0,\ldots,X_j)\right].
+\]</span></p>
+<p>At position <span class="math inline">\(j=0\)</span>, the model has one token of context. At position <span class="math inline">\(j=500\)</span>, it has 501. If it can exploit information from earlier in the passage, one expects its loss to be lower at the later positions.</p>
+<p>For an ideal predictor, there is a useful information-theoretic version of this statement. Suppose <span class="math inline">\(R\)</span> is the recent context, <span class="math inline">\(Z\)</span> the additional earlier context, and <span class="math inline">\(Y\)</span> the next token. Then the reduction in optimal expected log loss is</p>
+<p><span class="math display">\[
+H(Y\mid R)-H(Y\mid R,Z)=I(Y;Z\mid R)\geq0.
+\]</span></p>
+<p>The conditional mutual information measures how much the earlier text tells us about the next token beyond what is already in the recent text. Our measured position difference is not exactly this quantity: the model is imperfect, and different positions correspond to different targets. But it gives a natural way to think about the benefit we are trying to detect. A model that ignores <span class="math inline">\(Z\)</span> cannot realize that benefit.</p>
+<p>I evaluated all checkpoints on the same 1,024 non-overlapping validation windows, recording the loss separately at every predicted position. Averaging each curve recovers the usual validation loss. At the 47 checkpoints with a matching training-time evaluation, the binned curves agreed with the logged values to within <span class="math inline">\(0.00032\)</span> nats. This check was useful: an off-by-one error in the context length would otherwise be easy to overlook.</p>
+<div id="fig-position" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Loss decreases with context length; training improves most positions, but temporarily worsens the one-token-context prediction.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-position-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E07/position_loss.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Loss decreases with context length; training improves most positions, but temporarily worsens the one-token-context prediction.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-position-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Validation loss as a function of position in the context window, at successive checkpoints. Most of the eventual context benefit is obtained within the first few hundred tokens. The earliest position temporarily becomes worse while later positions improve.
+</figcaption>
+</figure>
+</div>
+<p>Two features of these curves are interesting. First, the benefit of context becomes much more pronounced early in training. The loss difference between positions near 50 and 500 rises from about <span class="math inline">\(0.11\)</span> nats at step 128 to <span class="math inline">\(0.34\)</span> at step 250. At the final checkpoint it is <span class="math inline">\(0.36\)</span>. Much of this particular context advantage therefore appears between roughly 67M and 131M training tokens. Both positions continue to improve afterwards, so the nearly constant difference does not mean that learning has stopped.</p>
+<p>Second, the very first position gets worse during part of this transition. Its loss rises from <span class="math inline">\(6.19\)</span> at step 32 to <span class="math inline">\(6.43\)</span> at step 64 and <span class="math inline">\(6.53\)</span> at step 128, even as the average loss falls quickly. The same parameters must serve short and long contexts. Training mostly rewards them for predicting positions with substantial context, because there are many more such positions in each window. Better average performance can come with a temporary cost when only one preceding token is available.</p>
+<p>The curves show a redistribution of predictive performance, although they do not identify its mechanism. Each individual position averages only 1,024 targets, with a standard error around <span class="math inline">\(0.08\)</span> nats within a curve. Comparisons across checkpoints reuse the same targets and are more precise, but small wiggles along a single curve should not be overinterpreted.</p>
+<p>Most of the context benefit in this evaluation is obtained by about 500 tokens. The curve is comparatively flat between positions 500 and 2,047. This concerns average next-token prediction on these windows. It does not establish that the model can retrieve an arbitrary fact from any location in a 2,048-token context.</p>
+</section>
+<section id="a-circuit-for-continuing-a-repeated-pattern" class="level2">
+<h2 class="anchored" data-anchor-id="a-circuit-for-continuing-a-repeated-pattern">A circuit for continuing a repeated pattern</h2>
+<p>What could let a transformer exploit a longer context? A particularly simple possibility is to recognize that a token has appeared before and copy what followed it. Consider</p>
+<p><span class="math display">\[
+\cdots\; A\;B\;\cdots\;A\;?
+\]</span></p>
+<p>If the earlier occurrence of <span class="math inline">\(A\)</span> was followed by <span class="math inline">\(B\)</span>, then <span class="math inline">\(B\)</span> is a reasonable candidate after the later occurrence. This rule requires no prior knowledge of what <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> mean. It can be applied to arbitrary tokens within the current sequence.</p>
+<p>Attention heads exhibiting this pattern are commonly called <em>induction heads</em> <span class="citation" data-cites="Olsson2022">(<a href="#ref-Olsson2022" role="doc-biblioref">Olsson et al. 2022</a>)</span>. The target of the attention is important: at the second <span class="math inline">\(A\)</span>, the head should attend to the earlier <span class="math inline">\(B\)</span>, not merely to the earlier <span class="math inline">\(A\)</span>. Attention to a matching token alone does not retrieve its successor.</p>
+<p>One way to implement this uses two layers. An earlier head attends to the previous token, making information about <span class="math inline">\(A\)</span> available in the representation at the position of <span class="math inline">\(B\)</span>. A later head can then compare the current <span class="math inline">\(A\)</span> with the information stored in that position’s key, and retrieve a value containing information about <span class="math inline">\(B\)</span>. In a schematic notation,</p>
+<p><span class="math display">\[
+\underbrace{A\;B}_{\text{store information about }A\text{ at }B}
+\quad\cdots\quad
+\underbrace{A}_{\text{match }A\text{ and retrieve }B}.
+\]</span></p>
+<p>This is a plausible mechanism for using an example in the prompt without changing the model parameters. It is also sufficiently specific to measure.</p>
+<p>I constructed 32 sequences of the form <span class="math inline">\([\mathrm{EOT},R,R]\)</span>, where <span class="math inline">\(R\)</span> consists of 100 distinct tokens drawn uniformly from the GPT-2 vocabulary. For each attention head, the induction score is the mean attention weight placed on the successor of the matching token in the first copy, while processing the second copy. A separate score measures attention to the immediately preceding token. These random sequences are deliberately unlike ordinary prose: familiar semantic associations should not explain successful continuation.</p>
+<div id="fig-induction" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Previous-token attention strengthens before induction attention, whose rise coincides with increased contextual prediction benefit.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-induction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E07/induction.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Previous-token attention strengthens before induction attention, whose rise coincides with increased contextual prediction benefit.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-induction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Previous-token and induction attention patterns during training, together with the benefit of context. The shaded interval runs from 67M to 131M tokens. Previous-token attention strengthens before strong induction attention. Layers in the heat map are numbered 1–20.
+</figcaption>
+</figure>
+</div>
+<p>At step 128, the strongest previous-token score was about <span class="math inline">\(0.29\)</span>, while the strongest induction score was still only <span class="math inline">\(0.01\)</span>. At step 250, these scores were about <span class="math inline">\(0.67\)</span> and <span class="math inline">\(0.72\)</span>. Strong induction patterns appeared in the middle layers. At the end of training, the best induction score was about <span class="math inline">\(0.80\)</span>.</p>
+<p>The model’s predictions on the repeated sequence also changed substantially. At the final checkpoint, the average loss was about <span class="math inline">\(12.8\)</span> nats on the first copy and <span class="math inline">\(0.88\)</span> on the second. The first copy is sampled from an unnatural, nearly uniform token distribution; a language model that prefers ordinary text can do worse on it than a uniform predictor. The second copy is highly predictable from the first. The model has learned to exploit this distinction.</p>
+<p>The increase in induction attention and the increase in the real-text context advantage occur in the same checkpoint interval. This agrees with the mechanism studied by <span class="citation" data-cites="Olsson2022">Olsson et al. (<a href="#ref-Olsson2022" role="doc-biblioref">2022</a>)</span>, and it is much more informative than observing that the loss has gone down. But attention weights alone do not establish how much a head contributes to the final prediction. Values, output projections and the rest of the network also matter. I have not ablated these heads or intervened on the proposed information pathway in this model. The evidence here is temporal and behavioral; a causal attribution would require those additional experiments.</p>
+<p>Nor was there a dramatic loss spike marking the transition. Training showed a slower period around steps 30 to 50, followed by faster improvement around steps 60 to 100. The induction measurements bracket their strongest change between steps 128 and 250. Calling all this a precisely located “phase transition” would give the checkpoint spacing more resolution than it has.</p>
+</section>
+<section id="grammar-facts-and-a-definition-of-learned" class="level2">
+<h2 class="anchored" data-anchor-id="grammar-facts-and-a-definition-of-learned">Grammar, facts, and a definition of “learned”</h2>
+<p>The next question is whether different kinds of predictions improve at different times. To investigate it, I froze a collection of 6,577 items divided into 28 fields, and evaluated exactly the same items at each checkpoint.</p>
+<p>The grammar probes use 13 families from BLiMP <span class="citation" data-cites="Warstadt2020">(<a href="#ref-Warstadt2020" role="doc-biblioref">Warstadt et al. 2020</a>)</span>, which compares a grammatical sentence with a minimally altered ungrammatical alternative. Knowledge probes use five groups of relations from LAMA T-REx <span class="citation" data-cites="Petroni2019">(<a href="#ref-Petroni2019" role="doc-biblioref">Petroni et al. 2019</a>)</span>, such as locations and languages, with candidate answers restricted to single GPT-2 tokens. SciQ contributes science questions <span class="citation" data-cites="Welbl2017">(<a href="#ref-Welbl2017" role="doc-biblioref">Welbl, Liu, and Gardner 2017</a>)</span>. I also generated small arithmetic, comparison, counting and sequence tasks. Finally, LAMBADA asks for the last word of a passage whose broader context is intended to be useful <span class="citation" data-cites="Paperno2016">(<a href="#ref-Paperno2016" role="doc-biblioref">Paperno et al. 2016</a>)</span>.</p>
+<p>For example, one grammar item compares “The grandmothers of Vanessa do approach Maria” with the same sentence using “does”. The subject is plural even though the intervening name is singular. A geography item asks for a continuation of “Damascus is the capital of”, choosing among “Peru”, “Karachi”, “Judah” and “Syria”. A sequence item asks what follows “21, 22, 23,”. These are small, precisely specified tasks. Their construction will matter when interpreting how much the scores tell us.</p>
+<p>Before plotting anything, we need to decide what the vertical axis means. For a prompt <span class="math inline">\(c\)</span> and candidate answers <span class="math inline">\(a_1,\ldots,a_K\)</span>, let</p>
+<p><span class="math display">\[
+s_j=\log p_\theta(a_j\mid c),
+\qquad
+\pi_j=\frac{\exp(s_j)}{\sum_{u=1}^K\exp(s_u)}.
+\]</span></p>
+<p>For a multi-token answer, <span class="math inline">\(s_j\)</span> sums the token log probabilities. For a grammar pair, it is the log probability of the entire candidate sentence. The quantity <span class="math inline">\(\pi_j\)</span> compares the candidates with one another. It is <strong>not</strong> the probability that the model will freely generate answer <span class="math inline">\(a_j\)</span>: the normalization discards every continuation outside the supplied list. It is also not automatically a calibrated probability that the answer is true.</p>
+<p>I use the mass on the correct option as a continuous score, and rescale it so that equal mass on all <span class="math inline">\(K\)</span> options corresponds to zero:</p>
+<p><span class="math display">\[
+S=\frac{\pi_{\rm correct}-1/K}{1-1/K}.
+\]</span></p>
+<p>The score is one when all the candidate mass is on the correct option, and can be negative. For example, with four options, <span class="math inline">\(\pi_{\rm correct}=0.10\)</span> gives <span class="math inline">\(S=-0.20\)</span>. This rescaling makes a two-sentence grammar comparison and a four-answer science question easier to display together, although it does not make their difficulty or interpretation identical. LAMBADA is treated separately: its score is the probability of the held-out final word, which may span several tokens, without a fixed candidate list.</p>
+<div id="fig-fields" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Grammar, factual knowledge, and skill probe trajectories show substantially different learning behavior.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fields-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E07/fields.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Grammar, factual knowledge, and skill probe trajectories show substantially different learning behavior.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fields-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Probe scores across training. Many grammatical contrasts improve early; factual fields continue to improve over a longer period. Several arithmetic and counting probes remain close to, or below, their chance-normalized baseline. Bold curves use a five-checkpoint running mean. LAMBADA uses final-word probability; the other curves use normalized candidate scores. The vertical line marks the start of learning-rate decay.
+</figcaption>
+</figure>
+</div>
+<p>The broad pattern is that many grammatical contrasts improve very early, whereas factual scores keep rising over more of the run. This seems plausible: grammatical regularities recur across many sentences, while a particular fact may be supported by a much smaller set of passages. But there is substantial overlap. Some facts improve while some grammatical distinctions are still weak, and the difficult island-effect probes remain slow. The data do not give a clean sequence in which grammar is completed before knowledge begins.</p>
+<p>To put dates on the curves, I measured the last upward crossing of half of each field’s final score, after a five-checkpoint running-median smoothing. Taking the <em>last</em> crossing avoids assigning an early learning time to a transient improvement that disappears. Fields with a final score below <span class="math inline">\(0.15\)</span> were excluded from this timing comparison. In the analysis files they are labelled “not learned”; that is an operational threshold for this plot, not a claim that the model possesses no relevant information.</p>
+<div id="fig-order" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Estimated half-final-score crossing times overlap across fields, with many grammar fields early and some difficult fields much later.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-order-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E07/fields_order.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Estimated half-final-score crossing times overlap across fields, with many grammar fields early and some difficult fields much later.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-order-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Time to reach half of the eventual score for fields that exceed the final-score threshold. Intervals come from resampling probe items, not from repeating training with new seeds. This is a relative progress measure, so half of a low final score need not represent strong absolute performance.
+</figcaption>
+</figure>
+</div>
+<p>Some grammatical fields reached this halfway point after only about 4M tokens; many others did so between a few tens and a few hundreds of millions. The knowledge fields crossed it between roughly 70M and 210M tokens. Sequence completion reached it near 430M, and LAMBADA near 510M. Island effects were much later, around 2.9B tokens.</p>
+<p>The intervals in this figure are 90% intervals from bootstrapping the items within each field. They quantify sensitivity to which questions are included. All curves come from one training trajectory, so they do not quantify variation across independently trained models. Also, “half learned” is a slightly treacherous expression: half of a weak final score can be reached quickly. The plot is best read as a comparison of progress along the observed trajectories.</p>
+</section>
+<section id="knowing-a-fact-or-liking-an-answer" class="level2">
+<h2 class="anchored" data-anchor-id="knowing-a-fact-or-liking-an-answer">Knowing a fact, or liking an answer?</h2>
+<p>Suppose a model completes many language questions with “English”, and many birthplace questions with “London”. If those strings occur frequently among the correct answers, the model can achieve a respectable score without using the subject of the question very effectively. A multiple-choice score combines information about the relation being queried with preferences for the answer strings themselves.</p>
+<p>This is a known difficulty in evaluating language models through candidate completions <span class="citation" data-cites="Holtzman2021">(<a href="#ref-Holtzman2021" role="doc-biblioref">Holtzman et al. 2021</a>)</span>. To examine it here, I scored each answer both with the full prompt and with a reduced prompt containing only the relation’s wording, such as “was born in”. The adjusted score is</p>
+<p><span class="math display">\[
+s_j^{\rm adj}
+=\log p_\theta(a_j\mid c)
+-\log p_\theta(a_j\mid c_0)
+=\log\frac{p_\theta(a_j\mid c)}{p_\theta(a_j\mid c_0)},
+\]</span></p>
+<p>where <span class="math inline">\(c_0\)</span> is the reduced prompt. The candidate softmax is then applied to these adjusted scores. An answer scores well when adding the full question increases its likelihood relative to that baseline. An answer that was already highly likely after the relation words receives less credit merely for remaining likely.</p>
+<p>The analysis calls this “calibration”, but the term should not suggest that the resulting numbers are calibrated probabilities of truth. The choice of <span class="math inline">\(c_0\)</span> matters, and subtracting a language-model score can remove useful information as well as a nuisance preference. It is a diagnostic for sensitivity to answer priors, not a universally correct replacement for the original score.</p>
+<div id="fig-calibration" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Answer-prior adjustment lowers several knowledge scores, leaves others similar, and improves the number-comparison score.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-calibration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E07/fields_calibrated.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Answer-prior adjustment lowers several knowledge scores, leaves others similar, and improves the number-comparison score.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-calibration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Raw and answer-prior-adjusted probe scores. Some factual fields lose a substantial part of their apparent performance after the relation-only score is subtracted; others change little. The number-comparison probe changes from below to above its normalized chance baseline.
+</figcaption>
+</figure>
+</div>
+<p>The effect is quite uneven. Averaging over the last five checkpoints, the normalized language score falls from <span class="math inline">\(0.67\)</span> to <span class="math inline">\(0.45\)</span>, birthplace and death-place questions from <span class="math inline">\(0.54\)</span> to <span class="math inline">\(0.33\)</span>, and organizations and media from <span class="math inline">\(0.51\)</span> to <span class="math inline">\(0.25\)</span>. Concepts stay near <span class="math inline">\(0.75\)</span>, geography changes from <span class="math inline">\(0.57\)</span> to <span class="math inline">\(0.52\)</span>, and SciQ stays near <span class="math inline">\(0.57\)</span>. Some of the raw factual performance is therefore sensitive to a preference for common answer strings, while some survives this correction quite well.</p>
+<p>Number comparison is an especially useful example. Its raw normalized score is about <span class="math inline">\(-0.16\)</span>, but the adjusted score is about <span class="math inline">\(0.12\)</span>. The original score was concealing some usable information. This also cautions against interpreting a below-chance score as a direct measurement of the absence of a skill: the way a question is posed and scored can interact with the model’s other preferences.</p>
+</section>
+<section id="an-answer-can-be-right-wrong-and-right-again" class="level2">
+<h2 class="anchored" data-anchor-id="an-answer-can-be-right-wrong-and-right-again">An answer can be right, wrong, and right again</h2>
+<p>A second difficulty appears when following individual items through training. Let <span class="math inline">\(A_t\)</span> be the set of questions answered correctly at checkpoint <span class="math inline">\(t\)</span>, and let <span class="math inline">\(n\)</span> be the total number of questions. The change in accuracy is</p>
+<p><span class="math display">\[
+\frac{|A_{t+1}|-|A_t|}{n}
+=\frac{|A_{t+1}\setminus A_t|-|A_t\setminus A_{t+1}|}{n}.
+\]</span></p>
+<p>It records new correct answers minus answers that ceased to be correct. The fraction of items whose correctness changes is instead</p>
+<p><span class="math display">\[
+\frac{|A_{t+1}\mathbin{\triangle}A_t|}{n}
+=\frac{|A_{t+1}\setminus A_t|+|A_t\setminus A_{t+1}|}{n}.
+\]</span></p>
+<p>This second quantity can be large even when the first is almost zero. An accuracy curve that looks flat can hide substantial movement in both directions.</p>
+<p>During the constant-learning-rate phase, about 11–17% of probe items changed correctness between checkpoints separated by 250 steps, or 131M tokens. Near the end of the learning-rate decay, this fell to about 2–5%.</p>
+<div id="fig-churn" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Item-level correctness changes remain substantial during constant-rate training and decrease during learning-rate decay.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-churn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E07/fields_churn.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Item-level correctness changes remain substantial during constant-rate training and decrease during learning-rate decay.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-churn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: The fraction of probe items whose correctness changes between successive checkpoints. Frequent reversals during constant-rate training become less common as the learning rate decays. This measures crossings of the decision boundary, not necessarily large changes in confidence.
+</figcaption>
+</figure>
+</div>
+<p>Some of these changes may be small score differences crossing zero. A barely preferred correct answer can become a barely preferred incorrect answer without a dramatic change in the predictive distribution. This is one reason for plotting continuous candidate mass as well as hard accuracy. The observation still makes a literal picture of facts being permanently added to a growing internal database rather misleading for this run.</p>
+<p>The generated samples offer a memorable, if noisier, illustration. At step 4,000, the prompt “The capital of Australia is” produced a continuation containing “Canberra”, albeit embedded in a confused paragraph. At the final checkpoint, it began:</p>
+<blockquote class="blockquote">
+<p>located in Melbourne. How fast are bees? The sting of a bee is not quick.</p>
+</blockquote>
+<p>A single sampled continuation does not prove that the model acquired and then forgot this fact. To establish that for a particular item, one should compare its candidate probabilities or repeated samples across checkpoints. What the example does show is why a fluent, once-correct completion is weak evidence of reliable knowledge. The fixed-item measurements make the broader instability visible without relying on one entertaining sample.</p>
+</section>
+<section id="why-are-the-apples-still-missing" class="level2">
+<h2 class="anchored" data-anchor-id="why-are-the-apples-still-missing">Why are the apples still missing?</h2>
+<p>Several generated skill probes were much worse than the language and knowledge results might lead one to expect. One-digit addition was only slightly above chance. Two-digit addition and counting were close to chance. The word-problem probe was below chance. Meanwhile, simple sequence completion was almost perfect by hard accuracy.</p>
+<p>Perhaps the model did not understand the requested format. Since it was trained as a continuation model, a bare question might be an awkward way to elicit an answer. I therefore repeated the final-checkpoint evaluation with three solved examples before each question.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Task</th>
+<th style="text-align: right;">No examples</th>
+<th style="text-align: right;">Three examples</th>
+<th style="text-align: right;">Random-choice accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>One-digit addition</td>
+<td style="text-align: right;">0.310</td>
+<td style="text-align: right;">0.340</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="even">
+<td>Two-digit addition</td>
+<td style="text-align: right;">0.223</td>
+<td style="text-align: right;">0.217</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="odd">
+<td>Multiplication, operands 2–12</td>
+<td style="text-align: right;">0.388</td>
+<td style="text-align: right;">0.298</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="even">
+<td>Counting</td>
+<td style="text-align: right;">0.296</td>
+<td style="text-align: right;">0.204</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="odd">
+<td>Word problems</td>
+<td style="text-align: right;">0.110</td>
+<td style="text-align: right;">0.123</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="even">
+<td>Sequence completion</td>
+<td style="text-align: right;">0.996</td>
+<td style="text-align: right;">0.991</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr class="odd">
+<td>Number comparison</td>
+<td style="text-align: right;">0.377</td>
+<td style="text-align: right;">0.560</td>
+<td style="text-align: right;">0.50</td>
+</tr>
+</tbody>
+</table>
+<p>These are hard accuracies at the final checkpoint, not the smoothed probability scores in the earlier figures. This distinction explains, for example, why sequence accuracy is almost one while its normalized probability score is only about <span class="math inline">\(0.66\)</span>: the correct option can win almost every time without receiving all the candidate mass.</p>
+<p>The three examples help number comparison, but do little for addition or word problems, and hurt several other tasks. This weakens the explanation that the failures are merely caused by omitting a demonstration of the format. It does not rule out every possible prompt, a longer worked solution, or a differently trained model. The narrower conclusion is already interesting: these skills are not reliably elicited by the tested zero-shot and three-shot formats, even though other probes work well.</p>
+<section id="copying-is-often-a-good-prediction" class="level3">
+<h3 class="anchored" data-anchor-id="copying-is-often-a-good-prediction">Copying is often a good prediction</h3>
+<p>Looking at the wrong answers is more revealing than looking at accuracy alone. On the word-problem set, 211 of the 267 wrong answers copied a number appearing in the prompt. Across all items, about 70% of the model’s selected answers were prompt numbers. Randomly choosing among the available options would do this only about 33% of the time.</p>
+<p>This makes the apple example less mysterious. The continuation “Tom has 5 apples” repeats a locally plausible phrase and a recently mentioned number. Such repetition is often useful in ordinary text. In a word problem, however, the correct operation may require producing a new number that has not appeared anywhere in the context.</p>
+<p>One can make the conflict explicit. Suppose a prompt contains the quantities <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, and asks for <span class="math inline">\(a+b\)</span>. A strategy that strongly favors numbers already present increases the relative scores of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. Whenever the correct sum differs from both, this moves probability away from the answer. If the candidate list contains copied numbers as distractors, more consistent use of the copying strategy can reduce accuracy below random choice.</p>
+<p>The candidate construction matters here. Not every item contains the same number of copyable distractors. The relevant baseline is the measured average share of available options that copy a prompt number, about <span class="math inline">\(0.327\)</span>, rather than an assumed one half. A diagnostic of a shortcut needs to compare against the shortcuts the test itself makes available.</p>
+<div id="fig-heuristics" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Training strengthens several systematic answer-selection heuristics, including copying numbers from word-problem prompts.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-heuristics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E07/heuristics.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Training strengthens several systematic answer-selection heuristics, including copying numbers from word-problem prompts.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-heuristics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: How selected answers change during training. Bold lines use a five-checkpoint running mean; dashed baselines are the shares expected from random choice within each candidate set. Numeric options are classified in order as correct, a copied prompt number, a near miss within two of the answer, or other. The comparison panel records mention order. The shaded interval is 67M–131M training tokens.
+</figcaption>
+</figure>
+</div>
+<p>The copying share rises from about <span class="math inline">\(0.42\)</span> at step 32 to <span class="math inline">\(0.61\)</span> at step 128 and <span class="math inline">\(0.71\)</span> at step 250. Around 1B training tokens it reaches roughly <span class="math inline">\(0.86\)</span>–<span class="math inline">\(0.89\)</span>, before falling to <span class="math inline">\(0.70\)</span> by the end. Thus the model can become more competent at exploiting repeated material while becoming less successful on a task where repeating the material is the wrong operation.</p>
+<p>The timing overlaps the development of induction attention and the larger context advantage. It is tempting to say that induction heads cause the arithmetic failures. These measurements do not establish that. Several parts of the network change together, and the word-problem shortcut is measured through final predictions, not through an intervention on a head. A direct test would alter the relevant attention pathway and examine both copying and arithmetic under that intervention.</p>
+</section>
+<section id="other-ways-of-being-systematically-wrong" class="level3">
+<h3 class="anchored" data-anchor-id="other-ways-of-being-systematically-wrong">Other ways of being systematically wrong</h3>
+<p>For number comparison, the final model selected the first-mentioned number in 229 of 300 items. Earlier in training, that preference was even stronger. However, the larger number comes first in exactly half the questions. A pure “choose the first number” rule would score 50%, so position preference alone cannot explain an accuracy of 38%. There is also a tendency toward the smaller number, consistent with preferences for particular number strings. The improvement after answer-prior adjustment, and after three demonstrations, is useful evidence that the raw score combines several effects.</p>
+<p>On one-digit addition, most errors were within one or two of the correct answer. That sounds like partial arithmetic competence until one inspects the options: the distractors were deliberately designed to include near misses. In fact, 240 of the 300 incorrect options are already within two of the correct answer! A random choice among the distractors would therefore be nearly right 80% of the time. The error distribution may contain information, but the bare statement “most errors are nearly right” says considerably less than it first appears to.</p>
+<p>Counting had an even more obvious answer preference: the model selected “three” or “eight” in 148 of 240 cases. Free continuation did not rescue the task. Given “cat cat cat cat. The word cat appears”, a greedy completion began “in the Bible in the form of a”. Given “7 + 5 =”, it produced “10”. These are failures to continue the requested computation, not merely mistakes in generating the letter of a multiple-choice answer.</p>
+<p>The collection of errors suggests a model that has learned useful regularities of text, including repetition and common answer forms, but has not made the tested exact operations reliable. The success on sequence completion is a useful control against declaring the entire probing procedure broken. It also shows how misleading it would be to arrange all these tasks on a single scale of what seems easy to us.</p>
+</section>
+</section>
+<section id="six-billion-tokens-is-not-six-billion-arithmetic-examples" class="level2">
+<h2 class="anchored" data-anchor-id="six-billion-tokens-is-not-six-billion-arithmetic-examples">Six billion tokens is not six billion arithmetic examples</h2>
+<p>Perhaps there was simply too little relevant material in the training data. To get an order-of-magnitude estimate, I scanned four of the 153 ClimbMix shards, containing about 0.22B tokens, for a few narrowly defined text patterns. Scaling their rates to 6B token presentations gave the following estimates.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 36%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Text pattern</th>
+<th style="text-align: right;">Matches per million tokens</th>
+<th style="text-align: right;">Estimated presentations in 6B tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>One-digit addition with an answer, such as <code>3 + 4 = 7</code></td>
+<td style="text-align: right;">1.04</td>
+<td style="text-align: right;">6,300</td>
+</tr>
+<tr class="even">
+<td>Two-digit addition with an answer</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">1,000</td>
+</tr>
+<tr class="odd">
+<td>Multiplication with an answer</td>
+<td style="text-align: right;">1.23</td>
+<td style="text-align: right;">7,400</td>
+</tr>
+<tr class="even">
+<td>Explicit comparison, such as “71 is greater than 23”</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">550</td>
+</tr>
+<tr class="odd">
+<td>Narrow word-problem patterns</td>
+<td style="text-align: right;">0.03–0.09</td>
+<td style="text-align: right;">200–500</td>
+</tr>
+<tr class="even">
+<td>“appears N times”</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">500</td>
+</tr>
+<tr class="odd">
+<td>“Monday, Tuesday, Wednesday”</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">300</td>
+</tr>
+<tr class="even">
+<td>“was born in”</td>
+<td style="text-align: right;">4.49</td>
+<td style="text-align: right;">27,000</td>
+</tr>
+<tr class="odd">
+<td>“the capital of”</td>
+<td style="text-align: right;">1.30</td>
+<td style="text-align: right;">7,800</td>
+</tr>
+</tbody>
+</table>
+<p>These counts are rough diagnostics of surface forms. A regular expression can miss a worked solution phrased differently, and can also match a string that is not a valid solved example. Only four shards were scanned; the sparsest rows have substantial sampling uncertainty. Because training samples windows with replacement, the rightmost column estimates presentations under that sampling scheme, not distinct examples known to have been read.</p>
+<p>Even so, the scale is informative. Roughly 6,300 one-digit addition strings would amount to only about sixty presentations per ordered digit pair if spread evenly, which they certainly are not. About 1,000 two-digit addition strings must cover a space of 8,100 ordered pairs of two-digit positive integers. A large token count can hide rather sparse direct supervision for a specific operation.</p>
+<p>Rarity alone cannot explain the whole result. The particular weekday pattern counted here is rarer still, yet sequence completion works extremely well. Its success can draw on many other list and sequence formats that the narrow count misses. More generally, some tasks can reuse broadly useful continuation patterns, whereas others require an exact transformation. Counting strings does not tell us how effectively their information is shared across examples.</p>
+<p>The useful next step is an intervention on the training data. One could restart from the checkpoint before the final learning-rate decay and replace a small fraction of the remaining text, say 2%, with carefully generated arithmetic examples. A matched branch would retain the original data. Both would process the same total number of tokens with the same schedule. Held-out operand pairs and held-out phrasings would help distinguish transfer from memorizing the added templates, while the ordinary validation loss and factual probes would reveal any cost elsewhere.</p>
+<p>That experiment has not been run. The present observations motivate it, but do not tell us whether a small targeted mixture would suffice, whether a tokenizer change would help, or whether substantially longer training is needed. The saved checkpoint makes these questions experimentally accessible.</p>
+</section>
+<section id="very-large-activations-in-a-well-behaved-run" class="level2">
+<h2 class="anchored" data-anchor-id="very-large-activations-in-a-well-behaved-run">Very large activations in a well-behaved run</h2>
+<p>There was another feature of training that initially looked rather alarming. The largest absolute residual-stream activation grew from about 5 at initialization to more than 500,000 near the end. Yet the loss remained smooth and the run did not diverge.</p>
+<p>These are measurements on a small fixed diagnostic input, before the final normalization. They record the maximum over its tokens and hidden dimensions. A few hidden coordinates repeatedly account for the largest values; the effect is not a uniform rescaling of every entry. Related concentration in a small number of coordinates has been studied under the name <em>massive activations</em> <span class="citation" data-cites="Sun2024">(<a href="#ref-Sun2024" role="doc-biblioref">Sun et al. 2024</a>)</span>.</p>
+<div id="fig-activations" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Final-layer residual activation maxima grow to about 500,000, whereas RMS values grow to a few thousand; the final layer profile shows this growth concentrated deeper in the network.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-activations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E05/activations.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Final-layer residual activation maxima grow to about 500,000, whereas RMS values grow to a few thousand; the final layer profile shows this growth concentrated deeper in the network.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-activations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Residual activation measurements recorded during training. The final-layer maximum grows by several orders of magnitude, while the overall RMS grows much less. These are raw residual-stream statistics on the diagnostic input, before the final RMS normalization.
+</figcaption>
+</figure>
+</div>
+<p>RMS normalization explains why a large raw value need not produce an equally large value in the next normalized computation. For a vector <span class="math inline">\(r\in\mathbb R^h\)</span>, ignoring the small numerical regularizer,</p>
+<p><span class="math display">\[
+\operatorname{RMSNorm}(r)
+=\frac{r}{\sqrt{h^{-1}\sum_{j=1}^h r_j^2}}.
+\]</span></p>
+<p>If one coordinate dominates, with <span class="math inline">\(r_k=A\)</span> and <span class="math inline">\(|A|\)</span> much larger than the others, then its normalized value is approximately</p>
+<p><span class="math display">\[
+\frac{A}{|A|/\sqrt h}
+=\operatorname{sign}(A)\sqrt h.
+\]</span></p>
+<p>Increasing <span class="math inline">\(|A|\)</span> further hardly changes this normalized value. Here <span class="math inline">\(h=1280\)</span>, so <span class="math inline">\(\sqrt h\)</span> is about 36. Normalization therefore keeps the scale of the vector entering subsequent sublayers controlled even when the unnormalized residual is very large. The final output also passes through a normalization, and the logits are softly capped as described in Part I.</p>
+<p>This does not make the large coordinate irrelevant. It contributes to the denominator and changes the direction of the normalized vector. Indeed, if it dominates, it suppresses the other normalized coordinates. The calculation only shows why a plot of the raw maximum is insufficient evidence of numerical failure.</p>
+<p>I have not removed these coordinates or measured the resulting change in behavior, so their function in this model remains open. They might be useful, redundant, or a by-product of the training dynamics. Their coexistence with smooth optimization is an observation; an explanation of their role would require another intervention.</p>
+<p>I would start the next experiment with the apples. Keep the initialization of the continuation, the training budget and the schedule fixed; change a small, controlled part of the data; and see whether the model learns to add the quantities on examples it has not been shown. We now have enough measurements to tell whether a better answer comes from a more reliable operation, a weaker copying preference, or merely another fortunate choice of words.</p>
+</section>
+<section id="references" class="level2">
+
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Holtzman2021" class="csl-entry" role="listitem">
+Holtzman, Ari, Peter West, Vered Shwartz, Yejin Choi, and Luke Zettlemoyer. 2021. <span>“Surface Form Competition: Why the Highest Probability Answer Isn’t Always Right.”</span> In <em>Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing</em>, 7038–51. Association for Computational Linguistics. doi:<a href="https://doi.org/10.18653/v1/2021.emnlp-main.564">10.18653/v1/2021.emnlp-main.564</a>.
+</div>
+<div id="ref-Olsson2022" class="csl-entry" role="listitem">
+Olsson, Catherine et al. 2022. <span>“In-Context Learning and Induction Heads.”</span> arXiv preprint arXiv:2209.11895. <a href="https://arxiv.org/abs/2209.11895">https://arxiv.org/abs/2209.11895</a>.
+</div>
+<div id="ref-Paperno2016" class="csl-entry" role="listitem">
+Paperno, Denis et al. 2016. <span>“The LAMBADA Dataset: Word Prediction Requiring a Broad Discourse Context.”</span> arXiv preprint arXiv:1606.06031. <a href="https://arxiv.org/abs/1606.06031">https://arxiv.org/abs/1606.06031</a>.
+</div>
+<div id="ref-Petroni2019" class="csl-entry" role="listitem">
+Petroni, Fabio et al. 2019. <span>“Language Models as Knowledge Bases?”</span> arXiv preprint arXiv:1909.01066. <a href="https://arxiv.org/abs/1909.01066">https://arxiv.org/abs/1909.01066</a>.
+</div>
+<div id="ref-Sun2024" class="csl-entry" role="listitem">
+Sun, Mingjie, Xinlei Chen, J. Zico Kolter, and Zhuang Liu. 2024. <span>“Massive Activations in Large Language Models.”</span> arXiv preprint arXiv:2402.17762. <a href="https://arxiv.org/abs/2402.17762">https://arxiv.org/abs/2402.17762</a>.
+</div>
+<div id="ref-Warstadt2020" class="csl-entry" role="listitem">
+Warstadt, Alex et al. 2020. <span>“BLiMP: The Benchmark of Linguistic Minimal Pairs for English.”</span> <em>Transactions of the Association for Computational Linguistics</em> 8. MIT Press: 377–92. doi:<a href="https://doi.org/10.1162/tacl_a_00321">10.1162/tacl_a_00321</a>.
+</div>
+<div id="ref-Welbl2017" class="csl-entry" role="listitem">
+Welbl, Johannes, Nelson F. Liu, and Matt Gardner. 2017. <span>“Crowdsourcing Multiple Choice Science Questions.”</span> arXiv preprint arXiv:1707.06209. <a href="https://arxiv.org/abs/1707.06209">https://arxiv.org/abs/1707.06209</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

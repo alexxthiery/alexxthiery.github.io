@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Training a half-billion-parameter GPT from scratch: data selection, compute allocation, optimizer experiments, and the limits of a small scaling sweep.">
+
+<title>Training a small language model, Part I – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2c49a34178fbd84a6f1fb51273f28ac8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+<link rel="alternate" type="application/rss+xml" title="Alexandre Thiéry — Notes" href="https://alexxthiery.github.io/notes/index_notes_as_list.xml">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Training a small language model, Part I – Alexandre Thiéry">
+<meta property="og:description" content="Training a half-billion-parameter GPT from scratch: data selection, compute allocation, optimizer experiments, and the limits of a small scaling sweep.">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/small_llm/figures/E01/reversal.png">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta property="og:image:alt" content="The mixture with the lowest average validation loss is not the one with the highest HellaSwag accuracy; losses differ strongly by validation corpus.">
+<meta property="og:image:height" content="1509">
+<meta property="og:image:width" content="3720">
+<meta name="twitter:title" content="Training a small language model, Part I – Alexandre Thiéry">
+<meta name="twitter:description" content="Training a half-billion-parameter GPT from scratch: data selection, compute allocation, optimizer experiments, and the limits of a small scaling sweep.">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/small_llm/figures/E01/reversal.png">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:image:alt" content="The mixture with the lowest average validation loss is not the one with the highest HellaSwag accuracy; losses differ strongly by validation corpus.">
+<meta name="twitter:image-height" content="1509">
+<meta name="twitter:image-width" content="3720">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Training a small language model, Part I</h1>
+                  <div>
+        <div class="description">
+          Training a half-billion-parameter GPT from scratch: data selection, compute allocation, optimizer experiments, and the limits of a small scaling sweep.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">optimization</div>
+                <div class="quarto-category">scaling</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">10 10 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-being-trained" id="toc-what-is-being-trained" class="nav-link active" data-scroll-target="#what-is-being-trained">What is being trained?</a></li>
+  <li><a href="#a-transformer-small-enough-to-inspect" id="toc-a-transformer-small-enough-to-inspect" class="nav-link" data-scroll-target="#a-transformer-small-enough-to-inspect">A transformer small enough to inspect</a></li>
+  <li><a href="#choosing-the-text" id="toc-choosing-the-text" class="nav-link" data-scroll-target="#choosing-the-text">Choosing the text</a></li>
+  <li><a href="#spending-a-fixed-amount-of-compute" id="toc-spending-a-fixed-amount-of-compute" class="nav-link" data-scroll-target="#spending-a-fixed-amount-of-compute">Spending a fixed amount of compute</a></li>
+  <li><a href="#a-scaling-law-and-what-its-exponents-mean" id="toc-a-scaling-law-and-what-its-exponents-mean" class="nav-link" data-scroll-target="#a-scaling-law-and-what-its-exponents-mean">A scaling law, and what its exponents mean</a></li>
+  <li><a href="#the-prediction-fails" id="toc-the-prediction-fails" class="nav-link" data-scroll-target="#the-prediction-fails">The prediction fails</a>
+  <ul class="collapse">
+  <li><a href="#does-the-model-benefit-more-from-additional-data" id="toc-does-the-model-benefit-more-from-additional-data" class="nav-link" data-scroll-target="#does-the-model-benefit-more-from-additional-data">Does the model benefit more from additional data?</a></li>
+  </ul></li>
+  <li><a href="#reducing-the-learning-rate" id="toc-reducing-the-learning-rate" class="nav-link" data-scroll-target="#reducing-the-learning-rate">Reducing the learning rate</a></li>
+  <li><a href="#muon-and-growing-weight-norms" id="toc-muon-and-growing-weight-norms" class="nav-link" data-scroll-target="#muon-and-growing-weight-norms">Muon and growing weight norms</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>With the availability of two small GPUs available I wanted to train a small GPT from scratch to get a better understanding of the training dynamics and the things that actually matter in practice. In particular, before launching a long training run, I wanted to spend a bit of time on tuning the hyperparameters and exploring different optimizer settings.</p>
+<p>The model eventually had 500M parameters and was trained on 6B tokens. The main run took 15h hours on two RTX PRO 6000 Blackwell cards. It produced reasonably fluent English, answered some factual questions, and was quite hopeless at several tasks that looked considerably easier. More on this in a subsequent post where I’ll try to look into the model and understand its inner workings.</p>
+<p>The prediction was less successful. Before starting the main run, I fitted a scaling law and a 90% confidence interval for the expected validation loss – I was quite significantly wrong and this led to a second set of experiments.</p>
+<section id="what-is-being-trained" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-being-trained">What is being trained?</h2>
+<p>I used the GPT-2 tokenizer with 50257 tokens, a context window of 2,048 tokens, and trained with the standard cross-entropy objective <span class="math display">\[
+\mathcal L(\theta)
+=-\frac{1}{T}\sum_{t=1}^T\log p_\theta(x_t\mid x_{&lt;t}).
+\]</span></p>
+<p>It can be useful to express the loss in <em>bits per byte</em>. With natural logarithms, the loss is measured in nats per token. Dividing by <span class="math inline">\(\log 2\)</span> converts nats into bits; dividing again by the average number of bytes per token gives</p>
+<p><span class="math display">\[
+\operatorname{bpb}
+=\frac{\mathcal{L} / \log 2}{\text{average bytes per token}}.
+\]</span></p>
+<p>The code uses the byte-to-token ratio of each corpus for this normalization. It is an estimate of a coding rate: a model that assigns larger probabilities to the observed text would allow that text to be encoded with fewer bits. This connects language modelling to the <a href="../../notes/information_theory_basics/information_theory_entropy.html">compression experiments</a> in the information-theory notes. It also avoids treating one token of source code as if it necessarily contained the same amount of text as one token of English prose. It does <strong>not</strong> make different validation corpora interchangeable. Predicting a repetitive FAQ collection and predicting a heterogeneous web crawl remain different statistical problems.</p>
+<p>At the end of the run, the held-out ClimbMix loss was <span class="math inline">\(2.533\)</span> nats per token, or <span class="math inline">\(0.7914\)</span> bpb. This means, for example, that on average each byte of the text can be encoded with about <span class="math inline">\(0.7914\)</span> bits using the model’s predictions. A totally useless model predicting each byte uniformly at random over the 50257 tokens would need about <span class="math inline">\(\log_2(50257) / 4.62 \approx 3.4\)</span> bpb.</p>
+</section>
+<section id="a-transformer-small-enough-to-inspect" class="level2">
+<h2 class="anchored" data-anchor-id="a-transformer-small-enough-to-inspect">A transformer small enough to inspect</h2>
+<p>The implementation starts from <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a>, with several choices borrowed from <a href="https://github.com/karpathy/nanochat">nanochat</a>. The model is a relatively standard decoder only transformer and has one main size parameter, its depth <span class="math inline">\(d\)</span>. The hidden width is chosen as <span class="math inline">\(h=64d\)</span>, and each attention head has fixed dimension 128. Thus the main model, with <span class="math inline">\(d=20\)</span>, has width 1,280 and ten heads per layer.</p>
+<p>There is a small accounting detail that matters for the scaling plots. The main model has approximately 393.2M parameters in the transformer blocks, 64.4M in the output matrix, and another 64.4M in the input embedding. I use <span class="math inline">\(N=458\text{M}\)</span> to denote the number of parameters for the blocks plus the output matrix, and 522M for the total. The input embedding is a lookup, whereas the output matrix participates in a large matrix multiplication at every position. Excluding the former is convenient for estimating training compute. It also means that a statement such as “ten tokens per parameter” needs its counting convention attached to it.</p>
+<!-- Sources: model.py; E05 summary.json config and n_params_total; E04 logs. -->
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Main-run quantity</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Layers / hidden width / attention heads</td>
+<td style="text-align: right;">20 / 1,280 / 10</td>
+</tr>
+<tr class="even">
+<td>Total / compute-counted parameters</td>
+<td style="text-align: right;">522M / 458M</td>
+</tr>
+<tr class="odd">
+<td>Context length</td>
+<td style="text-align: right;">2,048 tokens</td>
+</tr>
+<tr class="even">
+<td>Tokens per optimizer step</td>
+<td style="text-align: right;">524,288</td>
+</tr>
+<tr class="odd">
+<td>Optimizer steps</td>
+<td style="text-align: right;">11,444</td>
+</tr>
+<tr class="even">
+<td>Training token presentations</td>
+<td style="text-align: right;">6.0B</td>
+</tr>
+<tr class="odd">
+<td>Training time / wall time including in-run evaluations</td>
+<td style="text-align: right;">15.0 h / 15.6 h</td>
+</tr>
+<tr class="even">
+<td>Throughput</td>
+<td style="text-align: right;">111,000 tokens/s</td>
+</tr>
+<tr class="odd">
+<td>Reported training throughput per GPU</td>
+<td style="text-align: right;">approximately 188 TFLOP/s</td>
+</tr>
+</tbody>
+</table>
+<p>The two cards each have 96 GB of memory and a 300 W power cap, so about 300 x 2 x 15 = 9kWh (about S$2.5) for the GPUs for the entire training run, which probably amounts to less than S$5 in total. Memory capacity was not the limiting factor at the chosen batch size. A benchmark with larger microbatches approached 88 GB per card; using 16 sequences per card left more room. Gradients were accumulated over eight microbatches before each update. Increasing the model depth from 18 to 22 reduced tokens per second, but the estimated arithmetic throughput remained close to 188 TFLOP/s per card. Smaller models used the hardware less efficiently. This will matter when comparing a compute budget with a time budget.</p>
+</section>
+<section id="choosing-the-text" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-text">Choosing the text</h2>
+<p>The training data selection is crucial for model performance and nowadays there are quite a few good-quality datasets available for training language models. Before choosing the final model size, I trained four smaller models on different data mixtures. Each had depth 12, about 124M parameters, and received 0.5B training tokens.</p>
+<p>The candidates were <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu">FineWeb-Edu</a>, <a href="https://huggingface.co/datasets/karpathy/climbmix-400b-shuffle">ClimbMix</a>, a mixture of FineWeb-Edu, DCLM and FinePDFs-Edu, and the same mixture with half of its tokens replaced by <a href="https://huggingface.co/datasets/HuggingFaceFW/finephrase">FinePhrase</a> FAQ and tutorial rephrasings.</p>
+<p>How should these models be compared? One possibility is to average their validation losses over several held-out corpora. Another is to test whether they assign higher probability to correct answers in multiple-choice tasks. Standard benchmarks include <a href="https://arxiv.org/abs/1905.07830">HellaSwag</a>, which asks for a plausible continuation of a description, and ARC-Easy, a collection of science questions <span class="citation" data-cites="Zellers2019 Clark2018">(<a href="#ref-Zellers2019" role="doc-biblioref">Zellers et al. 2019</a>; <a href="#ref-Clark2018" role="doc-biblioref">Clark et al. 2018</a>)</span>. Each candidate answer is scored as a continuation of the prompt. For HellaSwag I report the version that divides the answer log probability by its length in bytes; for ARC-Easy I report the score using the summed log probability. The model is not asked to generate the letter “A” or “B”.</p>
+<!-- Sources: E01 README and results/index.json. -->
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Training data</th>
+<th style="text-align: right;">HellaSwag</th>
+<th style="text-align: right;">ARC-Easy</th>
+<th style="text-align: right;">Mean validation bpb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FineWeb-Edu</td>
+<td style="text-align: right;">0.282</td>
+<td style="text-align: right;">0.471</td>
+<td style="text-align: right;">1.078</td>
+</tr>
+<tr class="even">
+<td>ClimbMix</td>
+<td style="text-align: right;"><strong>0.292</strong></td>
+<td style="text-align: right;"><strong>0.494</strong></td>
+<td style="text-align: right;">1.042</td>
+</tr>
+<tr class="odd">
+<td>FineWeb-Edu / DCLM / FinePDFs-Edu</td>
+<td style="text-align: right;">0.271</td>
+<td style="text-align: right;">0.453</td>
+<td style="text-align: right;">1.025</td>
+</tr>
+<tr class="even">
+<td>Same mixture, with 50% FinePhrase</td>
+<td style="text-align: right;">0.278</td>
+<td style="text-align: right;">0.480</td>
+<td style="text-align: right;"><strong>1.005</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The lowest average validation loss did not identify the strongest benchmark model. ClimbMix won both benchmarks but came third by average validation loss. Adding FinePhrase improved all the reported benchmark scores relative to the three-source mixture, although each comparison used only one seed.</p>
+<div id="fig-data" class="quarto-float quarto-figure quarto-figure-center anchored" alt="The mixture with the lowest average validation loss is not the one with the highest HellaSwag accuracy; losses differ strongly by validation corpus.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E01/reversal.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="The mixture with the lowest average validation loss is not the one with the highest HellaSwag accuracy; losses differ strongly by validation corpus.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Data mixtures at fixed model size and token budget. The left panel compares mean validation loss with HellaSwag. The right panel shows how much the validation ranking depends on the source being evaluated.
+</figcaption>
+</figure>
+</div>
+<p>ClimbMix was selected for the subsequent runs. The available training pool contained about 8.35B tokens, with separate held-out data. The model received random windows sampled from this pool.</p>
+</section>
+<section id="spending-a-fixed-amount-of-compute" class="level2">
+<h2 class="anchored" data-anchor-id="spending-a-fixed-amount-of-compute">Spending a fixed amount of compute</h2>
+<p>In order to make best use of the available compute, one must balance the model size and the number of training tokens. In our case, a common approximation of the training cost is</p>
+<p><span class="math display">\[
+\text{Cost}=D\big(6N+12dTh\big),
+\]</span></p>
+<p>where <span class="math inline">\(d\)</span> is the number of layers, <span class="math inline">\(T=2048\)</span> the context length and <span class="math inline">\(h\)</span> the hidden width, <span class="math inline">\(N\)</span> the number of parameters, and <span class="math inline">\(D\)</span> the number of training tokens. At a fixed <span class="math inline">\(\text{Cost}\)</span>, a larger model sees fewer tokens. A small model cannot use all the information in the data (lack of capacity), whereas a sufficiently large model receives too few updates to exploit its capacity. One therefore expects a sweet spot. To find it, I used three budgets,</p>
+<p><span class="math display">\[
+C\in\{10^{17},\; 3\times10^{17},\; 10^{18}\},
+\]</span></p>
+<p>and model depths from <span class="math inline">\(d=4\)</span> to <span class="math inline">\(d=14\)</span>, keeping the combinations with reasonable token-to-parameter ratios. This gave fourteen runs, with parameter counts from approximately 16M to 180M.</p>
+<div id="fig-isoflop" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Three fixed-compute curves have their minima at progressively larger model sizes as the compute budget increases.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-isoflop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E02/isoflop.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Three fixed-compute curves have their minima at progressively larger model sizes as the compute budget increases.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-isoflop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Validation loss at fixed compute budgets, as a function of model size. Each budget has an interior minimum, but the bottom of the curve is quite flat.
+</figcaption>
+</figure>
+</div>
+<p>All three budgets had an interior minimum and fitting a parabola in <span class="math inline">\(\log N\)</span> around each curve gave optimal parameter counts of approximately 33M, 62M and 116M. This means that the associated token-to-parameter ratios were 11.5, 9.9 and 9.5. In other words, about <strong>ten tokens per parameter</strong> was a reasonable allocation. Also, note that the optimum was quite flat around the minimum so we do not need to be super precise in choosing the model size to remain near-optimal.</p>
+</section>
+<section id="a-scaling-law-and-what-its-exponents-mean" class="level2">
+<h2 class="anchored" data-anchor-id="a-scaling-law-and-what-its-exponents-mean">A scaling law, and what its exponents mean</h2>
+<p>Following <span class="citation" data-cites="Hoffmann2022">(<a href="#ref-Hoffmann2022" role="doc-biblioref">Hoffmann et al. 2022</a>)</span>, we can fit the validation loss with a function of the form</p>
+<p><span class="math display">\[
+L(N,D)=E+\frac{A}{N^\alpha}+\frac{B}{D^\beta},
+\qquad A,B,\alpha,\beta&gt;0.
+\]</span></p>
+<p>The two power-law terms describe the improvement from increasing the model size and the amount of training data; <span class="math inline">\(E\)</span> is the limiting loss predicted by the fit. Fitting the five constants to the fourteen runs gave <span class="math inline">\(\alpha\approx0.75\)</span>, <span class="math inline">\(\beta\approx0.82\)</span> and <span class="math inline">\(E\approx0.823\)</span> bpb.</p>
+<p>How should the model size grow when more compute becomes available? Using the approximation <span class="math inline">\(C\approx6ND\)</span>, we can substitute <span class="math inline">\(D=C/(6N)\)</span> into the fitted loss and minimize over <span class="math inline">\(N\)</span>. This gives</p>
+<p><span class="math display">\[
+N_{\rm opt}\propto C^{\beta/(\alpha+\beta)},
+\qquad
+D_{\rm opt}\propto C^{\alpha/(\alpha+\beta)}.
+\]</span></p>
+<p>Since the two fitted exponents are close, both quantities grow approximately like <span class="math inline">\(\sqrt C\)</span>. In other words, with four times more compute, we should roughly double the model size and double the number of training tokens. This also explains the approximately constant token-to-parameter ratio observed above.</p>
+<div id="fig-allocation" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Optimal parameter and token counts both grow approximately as the square root of the compute budget.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-allocation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E02/optimal_allocation.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Optimal parameter and token counts both grow approximately as the square root of the compute budget.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-allocation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Optimal model size and token budget inferred from the small runs. Both grow approximately as the square root of compute.
+</figcaption>
+</figure>
+</div>
+<p>Interestingly, the constant <span class="math inline">\(E\)</span> disappears when minimizing over <span class="math inline">\(N\)</span>. Choosing a good model size therefore does not require an accurate estimate of the limiting loss. Predicting the final loss of a much larger run is another matter, as I was about to find out.</p>
+</section>
+<section id="the-prediction-fails" class="level2">
+<h2 class="anchored" data-anchor-id="the-prediction-fails">The prediction fails</h2>
+<p>For the main run, I chose the depth-20 model with 458M compute-counted parameters and 6B training tokens. This was close to the predicted optimum, and the loss curve was flat enough that the precise choice mattered little. The run used about twenty times more compute than the largest experiment in the initial sweep.</p>
+<p>Before launching it, I recorded a predicted validation loss of <span class="math inline">\(0.854\)</span> bpb, with a 90% bootstrap interval of <span class="math inline">\([0.832,0.868]\)</span>. The observed loss was <strong><span class="math inline">\(0.7914\)</span> bpb</strong>, substantially better than expected!</p>
+<div id="fig-prediction" class="quarto-float quarto-figure quarto-figure-center anchored" alt="The main run finishes at 0.7914 bits per byte, well below the predicted interval of 0.832 to 0.868.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E05/loss_vs_prediction.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="The main run finishes at 0.7914 bits per byte, well below the predicted interval of 0.832 to 0.868.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Validation loss during the main run, compared with the prediction made before training. Blue points show shorter runs of the same model, discussed below.
+</figcaption>
+</figure>
+</div>
+<p>This was much too large a discrepancy to explain by the fluctuations seen in repeated small runs, which were around <span class="math inline">\(0.001\)</span> bpb. More strikingly, the final loss was below the fitted floor <span class="math inline">\(E=0.823\)</span>. Since both power-law terms are positive, the fitted formula says that this result is impossible, regardless of the model size or training duration.</p>
+<p>The difficulty is that a slowly decreasing term can look almost constant over a limited range of observations. Some of the improvement that would become visible in a longer run can then be absorbed into the estimated floor. The bootstrap interval describes uncertainty within the fitted model; it does not account for the formula becoming inaccurate when extrapolated far beyond the small experiments.</p>
+<section id="does-the-model-benefit-more-from-additional-data" class="level3">
+<h3 class="anchored" data-anchor-id="does-the-model-benefit-more-from-additional-data">Does the model benefit more from additional data?</h3>
+<p>The main run increased both model size and training duration. To separate their effects, I used saved checkpoints to produce four shorter runs of the same depth-20 model, with budgets ranging from about 0.65B to 5.24B tokens. Each ended with the same proportion of learning-rate decay as the main run. This gave a comparison in which only the training duration changed, although the runs shared their initial training history.</p>
+<div id="fig-fixed-size" class="quarto-float quarto-figure quarto-figure-center anchored" alt="At fixed model size, the gap between observed loss and the original prediction grows with training duration.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fixed-size-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E08/loss_vs_data.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="At fixed model size, the gap between observed loss and the original prediction grows with training duration.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fixed-size-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Loss versus training tokens for the depth-20 model. The original fit flattens too early: longer runs benefit more from additional training than it predicts.
+</figcaption>
+</figure>
+</div>
+<p>At the shortest duration, the original prediction was fairly close: <span class="math inline">\(0.917\)</span> bpb predicted versus <span class="math inline">\(0.905\)</span> observed. By 5.24B tokens, the gap had grown to about <span class="math inline">\(0.060\)</span> bpb. Simply lowering the fitted floor would not fix this: the model was benefiting more from additional data than the shape of the original curve allowed.</p>
+<p>Refitting with the longer runs lowered the data exponent from about <span class="math inline">\(0.82\)</span> to <span class="math inline">\(0.38\)</span> and the floor from <span class="math inline">\(0.82\)</span> to <span class="math inline">\(0.63\)</span>. A smaller data exponent allows the data term to remain relevant over longer training durations. The other coefficients changed too, and the fit to the original small runs became worse. So I would be reluctant to attach much significance to the new parameter values. A single power law was struggling to describe both ranges.</p>
+<p>The small sweep gave a reasonable way to allocate the compute budget. Predicting the final loss twenty times further along required a much stronger extrapolation, and that prediction failed. It would be interesting to repeat the duration experiment at another model size to see how much of the discrepancy is specific to this model.</p>
+</section>
+</section>
+<section id="reducing-the-learning-rate" class="level2">
+<h2 class="anchored" data-anchor-id="reducing-the-learning-rate">Reducing the learning rate</h2>
+<p>The learning rate was held constant for most of training, then decreased linearly to zero over the final 20%. During this last portion, the validation loss fell from about <span class="math inline">\(0.822\)</span> to <span class="math inline">\(0.791\)</span> bpb, while HellaSwag accuracy increased from <span class="math inline">\(42.1\%\)</span> to <span class="math inline">\(44.9\%\)</span> and ARC-Easy from <span class="math inline">\(63.0\%\)</span> to <span class="math inline">\(66.2\%\)</span>.</p>
+<p>Of course, the model also received more training data during this period. To isolate the effect of the schedule, we can compare the shorter runs with the main trajectory after the same number of tokens. For the first three shorter runs, the main trajectory was still using its constant learning rate. Finishing with a decay reduced the loss by about <span class="math inline">\(0.025\)</span> bpb in each case, a substantial gain at this scale.</p>
+<p>With a constant learning rate, noisy gradient updates keep moving the parameters around even near a good solution. Smaller steps can reduce these fluctuations towards the end of training. This also matters when fitting a scaling law: the loss halfway through a long run can be noticeably higher than the final loss of a shorter run trained on the same number of tokens, because the latter has already reduced its learning rate.</p>
+</section>
+<section id="muon-and-growing-weight-norms" class="level2">
+<h2 class="anchored" data-anchor-id="muon-and-growing-weight-norms">Muon and growing weight norms</h2>
+<p>For most weight matrices I used <a href="https://kellerjordan.github.io/posts/muon/">Muon</a>, which approximately orthogonalizes the matrix updates. The embeddings and output matrix used AdamW. On a smaller, 124M-parameter model, replacing Muon with AdamW increased the loss from about <span class="math inline">\(0.925\)</span> to <span class="math inline">\(0.959\)</span> bpb at the same training budget, even after trying several AdamW learning rates. This gave a good reason to retain Muon for the main run, although the comparison covered only one model size and a limited amount of tuning.</p>
+<p>One curious feature of the run was that, without weight decay on these matrices, their norms kept growing approximately like the square root of the number of updates.</p>
+<div id="fig-norms" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Matrix weight norms grow with powers near one half, and the update-to-weight norm ratio decreases during training.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-norms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/E05/muon_norms.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Matrix weight norms grow with powers near one half, and the update-to-weight norm ratio decreases during training.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-norms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Weight norms grow approximately like the square root of the training step, while updates become smaller relative to the weights.
+</figcaption>
+</figure>
+</div>
+<p>This behavior is consistent with updates of roughly constant magnitude that are approximately orthogonal to the current weights: each update adds a roughly constant amount to the <em>squared</em> norm. Consequently, a constant learning rate can still give progressively smaller relative changes,</p>
+<p><span class="math display">\[
+\frac{\lVert\Delta W_t\rVert}{\lVert W_t\rVert}\propto t^{-1/2}.
+\]</span></p>
+<p>The growing norms therefore introduce a kind of implicit decrease in the relative step size, even before the explicit learning-rate decay. This describes the geometry of the parameter updates; the effect on predictions also depends on the network’s normalization operations.</p>
+<p>Would weight decay help? In the smaller-model experiments, adding it reduced typical matrix norms by a factor of about 2.6, but changed the final loss by only <span class="math inline">\(0.002\)</span> bpb. That is too small to draw a strong conclusion from these single-run comparisons. At least here, large weight norms were compatible with good predictive performance, and shrinking them did not produce a clear improvement.</p>
+<p>The final model could continue a story, recognize many grammatical contrasts, and recall some facts. It also confidently gave <span class="math inline">\(7+5=10\)</span>. In <a href="../../notes/small_llm/part2.html">Part II</a>, I return to the saved checkpoints to look at how these behaviors appeared while the loss was going down.</p>
+</section>
+<section id="references" class="level2">
+
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Clark2018" class="csl-entry" role="listitem">
+Clark, Peter et al. 2018. <span>“Think You Have Solved Question Answering? Try ARC, the AI2 Reasoning Challenge.”</span> arXiv preprint arXiv:1803.05457. <a href="https://arxiv.org/abs/1803.05457">https://arxiv.org/abs/1803.05457</a>.
+</div>
+<div id="ref-Hoffmann2022" class="csl-entry" role="listitem">
+Hoffmann, Jordan et al. 2022. <span>“Training Compute-Optimal Large Language Models.”</span> arXiv preprint arXiv:2203.15556. <a href="https://arxiv.org/abs/2203.15556">https://arxiv.org/abs/2203.15556</a>.
+</div>
+<div id="ref-Zellers2019" class="csl-entry" role="listitem">
+Zellers, Rowan, Ari Holtzman, Yonatan Bisk, Ali Farhadi, and Yejin Choi. 2019. <span>“HellaSwag: Can a Machine Really Finish Your Sentence?”</span> In <em>Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics</em>, 4791–4800. Association for Computational Linguistics. doi:<a href="https://doi.org/10.18653/v1/p19-1472">10.18653/v1/p19-1472</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

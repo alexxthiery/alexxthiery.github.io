@@ -57,8 +57,12 @@
     <lastmod>2026-09-26T16:49:25.081Z</lastmod>
   </url>
   <url>
+    <loc>https://alexxthiery.github.io/notes/small_llm/part1.html</loc>
+    <lastmod>2026-10-21T12:55:07.309Z</lastmod>
+  </url>
+  <url>
     <loc>https://alexxthiery.github.io/notes/scoring_rules/scoring.html</loc>
-    <lastmod>2026-09-26T16:49:25.086Z</lastmod>
+    <lastmod>2026-10-10T15:20:42.495Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/reverse_and_tweedie/reverse_and_tweedie.html</loc>
@@ -69,28 +73,28 @@
     <lastmod>2026-09-26T16:49:25.078Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</loc>
-    <lastmod>2026-09-26T16:49:25.079Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/lax/lax.html</loc>
+    <lastmod>2026-10-26T13:12:30.882Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</loc>
-    <lastmod>2026-09-26T16:49:25.086Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/jarzynski/jarzynski.html</loc>
+    <lastmod>2026-09-26T16:49:25.077Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</loc>
-    <lastmod>2026-09-26T16:49:25.084Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</loc>
+    <lastmod>2026-09-26T16:49:25.082Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
-    <lastmod>2026-09-26T16:33:00.377Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</loc>
+    <lastmod>2026-09-26T16:49:25.075Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
-    <lastmod>2026-09-26T16:49:25.074Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/infinite_products/inft_prod.html</loc>
+    <lastmod>2026-09-26T16:49:25.083Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</loc>
-    <lastmod>2026-09-26T16:49:25.070Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
+    <lastmod>2026-10-26T15:29:07.751Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/fisher-rao/distance.html</loc>
@@ -185,28 +189,40 @@
     <lastmod>2026-09-26T16:49:25.075Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2026-09-26T16:26:31.659Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/gegenbauer/gegenbauer.html</loc>
+    <lastmod>2026-09-26T16:49:25.070Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/infinite_products/inft_prod.html</loc>
-    <lastmod>2026-09-26T16:49:25.083Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/girsanov/girsanov.html</loc>
+    <lastmod>2026-09-26T16:49:25.074Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/information_theory_fano/information_theory_fano.html</loc>
-    <lastmod>2026-09-26T16:49:25.075Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/index_notes_as_list.html</loc>
+    <lastmod>2026-09-26T16:33:00.377Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/information_theory_shannon_coding/information_theory_shannon_coding.html</loc>
-    <lastmod>2026-09-26T16:49:25.082Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/information_theory_basics/information_theory_entropy.html</loc>
+    <lastmod>2026-09-26T16:49:25.084Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/jarzynski/jarzynski.html</loc>
-    <lastmod>2026-09-26T16:49:25.077Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/information_theory_references/information_theory_references.html</loc>
+    <lastmod>2026-09-26T16:49:25.086Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/information_theory_shearer_lemma/shearer_lemma.html</loc>
+    <lastmod>2026-09-26T16:49:25.079Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/lagrangian_convexity/lagrange.html</loc>
+    <lastmod>2026-10-26T14:17:29.979Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/on_Langevin_MCMC/on_Langevin_MCMC.html</loc>
     <lastmod>2026-09-26T16:49:25.076Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/predictive_posterior/predictive_posterior.html</loc>
+    <lastmod>2026-10-26T15:28:30.449Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/sanov/sanov.html</loc>
@@ -215,6 +231,10 @@
   <url>
     <loc>https://alexxthiery.github.io/notes/shrodinger_bridge/shrodinger.html</loc>
     <lastmod>2026-09-26T16:49:25.078Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/small_llm/part2.html</loc>
+    <lastmod>2026-10-21T12:55:05.770Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/wasserstein_langevin/wasserstein_langevin.html</loc>

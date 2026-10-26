@@ -10,7 +10,223 @@
 <atom:link href="https://alexxthiery.github.io/notes/index_notes_as_list.xml" rel="self" type="application/rss+xml"/>
 <description>Mathematics, statistics, and machine learning notes, ordered by publication date.</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Sun, 30 Aug 2026 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 25 Oct 2026 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Bellman, Hopf–Lax and Cole–Hopf</title>
+  <link>https://alexxthiery.github.io/notes/lax/lax.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/lax/lax.jpg" class="img-fluid figure-img" style="width:35.0%" loading="lazy" alt="Portrait of Peter Lax."></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/Peter_Lax">Peter Lax</a> (1926 – 2025)</figcaption>
+</figure>
+</div>
+</div>
+<section id="stochastic-control-and-bellman" class="level3">
+<h3 class="anchored" data-anchor-id="stochastic-control-and-bellman">Stochastic control and Bellman</h3>
+<p>Let <img src="https://latex.codecogs.com/png.latex?g"> be a terminal reward and <img src="https://latex.codecogs.com/png.latex?L"> a convex running cost. Consider the controlled diffusion</p>
+<p><span id="eq-noisy-dynamics"><img src="https://latex.codecogs.com/png.latex?%0AdX_s%5Eu=%20%5Ctextcolor%7Bblue%7D%7Bu_s%7D%5C,ds+%5Csqrt%5Cvarepsilon%5C,dW_s,%0A%5Cqquad%20X_t%5Eu=x,%0A%5Ctag%7B1%7D"></span></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?W"> is standard Brownian motion in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED">. The value is</p>
+<p><span id="eq-noisy-value"><img src="https://latex.codecogs.com/png.latex?%0AV_%5Cvarepsilon%5EL(t,x)%0A=%0A%5Csup_u%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%0Ag(X_T%5Eu)-%5Cint_t%5ET%20L(u_s)%5C,ds%0A%5C;%5Cmiddle%7C%5C;X_t%5Eu=x%0A%5Cright%5D%7D%20.%0A%5Ctag%7B2%7D"></span></p>
+<p>Holding the control constant over a short first interval, <a href="https://en.wikipedia.org/wiki/Dynamic_programming">dynamic programming</a> gives <span class="citation" data-cites="Evans2024">(Evans 2024, chap. 7)</span></p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AV_%5Cvarepsilon%5EL(t,x)%0A=%5Csup_a%20%7B%5Cleft%5C%7B%0A-%5Cdelta%20L(a)+%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20V_%5Cvarepsilon%5EL(t+%5Cdelta,X_%7Bt+%5Cdelta%7D%5Ea)%5Cmid%20X_t%5Ea=x%20%5Cright%5D%7D%0A%5Cright%5C%7D%7D%20+o(%5Cdelta).%0A"></p>
+<p>Expanding by Itô’s formula, subtracting <img src="https://latex.codecogs.com/png.latex?V_%5Cvarepsilon%5EL(t,x)"> and dividing by <img src="https://latex.codecogs.com/png.latex?%5Cdelta"> yields the <a href="https://en.wikipedia.org/wiki/Hamilton%E2%80%93Jacobi%E2%80%93Bellman_equation">HJB equation</a></p>
+<p><span id="eq-general-hjb"><img src="https://latex.codecogs.com/png.latex?%0A%5Cpartial_tV_%5Cvarepsilon%5EL+%5Cfrac%5Cvarepsilon%202%5CDelta%20V_%5Cvarepsilon%5EL%0A+%5Cunderbrace%7B%5Csup_a%20%7B%5Cleft%5C%7B%20%5Cleft%3C%20a,%5Cnabla%20V_%5Cvarepsilon%5EL%20%5Cright%3E-L(a)%20%5Cright%5C%7D%7D%20%7D_%7BH(%5Cnabla%20V_%5Cvarepsilon%5EL)%7D=0,%0A%5Cqquad%20V_%5Cvarepsilon%5EL(T,x)=g(x),%0A%5Ctag%7B3%7D"></span></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?H=L%5E*"> is the <a href="https://en.wikipedia.org/wiki/Convex_conjugate">convex conjugate</a> of <img src="https://latex.codecogs.com/png.latex?L">. For <img src="https://latex.codecogs.com/png.latex?L(u)=%5Ctfrac12%5C%7Cu%5C%7C%5E2">, we have <img src="https://latex.codecogs.com/png.latex?H(p)=%5Ctfrac12%5C%7Cp%5C%7C%5E2">. Writing <img src="https://latex.codecogs.com/png.latex?V_%5Cvarepsilon=V_%5Cvarepsilon%5EL"> in this quadratic case gives</p>
+<p><span id="eq-noisy-hjb"><img src="https://latex.codecogs.com/png.latex?%0A%5Cpartial_tV_%5Cvarepsilon%0A+%5Cfrac%5Cvarepsilon%202%5CDelta%20V_%5Cvarepsilon%0A+%5Cfrac12%5C%7C%5Cnabla%20V_%5Cvarepsilon%5C%7C%5E2=0,%0A%5Cqquad%20V_%5Cvarepsilon(T,x)=g(x),%0A%5Ctag%7B4%7D"></span></p>
+<p>with optimal feedback <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7Bu_%5Cvarepsilon%5E%5Cstar(t,x)=%5Cnabla%20V_%5Cvarepsilon(t,x)%7D">.</p>
+</section>
+<section id="colehopf" class="level3">
+<h3 class="anchored" data-anchor-id="colehopf">Cole–Hopf</h3>
+<p>The <a href="https://en.wikipedia.org/wiki/Cole%E2%80%93Hopf_transformation"><strong>Cole–Hopf transformation</strong></a> sets <img src="https://latex.codecogs.com/png.latex?h_%5Cvarepsilon=e%5E%7BV_%5Cvarepsilon/%5Cvarepsilon%7D"> and cancels the quadratic gradient term in Equation&nbsp;4:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cpartial_t%20h_%5Cvarepsilon+%5Cfrac%5Cvarepsilon%202%5CDelta%20h_%5Cvarepsilon%0A=%0A%5Cfrac%7Bh_%5Cvarepsilon%7D%7B%5Cvarepsilon%7D%0A%7B%5Cleft(%20%5Cpartial_tV_%5Cvarepsilon+%5Cfrac%5Cvarepsilon%202%5CDelta%20V_%5Cvarepsilon+%5Cfrac%2012%5C%7C%5Cnabla%20V_%5Cvarepsilon%5C%7C%5E2%20%5Cright)%7D%0A=0.%0A"></p>
+<p>Solving this backward heat equation with terminal condition <img src="https://latex.codecogs.com/png.latex?h_%5Cvarepsilon(T,x)=e%5E%7Bg(x)/%5Cvarepsilon%7D"> gives</p>
+<p><span id="eq-cole-hopf-value"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%0AV_%5Cvarepsilon(t,x)%0A=%5Cvarepsilon%5Clog%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20e%5E%7Bg(x+%5Csqrt%5Cvarepsilon%20W_%7BT-t%7D)/%5Cvarepsilon%7D%20%5Cright%5D%7D%20.%0A%7D%0A%5Ctag%7B5%7D"></span></p>
+<p>The expectation here is over uncontrolled Brownian motion; the change-of-measure derivation is given in <a href="../../notes/HJB/HJB.html">Doob, Girsanov and Bellman</a>. Writing <img src="https://latex.codecogs.com/png.latex?%5Ctau=T-t"> and using the Gaussian density,</p>
+<p><span id="eq-soft-hopf-lax"><img src="https://latex.codecogs.com/png.latex?%0AV_%5Cvarepsilon(t,x)%0A=%0A%5Cvarepsilon%5Clog%20%7B%5Cleft%5B%0A%5Cfrac%7B1%7D%7B(2%5Cpi%5Cvarepsilon%5Ctau)%5E%7BD/2%7D%7D%0A%5Cint_%7B%5Cmathbb%7BR%7D%5ED%7D%0A%5Cexp%20%7B%5Cleft%5C%7B%0A%5Cfrac%201%5Cvarepsilon%20%7B%5Cleft(%20g(y)-%5Cfrac%7B%5C%7Cy-x%5C%7C%5E2%7D%7B2%5Ctau%7D%20%5Cright)%7D%0A%5Cright%5C%7D%7D%20%5C,dy%0A%5Cright%5D%7D%20.%0A%5Ctag%7B6%7D"></span></p>
+</section>
+<section id="zero-noise-and-hopflax" class="level3">
+<h3 class="anchored" data-anchor-id="zero-noise-and-hopflax">Zero noise and Hopf–Lax</h3>
+<p>As <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cdownarrow0">, <a href="https://en.wikipedia.org/wiki/Laplace_principle_(large_deviations_theory)">Laplace’s principle</a> turns Equation&nbsp;6 into</p>
+<p><span id="eq-hopf-lax-quadratic"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%0AV_0(t,x)%0A:=%5Clim_%7B%5Cvarepsilon%5Cdownarrow%200%7DV_%5Cvarepsilon(t,x)%0A=%0A%5Csup_%7By%5Cin%5Cmathbb%7BR%7D%5ED%7D%20%7B%5Cleft%5C%7B%20g(y)-%5Cfrac%7B%5C%7Cy-x%5C%7C%5E2%7D%7B2(T-t)%7D%20%5Cright%5C%7D%7D%20.%0A%7D%0A%5Ctag%7B7%7D"></span></p>
+<p>The Gaussian normalization contributes <img src="https://latex.codecogs.com/png.latex?-%5Ctfrac%7B%5Cvarepsilon%20D%7D%7B2%7D%5Clog(2%5Cpi%5Cvarepsilon%5Ctau)%5Cto0">. This is the <strong>Hopf–Lax formula</strong> in the reward-maximization convention. This means that the deterministic control problem with quadratic cost</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csup_%7Bu%5Cin%5Cmathcal%7BU%7D%7D%20%7B%5Cleft%5C%7B%20%5Cint_t%5ET%20-%5Cfrac%2012%5C%7Cu_s%5C%7C%5E2%5C,ds%20+%20g(X_T%5Eu)%20%20%5Cright%5C%7D%7D%0A%5Cquad%5Ctext%7Bsubject%20to%7D%5Cquad%20%5Cdot%20X_s%5Eu=u_s,%20%5Cquad%20X_t%5Eu=x,%0A"></p>
+<p>has a value given by the supremum over endpoints as in Equation&nbsp;7. Interestingly, this can also be derived very simply from the Cauchy-Schwarz inequality since <img src="https://latex.codecogs.com/png.latex?%5Cint_t%5ET%20%5C%7Cu_s%5C%7C%5E2%5C,ds%20%5Cgeq%20%5C%7CX_T%5Eu-x%5C%7C%5E2%20/%20(T-t)">, from which the conclusion follows readily. The limiting HJB equation is <img src="https://latex.codecogs.com/png.latex?%0A%5Cpartial_tV_0+%5Ctfrac12%5C%7C%5Cnabla%20V_0%5C%7C%5E2=0%0A"></p>
+<p>and has to be interpreted in the <a href="https://en.wikipedia.org/wiki/Viscosity_solution">viscosity sense</a> when <img src="https://latex.codecogs.com/png.latex?V_0"> develops corners. For example, with <img src="https://latex.codecogs.com/png.latex?g(y)=-%5Ctfrac14(y%5E2-1)%5E2"> and <img src="https://latex.codecogs.com/png.latex?T-t=2">, the stochastic values converge to a Hopf–Lax value with a corner at <img src="https://latex.codecogs.com/png.latex?x=0"> (Figure&nbsp;1).</p>
+<div id="fig-noise-limit" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Smooth stochastic value functions approach the deterministic Hopf–Lax value, which has a corner at the origin.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-noise-limit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/lax/lax_files/noise-limit.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%" loading="lazy" alt="Smooth stochastic value functions approach the deterministic Hopf–Lax value, which has a corner at the origin.">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noise-limit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Value functions for the quartic reward with duration <img src="https://latex.codecogs.com/png.latex?%5Ctau=2">. Positive noise smooths the corner of the limiting Hopf–Lax value at <img src="https://latex.codecogs.com/png.latex?x=0">.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-Evans2024" class="csl-entry">
+Evans, Lawrence C. 2024. <span>“An Introduction to Mathematical Optimal Control Theory.”</span> Lecture notes, University of California, Berkeley. <a href="https://math.berkeley.edu/~evans/control.course.pdf">https://math.berkeley.edu/~evans/control.course.pdf</a>.
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>SDE</category>
+  <category>markov</category>
+  <category>optimal-control</category>
+  <guid>https://alexxthiery.github.io/notes/lax/lax.html</guid>
+  <pubDate>Sun, 25 Oct 2026 16:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Lagrange multipliers &amp; Convex duality</title>
+  <link>https://alexxthiery.github.io/notes/lagrangian_convexity/lagrange.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/lagrangian_convexity/rockafellar.jpg" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Portrait of R. Tyrrell Rockafellar."></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/R._Tyrrell_Rockafellar">Tyrrell Rockafellar (1935-)</a></figcaption>
+</figure>
+</div>
+</div>
+<p>These notes are a brief introduction to <a href="https://en.wikipedia.org/wiki/Lagrange_multiplier">Lagrange multipliers</a> and convex <a href="https://en.wikipedia.org/wiki/Duality_(optimization)">duality</a>, with as little technical detail as possible since the epsilon-delta proofs can be found in many places. Consider the problem of minimizing a smooth function <img src="https://latex.codecogs.com/png.latex?f:%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D">. In the absence of constraints, the first-order condition is of course</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla%20f(x_%5Cstar)=0.%0A"></p>
+<p>Indeed, if the gradient is non-zero, one can move a little in the direction <img src="https://latex.codecogs.com/png.latex?-%5Cnabla%20f"> and decrease the function. In some sense, a lot of these notes are about generalizing this simple remark to the case of equality and inequality constraints. Constraints only change one thing: some directions are no longer available, which indeed means that the condition <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20f(x_%5Cstar)=0"> will need to be relaxed in different ways. As we will see, the notion of <a href="https://en.wikipedia.org/wiki/Lagrange_multiplier">Lagrange multipliers</a> and Lagrange duality are the natural generalizations of this simple idea.</p>
+<section id="equality-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="equality-constraints">Equality constraints</h2>
+<p>Suppose first that the feasible set is described by <img src="https://latex.codecogs.com/png.latex?r%5Cgeq1"> smooth equality constraints,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ah_1(x)=0,%20%5Cquad%20h_2(x)=0,%20%5Cquad%20%5Cldots,%20%5Cquad%20h_r(x)=0%0A"></p>
+<p>for scalar-valued functions <img src="https://latex.codecogs.com/png.latex?h_a:%5Cmathbb%7BR%7D%5Ed%5Cto%5Cmathbb%7BR%7D">. Near a feasible point where the gradients <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20h_a"> are linearly independent, this is a smooth surface of dimension <img src="https://latex.codecogs.com/png.latex?d-r">. At a local minimum <img src="https://latex.codecogs.com/png.latex?x_%5Cstar">, the directional derivative of <img src="https://latex.codecogs.com/png.latex?f"> vanishes along every tangent vector, so <img src="https://latex.codecogs.com/png.latex?%5Cnabla%20f(x_%5Cstar)"> is orthogonal to the tangent space. Since that tangent space is the orthogonal complement of the span of the constraint gradients, there exist multipliers <img src="https://latex.codecogs.com/png.latex?%5Cnu_a%5Cin%5Cmathbb%7BR%7D"> such that</p>
+<p><span id="eq-equality-lagrange"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%0A%5Cnabla%20f(x_%5Cstar)%0A+%0A%5Csum_%7Ba=1%7D%5Er%20%5Cnu_a%5C,%5Cnabla%20h_a(x_%5Cstar)%0A=0.%7D%0A%5Ctag%7B1%7D"></span></p>
+<p>At an optimum, the objective gradient has no tangent component.</p>
+</section>
+<section id="inequality-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="inequality-constraints">Inequality constraints</h2>
+<p>Consider <img src="https://latex.codecogs.com/png.latex?m%5Cgeq1"> smooth inequality constraints</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ag_1(x)%5Cleq0,%20%5Cquad%20g_2(x)%5Cleq0,%20%5Cquad%20%5Cldots,%20%5Cquad%20g_m(x)%5Cleq0%0A"></p>
+<p>for scalar-valued functions <img src="https://latex.codecogs.com/png.latex?g_i:%5Cmathbb%7BR%7D%5Ed%5Cto%5Cmathbb%7BR%7D">. At a feasible point <img src="https://latex.codecogs.com/png.latex?x_%5Cstar">, let <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BA%7D(x_%5Cstar)=%5C%7Bi:g_i(x_%5Cstar)=0%5C%7D"> be the set of active constraints. Under the regularity conditions discussed below, the tangent cone is the intersection of the half-spaces</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%3C%20%5Cnabla%20g_i(x_%5Cstar),v%20%5Cright%3E%5Cleq0,%0A%5Cqquad%20i%5Cin%5Cmathcal%7BA%7D(x_%5Cstar).%0A"></p>
+<p>If equality constraints <img src="https://latex.codecogs.com/png.latex?h_a(x)=0"> are also present, we additionally require <img src="https://latex.codecogs.com/png.latex?%5Cleft%3C%20%5Cnabla%20h_a(x_%5Cstar),v%20%5Cright%3E=0">. At a local minimum, <img src="https://latex.codecogs.com/png.latex?%5Cleft%3C%20%5Cnabla%20f(x_%5Cstar),v%20%5Cright%3E%5Cgeq0"> for every vector in this cone. By <a href="https://en.wikipedia.org/wiki/Farkas%27_lemma">Farkas’ lemma</a>, this is equivalent to</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla%20f(x_%5Cstar)%0A+%5Csum_%7Ba=1%7D%5Er%5Cnu_a%5C,%5Cnabla%20h_a(x_%5Cstar)%0A+%5Csum_%7Bi%5Cin%5Cmathcal%7BA%7D(x_%5Cstar)%7D%5Clambda_i%5C,%5Cnabla%20g_i(x_%5Cstar)=0,%0A"></p>
+<p>with <img src="https://latex.codecogs.com/png.latex?%5Cnu_a%5Cin%5Cmathbb%7BR%7D"> and <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bgreen%7D%7B%5Clambda_i%5Cgeq%200%7D">. In general, <img src="https://latex.codecogs.com/png.latex?-%5Cnabla%20g_i(x_%5Cstar)"> need not be a feasible direction: it may violate another active constraint. The sign restriction on the multipliers comes from the whole cone of feasible directions.</p>
+<p>Setting <img src="https://latex.codecogs.com/png.latex?%5Clambda_i=0"> for inactive constraints lets us write the sum over all constraints:</p>
+<p><span id="eq-kkt-stationarity"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%0A%5Cnabla%20f(x_%5Cstar)%0A+%5Csum_%7Ba=1%7D%5Er%5Cnu_a%5C,%5Cnabla%20h_a(x_%5Cstar)%0A+%5Csum_%7Bi=1%7D%5Em%5Clambda_i%5C,%5Cnabla%20g_i(x_%5Cstar)=0.%7D%0A%5Ctag%7B2%7D"></span></p>
+<p>The condition that inactive constraints have zero multipliers is called <strong>complementary slackness</strong>:</p>
+<p><span id="eq-kkt-complementarity"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Clambda_i%5C,g_i(x_%5Cstar)=0.%7D%0A%5Ctag%7B3%7D"></span></p>
+<p>Either the constraint <img src="https://latex.codecogs.com/png.latex?g_i"> has some slack, in which case its multiplier <img src="https://latex.codecogs.com/png.latex?%5Clambda_i"> vanishes, or the multiplier is nonzero, in which case the constraint is active.</p>
+</section>
+<section id="the-lagrangian" class="level2">
+<h2 class="anchored" data-anchor-id="the-lagrangian">The Lagrangian</h2>
+<div style="text-align:center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://alexxthiery.github.io/notes/lagrangian_convexity/lagrange.jpg" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Portrait of Joseph Louis Lagrange."></p>
+<figcaption><a href="https://en.wikipedia.org/wiki/Joseph_Louis_Lagrange">Joseph Louis Lagrange (1736 – 1813)</a></figcaption>
+</figure>
+</div>
+</div>
+<p>The <a href="https://en.wikipedia.org/wiki/Lagrangian_function">Lagrangian</a> collects the objective and constraints:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D(x,%5Clambda,%5Cnu)%0A=%0Af(x)%0A+%0A%5Csum_%7Bi=1%7D%5Em%20%5Clambda_i%20g_i(x)%0A+%0A%5Csum_%7Ba=1%7D%5Er%20%5Cnu_a%20h_a(x).%0A"></p>
+<p>The stationarity condition Equation&nbsp;2 is <img src="https://latex.codecogs.com/png.latex?%5Cnabla_x%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda,%5Cnu)=0">. Together with feasibility and complementary slackness, it gives the <a href="https://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions">Karush–Kuhn–Tucker (KKT) conditions</a>:</p>
+<p><span id="eq-kkt-conditions"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%0A%5Cbegin%7Baligned%7D%0A%5Cnabla_x%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda,%5Cnu)&amp;=0,%5C%5C%0Ag_i(x_%5Cstar)&amp;%5Cleq%200,%20&amp;%20h_a(x_%5Cstar)&amp;=0,%5C%5C%0A%5Clambda_i&amp;%5Cgeq%200,%20&amp;%20%5Clambda_i%20g_i(x_%5Cstar)&amp;=0.%0A%5Cend%7Baligned%7D%0A%7D%0A%5Ctag%7B4%7D"></span></p>
+<p>At a regular local minimum, these conditions are necessary. For a general nonconvex problem, they do not guarantee local or global optimality.</p>
+</section>
+<section id="a-small-pathology" class="level2">
+<h2 class="anchored" data-anchor-id="a-small-pathology">A small pathology</h2>
+<p>The arguments above identify the tangent cone with the directions satisfying the linearized constraints. This identification can fail. Consider minimizing <img src="https://latex.codecogs.com/png.latex?f(x)=x"> subject to <img src="https://latex.codecogs.com/png.latex?g(x)=x%5E2%5Cleq0">. The feasible set is <img src="https://latex.codecogs.com/png.latex?%5C%7B0%5C%7D">, so <img src="https://latex.codecogs.com/png.latex?x_%5Cstar=0"> is the global minimum, but stationarity would require</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A0=%5Cnabla%20f(0)+%5Clambda%5Cnabla%20g(0)=1+%5Clambda%5Ccdot0,%0A"></p>
+<p>which is impossible. The constraint gradient vanishes, so the linearized inequality allows every direction, whereas the tangent cone is <img src="https://latex.codecogs.com/png.latex?%5C%7B0%5C%7D">.</p>
+<p><a href="https://en.wikipedia.org/wiki/Constraint_qualification">Constraint qualifications</a> rule out this degeneracy and ensure that KKT conditions are necessary at a local minimum. One sufficient condition is the <a href="https://en.wikipedia.org/wiki/Constraint_qualification#Linear_independence_constraint_qualification_(LICQ)">linear independence constraint qualification (LICQ)</a>: the gradients of all equality constraints and active inequality constraints are linearly independent. For affine constraints, the linearization is exact, so KKT necessity holds even when these gradients are linearly dependent.</p>
+</section>
+<section id="the-convex-case" class="level2">
+<h2 class="anchored" data-anchor-id="the-convex-case">The convex case</h2>
+<p>In the unconstrained case, a stationary point of a convex function is a global minimum. For the constrained analogue, let <img src="https://latex.codecogs.com/png.latex?A%5Cin%5Cmathbb%7BR%7D%5E%7Br%5Ctimes%20d%7D"> and <img src="https://latex.codecogs.com/png.latex?b%5Cin%5Cmathbb%7BR%7D%5Er">, and consider the convex program:</p>
+<p><span id="eq-convex-program"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Ctextrm%7Bminimize%7D%20%5Cqquad%20&amp;%20f(x),%5C%5C%0A%5Ctextrm%7Bsubject%20to%7D%20%5Cqquad%20&amp;%20g_i(x)%5Cleq%200,%5C%5C%0A&amp;%20Ax=b,%0A%5Cend%7Baligned%7D%0A%5Ctag%7B5%7D"></span></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?f"> and the functions <img src="https://latex.codecogs.com/png.latex?g_i"> are convex. With affine equalities <img src="https://latex.codecogs.com/png.latex?Ax=b">, the feasible set is convex. The Lagrangian is also convex in <img src="https://latex.codecogs.com/png.latex?x"> for any <img src="https://latex.codecogs.com/png.latex?%5Clambda%5Cgeq0"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu">:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D(x,%5Clambda,%5Cnu)%0A=%0Af(x)+%5Csum_i%20%5Clambda_i%20g_i(x)+%5Cnu%5E%5Ctop(Ax-b).%0A"></p>
+<p>Now, assume that a feasible point <img src="https://latex.codecogs.com/png.latex?x_%5Cstar"> and multipliers <img src="https://latex.codecogs.com/png.latex?(%5Clambda_%5Cstar,%5Cnu_%5Cstar)"> satisfy the KKT conditions Equation&nbsp;4. Since the Lagrangian is convex in <img src="https://latex.codecogs.com/png.latex?x">, stationarity <img src="https://latex.codecogs.com/png.latex?%5Cnabla_x%20%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%20=%200"> implies that the function <img src="https://latex.codecogs.com/png.latex?x%20%5Cmapsto%20%5Cmathcal%7BL%7D(x,%5Clambda_%5Cstar,%5Cnu_%5Cstar)"> has a global minimum at <img src="https://latex.codecogs.com/png.latex?x_%5Cstar">:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%0A%5Cleq%0A%5Cmathcal%7BL%7D(x,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%0A"></p>
+<p>for every <img src="https://latex.codecogs.com/png.latex?x">. Furthermore, <img src="https://latex.codecogs.com/png.latex?f(x_%5Cstar)%20=%20%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda_%5Cstar,%5Cnu_%5Cstar)"> by complementary slackness and feasibility. For any feasible <img src="https://latex.codecogs.com/png.latex?x">, we also have <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D(x,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%20%5Cleq%20f(x)"> since <img src="https://latex.codecogs.com/png.latex?%5Clambda_%5Cstar%20%5Cgeq%200"> and <img src="https://latex.codecogs.com/png.latex?g_i(x)%5Cleq%200">. Combining these two inequalities gives:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7Bf(x_%5Cstar)%0A=%0A%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%0A%5Cleq%0A%5Cmathcal%7BL%7D(x,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%0A%5Cleq%0Af(x)%7D%0A"></p>
+<p>for every feasible <img src="https://latex.codecogs.com/png.latex?x">. Thus, in a convex problem, the KKT conditions are sufficient for global optimality:</p>
+<p><span id="eq-kkt-sufficient"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Ctextrm%7BKKT%7D%20%5Cquad%20%5CLongrightarrow%20%5Cquad%20%5Ctextrm%7Bglobal%20optimum%7D.%7D%0A%5Ctag%7B6%7D"></span></p>
+<p>No constraint qualification is needed for this direction.</p>
+<p>For KKT conditions to be necessary, a constraint qualification is still needed, as the example <img src="https://latex.codecogs.com/png.latex?x%5E2%5Cleq0"> shows. For a convex problem, <strong>Slater’s condition</strong> requires a point <img src="https://latex.codecogs.com/png.latex?%5Cbar%20x"> satisfying the equalities and strictly satisfying every inequality:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bblue%7D%7B%0A%5Ctextrm%7BSlater:%7D%20%5Cqquad%20%5Cqquad%0AA%5Cbar%20x=b%0A%5Cquad%0A%5Ctext%7Band%7D%0A%5Cquad%0Ag_i(%5Cbar%20x)%3C0%20%5C;%20%5Ctext%7Bfor%20all%20%7D%20%5C;%201%20%5Cleq%20i%20%5Cleq%20m.%0A%7D%0A"></p>
+<p>The condition is named after <a href="https://elischolar.library.yale.edu/cowles-discussion-paper-series/304/">Morton Slater</a>, whose <em>Lagrange Multipliers Revisited</em> is available in the Cowles Foundation archive. He is distinct from <a href="https://en.wikipedia.org/wiki/John_C._Slater">John Slater</a>, of Slater determinant fame in quantum mechanics. Under Slater’s condition, an optimal point admits KKT multipliers. Combining this with Equation&nbsp;6 gives</p>
+<p><span id="eq-kkt-equivalence"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%0A%5Ctextrm%7Bglobal%20optimum%7D%0A%5Cquad%20%5CLongleftrightarrow%20%5Cquad%0A%5Ctextrm%7BKKT%7D.%7D%0A%5Ctag%7B7%7D"></span></p>
+<p>Convexity makes KKT sufficient; the constraint qualification makes KKT necessary.</p>
+</section>
+<section id="the-dual-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-dual-problem">The dual problem</h2>
+<p>The discussion above hints at a more general principle. For multipliers <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%5Cgeq%200"> and arbitrary <img src="https://latex.codecogs.com/png.latex?%5Cnu">, the dual function is defined as the infimum of the Lagrangian over <img src="https://latex.codecogs.com/png.latex?x">:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Aq(%5Clambda,%5Cnu)%0A=%0A%5Cinf_x%20%5Cmathcal%7BL%7D(x,%5Clambda,%5Cnu).%0A"></p>
+<p>For any feasible <img src="https://latex.codecogs.com/png.latex?x"> and <img src="https://latex.codecogs.com/png.latex?%5Clambda%5Cgeq0">, we have <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D(x,%5Clambda,%5Cnu)%5Cleq%20f(x)">. Consequently,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Aq(%5Clambda,%5Cnu)%0A%5Cleq%0Af(x)%0A"></p>
+<p>for every feasible <img src="https://latex.codecogs.com/png.latex?x">, without any convexity assumption. Taking the infimum over feasible <img src="https://latex.codecogs.com/png.latex?x"> gives</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7Bq(%5Clambda,%5Cnu)%20%5Cleq%20p_%5Cstar%7D%0A"></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?p_%5Cstar"> is the primal optimal value. Maximizing this lower bound gives the dual problem:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csup_%7B%5Clambda%5Cgeq%200,%5C,%5Cnu%7D%20q(%5Clambda,%5Cnu)%20=%20%20%5Ctextcolor%7Bgreen%7D%7Bd_%5Cstar%20%5C;%20%5Cleq%20%5C;%20p_%5Cstar%7D%20=%20%5Cinf_%7Bx%20%5Ctext%7B%20feasible%7D%7D%20f(x)%0A"></p>
+<p>This is <strong>weak duality</strong>, and it does not require convexity. For the convex program above, Slater’s condition gives <span class="citation" data-cites="Boyd2004">(Boyd and Vandenberghe 2004, chap. 5)</span></p>
+<p><span id="eq-strong-duality"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7Bd_%5Cstar=p_%5Cstar.%7D%0A%5Ctag%7B8%7D"></span></p>
+<p>This is <a href="https://en.wikipedia.org/wiki/Strong_duality"><strong>strong duality</strong></a>. When the primal value is finite, Slater’s condition also ensures that the dual optimum is attained.</p>
+<details>
+<summary>
+Proof
+</summary>
+<p>Assume <img src="https://latex.codecogs.com/png.latex?p_%5Cstar"> is finite and discard redundant equality constraints, so that <img src="https://latex.codecogs.com/png.latex?A"> has full row rank. Consider the set <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%20C"> of all <img src="https://latex.codecogs.com/png.latex?(u,v,t)%5Cin%5Cmathbb%7BR%7D%5Em%5Ctimes%5Cmathbb%7BR%7D%5Er%5Ctimes%5Cmathbb%7BR%7D"> such that, for some <img src="https://latex.codecogs.com/png.latex?x">,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ag_i(x)%5Cleq%20u_i,%20%5Cqquad%20Ax-b=v,%20%5Cqquad%20f(x)%5Cleq%20t.%0A"></p>
+<p>This set is convex, and <img src="https://latex.codecogs.com/png.latex?(0,0,p_%5Cstar)"> is a boundary point, even if the primal infimum is not attained. A <a href="https://en.wikipedia.org/wiki/Supporting_hyperplane">supporting hyperplane</a> therefore gives a nonzero normal <img src="https://latex.codecogs.com/png.latex?(%5Clambda,%5Cnu,%5Cmu)"> with</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clambda%5E%5Ctop%20u+%5Cnu%5E%5Ctop%20v+%5Cmu%20t%5Cgeq%5Cmu%20p_%5Cstar%0A%5Cqquad%5Ctext%7Bfor%20every%20%7D(u,v,t)%5Cin%5Cmathcal%20C.%0A"></p>
+<p>Since <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%20C"> is closed under increasing <img src="https://latex.codecogs.com/png.latex?u"> or <img src="https://latex.codecogs.com/png.latex?t">, we have <img src="https://latex.codecogs.com/png.latex?%5Clambda%5Cgeq0"> and <img src="https://latex.codecogs.com/png.latex?%5Cmu%5Cgeq0">. Suppose <img src="https://latex.codecogs.com/png.latex?%5Cmu=0">. Substituting a Slater point gives</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clambda%5E%5Ctop%20g(%5Cbar%20x)%5Cgeq0.%0A"></p>
+<p>Because every <img src="https://latex.codecogs.com/png.latex?g_i(%5Cbar%20x)%3C0">, this forces <img src="https://latex.codecogs.com/png.latex?%5Clambda=0">. The supporting inequality then becomes <img src="https://latex.codecogs.com/png.latex?%5Cnu%5E%5Ctop(Ax-b)%5Cgeq0"> for every <img src="https://latex.codecogs.com/png.latex?x">. This implies <img src="https://latex.codecogs.com/png.latex?A%5E%5Ctop%5Cnu=0">, hence <img src="https://latex.codecogs.com/png.latex?%5Cnu=0"> because <img src="https://latex.codecogs.com/png.latex?A"> has full row rank, contradicting the nonzero normal.</p>
+<p>Thus <img src="https://latex.codecogs.com/png.latex?%5Cmu%3E0">, and we can normalize it to <img src="https://latex.codecogs.com/png.latex?1">. Substituting <img src="https://latex.codecogs.com/png.latex?(u,v,t)=(g(x),Ax-b,f(x))"> gives</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Af(x)+%5Clambda%5E%5Ctop%20g(x)+%5Cnu%5E%5Ctop(Ax-b)%5Cgeq%20p_%5Cstar%0A%5Cqquad%5Ctext%7Bfor%20every%20%7Dx.%0A"></p>
+<p>Taking the infimum over <img src="https://latex.codecogs.com/png.latex?x"> gives <img src="https://latex.codecogs.com/png.latex?q(%5Clambda,%5Cnu)%5Cgeq%20p_%5Cstar">. Weak duality supplies the reverse inequality, so <img src="https://latex.codecogs.com/png.latex?d_%5Cstar=q(%5Clambda,%5Cnu)=p_%5Cstar">.</p>
+</details>
+<section id="saddle-point-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="saddle-point-interpretation">Saddle point interpretation</h3>
+<p>Suppose strong duality holds, <img src="https://latex.codecogs.com/png.latex?p_%5Cstar=d_%5Cstar">, and both the primal and dual optima are attained at <img src="https://latex.codecogs.com/png.latex?x_%5Cstar"> and <img src="https://latex.codecogs.com/png.latex?(%5Clambda_%5Cstar,%5Cnu_%5Cstar)">. By the definition of <img src="https://latex.codecogs.com/png.latex?q"> and primal feasibility,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ap_%5Cstar%0A=q(%5Clambda_%5Cstar,%5Cnu_%5Cstar)%0A%5Cleq%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%0A%5Cleq%20f(x_%5Cstar)%0A=p_%5Cstar.%0A"></p>
+<p>All inequalities are therefore equalities: <img src="https://latex.codecogs.com/png.latex?x_%5Cstar"> minimizes <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D(%5Ccdot,%5Clambda_%5Cstar,%5Cnu_%5Cstar)">, and complementary slackness holds. For any dual-feasible <img src="https://latex.codecogs.com/png.latex?(%5Clambda,%5Cnu)">, primal feasibility also gives <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda,%5Cnu)%5Cleq%20f(x_%5Cstar)">. Together these yield the saddle-point property</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%0A%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda,%5Cnu)%0A%5Cleq%5Cmathcal%7BL%7D(x_%5Cstar,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%0A%5Cleq%5Cmathcal%7BL%7D(x,%5Clambda_%5Cstar,%5Cnu_%5Cstar)%0A%7D%0A"></p>
+<p>for every <img src="https://latex.codecogs.com/png.latex?x"> and every <img src="https://latex.codecogs.com/png.latex?%5Clambda%5Cgeq0">, <img src="https://latex.codecogs.com/png.latex?%5Cnu%5Cin%5Cmathbb%7BR%7D%5Er">. This saddle-point formulation motivates a number of primal-dual algorithms for convex optimization.</p>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-Boyd2004" class="csl-entry">
+Boyd, Stephen, and Lieven Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge University Press. doi:<a href="https://doi.org/10.1017/cbo9780511804441">10.1017/cbo9780511804441</a>.
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>optimization</category>
+  <category>convexity</category>
+  <guid>https://alexxthiery.github.io/notes/lagrangian_convexity/lagrange.html</guid>
+  <pubDate>Fri, 04 Sep 2026 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Short introduction to CVXPY</title>
   <link>https://alexxthiery.github.io/notes/cvxpy/cvxpy.html</link>
@@ -509,6 +725,103 @@ font-style: inherit;">in</span> cone_problems:</span>
   <category>convexity</category>
   <guid>https://alexxthiery.github.io/notes/cvxpy/cvxpy.html</guid>
   <pubDate>Sun, 30 Aug 2026 16:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Predictive Posteriors</title>
+  <link>https://alexxthiery.github.io/notes/predictive_posterior/predictive_posterior.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>A Bayesian model gives a distribution <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta"> for future data, indexed by a parameter <img src="https://latex.codecogs.com/png.latex?%5Ctheta"> and predictions are usually done through the posterior predictive. If <img src="https://latex.codecogs.com/png.latex?%5CPi_n"> is the posterior on <img src="https://latex.codecogs.com/png.latex?%5Ctheta">, then the posterior predictive is <img src="https://latex.codecogs.com/png.latex?P_%7B%5CPi_n%7D%20=%20%5Cint_%5CTheta%20P_%5Ctheta%20%5C,%20d%5CPi_n(%5Ctheta)"> and it can be interpreted as a mixture of the model components <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta"> weighted by the posterior <img src="https://latex.codecogs.com/png.latex?%5CPi_n">. The standard Bayesian approach chooses the weights by scoring parameters with the likelihood, not by directly scoring the mixture predictive, which can be especially limiting when the model is misspecified!</p>
+<p>For example, suppose that the data come from two subpopulations, but the model only accounts for one. As data accumulate, the posterior can concentrate near a compromise parameter, making the posterior predictive approach a single component. A predictive posterior approach, as we will describe below, can learn a mixture of two components and predict much better. This is achieved by scoring the mixture predictive directly, rather than scoring the individual components through the likelihood function. In other words, the predictive posteriors still mix the original model components <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta">, still using a distribution <img src="https://latex.codecogs.com/png.latex?Q"> on <img src="https://latex.codecogs.com/png.latex?%5Ctheta">, but they choose <img src="https://latex.codecogs.com/png.latex?Q"> by scoring the resulting mixture predictive directly in terms of predictive performance. In contrast, Bayes chooses <img src="https://latex.codecogs.com/png.latex?Q"> by scoring the individual components <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta"> through the likelihood function.</p>
+<p>Let us set up some notation: the observations take values in a space <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%20Z">, and we typically have <img src="https://latex.codecogs.com/png.latex?n"> observations <img src="https://latex.codecogs.com/png.latex?z_1,%5Cldots,z_n%5Cin%5Cmathcal%20Z">. The parameter <img src="https://latex.codecogs.com/png.latex?%5Ctheta"> belongs to a parameter space <img src="https://latex.codecogs.com/png.latex?%5CTheta">, and <img src="https://latex.codecogs.com/png.latex?p_%5Ctheta(z)"> is the density of <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta"> with respect to a reference measure <img src="https://latex.codecogs.com/png.latex?%5Cmu"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%20Z">. The log-likelihood is <img src="https://latex.codecogs.com/png.latex?%5Cell_n(%5Ctheta)%20=%20%5Csum_%7Bi=1%7D%5En%20%5Clog%20p_%5Ctheta(z_i)"> and the model is:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%20M=%5C%7BP_%5Ctheta:%5Ctheta%5Cin%5CTheta%5C%7D.%0A"></p>
+<p>A mixing distribution <img src="https://latex.codecogs.com/png.latex?Q"> is a probability distribution on <img src="https://latex.codecogs.com/png.latex?%5CTheta"> and the mixture predictive with respect to <img src="https://latex.codecogs.com/png.latex?Q"> is defined as</p>
+<p><span id="eq-predictive-mixture"><img src="https://latex.codecogs.com/png.latex?%0AP_Q%20=%20%5Cint_%5CTheta%20P_%5Ctheta%20%5C,%20dQ(%5Ctheta).%0A%5Ctag%7B1%7D"></span></p>
+<p>The mixture <img src="https://latex.codecogs.com/png.latex?P_Q"> is again a probability distribution on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%20Z"> and for an event <img src="https://latex.codecogs.com/png.latex?A%5Csubset%5Cmathcal%20Z"> we have <img src="https://latex.codecogs.com/png.latex?P_Q(A)=%5Cint_%5CTheta%20P_%5Ctheta(A)%5C,dQ(%5Ctheta)">.</p>
+<section id="average-the-score-or-score-the-average" class="level3">
+<h3 class="anchored" data-anchor-id="average-the-score-or-score-the-average">Average the score or score the average</h3>
+<p>Let <img src="https://latex.codecogs.com/png.latex?Q_0"> be a prior or reference measure on <img src="https://latex.codecogs.com/png.latex?%5CTheta">. The <a href="../../notes/sanov/sanov.html">Kullback-Leibler</a> term below is the regularizer. Bayesian and generalized Bayesian approaches can be written as</p>
+<p><span id="eq-gibbs-template"><img src="https://latex.codecogs.com/png.latex?%0AQ_n%5EG%0A%5Cin%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7BQ%5Cin%5Cmathcal%20P(%5CTheta)%7D%0A%5Cleft%5C%7B%0A-%5Cint_%5CTheta%20%5Cell_n(%5Ctheta)%5C,dQ(%5Ctheta)%0A+%0A%5Clambda_n%20D_%7B%5Ctext%7BKL%7D%7D(Q%20%5Cmid%20Q_0)%0A%5Cright%5C%7D.%0A%5Ctag%7B2%7D"></span></p>
+<p>Standard Bayes is the special case with <img src="https://latex.codecogs.com/png.latex?%5Clambda_n=1"> and <img src="https://latex.codecogs.com/png.latex?Q_0"> the prior, while generalized Bayes allows other losses and scaling of <img src="https://latex.codecogs.com/png.latex?%5Clambda_n"> <span class="citation" data-cites="Bissiri2016">(Bissiri, Holmes, and Walker 2016)</span>. A predictive posterior instead solves</p>
+<p><span id="eq-predictive-template"><img src="https://latex.codecogs.com/png.latex?%0AQ_n%5EP%0A%5Cin%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7BQ%5Cin%5Cmathcal%20P(%5CTheta)%7D%0A%5Cleft%5C%7B%0AD_n(P_n,P_Q)%0A+%0A%5Clambda_n%20D_%7B%5Ctext%7BKL%7D%7D(Q%20%5Cmid%20Q_0)%0A%5Cright%5C%7D%0A%5Ctag%7B3%7D"></span></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?P_n=%5Cfrac1n%5Csum_%7Bi=1%7D%5En%5Cdelta_%7Bz_i%7D"> is the empirical distribution of the data and <img src="https://latex.codecogs.com/png.latex?D_n"> is a discrepancy between the predictive <img src="https://latex.codecogs.com/png.latex?P_Q"> and the empirical distribution <img src="https://latex.codecogs.com/png.latex?P_n">. The first term scores the mixture predictive directly, while the second term keeps <img src="https://latex.codecogs.com/png.latex?Q"> close to a reference measure <img src="https://latex.codecogs.com/png.latex?Q_0">. The discrepancy <img src="https://latex.codecogs.com/png.latex?D_n(P_n,P)"> may be chosen as the negative log likelihood, i.e.</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AD_n(P_n,P_Q)%20=%20-%5Csum_%7Bi=1%7D%5En%20%5Clog%20%5Cint_%5CTheta%20p_%5Ctheta(z_i)%5C,dQ(%5Ctheta),%0A"></p>
+<p>but indeed it does not have to be. It can be any scoring rule and a few examples are given in the next section. The regularization term is important to avoid overfitting, especially when the model is misspecified and the mixture predictive can be very flexible. For a pointwise <a href="../../notes/scoring_rules/scoring.html">scoring rule</a> <img src="https://latex.codecogs.com/png.latex?S">, with smaller scores being better, the discrepancy can be written as</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0AD_n(P_n,P_Q)%20=%20%5Csum_%7Bi=1%7D%5En%20S(P_Q,z_i).%0A"></p>
+<p>Note that the quantity <img src="https://latex.codecogs.com/png.latex?%5Clambda_n"> can be chosen to depend on <img src="https://latex.codecogs.com/png.latex?n">, and it can be tuned to optimize predictive performance, typically using a validation set or cross-validation.</p>
+</section>
+<section id="log-score-and-mixture-likelihood" class="level3">
+<h3 class="anchored" data-anchor-id="log-score-and-mixture-likelihood">Log score and mixture likelihood</h3>
+<p>With the log score and no KL penalty, Equation&nbsp;3 becomes</p>
+<p><span id="eq-mixture-likelihood"><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_Q%0A%5Cleft%5C%7B%0A-%5Csum_%7Bi=1%7D%5En%0A%5Clog%5Cint_%5CTheta%20p_%5Ctheta(z_i)%5C,dQ(%5Ctheta)%0A%5Cright%5C%7D.%0A%5Ctag%7B4%7D"></span></p>
+<p>This is maximum likelihood estimation for a mixture model with unknown mixing distribution <span class="citation" data-cites="Lindsay1995">(Lindsay 1995)</span>. So in this case the predictive posterior is doing classical mixture estimation. Restricting <img src="https://latex.codecogs.com/png.latex?Q"> to a finite collection of predictors gives convex aggregation. The corresponding objective using cross-validated predictive densities gives stacking <span class="citation" data-cites="Yao2018">(Yao et al. 2018)</span>. Better prediction may simply mean that mixtures predict better than single components. The posterior-like part is the <a href="../../notes/information_theory_basics/information_theory_entropy.html">entropy</a> penalty on <img src="https://latex.codecogs.com/png.latex?Q">.</p>
+</section>
+<section id="conditional-prediction" class="level3">
+<h3 class="anchored" data-anchor-id="conditional-prediction">Conditional prediction</h3>
+<p>For supervised data, write <img src="https://latex.codecogs.com/png.latex?x%5Cin%5Cmathcal%20X"> for covariates and <img src="https://latex.codecogs.com/png.latex?y%5Cin%5Cmathcal%20Y"> for responses so that the observation is <img src="https://latex.codecogs.com/png.latex?z=(x,y)%5Cin%5Cmathcal%20X%5Ctimes%5Cmathcal%20Y">. Replace <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta"> by a conditional distribution <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta(dy%5Cmid%20x)"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%20Y"> and the mixture predictive is</p>
+<p><span id="eq-conditional-mixture"><img src="https://latex.codecogs.com/png.latex?%0AP_Q(dy%5Cmid%20x)%0A=%0A%5Cint_%5CTheta%20P_%5Ctheta(dy%5Cmid%20x)%5C,dQ(%5Ctheta).%0A%5Ctag%7B5%7D"></span></p>
+<p>If one uses a proper scoring rule <img src="https://latex.codecogs.com/png.latex?S"> as the discrepancy, the predictive posterior solves</p>
+<p><span id="eq-conditional-score"><img src="https://latex.codecogs.com/png.latex?%0AQ_n%5EP%0A%5Cin%0A%5Cmathop%7B%5Cmathrm%7Bargmin%7D%7D_%7BQ%5Cin%5Cmathcal%20P(%5CTheta)%7D%0A%5Cleft%5C%7B%0A%5Csum_%7Bi=1%7D%5En%20S(P_Q(%5Ccdot%5Cmid%20x_i),y_i)%0A+%0A%5Clambda_nD_%7B%5Ctext%7BKL%7D%7D(Q%5Cmid%20Q_0)%0A%5Cright%5C%7D.%0A%5Ctag%7B6%7D"></span></p>
+<p>where as usual the first term scores the mixture predictive and the second term keeps <img src="https://latex.codecogs.com/png.latex?Q"> close to a reference measure <img src="https://latex.codecogs.com/png.latex?Q_0">. The log score is a special case, but other proper scoring rules can be used as well.</p>
+</section>
+<section id="a-latent-subpopulation-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-latent-subpopulation-example">A latent-subpopulation example</h3>
+<p>Consider the Gaussian regression model <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta(dy%5Cmid%20x)=%5Cmathcal%20N(y;x%5E%5Ctop%5Ctheta,%5Csigma%5E2)%5C,dy"> where <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2"> is known and <img src="https://latex.codecogs.com/png.latex?%5Ctheta%5Cin%5Cmathbb%20R%5Ep"> is the regression coefficient. Now suppose the population has unobserved groups:</p>
+<p><span id="eq-latent-mixture"><img src="https://latex.codecogs.com/png.latex?%0AY%5Cmid%20X=x%0A%5Csim%0A%5Csum_%7Bk=1%7D%5EK%20w_k%5C,%5Cmathcal%20N(x%5E%5Ctop%5Ctheta_k,%5Csigma%5E2).%0A%5Ctag%7B7%7D"></span></p>
+<p>Bayes under the single-slope model can concentrate near one compromise slope as data accumulate, with arbitrarily poor predictive performance. A predictive posterior can put mass near <img src="https://latex.codecogs.com/png.latex?%5Ctheta_1,%5Cldots,%5Ctheta_K">, which gives a mixture predictive that can be much closer to the truth. If the groups are part of the scientific model, <img src="https://latex.codecogs.com/png.latex?Q"> estimates population heterogeneity. If the same mixture is only approximating nonlinear regression, heteroscedastic noise, or missing covariates, <img src="https://latex.codecogs.com/png.latex?Q"> is an ensemble representation.</p>
+</section>
+<section id="a-misspecified-simulator-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-misspecified-simulator-example">A misspecified simulator example</h3>
+<p>The interpretation changes in mechanistic models. Consider a mechanistic simulator <img src="https://latex.codecogs.com/png.latex?P_%5Ctheta(dy%5Cmid%20x)">. For a deterministic simulator, this may be a point mass, or the simulator output plus observation noise. The parameter <img src="https://latex.codecogs.com/png.latex?%5Ctheta"> may contain rate constants, forcing terms, initial-state corrections, or boundary conditions. If the simulator omits a source of randomness or a reaction channel, ordinary Bayes can concentrate around one best-fitting but incorrect simulator as data accumulate. The mixture can add predictive spread, as is empirically observed in ensemble weather forecasts. It can widen intervals, add heavier tails, or create several plausible predictive modes. Note that this predictive spread is not a discovery of the missing mechanism. It is just a predictive fix for a misspecified model. In other words, there is nothing magical about the mixture predictive: it is just a mixture of the original model components, and the mixture weights are chosen to optimize predictive performance. A broad <img src="https://latex.codecogs.com/png.latex?Q"> may mean physical heterogeneity, missing process noise, numerical ensemble spread, or regularization.</p>
+</section>
+<section id="what-does-q-mean" class="level3">
+<h3 class="anchored" data-anchor-id="what-does-q-mean">What does Q mean?</h3>
+<p>The predictive-fit term depends on <img src="https://latex.codecogs.com/png.latex?Q"> only through <img src="https://latex.codecogs.com/png.latex?P_Q">, and the map <img src="https://latex.codecogs.com/png.latex?Q%5Cmapsto%20P_Q"> need not be injective: different mixing distributions can give the same predictive distribution. The KL penalty can distinguish between these mixing distributions. Two nearly identical predictive distributions can come from very different mixing distributions. The predictive-fit term directly supports claims about <img src="https://latex.codecogs.com/png.latex?P_Q">. On the other hand, claims about parameter uncertainty, latent heterogeneity, or scientific mechanism need more assumptions. They need identifiability of the mixture representation and a data-generating story in which <img src="https://latex.codecogs.com/png.latex?Q"> has that meaning.</p>
+<p>The regularization scale <img src="https://latex.codecogs.com/png.latex?%5Clambda_n"> also matters. While a Bayes-scaled value keeps the posterior analogy closer, a validation-tuned value targets prediction. Large <img src="https://latex.codecogs.com/png.latex?%5Clambda_n"> keeps <img src="https://latex.codecogs.com/png.latex?Q"> close to <img src="https://latex.codecogs.com/png.latex?Q_0">. Small <img src="https://latex.codecogs.com/png.latex?%5Clambda_n"> chases predictive fit. In the second case, the spread of <img src="https://latex.codecogs.com/png.latex?Q"> is partly a tuning effect.</p>
+</section>
+<section id="computation" class="level3">
+<h3 class="anchored" data-anchor-id="computation">Computation</h3>
+<p>The optimization is over distributions <img src="https://latex.codecogs.com/png.latex?Q"> on parameter space, so computation starts by choosing a representation of <img src="https://latex.codecogs.com/png.latex?Q">. A variational implementation chooses a parametric density <img src="https://latex.codecogs.com/png.latex?q_%5Cvarphi"> on <img src="https://latex.codecogs.com/png.latex?%5CTheta"> and optimizes <img src="https://latex.codecogs.com/png.latex?%5Cvarphi">. A particle implementation approximates <img src="https://latex.codecogs.com/png.latex?Q"> by</p>
+<p><span id="eq-particle-q"><img src="https://latex.codecogs.com/png.latex?%0AQ_M=%5Cfrac1M%5Csum_%7Bm=1%7D%5EM%5Cdelta_%7B%5Ctheta_m%7D%0A%5Ctag%7B8%7D"></span></p>
+<p>Without the KL penalty, optimizing the particle locations gives a generally nonconvex optimization problem, often tackled with stochastic gradient descent. With a continuous prior and a positive KL penalty, the particles instead approximate a continuous solution, for example through interacting Langevin sampling: directly substituting <img src="https://latex.codecogs.com/png.latex?Q_M"> into the KL term would give infinity.</p>
+<p>For maximum mean discrepancy (MMD), the continuous ranked probability score (CRPS), or energy scores, the predictive-fit term can often be estimated from simulations without evaluating <img src="https://latex.codecogs.com/png.latex?p_%5Ctheta">. The KL term still requires separate treatment through densities on parameter space or suitable sampling dynamics.</p>
+</section>
+<section id="where-this-appears" class="level3">
+<h3 class="anchored" data-anchor-id="where-this-appears">Where this appears</h3>
+<p>Several recent papers study this score-the-mixture update. Predictive variational inference, prediction-centric uncertainty quantification, and predictively oriented posteriors all fit the score-the-mixture pattern <span class="citation" data-cites="Lai2024 Shen2024 McLatchie2025">(Lai, Linero, and Yao 2024; Shen et al. 2025; McLatchie et al. 2025)</span>. Generalized Bayes fits the average-loss pattern <span class="citation" data-cites="Bissiri2016">(Bissiri, Holmes, and Walker 2016)</span>. MMD posterior bootstrap and MMD regression are nearby, but they remain parameter-projection methods unless they score the mixture predictive itself.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-Bissiri2016" class="csl-entry">
+Bissiri, P. G., C. C. Holmes, and S. G. Walker. 2016. <span>“<span class="nocase">A General Framework for Updating Belief Distributions</span>.”</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 78 (5). Oxford University Press (OUP): 1103–30. <a href="https://doi.org/10.1111/rssb.12158">https://doi.org/10.1111/rssb.12158</a>.
+</div>
+<div id="ref-Lai2024" class="csl-entry">
+Lai, Jinlin, Antonio Linero, and Yuling Yao. 2024. <span>“<span class="nocase">Predictive variational inference: Learn the predictively optimal posterior distribution</span>.”</span> arXiv preprint arXiv:2410.14843. <a href="https://arxiv.org/abs/2410.14843">https://arxiv.org/abs/2410.14843</a>.
+</div>
+<div id="ref-Lindsay1995" class="csl-entry">
+Lindsay, Bruce G. 1995. <em><span class="nocase">Mixture Models: Theory, Geometry and Applications</span></em>. <em>NSF-CBMS Regional Conference Series in Probability and Statistics</em>. Institute of Mathematical Statistics; American Statistical Association. <a href="https://doi.org/10.1214/cbms/1462106013">https://doi.org/10.1214/cbms/1462106013</a>.
+</div>
+<div id="ref-McLatchie2025" class="csl-entry">
+McLatchie, Yann, Badr-Eddine Cherief-Abdellatif, David T. Frazier, and Jeremias Knoblauch. 2025. <span>“<span>Predictively Oriented Posteriors</span>.”</span> arXiv preprint arXiv:2510.01915. <a href="https://arxiv.org/abs/2510.01915">https://arxiv.org/abs/2510.01915</a>.
+</div>
+<div id="ref-Shen2024" class="csl-entry">
+Shen, Zheyang, Jeremias Knoblauch, Samuel Power, and Chris J. Oates. 2025. <span>“Prediction-Centric Uncertainty Quantification via <span>MMD</span>.”</span> In <em>Proceedings of the 28th International Conference on Artificial Intelligence and Statistics</em>, 258:649–57. Proceedings of Machine Learning Research. PMLR. <a href="https://proceedings.mlr.press/v258/shen25a.html">https://proceedings.mlr.press/v258/shen25a.html</a>.
+</div>
+<div id="ref-Yao2018" class="csl-entry">
+Yao, Yuling, Aki Vehtari, Daniel Simpson, and Andrew Gelman. 2018. <span>“<span class="nocase">Using Stacking to Average Bayesian Predictive Distributions (with Discussion)</span>.”</span> <em>Bayesian Analysis</em> 13 (3). Institute of Mathematical Statistics: 917–1007. <a href="https://doi.org/10.1214/17-ba1091">https://doi.org/10.1214/17-ba1091</a>.
+</div>
+</div></section></div> ]]></description>
+  <category>bayes</category>
+  <category>prediction</category>
+  <guid>https://alexxthiery.github.io/notes/predictive_posterior/predictive_posterior.html</guid>
+  <pubDate>Mon, 29 Jun 2026 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>The mean-field Potts model</title>
@@ -1916,336 +2229,6 @@ An interpretation of the conditioned process is as follows. Suppose for example 
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/doob_transforms/doob.html</guid>
   <pubDate>Mon, 13 May 2024 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>RWM &amp; HMC on manifolds</title>
-  <link>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" loading="lazy" alt="A curved green surface above its contour plot."></p>
-</figure>
-</div>
-</div>
-<p>Consider a smooth manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D%5Csubset%20%5Cmathbb%7BR%7D%5En"> of dimension <img src="https://latex.codecogs.com/png.latex?d_%7B%5Cmathcal%7BM%7D%7D%20=%20(n-d)"> defined as the zero set of a well-behaved “constraint” function <img src="https://latex.codecogs.com/png.latex?C:%20%5Cmathbb%7BR%7D%5En%20%5Cto%20%5Cmathbb%7BR%7D%5Ed">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BM%7D=%20%5C%7B%20x%20%5Cin%20%5Cmathbb%7BR%7D%5En%20%5C;%20%5Ctext%7Bsuch%20that%7D%20%5C;%20C(x)%20=%200%20%5C%7D.%0A"></p>
-<p>We would like to use MCMC to sample from a probability distribution supported on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> with density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> with respect to the uniform <a href="https://en.wikipedia.org/wiki/Hausdorff_measure">Hausdorff measure</a> on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. It is relatively straightforward to adapt standard MCMC methods when dealing with simple manifolds such as a sphere or a torus since their geodesics and several other geometric quantities are analytically tractable. Maybe surprisingly, it is in fact relatively straightforward to design MCMC samplers on general implicitly defined manifold such as <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. The article <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span> explains these ideas beautifully.</p>
-<section id="manifold-random-walk-metropolis-hastings" class="level3">
-<h3 class="anchored" data-anchor-id="manifold-random-walk-metropolis-hastings">Manifold Random Walk Metropolis-Hastings</h3>
-<p>Assume that <img src="https://latex.codecogs.com/png.latex?x_n%20%5Cin%20%5Cmathcal%7BM%7D"> is the current position of the MCMC chain. To generate a proposal <img src="https://latex.codecogs.com/png.latex?y_n%20%5Cin%20%5Cmathcal%7BM%7D"> that will eventually be accepted or rejected, one can proceed very similarly to the standard RWM algorithm with Gaussian perturbations with variance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2">. First, generate a vector <img src="https://latex.codecogs.com/png.latex?v%20%5Cin%20T_%7Bx_n%7D"> from a centred Gaussian distribution with covariance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2%20%5C,%20I"> on the tangent space <img src="https://latex.codecogs.com/png.latex?T_%7Bx_n%7D"> to <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> at <img src="https://latex.codecogs.com/png.latex?x_n">. To do so, it suffices for example to generate a standard Gaussian vector <img src="https://latex.codecogs.com/png.latex?z%20%5Csim%20%5Cmathcal%7BN%7D(0,%20%5Csigma%5E2%20I_n)"> in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5En"> and orthogonal-project it onto <img src="https://latex.codecogs.com/png.latex?T_%7Bx_n%7D">. Indeed, one cannot simply define the proposal as <img src="https://latex.codecogs.com/png.latex?x_n%20+%20v"> since it would not necessarily lie on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. Instead, one projects <img src="https://latex.codecogs.com/png.latex?x_n%20+%20v"> back to <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. To do so, one needs to define the direction used for the projection and the manifold RWM algorithm uses <img src="https://latex.codecogs.com/png.latex?T_%7Bx_n%7D%5E%5Cperp">, for reasons that will become clear later. In other words, the proposal <img src="https://latex.codecogs.com/png.latex?y_n"> is obtained by seeking a vector <img src="https://latex.codecogs.com/png.latex?w%20%5Cin%20T_%7Bx_n%7D%5E%7B%5Cperp%7D"> such that <img src="https://latex.codecogs.com/png.latex?x_n%20+%20v%20+%20w%20%5Cin%20%5Cmathcal%7BM%7D">.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/projection_onto_M.jpg" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Projection onto \mathcal{M} from [@zappa2018monte]"></p>
-<figcaption>Projection onto <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> from <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span></figcaption>
-</figure>
-</div>
-</div>
-<p>If one calls <img src="https://latex.codecogs.com/png.latex?J_%7Bx_n%7D"> the Jacobian matrix of <img src="https://latex.codecogs.com/png.latex?C"> at <img src="https://latex.codecogs.com/png.latex?x_n">, i.e.&nbsp;the matrix whose <strong>rows</strong> are the gradients of the components of <img src="https://latex.codecogs.com/png.latex?C">, this projection operation boils down to finding a vector <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> such that</p>
-<p><span id="eq-projection"><img src="https://latex.codecogs.com/png.latex?%0AC(%20%5C,%20x_n%20+%20v%20+%20J_%7Bx_n%7D%5E%5Ctop%20%5Clambda)%20=%200%20%5Cin%20%5Cmathbb%7BR%7D%5Ed.%0A%5Ctag%7B1%7D"></span></p>
-<p>Note that Equation&nbsp;1 is a non-linear equation in <img src="https://latex.codecogs.com/png.latex?%5Clambda"> that can have no solution, one solution or many solutions – this can seem like a fundamental roadblock to the design of a valid MCMC algorithm, but we will see that it is not! Before discussing in slightly more details the resolution of Equation&nbsp;1, assume that a standard root-finding algorithm takes the pair <img src="https://latex.codecogs.com/png.latex?(x_n+v,%20J_%7Bx_n%7D)"> as input and attempts to produces the projection <img src="https://latex.codecogs.com/png.latex?y_n">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctext%7BProj%7D:%20%5Cquad%20(x_n+v,%20J_%7Bx_n%7D)%20%5C;%20%5Cunderbrace%7B%5Cmapsto%7D_%7B%5Ctext%7Broot-finding%7D%7D%20%5C;%20y_n%20%5Cin%20%5Cmathcal%7BM%7D.%0A"></p>
-<p>The algorithm will either converge to one of the possible solutions or fail. If the algorithm fails to converge, one can simply reject the proposal <img src="https://latex.codecogs.com/png.latex?y_n"> and set <img src="https://latex.codecogs.com/png.latex?y_n%20=%20%5Ctext%7B(Failed)%7D"> and set <img src="https://latex.codecogs.com/png.latex?x_%7Bn+1%7D%20=%20x_n">. If the algorithm converges, this defines a valid proposal <img src="https://latex.codecogs.com/png.latex?y_n%20%5Cin%20%5Cmathcal%7BM%7D">. To ensure reversibility, and it is one of the main novelty of the article <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span>, one needs to verify that the reverse proposal <img src="https://latex.codecogs.com/png.latex?y_n%20%5Cmapsto%20x_n"> is possible.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/reverse_mcmc.jpg" class="img-fluid figure-img" style="width:80.0%" loading="lazy" alt="Reversibility check [@zappa2018monte]"></p>
-<figcaption>Reversibility check <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span></figcaption>
-</figure>
-</div>
-</div>
-<p>To do so, note that the only possibility for the reverse move <img src="https://latex.codecogs.com/png.latex?y_n%20%5Cto%20x_n"> to happen is if <img src="https://latex.codecogs.com/png.latex?x_n%20=%20%5Ctext%7BProj%7D(y_n%20+%20v',%20J_%7By_n%7D)"> where</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ax_n-y_n%20%5C;=%5C;%20%5Cunderbrace%7Bv'%7D_%7B%5Cin%20T_%7By_n%7D%7D%20%20%5C,%20+%20%5C,%20%5Cunderbrace%7Bw'%7D_%7B%5Cin%20T_%7By_n%7D%5E%7B%5Cperp%7D%7D.%0A"></p>
-<p>The uniqueness follows from the decomposition <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5En%20%5Cequiv%20T_%7By_n%7D%20%5Cotimes%20T_%7By_n%7D%5E%7B%5Cperp%7D">. The reverse move is consequently possible if and only if the following <strong>reversibility check</strong> condition is satisfied,</p>
-<p><span id="eq-reversibility"><img src="https://latex.codecogs.com/png.latex?%0Ax_n%20=%20%5Ctext%7BProj%7D(y_n%20+%20v',%20J_%7By_n%7D).%0A%5Ctag%7B2%7D"></span></p>
-<p>This reversibility check is necessary as it is not guaranteed that the root-finding algorithm started from <img src="https://latex.codecogs.com/png.latex?y_n%20+%20v'"> converges at all, or converges to <img src="https://latex.codecogs.com/png.latex?x_n"> in the case when there are several solutions. If Equation&nbsp;2 is not satisfied, the proposal <img src="https://latex.codecogs.com/png.latex?y_n"> is rejected and one sets <img src="https://latex.codecogs.com/png.latex?x_%7Bn+1%7D%20=%20x_n">. On the other hand, if Equation&nbsp;2 is satisfied, the proposal <img src="https://latex.codecogs.com/png.latex?y_n"> is accepted with the usual Metropolis-Hastings probability</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmin%20%5Cleft%5C%7B1,%20%5Cfrac%7B%5Cpi(y_n)%20%5C,%20p(v'%7Cx_n)%7D%7B%5Cpi(x_n)%20%5C,%20p(v%7Cx_n)%7D%20%5Cright%5C%7D%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?p(v%7Cx)%20=%20Z%5E%7B-1%7D%20%5C,%20%5Cexp(-%5C%7Cv%5C%7C%5E2%20/%202%20%5Csigma%5E2)"> denotes the Gaussian density on the tangent space <img src="https://latex.codecogs.com/png.latex?T_%7Bx_n%7D"> The above description defines a valid MCMC algorithm on <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D"> that is reversible with respect to the target distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)">.</p>
-</section>
-<section id="projection-onto-the-manifold" class="level3">
-<h3 class="anchored" data-anchor-id="projection-onto-the-manifold">Projection onto the manifold</h3>
-<p>As described above, the main difficulty is to solve the non-linear equation Equation&nbsp;1 describing the projection of the proposal <img src="https://latex.codecogs.com/png.latex?(x_n%20+%20v)"> back to the manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">. The projection is along the space spanned by the columns of <img src="https://latex.codecogs.com/png.latex?J_%7Bx_n%7D%5E%5Ctop%20%5Cin%20%5Cmathbb%7BR%7D%5E%7Bn,d%7D">, i.e.&nbsp;find a vector <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> such that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5CPhi(%5Clambda)%20=%20C(%20%5C,%20x_n%20+%20v%20+%20J_%7Bx_n%7D%5E%5Ctop%20%5Clambda)%20=%200%20%5Cin%20%5Cmathbb%7BR%7D%5Ed.%0A"></p>
-<p>One can use a standard Newton’s method to solve this equation started from <img src="https://latex.codecogs.com/png.latex?%5Clambda_0=0">. Setting for notational convenience <img src="https://latex.codecogs.com/png.latex?q(%5Clambda)%20=%20x_n%20+%20v%20+%20J_%7Bx_n%7D%5ET%20%5C,%20%5Clambda">, this boils down to iterating</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clambda_%7Bk+1%7D%20-%20%5Clambda_%7Bk%7D%0A=%0A-%20%5Cleft(%20J_%7Bq(%5Clambda_k)%7D%20%5C,%20J_%7Bx_n%7D%5E%5Ctop%20%5Cright)%5E%7B-1%7D%20%5C,%20%5CPhi(%5Clambda_k).%0A"></p>
-<p>As described in <span class="citation" data-cites="barth1995algorithms">(Barth et al. 1995)</span>, it can sometimes be computationally advantageous to use a quasi-Newton method and use instead</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Clambda_%7Bk+1%7D%20-%20%5Clambda_%7Bk%7D%0A=%0A-%20G%5E%7B-1%7D%20%5C,%20%5CPhi(%5Clambda_k)%0A"></p>
-<p>with <strong>fixed</strong> positive definite matrix <img src="https://latex.codecogs.com/png.latex?G%20=%20J_%7Bx_n%7D%20%5C,%20J_%7Bx_n%7D%5E%5Ctop"> since one can then pre-compute a decomposition of <img src="https://latex.codecogs.com/png.latex?G"> and use it to solve the linear systems at each iterations. In some recent and related work <span class="citation" data-cites="au2020manifold">(Au, Graham, and Thiery 2022)</span>, we observed that the standard Newton method performed well in the settings we considered and there was most of the time no computational advantage to using a quasi-Newton method. In practice, the main computational bottleneck is to compute the Jacobian matrix <img src="https://latex.codecogs.com/png.latex?J_%7Bx_n%7D">, although it is problem-dependent and some structure can typically be exploited. In practice, only a relatively small number of iterations are performed and the root-finding algorithm is stopped as soon as <img src="https://latex.codecogs.com/png.latex?%5C%7C%5CPhi(%5Clambda_k)%5C%7C"> is below a certain threshold. If the stepsize is small, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?%5C%7Cv%5C%7C%20%5Cll%201">, it is typically the case that the Newton’s method will converge to a solution in only a very small number of iterations – indeed, <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a> is quadratically convergent when close to a solution.</p>
-<figure style="text-align:center;" class="figure">
-<video controls="" loop="" muted="" playsinline="" preload="none" poster="RWM_double_torus-poster.jpg" style="width:90%;max-width:100%;height:auto" aria-label="30k RWM chains ran in parallel to explore a double torus.">
-<source src="RWM_double_torus.mp4" type="video/mp4">
-<a href="RWM_double_torus.mp4">Download the animation</a>.
-</video>
-<figcaption>30k RWM chains ran in parallel to explore a double torus.</figcaption>
-</figure>
-<p>In the figure above, I have implemented the RWM algorithm above described to sample from the uniform distribution supported on a double torus described by the constraint function <img src="https://latex.codecogs.com/png.latex?C:%20%5Cmathbb%7BR%7D%5E3%20%5Cto%20%5Cmathbb%7BR%7D"> given as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AC(x,y,z)%20=%20(x%5E2%20%5C,%20(x%5E2%20-%201)%20+%20y%5E2)%5E2+z%5E2-0.03.%0A"></p>
-<p>The figure shows <img src="https://latex.codecogs.com/png.latex?30,000"> chains ran in parallel, which is straightforward to implement in practice with JAX <span class="citation" data-cites="jax2018github">(Bradbury et al. 2018)</span>. All the chains are initialized from the same position so that one can visualize the evolution of the density of particles.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/MCMC_on_manifold/RWM_manifold_tuning.png" class="img-fluid figure-img" style="width:100.0%" loading="lazy" alt="Tuning of manifold-RWM"></p>
-<figcaption>Tuning of manifold-RWM</figcaption>
-</figure>
-</div>
-</div>
-<p>One can for example monitor the usual expected squared jump distance</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextrm%7B(ESJD)%7D%20%5Cequiv%20%5Cmathbb%7BE%7D%5B%5C%7CX_%7Bn+1%7D%20-%20X_n%5C%7C%5E2%5D%0A"></p>
-<p>and maximize it to tune the RWM step-size; it would probably make slightly more sense to monitor the squared geodesic distances instead the naive squared norm <img src="https://latex.codecogs.com/png.latex?%5C%7CX_%7Bn+1%7D%20-%20X_n%5C%7C%5E2">, but that’s way to much hassle and would probably make only a negligible difference. In the figure above, I have plotted the expected squared jump distance as a function of the acceptance rate for different step-sizes. It is interesting to see a pattern extremely similar to the one observed in the standard RWM algorithm <span class="citation" data-cites="roberts2001optimal">(Roberts and Rosenthal 2001)</span>: in this double torus example, the optimal acceptance rate is around <img src="https://latex.codecogs.com/png.latex?25%5C%25">. Note that since the target distribution is uniform, the rate of acceptance is only very slightly lower than the proportion of successful reversibility checks.</p>
-</section>
-<section id="hamiltonian-monte-carlo-hmc-on-manifolds" class="level3">
-<h3 class="anchored" data-anchor-id="hamiltonian-monte-carlo-hmc-on-manifolds">Hamiltonian Monte Carlo (HMC) on manifolds</h3>
-<p>While the Random Walk Metropolis-Hastings algorithm is interesting, exploiting gradient information is often necessary to design efficient MCMC samplers. Consider a single iteration of a standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> sampler targeting a density <img src="https://latex.codecogs.com/png.latex?%5Cpi(q)"> on <img src="https://latex.codecogs.com/png.latex?q%20%5Cin%20%5Cmathbb%7BR%7D%5En">. The method proceeds by simulating from a dynamics that is reversible with respect to an extended target density <img src="https://latex.codecogs.com/png.latex?%5Cbar%7B%5Cpi%7D(q,p)"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5En%20%5Cotimes%20%5Cmathbb%7BR%7D%5En"> defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Cbar%7B%5Cpi%7D(q,p)%0A&amp;%5Cpropto%20%5Cpi(q)%20%5C,%20%5Cexp%20%5Cleft%5C%7B%20-%5Cfrac%7B1%7D%7B2m%7D%20%5C%7Cp%5C%7C%5E2%20%5Cright%5C%7D%5C%5C%0A&amp;=%20%5Cexp%5Cleft%5C%7B%20%5Clog%20%5Cpi(q)%20-%20K(p)%20%5Cright%5C%7D%0A%5Cend%7Baligned%7D%0A"></p>
-<p>for a user-defined mass parameter <img src="https://latex.codecogs.com/png.latex?m%20%3E%200">. In general, the mass parameter is a positive definite <strong>matrix</strong> but generalizing this to manifolds is slightly less useful in practice. For a time-discretization step <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%3E%200"> and a current position <img src="https://latex.codecogs.com/png.latex?(q_n,p_n)">, the method proceeds by generating a proposal <img src="https://latex.codecogs.com/png.latex?(q_%7B*%7D,p_%7B*%7D)"> defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0Ap_%7Bn+1/2%7D%20&amp;=%20p_n%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_n)%5C%5C%0Aq_%7B*%7D%20&amp;=%20q_n%20+%20%5Cvarepsilon%5C,%20m%5E%7B-1%7D%20%5C,%20p_%7Bn+1/2%7D%5C%5C%0Ap_%7B*%7D%20&amp;=%20p_%7Bn+1/2%7D%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_%7B*%7D).%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
-<p>This proposal is accepted with probability <img src="https://latex.codecogs.com/png.latex?%5Cmin%5Cleft(%201,%20%5Cbar%7B%5Cpi%7D(q_*,%20p_*)/%5Cbar%7B%5Cpi%7D(q_n,%20p_n)%20%5Cright)">. Indeed, in standard implementation, several leapfrog steps are performed instead of a single one. One can also choose to perform a single leapfrog step as above and only do a partial refreshment of the momentum after each leapfrog step – this may be more efficient or easier to implement when running a large number of HMC chains in parallel on a GPU for example. To adapt the HMC algorithm to sample from a density <img src="https://latex.codecogs.com/png.latex?%5Cpi(q)"> supported on a manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">, one can proceed similarly to the RWM algorithm by interleaving additional projection steps. These projections are needed to ensure that the momentum vectors <img src="https://latex.codecogs.com/png.latex?p_n"> remain in the right tangent spaces and the position vectors <img src="https://latex.codecogs.com/png.latex?q_n"> remain on the manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A(q_n,%20p_n)%20%5C;%20%5Cin%20%5C;%20%5Cmathcal%7BM%7D%5Ctimes%20T_%7Bq_n%7D.%0A"></p>
-<p>As in the RWM algorithm, reversibility checks need to be performed to ensure that the overall algorithm is reversible with respect to the target distribution <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(q,p)">. The resulting algorithm for generating a proposal <img src="https://latex.codecogs.com/png.latex?(q_n,%20p_n)%20%5Cmapsto%20(q_*,%20p_*)"> reads as follows:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Baligned%7D%0A%5Cwidetilde%7Bp%7D_%7Bn+1/2%7D%20&amp;=%20p_n%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_n)%5C%5C%0Ap_%7Bn+1/2%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$%5Cwidetilde%7Bp%7D_%7Bn+1/2%7D$%20onto%20$T_%7Bq_n%7D$%7D%7D%20%5C%5C%0A%5Cwidetilde%7Bq%7D_%7B*%7D%20&amp;=%20q_n%20+%20%5Cvarepsilon%5C,%20m%5E%7B-1%7D%20%5C,%20p_%7Bn+1/2%7D%5C%5C%0Aq_%7B*%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7BProj$(%5Cwidetilde%7Bq%7D_%7B*%7D,%20J_%7Bq_n%7D)$%7D%7D%5C%5C%0A%5Coverline%7Bp%7D_%7Bn+1/2%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$(q_%7B*%7D-q_n)%20%5C,%20m%20/%20%5Cvarepsilon$%20onto%20$T_%7Bq_%7B*%7D%7D$%7D%7D%20%5C%5C%0A%5Cwidetilde%7Bp%7D_%7B*%7D%20&amp;=%20%5Coverline%7Bp%7D_%7Bn+1/2%7D%20+%20%5Cfrac%7B%5Cvarepsilon%7D%7B2%7D%20%5Cnabla%20%5Clog%20%5Cpi(q_%7B*%7D)%5C%5C%0Ap_%7B*%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Ctext%7Borthogonal%20project%20$%5Cwidetilde%7Bp%7D_%7B*%7D$%20onto%20$T_%7Bq_%7B*%7D%7D$%7D%7D.%0A%5Cend%7Baligned%7D%0A%5Cright.%0A"></p>
-<p>If any of the projection operations fail, the proposal is rejected. If no failure occurs, a reversibility check is performed by running the algorithm backward starting from <img src="https://latex.codecogs.com/png.latex?(q_*,%20-p_*)">. If the reversibility check is successful, the proposal is accepted with the usual Metropolis-Hastings probability <img src="https://latex.codecogs.com/png.latex?%5Cmin%5Cleft(%201,%20%5Cbar%7B%5Cpi%7D(q_*,%20p_*)/%5Cbar%7B%5Cpi%7D(q_n,%20p_n)%20%5Cright)">.</p>
-<figure style="text-align:center;" class="figure">
-<video controls="" loop="" muted="" playsinline="" preload="none" poster="HMC_double_torus_compressed-poster.jpg" style="width:90%;max-width:100%;height:auto" aria-label="5k HMC chains ran in parallel: the momentum is not refreshed">
-<source src="HMC_double_torus_compressed.mp4" type="video/mp4">
-<a href="HMC_double_torus_compressed.mp4">Download the animation</a>.
-</video>
-<figcaption>5k HMC chains ran in parallel: the momentum is not refreshed</figcaption>
-</figure>
-<p>The article <span class="citation" data-cites="lelievre2019hybrid">(Lelièvre, Rousset, and Stoltz 2019)</span> provides a detailed description of several of these ideas along with detailed analysis and extensions.</p>
-
-
-
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
-<div id="ref-au2020manifold" class="csl-entry">
-Au, Khai Xiang, Matthew M Graham, and Alexandre H Thiery. 2022. <span>“<span class="nocase">Manifold lifting: scaling MCMC to the vanishing noise regime</span>.”</span> <em>Journal of the Royal Statistical Society: Series B</em>. <a href="https://arxiv.org/abs/2003.03950">https://arxiv.org/abs/2003.03950</a>.
-</div>
-<div id="ref-barth1995algorithms" class="csl-entry">
-Barth, Eric, Krzysztof Kuczera, Benedict Leimkuhler, and Robert D Skeel. 1995. <span>“<span class="nocase">Algorithms for constrained molecular dynamics</span>.”</span> <em>Journal of Computational Chemistry</em> 16 (10). Wiley Online Library: 1192–1209. <a href="https://doi.org/10.1002/jcc.540161003">https://doi.org/10.1002/jcc.540161003</a>.
-</div>
-<div id="ref-jax2018github" class="csl-entry">
-Bradbury, James et al. 2018. <span>“<span class="nocase"><span>JAX</span>: composable transformations of <span>P</span>ython+<span>N</span>um<span>P</span>y programs</span>.”</span> <a href="http://github.com/google/jax">http://github.com/google/jax</a>.
-</div>
-<div id="ref-lelievre2019hybrid" class="csl-entry">
-Lelièvre, Tony, Mathias Rousset, and Gabriel Stoltz. 2019. <span>“<span class="nocase">Hybrid Monte Carlo methods for sampling probability measures on submanifolds</span>.”</span> <em>Numerische Mathematik</em> 143 (2). Springer: 379–421. <a href="https://arxiv.org/abs/1807.02356">https://arxiv.org/abs/1807.02356</a>.
-</div>
-<div id="ref-roberts2001optimal" class="csl-entry">
-Roberts, Gareth O, and Jeffrey S Rosenthal. 2001. <span>“<span class="nocase">Optimal scaling for various Metropolis-Hastings algorithms</span>.”</span> <em>Statistical Science</em> 16 (4). Institute of Mathematical Statistics: 351–67. <a href="https://doi.org/10.1214/ss/1015346320">https://doi.org/10.1214/ss/1015346320</a>.
-</div>
-<div id="ref-zappa2018monte" class="csl-entry">
-Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“<span class="nocase">Monte Carlo on manifolds: sampling densities and integrating functions</span>.”</span> <em>Communications on Pure and Applied Mathematics</em> 71 (12). Wiley Online Library: 2609–47. <a href="https://arxiv.org/abs/1702.08446">https://arxiv.org/abs/1702.08446</a>.
-</div>
-</div></section></div> ]]></description>
-  <category>MCMC</category>
-  <category>manifold</category>
-  <guid>https://alexxthiery.github.io/notes/MCMC_on_manifold/mcmc_manifold.html</guid>
-  <pubDate>Fri, 08 Mar 2024 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Metropolis-Hastings ratio with deterministic proposals</title>
-  <link>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>Consider a probability density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5Ed"> and a (deterministic) function <img src="https://latex.codecogs.com/png.latex?F:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D%5Ed">. Assume further that <img src="https://latex.codecogs.com/png.latex?F"> is an <a href="https://en.wikipedia.org/wiki/Involution_(mathematics)">involution</a> in the sense that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AF(F(x))%20=%20x%0A"></p>
-<p>for all <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed">. To keep things simple since it is not really the point of this short note, suppose that <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)%3E0"> everywhere and that <img src="https://latex.codecogs.com/png.latex?F"> is smooth. This type of transformations can be used to define Markov Chain Monte Carlo algorithms, eg. the standard <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a> algorithm. To design a MCMC scheme with this involution <img src="https://latex.codecogs.com/png.latex?F">, one needs to answer the following basic question: suppose that <img src="https://latex.codecogs.com/png.latex?X%20%5Csim%20%5Cpi(dx)"> and the proposal <img src="https://latex.codecogs.com/png.latex?Y%20=%20F(X)"> is constructed and accepted with probability <img src="https://latex.codecogs.com/png.latex?%5Calpha(X)">, how should the acceptance probability function <img src="https://latex.codecogs.com/png.latex?%5Calpha:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5B0,1%5D"> be chosen so that the resulting random variable <img src="https://latex.codecogs.com/png.latex?Z%20%5C;%20=%20%5C;%20Y%20%5C,%20B%20+%20(1-B)%20%5C,%20X"> is also distributed according to <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)">? The Bernoulli random variable <img src="https://latex.codecogs.com/png.latex?B"> is such that <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(B=1%7CX=x)=%5Calpha(x)">. In other words, for any test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D">, we would like <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5B%5Cvarphi(Z)%5D%20=%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X)%5D">, which means that</p>
-<p><span id="eq-necessary"><img src="https://latex.codecogs.com/png.latex?%0A%5Cint%20%20%7B%5Cleft%5C%7B%20%20%5Cvarphi(F(x))%20%5C,%20%5Calpha(x)%20+%20%5Cvarphi(x)%20%5C,%20(1-%5Calpha(x))%20%20%5Cright%5C%7D%7D%20%20%5C,%20%5Cpi(dx)%20=%20%5Cint%20%5Cvarphi(x)%20%5C,%20%5Cpi(dx).%0A%5Ctag%7B1%7D"></span></p>
-<p>Requiring for Equation&nbsp;1 to hold for any test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi"> is easily seen to be equivalent to asking for the equation</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C,%20%5Cpi(x)%20%5C;%20=%20%5C;%20%5Calpha(y)%20%5C,%20%5Cpi(y)%20%5C,%20%7CJ_F(x)%7C%0A"></p>
-<p>to hold for any <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathbb%7BR%7D%5Ed"> where <img src="https://latex.codecogs.com/png.latex?y=F(x)"> and <img src="https://latex.codecogs.com/png.latex?J_F(x)"> is the Jacobian of <img src="https://latex.codecogs.com/png.latex?F"> at <img src="https://latex.codecogs.com/png.latex?x">. Since <img src="https://latex.codecogs.com/png.latex?%7CJ_F(y)%7C%20%5Ctimes%20%7CJ_F(x)%7C%20=%201"> because the function <img src="https://latex.codecogs.com/png.latex?F"> is an involution, this also reads</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C,%20%5Cfrac%7B%5Cpi(x)%20%7D%7B%7CJ_F(x)%7C%5E%7B1/2%7D%7D%20%5C;%20=%20%5C;%0A%5Calpha(y)%20%5C,%20%5Cfrac%7B%5Cpi(y)%20%7D%7B%7CJ_F(y)%7C%5E%7B1/2%7D%7D.%0A"></p>
-<p>At this point, it becomes clear to anyone familiar with the the correctness-proof of the usual <a href="https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm">Metropolis-Hastings algorithm</a> that a possible solution is</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C;%20=%20%5C;%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%20/%20%7CJ_F(y)%7C%5E%7B1/2%7D%7D%7B%5Cpi(x)%20/%20%7CJ_F(x)%7C%5E%7B1/2%7D%7D%20%5Cright%5C%7D%7D%0A"></p>
-<p>although there are indeed many other possible solutions. Since <img src="https://latex.codecogs.com/png.latex?%7CJ_F(y)%7C%20%5Ctimes%20%7CJ_F(x)%7C%20=%201">, this also reads</p>
-<p><span id="eq-MH"><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C;%20=%20%5C;%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%7D%7B%5Cpi(x)%7D%20%5C,%20%7CJ_F(x)%7C%20%5Cright%5C%7D%7D%20.%0A%5Ctag%7B2%7D"></span></p>
-<p>One can reach a similar conclusion by looking at the Radon-Nikodym ratio <img src="https://latex.codecogs.com/png.latex?%5B%5Cpi(dx)%20%5Cotimes%20q(x,dy)%5D%20/%20%5B%5Cpi(dy)%20%5Cotimes%20q(y,dx)%5D"> where <img src="https://latex.codecogs.com/png.latex?q(x,dy)"> is the markov kernel described the deterministic transformation <span class="citation" data-cites="green1995reversible">(Green 1995)</span>, but I do not find this approach significantly simpler. The very neat article <span class="citation" data-cites="andrieu2020general">(Andrieu, Lee, and Livingstone 2020)</span> describes much more sophisticated and interesting generalizations. Indeed, Equation&nbsp;2 is often used in the simpler case when <img src="https://latex.codecogs.com/png.latex?F"> is volume preserving, i.e.&nbsp;<img src="https://latex.codecogs.com/png.latex?%7CJ_F(x)%7C=1">, as is the case for the <a href="https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo">Hamiltonian Monte Carlo (HMC)</a>. The discussion above was prompted by a student implementing a variant of this but with the wrong acceptance ratio <img src="https://latex.codecogs.com/png.latex?%5Calpha(x)%20=%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%7D%7B%5Cpi(x)%7D%20%5C,%20%5Cfrac%7B%7CJ_F(x)%7C%7D%7B%7CJ_F(y)%7C%7D%20%5Cright%5C%7D%7D%20"> and us taking quite a bit of time to find the bug…</p>
-<p>Note that there are interesting and practical situations when the function <img src="https://latex.codecogs.com/png.latex?F"> satisfies the involution property <img src="https://latex.codecogs.com/png.latex?F(F(x))=x"> only when <img src="https://latex.codecogs.com/png.latex?x"> belongs to a subset of the state-space. For instance, this can happen when implementing MCMC on a manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D%20%5Csubset%20%5Cmathbb%7BR%7D%5Ed"> and the function <img src="https://latex.codecogs.com/png.latex?F"> involves a “projection” on the manifold <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BM%7D">, as for example described in the really interesting article <span class="citation" data-cites="zappa2018monte">(Zappa, Holmes-Cerfon, and Goodman 2018)</span>. In that case, it suffices to add a “reversibility check”, i.e.&nbsp;make sure that when applying <img src="https://latex.codecogs.com/png.latex?F"> to the proposal <img src="https://latex.codecogs.com/png.latex?y=F(x)">, one goes back to <img src="https://latex.codecogs.com/png.latex?x"> in the sense that <img src="https://latex.codecogs.com/png.latex?F(y)=x">. The acceptance probability in that case should be amended and expressed as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha(x)%20%5C;%20=%20%5C;%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi(y)%7D%7B%5Cpi(x)%7D%20%5C,%20%7CJ_F(x)%7C%20%5Cright%5C%7D%7D%20%20%5C,%20%5Cmathbf%7B1%7D%20%7B%5Cleft(%20F(y)=x%20%5Cright)%7D%20.%0A"></p>
-<p>In other words, if applying <img src="https://latex.codecogs.com/png.latex?F"> to the proposal <img src="https://latex.codecogs.com/png.latex?y=F(x)"> does not lead back to <img src="https://latex.codecogs.com/png.latex?x">, the proposal is always rejected.</p>
-<section id="same-but-without-involution" class="level3">
-<h3 class="anchored" data-anchor-id="same-but-without-involution">Same, but without involution</h3>
-<p>in some situations, the requirement for <img src="https://latex.codecogs.com/png.latex?F"> to be an involution can seem cumbersome. What if we consider the more general situation of a smooth bijection <img src="https://latex.codecogs.com/png.latex?T:%20%5Cmathbb%7BR%7D%5Ed%20%5Cto%20%5Cmathbb%7BR%7D%5Ed"> and its inverse <img src="https://latex.codecogs.com/png.latex?T%5E%7B-1%7D">? In that case, one can directly apply what has been described in the previous section: it suffices to consider an extended state-space <img src="https://latex.codecogs.com/png.latex?(x,%5Cvarepsilon)"> obtained by including an index <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cin%20%5C%7B-1,1%5C%7D"> and the involution <img src="https://latex.codecogs.com/png.latex?F"> defined as</p>
-<p><span id="eq-extended"><img src="https://latex.codecogs.com/png.latex?%0AF:%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0A(x,%5Cvarepsilon=+1)%20&amp;%5Cmapsto%20(T(x),%20%5Cvarepsilon=-1)%5C%5C%0A(x,%5Cvarepsilon=-1)%20&amp;%5Cmapsto%20(T%5E%7B-1%7D(x),%20%5Cvarepsilon=+1).%0A%5Cend%7Balign%7D%0A%5Cright.%0A%5Ctag%7B3%7D"></span></p>
-<p>This allows one to define a Markov kernel that lets the distribution <img src="https://latex.codecogs.com/png.latex?%5Coverline%7B%5Cpi%7D(x,%20%5Cvarepsilon)%20=%20%5Cpi(dx)/2"> invariant. Things can even start to get a bit more interesting if a deterministic “flip” <img src="https://latex.codecogs.com/png.latex?(x,%20%5Cvarepsilon)%20%5Cmapsto%20(x,%20-%5Cvarepsilon)"> is applied after each application of the Markov kernel above describe: doing so avoids immediately coming back to <img src="https://latex.codecogs.com/png.latex?x"> in the event the move <img src="https://latex.codecogs.com/png.latex?(x,%5Cvarepsilon)%20%5Cmapsto%20(T%5E%7B%5Cvarepsilon%7D(x),%20-%5Cvarepsilon)"> is accepted. There are indeed quite a few papers exploiting this type of ideas.</p>
-</section>
-<section id="a-mixture-of-deterministic-transformations" class="level3">
-<h3 class="anchored" data-anchor-id="a-mixture-of-deterministic-transformations">A mixture of deterministic transformations?</h3>
-<p>To conclude these notes, here is a small riddle whose answer I do not have. One can check that for any <img src="https://latex.codecogs.com/png.latex?c%20%5Cin%20%5Cmathbb%7BR%7D">, the function <img src="https://latex.codecogs.com/png.latex?F_%7Bc%7D(x)%20=%20c%20+%201/(x-c)"> is an involution of the real line. This means that for any target density <img src="https://latex.codecogs.com/png.latex?%5Cpi(x)"> on the real line, one can build the associated Markov kernel <img src="https://latex.codecogs.com/png.latex?M_c"> defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AM_c(x,%20dy)%20=%20%5Calpha_c(x)%20%5C,%20%5Cdelta_%7BF_c(x)%7D(dy)%20+%20(1-%5Calpha_c(x))%20%5C,%20%5Cdelta_x(dy)%0A"></p>
-<p>for an acceptance probability <img src="https://latex.codecogs.com/png.latex?%5Calpha_c(x)"> described as above,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Calpha_c(x)%20=%20%5Cmin%20%7B%5Cleft%5C%7B%201,%20%5Cfrac%7B%5Cpi%5BF_c(x)%5D%7D%7B%5Cpi(x)%7D%20%7CF'_c(x)%7C%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>Finally, choose a <img src="https://latex.codecogs.com/png.latex?N%20%5Cgeq%202"> values <img src="https://latex.codecogs.com/png.latex?c_1,%20%5Cldots,%20c_N%20%5Cin%20%5Cmathbb%7BR%7D"> and consider the mixture of Markov kernels</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AM(x,dy)%20%5C;%20=%20%5C;%20%5Cfrac%7B1%7D%7BN%7D%20%5Csum_%7Bi=1%7D%5EN%20M_%7Bc_i%7D(x,%20dy).%0A"></p>
-<p>The Markov kernel <img src="https://latex.codecogs.com/png.latex?M(x,%20dy)"> lets the distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi"> invariant since each Markov kernel <img src="https://latex.codecogs.com/png.latex?M_%7Bc_i%7D(x,%20dy)"> does, but it is not clear at all (to me) under what conditions the associated MCMC algorithm does converge to <img src="https://latex.codecogs.com/png.latex?%5Cpi">. One can empirically check that if <img src="https://latex.codecogs.com/png.latex?N"> is very small, things can break down quite easily. On the other, for <img src="https://latex.codecogs.com/png.latex?N"> large, the mixuture of Markov kernels <img src="https://latex.codecogs.com/png.latex?M(x,dy)"> empirically seems to behave as if it were ergodic with respect to <img src="https://latex.codecogs.com/png.latex?%5Cpi">.</p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/mcmc_deterministic.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" loading="lazy" alt="Empirical distribution from deterministic-proposal MCMC compared with its standard Gaussian target."></p>
-</figure>
-</div>
-</div>
-<p>For <img src="https://latex.codecogs.com/png.latex?N=5"> values <img src="https://latex.codecogs.com/png.latex?c_1,%20%5Cldots,%20c_5%20%5Cin%20%5Cmathbb%7BR%7D"> chosen at random, the illustration aboves shows the empirical distribution of the associated Markov chain ran for <img src="https://latex.codecogs.com/png.latex?T=10%5E6"> iterations and targeting the standard Gaussian distribution <img src="https://latex.codecogs.com/png.latex?%5Cpi(dx)%20%5Cequiv%20%5Cmathcal%7BN%7D(0,1)">: the fit seems almost perfect.</p>
-
-
-
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
-<div id="ref-andrieu2020general" class="csl-entry">
-Andrieu, Christophe, Anthony Lee, and Sam Livingstone. 2020. <span>“<span class="nocase">A general perspective on the Metropolis-Hastings kernel</span>.”</span> <em>arXiv Preprint arXiv:2012.14881</em>. <a href="https://arxiv.org/abs/2012.14881">https://arxiv.org/abs/2012.14881</a>.
-</div>
-<div id="ref-green1995reversible" class="csl-entry">
-Green, Peter J. 1995. <span>“<span class="nocase">Reversible jump Markov chain Monte Carlo computation and Bayesian model determination</span>.”</span> <em>Biometrika</em> 82 (4). Oxford University Press: 711–32. <a href="https://doi.org/10.1093/biomet/82.4.711">https://doi.org/10.1093/biomet/82.4.711</a>.
-</div>
-<div id="ref-zappa2018monte" class="csl-entry">
-Zappa, Emilio, Miranda Holmes-Cerfon, and Jonathan Goodman. 2018. <span>“<span class="nocase">Monte Carlo on manifolds: sampling densities and integrating functions</span>.”</span> <em>Communications on Pure and Applied Mathematics</em> 71 (12). Wiley Online Library: 2609–47. <a href="https://doi.org/10.1002/cpa.21783">https://doi.org/10.1002/cpa.21783</a>.
-</div>
-</div></section></div> ]]></description>
-  <category>auxiliary-variable</category>
-  <guid>https://alexxthiery.github.io/notes/MCMC_deterministic_proposals/MCMC_deterministic.html</guid>
-  <pubDate>Sun, 17 Dec 2023 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Averaging and homogenization</title>
-  <link>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="averaging" class="level3">
-<h3 class="anchored" data-anchor-id="averaging">Averaging</h3>
-<p>Consider a pair of (coupled) Markov processes <img src="https://latex.codecogs.com/png.latex?X_t%20%5Cin%20%5Cmathcal%7BX%7D"> and <img src="https://latex.codecogs.com/png.latex?Y_t%20%5Cin%20%5Cmathcal%7BY%7D"> with dynamics that can informally be described as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0AdX%5E%7B%5Cvarepsilon%7D/dt%20&amp;=%20F(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D,%20W%5EX)%5C%5C%0AdY%5E%7B%5Cvarepsilon%7D/dt%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Cvarepsilon%5E%7B-1%7D%7D%20%5C,%20G(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D,%20W%5EY)%5C%5C%0A%5Cend%7Balign%7D%0A%5Cright.%0A"></p>
-<p>for two independent “noise” terms <img src="https://latex.codecogs.com/png.latex?W%5EX"> and <img src="https://latex.codecogs.com/png.latex?W%5EY"> and a time-scale parameter <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cll%201">. We assume that <img src="https://latex.codecogs.com/png.latex?X"> is a <strong>slow component</strong> that moves by <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BO%7D(%5Cdelta)"> in on the time interval <img src="https://latex.codecogs.com/png.latex?%5Bt,%20t+%5Cdelta%5D">. The scaling <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1%7D"> in the dynamics of <strong>fast process</strong> <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Cvarepsilon%7D"> indicates that we expect the process <img src="https://latex.codecogs.com/png.latex?Y"> to evolve on a time scale of order <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BO%7D(%5Cvarepsilon)">. We are interested in the limit <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200"> and hope to “average out” the fast process <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Cvarepsilon%7D"> and be able to describe the slow (and interesting) process <img src="https://latex.codecogs.com/png.latex?X%5E%7B%5Cvarepsilon%7D"> without referring to the fast process. Informally, we would like to describe the process <img src="https://latex.codecogs.com/png.latex?X%5E%7B%5Cvarepsilon%7D">, in the limit <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200">, as following an effective Markovian dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX/dt%20=%20%5Coverline%7BF%7D(X,%20W%5EX).%0A"></p>
-<p>For describing the averaging phenomenon, we typically assume some ergodicity conditions on the fast process <img src="https://latex.codecogs.com/png.latex?Y">. Here, we assume that for each fixed <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathcal%7BX%7D">, the fast process process <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Bx%5D%7D"> with fixed slow-component <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathcal%7BX%7D">, i.e.</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdY%5E%7B%5Bx%5D%7D/dt%20=%20G(x,Y%5E%7B%5Bx%5D%7D,%20W%5EY)%0A"></p>
-<p>is ergodic with respect to some probability distribution <img src="https://latex.codecogs.com/png.latex?%5Crho_x(dy)">. Although the averaging phenomenon is quite general, it is somewhat easier to illustrate it for diffusion processes. In this case, let us assume that the slow process is given by</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%5E%7B%5Cvarepsilon%7D%20=%20%5Cmu(X%5E%7B%5Cvarepsilon%7D,%20Y%5E%7B%5Cvarepsilon%7D)%20%5C,%20dt%20+%20%5Csigma(X%5E%7B%5Cvarepsilon%7D,%20Y%5E%7B%5Cvarepsilon%7D)%20%5C,%20dW%5Ex.%0A"></p>
-<p>For <img src="https://latex.codecogs.com/png.latex?X%5E%7B%5Cvarepsilon%7D_%7Bt%7D%20=%20x"> and for a time increment <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20%5Cll%201">, since the process <img src="https://latex.codecogs.com/png.latex?X%5E%7B%5Cvarepsilon%7D"> can be considered constant we have</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AX%5E%7B%5Cvarepsilon%7D_%7Bt+%5Cdelta%7D%20-%20x%0A&amp;%5Capprox%20%5C;%0A%7B%5Cleft(%20%20%5Cfrac%7B%20%5Cint_%7Bt%7D%5E%7Bt+%5Cdelta%7D%20%5Cmu(x,%20Y%5E%7B%5Cvarepsilon%7D)%20%5C,%20dt%7D%7B%5Cdelta%7D%20%20%5Cright)%7D%20%20%5C,%20%5Cdelta%20+%20%5C%0A%7B%5Cleft(%20%20%5Cfrac%7B%20%5Cint_%7Bt%7D%5E%7Bt+%5Cdelta%7D%20%5Csigma%5E2(x,%20Y%5E%7B%5Cvarepsilon%7D)%20%7D%7B%5Cdelta%7D%20%5Cright)%7D%20%5E%7B1/2%7D%20%5C,%20%5Cmathcal%7BN%7D(0,%20%5Cdelta).%0A%5Cend%7Balign%7D%0A"></p>
-<p>This can be regarded as a time-discretization of the <strong>averaged process</strong></p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%20%5C,%20=%20%5C;%20%5Coverline%7B%5Cmu%7D(X)%20%5C,%20dt%20+%20%5Coverline%7B%5Csigma%7D(X)%20%5C,%20dW%0A"></p>
-<p>for averaged drift and volatility functions give by</p>
-<p><span id="eq-av-diff"><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0A%5Coverline%7B%5Cmu%7D(x)%0A&amp;=%0A%5Cint%20%5Cmu(x,y)%20%5C,%20%5Crho_x(dy)%20%5C%5C%0A%5Coverline%7B%5Csigma%7D%5E2(x)%0A&amp;=%20%5Cint%20%5Csigma%5E2(x,y)%20%5C,%20%5Crho_x(dy).%0A%5Cend%7Balign%7D%0A%5Cright.%0A%5Ctag%7B1%7D"></span></p>
-<p>One standard approach for proving this type of results is to write the Kolmogorov equations</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Cfrac%7Bd%7D%7Bdt%7D%5Cvarphi%5E%7B%5Cvarepsilon%7D(x,y,t)%20=%20%5Cmathcal%7BL%7D%5E%7B%5Cvarepsilon%7D%20%5Cvarphi%5E%7B%5Cvarepsilon%7D(x,y,t)"> for <img src="https://latex.codecogs.com/png.latex?%5Cvarphi%5E%7B%5Cvarepsilon%7D(x,y,t)%20=%20%5Cmathbb%7BE%7D%5B%5Cvarphi(X%5E%7B%5Cvarepsilon%7D_%7Bt%7D,%20Y%5E%7B%5Cvarepsilon%7D_%7Bt%7D,%20t)%20%7C%20X%5E%7B%5Cvarepsilon%7D_%7B0%7D=x,%20Y%5E%7B%5Cvarepsilon%7D_%7B0%7D=y%5D"> and perform a <a href="https://en.wikipedia.org/wiki/Method_of_matched_asymptotic_expansions">multiscale expansion</a> <span class="citation" data-cites="hinch_1991">(Hinch 1991)</span> <span class="citation" data-cites="pavliotis2008multiscale">(Pavliotis and Stuart 2008)</span> <span class="citation" data-cites="weinan2011principles">(Weinan 2011)</span></p>
-<p><span id="eq-multiscale"><img src="https://latex.codecogs.com/png.latex?%0A%5Cvarphi%5E%7B%5Cvarepsilon%7D(x,y,t)%0A=%0AA(x,t)%20+%20%5Cvarepsilon%20B(x,y,t)%20+%20%5Cmathcal%7BO%7D(%5Cvarepsilon%5E2).%0A%5Ctag%7B2%7D"></span></p>
-<p>Indeed, the first order term <img src="https://latex.codecogs.com/png.latex?A(x,t)"> is expected to not depend on the initial condition <img src="https://latex.codecogs.com/png.latex?y"> since the process <img src="https://latex.codecogs.com/png.latex?(X%5E%7B%5Cvarepsilon%7D_t,%20Y%5E%7B%5Cvarepsilon%7D_t)"> forgets <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Cvarepsilon%7D_0%20=%20y"> on time scales of order <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon"> and we are interested in the regime <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200">. From Equation&nbsp;2 one can obtain the dynamics of the averaged process described by the function <img src="https://latex.codecogs.com/png.latex?A(x,t)">. One finds that <img src="https://latex.codecogs.com/png.latex?A"> is described by the averaged generator of the slow component, i.e.&nbsp;averaging <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5E%7BX%5E%7B%5Cvarepsilon%7D%7D"> under <img src="https://latex.codecogs.com/png.latex?%5Crho_x(dy)">; this exactly gives Equation&nbsp;1 in the case of diffusions. A typical example could be as follows:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0AdX%5E%7B%5Cvarepsilon%7D%20&amp;=%20%5Cmu(X%5E%7B%5Cvarepsilon%7D,%20Y%5E%7B%5Cvarepsilon%7D)%20dt%20+%20%5Csigma(X%5E%7B%5Cvarepsilon%7D,%20Y%5E%7B%5Cvarepsilon%7D)%20%5C,%20dW%5EX%5C%5C%0AdY%5E%7B%5Cvarepsilon%7D%20&amp;=%20-%20%5Ctextcolor%7Bred%7D%7B%5Cvarepsilon%5E%7B-1%7D%7D%20%5Cfrac%7B%20(Y%5E%7B%5Cvarepsilon%7D%20-%20X%5E%7B%5Cvarepsilon%7D)%20%7D%7B%5Csigma%5E2%7D%20%5C,%20dt%20+%20%5Csqrt%7B2%20%20%5Ctextcolor%7Bred%7D%7B%5Cvarepsilon%5E%7B-1%7D%7D%20%7D%20%5C,%20dW%5EY.%5C%5C%0A%5Cend%7Balign%7D%0A%5Cright.%0A"></p>
-<p>The fast process <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Cvarepsilon%7D_t"> is a <a href="https://en.wikipedia.org/wiki/Ornstein–Uhlenbeck_process">Ornstein-Uhlenbeck</a> process sped-up by a factor <img src="https://latex.codecogs.com/png.latex?1/%5Cvarepsilon"> that will very rapidly oscillate around <img src="https://latex.codecogs.com/png.latex?X%5E%7B%5Cvarepsilon%7D_t">, with Gaussian fluctuations with variance <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2%3E0">, ie:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Crho_x(dy)%20%5C;%20=%20%5C;%20%5Cfrac%7B%20e%5E%7B-(y-x)%5E2/2%7D%20%7D%7B%5Csqrt%7B2%5Cpi%20%5Csigma%5E2%7D%7D%5C,%20dy.%0A"></p>
-<p>This averaging phenomenon is relatively straightforward and not extremely surprising. More interesting is the homogenization phenomenon described in the next Section.</p>
-</section>
-<section id="homogenization" class="level3">
-<h3 class="anchored" data-anchor-id="homogenization">Homogenization</h3>
-<p>Consider the presence of an additional intermediate time scale <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1/2%7D">, <img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0AdX%5E%7B%5Cvarepsilon%7D/dt%20&amp;=%20%20%5Ctextcolor%7Bblue%7D%7B%5Cvarepsilon%5E%7B-1/2%7D%20H(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D)%7D%20%5C,%20+%20%5C,F(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D,%20W%5EX)%5C%5C%0AdY%5E%7B%5Cvarepsilon%7D/dt%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Cvarepsilon%5E%7B-1%7D%7D%20%5C,%20G(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D,%20W%5EY)%5C%5C%0A%5Cend%7Balign%7D%0A%5Cright.%0A"> with the same assumption that for any fixed <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathcal%7BX%7D"> the process <img src="https://latex.codecogs.com/png.latex?dY%5E%7B%5Bx%5D%7D/dt%20=%20G(x,Y%5E%7B%5Bx%5D%7D,%20W%5EY)"> is ergodic with respect to the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Crho_x(dy)">. The same reasoning as in the averaging case shows that averaging the term <img src="https://latex.codecogs.com/png.latex?F(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D,%20W%5EX)"> is relatively straightforward and has the exact same expression: it suffices to average under <img src="https://latex.codecogs.com/png.latex?%5Crho_x(dy)">. This means that one can study instead</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0AdX%5E%7B%5Cvarepsilon%7D/dt%20&amp;=%20%20%5Ctextcolor%7Bblue%7D%7B%5Cvarepsilon%5E%7B-1/2%7D%20H(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D)%7D%20%5C,%20+%20%5C,%20%5Coverline%7BF%7D(X%5E%7B%5Cvarepsilon%7D,%20W%5EX)%5C%5C%0AdY%5E%7B%5Cvarepsilon%7D/dt%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Cvarepsilon%5E%7B-1%7D%7D%20%5C,%20G(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D,%20W%5EY)%5C%5C%0A%5Cend%7Balign%7D%0A%5Cright.%0A"></p>
-<p>with, informally, <img src="https://latex.codecogs.com/png.latex?%5Coverline%7BF%7D(x,w)%20=%20%5Cint%20F(x,y,w)%20%5C,%20%5Crho_x(dy)">. The new interesting phenomenon is coming from the intermediate time scale <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1/2%7D">. Contrarily to the averaging phenomenon of the previous section that was only relying on a Law of Large Numbers, dealing with the intermediate time-scale requires exploiting a CLT and quantifying the rate of mixing of the fast process <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Bx%5D%7D"> Note that since <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1/2%7D%20%5Cgg%201">, for the dynamics to not explode one needs the <strong>centering condition</strong>:</p>
-<p><span id="eq-centering"><img src="https://latex.codecogs.com/png.latex?%0A%5Cint_%7B%5Cmathcal%7BY%7D%7D%20H(x,y)%20%5C,%20%5Crho_x(dy)%20=%200%0A%5Cqquad%20%5Ctextrm%7Bfor%20all%20%7D%20x%20%5Cin%20%5Cmathcal%7BX%7D.%0A%5Ctag%7B3%7D"></span></p>
-<p>Because of the centering condition*, the term <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7B%5Cvarepsilon%5E%7B-1/2%7D%20H(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D)%7D"> will contribute an additional noise term in the effective dynamics of the slow process. To describe this additional noise term, assume an ergodic central limit theorem (CLT) for the fast process <img src="https://latex.codecogs.com/png.latex?dY%5E%7B%5Bx%5D%7D/dt%20=%20G(x,Y%5E%7B%5Bx%5D%7D,%20W%5EY)">: for a test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi:%20%5Cmathcal%7BY%7D%5Cto%20%5Cmathbb%7BR%7D"> with zero expectation under <img src="https://latex.codecogs.com/png.latex?%5Crho_x(dy)"> we have:</p>
-<p><span id="eq-CLT"><img src="https://latex.codecogs.com/png.latex?%0A%5Clim_%7Bt%20%5Cto%20%5Cinfty%7D%20%5C;%20T%5E%7B-1/2%7D%0A%5Cint_%7Bt=0%7D%5ET%20%5C,%20%5Cvarphi(Y%5E%7B%5Bx%5D%7D_t)%20%5C,%20dt%0A%5C;%20=%20%5C;%20%5Cmathcal%7BN%7D(0,%20V_x%5B%5Cvarphi%5D)%0A%5Ctag%7B4%7D"></span></p>
-<p>for asymptotic variance <img src="https://latex.codecogs.com/png.latex?V_x%5B%5Cvarphi%5D%20%5Cgeq%200">. For a time increment <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20%3E%200"> and assuming <img src="https://latex.codecogs.com/png.latex?X%5E%7B%5Cvarepsilon%7D_%7Bt%7D=x"> we have</p>
-<p><span id="eq-split"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AX%5E%7B%5Cvarepsilon%7D_%7Bt+%5Cdelta%7D%20-%20x%0A&amp;%5Capprox%20%20%5Ctextcolor%7Bblue%7D%7B%20%5Cvarepsilon%5E%7B-1/2%7D%20%5C,%20%5Cint_%7Bu=t%7D%5E%7Bt+%5Cdelta%7D%20H(X%5E%7B%5Cvarepsilon%7D_u,Y%5E%7B%5Cvarepsilon%7D_u)%7D%20%5C,%20du%20%5C,%20+%20%5C,%20%5Cint_%7Bu=t%7D%5E%7Bt+%5Cdelta%7D%20%5Coverline%7BF%7D(x,%20W%5EX_u)%20%5C,%20du.%0A%5Cend%7Balign%7D%0A%5Ctag%7B5%7D"></span></p>
-<p>The second integral term is an averaging term that can be treated easily. Approximating the process <img src="https://latex.codecogs.com/png.latex?t%20%5Cmapsto%20Y%5E%7B%5Cvarepsilon%7D_t"> by <img src="https://latex.codecogs.com/png.latex?t%20%5Cmapsto%20Y%5E%7B%5Bx%5D%7D_%7Bt%20%5Cvarepsilon%5E%7B-1%7D%7D">, the first integral on the RHS of Equation&nbsp;5 can be approximated as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cunderbrace%7B%5Cvarepsilon%5E%7B-1/2%7D%20%5Cint_%7Bu=t%7D%5E%7Bt+%5Cdelta%7D%20%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bu%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%7D)%20%5C,%20du%7D_%7B%5Ctextrm%7BCLT%7D%7D%20%5C,%0A+%0A%5Cunderbrace%7B%5Cint_%7Bu=t%7D%5E%7Bt+%5Cdelta%7D%20%5Cvarepsilon%5E%7B-1/2%7D%20%5Cpartial_x%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bu%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%7D)%20%5C,%20(X%5E%7B%5Cvarepsilon%7D_u%20-%20x)%20%5C,%20%5C,%20du%7D_%7B%5Ctextrm%7B(drift)%7D%7D.%0A%5Cend%7Balign%7D%0A"></p>
-<p>After a time-rescaling, one can readily see that the first term is described by the CLT of Equation&nbsp;4,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cvarepsilon%5E%7B-1/2%7D%20%5Cint_%7Bu=t%7D%5E%7Bt+%5Cdelta%7D%20%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bu%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%7D)%20%5C,%20du%0A%5Capprox%20V_x%5BH(x,%20%5Ccdot)%5D%5E%7B1/2%7D%20%5Cmathcal%7BN%7D(0,%20%5Cdelta).%0A"></p>
-<p>The second term is further approximated as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cvarepsilon%5E%7B-1%7D%20%5C,%20&amp;%5Cint_%7Bu=t%7D%5E%7Bt+%5Cdelta%7D%5Cint_%7Bv=t%7D%5E%7Bt+%5Cdelta%7D%0A%5Cpartial_x%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bu%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%7D)%20%5C,%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bv%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%7D)%20%5C,%201_%7Bv%3Cu%7D%20%5C,%20du%20%5C,%20dv%5C%5C%0A&amp;=%20%20%7B%5Cleft(%20%20%5Cfrac%7B1%7D%7B%5Cdelta%20%5Cvarepsilon%5E%7B-1%7D%7D%20%5Cint_%7Bu=t%7D%5E%7Bt+%5Cdelta%20%5Cvarepsilon%5E%7B-1%7D%7D%5Cint_%7Bv=t%7D%5E%7Bt+%5Cdelta%20%5Cvarepsilon%5E%7B-1%7D%7D%20%5Cpartial_x%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bu%7D)%20%5C,%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bv%7D)%20%5C,%201_%7Bv%3Cu%7D%20%20%5Cright)%7D%20%20%5C,%20%5Cdelta,%0A%5Cend%7Balign%7D%0A"></p>
-<p>the second equality coming from the time-rescaling <img src="https://latex.codecogs.com/png.latex?t%20%5Cmapsto%20t%20%5Cvarepsilon">. The process <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Bx%5D%7D"> mixes on scale <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BO%7D(1)"> so that the term inside bracket <img src="https://latex.codecogs.com/png.latex?%20%7B%5Cleft(%20%5Cldots%20%5Cright)%7D%20"> converges to its expectation. Setting <img src="https://latex.codecogs.com/png.latex?T%20=%20%5Cdelta%20%5C,%20%5Cvarepsilon%5E%7B-1%7D%20%5Cto%20%5Cinfty">, one obtains</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AI(x)%20&amp;=%0A%5Cfrac%7B1%7D%7BT%7D%20%5Ciint_%7B%5B0,T%5D%5E2%7D%0A%5Cpartial_x%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bu%7D)%20%5C,%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bv%7D)%20%5C,%201_%7Bv%3Cu%7D%20%20%5C,%20du%20%5C,%20dv%20%5C%5C%0A&amp;%5Cto%0A%5Cint%20%5Crho_x(dy)%20%5C,%20H(x,y)%20%5C,%20%20%20%7B%5Cleft%5C%7B%20%20%5Cint_%7Bs=0%7D%5E%7B%5Cinfty%7D%20%5Cmathbb%7BE%7D%5B%5Cpartial_x%20H(%5Chat%7Bx%7D,%20Y%5E%7B%5Bx%5D%7D_s)%20%5C,%20%7C%20%20Y%5E%7B%5Bx%5D%7D_0=y%5D%20%5C,%20ds%20%20%5Cright%5C%7D%7D%20.%0A%5Cend%7Balign%7D%0A"></p>
-<p>In conclusion, the fast-slow system</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0AdX%5E%7B%5Cvarepsilon%7D%20&amp;=%20%20%5Ctextcolor%7Bblue%7D%7B%5Cvarepsilon%5E%7B-1/2%7D%20%5C,%20H(X%5E%7B%5Cvarepsilon%7D,%20Y%5E%7B%5Cvarepsilon%7D)%7D%20%5C,%20dt%20+%20%5Cmu(X%5E%7B%5Cvarepsilon%7D,%20Y%5E%7B%5Cvarepsilon%7D)%20%5C,%20dt%20+%20%5Csigma(X%5E%7B%5Cvarepsilon%7D,%20Y%5E%7B%5Cvarepsilon%7D)%20%5C,%20dW%5Ex%5C%5C%0AdY%5E%7B%5Cvarepsilon%7D%20&amp;=%20%20%5Ctextcolor%7Bred%7D%7B%5Cvarepsilon%5E%7B-1%7D%7D%20%5C,%20G(X%5E%7B%5Cvarepsilon%7D,Y%5E%7B%5Cvarepsilon%7D,%20W%5EY)%20%5C,%20dt%0A%5Cend%7Balign%7D%0A%5Cright.%0A"></p>
-<p>can be described in the regime <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200"> by the effective dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%20=%20%20%5Ctextcolor%7Bblue%7D%7BI(X)%20%5C,%20dt%20+%20%5CGamma%5E%7B1/2%7D(X)%20%5C,%20dW%5E%7BH%7D%7D%0A+%0A%5Coverline%7B%5Cmu%7D(X)%20%5C,%20dt%20+%20%5Coverline%7B%5Csigma%7D(X)%20%5C,%20dW%5EX.%0A"></p>
-<p>for two independent Brownian motions <img src="https://latex.codecogs.com/png.latex?W%5EX"> and <img src="https://latex.codecogs.com/png.latex?W%5EH">. The volatility terms <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7B%5CGamma(x)%7D"> comes from the CLT and the drift term <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7BI(x)%7D"> comes from the self-interaction term:</p>
-<p><span id="eq-homogenized-terms"><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0A%5CGamma(x)%0A&amp;=%20%5Clim_%7BT%20%5Cto%20%5Cinfty%7D%20%5C;%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D%20%7B%5Cleft%5C%7B%20T%5E%7B-1/2%7D%20%5Cint_%7B0%7D%5ET%20H(x,%20Y%5E%7B%5Bx%5D%7D_t)%20%5C,%20dt%20%5Cright%5C%7D%7D%20%5C%5C%0A%25%0AI(x)%0A&amp;=%20%5Clim_%7BT%20%5Cto%20%5Cinfty%7D%20%5C;%20%5Cfrac%7B1%7D%7BT%7D%20%5Ciint_%7B0%3Cu%3Cv%3CT%7D%20H(x,%20Y%5E%7B%5Bx%5D%7D_u)%20%5C,%20%5Cpartial_x%20H(x,%20Y%5E%7B%5Bx%5D%7D_v)%20%5C,%20du%20%5C,%20dv.%0A%5Cend%7Balign%7D%0A%5Cright.%0A%5Ctag%7B6%7D"></span></p>
-<p>For the drift function, the scaling <img src="https://latex.codecogs.com/png.latex?T%5E%7B-1%7D%20%5Cint_%7B0%3Cu%3Cv%3CT%7D%20(%5Cldots)"> may look a bit surprising at first sight as one may expect <img src="https://latex.codecogs.com/png.latex?T%5E%7B-2%7D%20%5Cint_%7B0%3Cu%3Cv%3CT%7D%20(%5Cldots)"> instead. Note that since the process <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Bx%5D%7D"> mixes on a time scale <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BO%7D(1)"> and the centering condition <img src="https://latex.codecogs.com/png.latex?%5Cint%20H(x,%20y)%20%5Crho_x(dy)=0"> holds, the expectation <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BH(x,%20Y%5E%7B%5Bx%5D%7D_u)%20%5C,%20%5Cpartial_x%20H(x,%20Y%5E%7B%5Bx%5D%7D_v)%5D"> goes to zero as soon as <img src="https://latex.codecogs.com/png.latex?%7Cu-v%7C%20%5Cgg%201">. This means that only the subset <img src="https://latex.codecogs.com/png.latex?%7Cu-v%7C%20=%20%5Cmathcal%7BO%7D(1)"> of <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D%5E2"> really matters in that double integral, hence the <img src="https://latex.codecogs.com/png.latex?(1/T)"> normalization factor.</p>
-</section>
-<section id="closed-form-solution-poisson-equation" class="level3">
-<h3 class="anchored" data-anchor-id="closed-form-solution-poisson-equation">Closed form solution &amp; Poisson equation:</h3>
-<p>The drift and volatility terms <img src="https://latex.codecogs.com/png.latex?%5CGamma(x)"> and <img src="https://latex.codecogs.com/png.latex?I(x)"> quantify the mixing properties of the fast process <img src="https://latex.codecogs.com/png.latex?Y%5E%7B%5Bx%5D%7D">. While formulas Equation&nbsp;6 are intuitive, they can be difficult to deal with if one needs the exact expressions of the drift and volatility functions. Instead, they can also be expressed in terms of the solution to an appropriate <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson equations</a>.</p>
-<p><span id="eq-poisson"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AI(x)%20&amp;=%0A%5Cfrac%7B1%7D%7BT%7D%20%5Ciint_%7B%5B0,T%5D%5E2%7D%0AH(x,Y%5E%7B%5Bx%5D%7D_%7Bv%7D)%20%5C,%20%5Cpartial_x%20H(x,Y%5E%7B%5Bx%5D%7D_%7Bu%7D)%20%5C,%201_%7Bv%3Cu%7D%20%20%5C,%20du%20%5C,%20dv%20%5C%5C%0A&amp;%5Cto%0A%5Cint%20%5Crho_x(dy)%20%5C,%20H(x,y)%20%5C,%20%5Cpartial_%7B%5Chat%7Bx%7D%7D%20%20%7B%5Cleft%5C%7B%20%20%5Cint_%7Bs=0%7D%5E%7B%5Cinfty%7D%20%5Cmathbb%7BE%7D%5BH(%5Chat%7Bx%7D,%20Y%5E%7B%5Bx%5D%7D_s)%20%5C,%20%7CY%5E%7B%5Bx%5D%7D_0=y%5D%20%5C,%20ds%20%20%5Cright%5C%7D%7D%20%5C%5C%0A&amp;=%0A-%5Cint%20%5Crho_x(dy)%20%5C,%20H(x,y)%20%5C,%20%5Cpartial_%7Bx%7D%20%5CPhi(x,y)%5C%5C%0A&amp;=%20-%5Cleft%3C%20H(x,%20%5Ccdot),%20%5Cpartial_x%20%5CPhi(x,%20%5Ccdot)%20%5Cright%3E_%7B%5Crho_x%7D%0A%5Cend%7Balign%7D%0A%5Ctag%7B7%7D"></span></p>
-<p>where the function <img src="https://latex.codecogs.com/png.latex?%5CPhi(x,y)"> is solution to the <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">Poisson equation</a></p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7BY%5E%7B%5Bx%5D%7D%7D%20%5CPhi(x,%20%5Ccdot)%20=%20H(x,%20%5Ccdot)%0A"></p>
-<p>for all <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathcal%7BX%7D"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5E%7BY%5E%7B%5Bx%5D%7D%7D"> is the generator of the fast process <img src="https://latex.codecogs.com/png.latex?dY%5E%7B%5Bx%5D%7D/dt%20=%20G(x,Y%5E%7B%5Bx%5D%7D,%20W%5EY)">. The last equality in Equation&nbsp;7 follows from the <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">integral representation</a> of the Poisson equation. Similarly, and also as explained <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">here</a>, the asymptotic variance term can also be expressed in terms of the function <img src="https://latex.codecogs.com/png.latex?%5CPhi">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5CGamma(x)%0A&amp;=%20%5Clim_%7BT%20%5Cto%20%5Cinfty%7D%20%5C;%20%5Cmathop%7B%5Cmathrm%7BVar%7D%7D%20%7B%5Cleft%5C%7B%20T%5E%7B-1/2%7D%20%5Cint_%7B0%7D%5ET%20H(x,%20Y%5E%7B%5Bx%5D%7D_t)%20%5C,%20dt%20%5Cright%5C%7D%7D%20%5C%5C%0A&amp;=%20-2%20%5Cint_%7B%5Cmathcal%7BY%7D%7D%20%5CPhi(x,%20y)%20%5C,%20H(x,%20y)%20%5C,%20%5Crho_x(dy)%5C%5C%0A&amp;=%20-2%20%5Cleft%3C%20%5CPhi,%20%5Cmathcal%7BL%7D%5E%7BY%5E%7B%5Bx%5D%7D%7D%20%5CPhi%20%5Cright%3E_%7B%5Crho_x%7D.%0A%5Cend%7Balign%7D%0A"></p>
-</section>
-<section id="example-integrated-ou-process" class="level3">
-<h3 class="anchored" data-anchor-id="example-integrated-ou-process">Example: integrated OU process</h3>
-<p>Consider a slow process obtained by integrating an OU process,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0AdX%5E%7B%5Cvarepsilon%7D%20&amp;=%20%5Cvarepsilon%5E%7B-1/2%7D%20%5C,%20Y%5E%7B%5Cvarepsilon%7D%20%5C,%20dt%5C%5C%0AdY%5E%7B%5Cvarepsilon%7D%20&amp;=%20-%5Clambda%20%5Cvarepsilon%5E%7B-1%7D%5C,%20Y%5E%7B%5Cvarepsilon%7D%20%5C,%20dt%20+%20%5Csqrt%7B2%20%5Clambda/%5Cvarepsilon%7D%20%5C,%20dW%5EY,%0A%5Cend%7Balign%7D%0A%5Cright.%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%5Clambda%20%3E%200"> is just a fixed time-scaling parameter. The fast OU process mixes on time scales of order <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BO%7D(%5Cvarepsilon)"> and has a standard Gaussian distribution as invariant distribution. Homogenization gives that in the regime <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200">, the slow process can be approximated as</p>
-<p><span id="eq-integ-OU"><img src="https://latex.codecogs.com/png.latex?%0AdX%20=%20%5Csqrt%7B2/%5Clambda%7D%20%5C,%20dW%0A%5Ctag%7B8%7D"></span></p>
-<p>since the asymptotic variance is</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7BVar%7D%7D%20%7B%5Cleft%5C%7B%20%20T%5E%7B-1/2%7D%20%5Cint_%7Bt=0%7D%5E%7BT%7D%20Y_t%20%5C,%20dt%20%5Cright%5C%7D%7D%0A%5Cto%0A2%20%5C,%20%5Cint_%7B0%7D%5E%7B%5Cinfty%7D%20C(r)%20%5C,%20dr%20=%202/%5Clambda%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?C(r)%20=%20%5Cmathbb%7BE%7D%5BY_t%20Y_%7Bt+r%7D%5D%20=%20%5Cexp%5B-%5Clambda%20r%5D"> is the autocorrelation function of the fast OU process, as explained <a href="../../notes/Poisson_Eq_Asymp_Var/Poisson_Eq_Asymp_Var.html">here</a>. The fact that the effective diffusion is (twice) the integrated autocorrelation of the fast process is an example of <a href="https://en.wikipedia.org/wiki/Green–Kubo_relations">Green-Kubo relations</a>.</p>
-</section>
-<section id="example-overdamped-langevin-dynamics" class="level3">
-<h3 class="anchored" data-anchor-id="example-overdamped-langevin-dynamics">Example: Overdamped Langevin Dynamics</h3>
-<p>This example does not exactly fall within the homogenization result described in the previous section, but almost. Consider a potential <img src="https://latex.codecogs.com/png.latex?U"> and the slow-fast dynamics:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cleft%5C%7B%0A%5Cbegin%7Balign%7D%0AdX%5E%7B%5Cvarepsilon%7D%20&amp;=%20%5Cvarepsilon%5E%7B-1/2%7D%20%5C,%20Y%5E%7B%5Cvarepsilon%7D%20%5C,%20dt%5C%5C%0AdY%5E%7B%5Cvarepsilon%7D%20&amp;=%20-%20%5Cvarepsilon%5E%7B-1%7D%5C,%20%5BY%5E%7B%5Cvarepsilon%7D+%5Cvarepsilon%5E%7B1/2%7D%5Cnabla%20U(X%5E%7B%5Cvarepsilon%7D)%5D%20%5C,%20dt%20+%20%5Csqrt%7B2%20/%5Cvarepsilon%7D%20%5C,%20dW%5EY.%0A%5Cend%7Balign%7D%0A%5Cright.%0A"></p>
-<p>For any fixed value of <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathcal%7BX%7D">, the fast OU-dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdY%20=%20-%5BY%5E%7B%5Cvarepsilon%7D+%5Cvarepsilon%5E%7B1/2%7D%5Cnabla%20U(x)%5D%20%5C,%20dt%20+%20%5Csqrt%7B2%7D%20%5C,%20dW%5EY%0A"></p>
-<p>converges to a Gaussian distribution with mean <img src="https://latex.codecogs.com/png.latex?-%5Cnabla%20U(x)"> and unit variance. The same arguments as the previous section immediately give that, starting from <img src="https://latex.codecogs.com/png.latex?X%5E%7B%5Cvarepsilon%7D_0=x">, we have</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cvarepsilon%5E%7B-1/2%7D%20%5C,%20%5Cint_%7B0%7D%5E%7B%5Cdelta%7D%20Y%5E%7B%5Cvarepsilon%7D%20%5C,%20dt%0A%5C;%20%5Cto%20%5C;%0A-%5Cnabla%20U(x)%20%5C,%20%5Cdelta%20+%20%5Csqrt%7B2%20%5Cdelta%7D%20%5C,%20%5Cmathcal%7BN%7D(0,1).%0A"></p>
-<p>The <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7B2%7D"> terms comes from the OU asymptotic variance. this shows that the slow process converges as <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200"> to the <a href="https://en.wikipedia.org/wiki/Brownian_dynamics">overdamped Langevin dynamics</a></p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%20=%20-%5Cnabla%20U(X)%20%5C;%20+%20%5C;%20%5Csqrt%7B2%7D%20%5C,%20dW.%0A"></p>
-</section>
-<section id="example-stratonovich-corrections" class="level3">
-<h3 class="anchored" data-anchor-id="example-stratonovich-corrections">Example: Stratonovich Corrections</h3>
-<p>Consider a function <img src="https://latex.codecogs.com/png.latex?f:%20%5Cmathbb%7BR%7D%5Cto%20%5Cmathbb%7BR%7D"> and the slow-fast system</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%5E%7B%5Cvarepsilon%7D%20=%20%5Cvarepsilon%5E%7B-1/2%7D%20%5C,%20f(X%5E%7B%5Cvarepsilon%7D)%20%5C,%20Y%5E%7B%5Cvarepsilon%7D%20%5C,%20dt%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?dY%5E%7B%5Cvarepsilon%7D%20=%20-(%5Clambda/%5Cvarepsilon)%20Y%5E%7B%5Cvarepsilon%7D%20+%20%5Csqrt%7B2%20%5Clambda%20/%20%5Cvarepsilon%7D"> is a fast OU process mixing on scales of order <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BO%7D(%5Cvarepsilon)"> and with standard centred Gaussian invariant distribution <img src="https://latex.codecogs.com/png.latex?%5Crho(dy)">.The discussion leading to Equation&nbsp;8 suggest that the term <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5E%7B-1/2%7D%20%5C,%20Y%5E%7B%5Cvarepsilon%7D%20%5C,%20dt"> can be heuristically be thought of as <img src="https://latex.codecogs.com/png.latex?(2/%5Clambda)%5E%7B1/2%7D%20%5C,%20dW">, which would imply that the effective dynamics for the slow-process is</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%20=%20%5Csqrt%7B2/%5Clambda%7D%20%5C,%20f(X)%20%5C,%20dW.%0A"></p>
-<p>We will see that this heuristic is <strong>wrong</strong>! In order to obtain the effective dynamics of the slow process as <img src="https://latex.codecogs.com/png.latex?%5Cvarepsilon%5Cto%200">, since the generator of the fast-OU reads <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5Cvarphi=%20%5Clambda%20%5B%20-y%5C,%5Cvarphi_y%20+%20%5Cvarphi_%7Byy%7D%5D">, one can solve the Poisson equation <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5CPsi(x,y)%20=%20f(x)y"> to obtain that <img src="https://latex.codecogs.com/png.latex?%5CPhi(x,y)%20=%20-f(x)y/%5Clambda">. One already knows that <img src="https://latex.codecogs.com/png.latex?%5Cmathop%7B%5Cmathrm%7BVar%7D%7D%5BT%5E%7B-1%7D%5Cint_%7B%5B0,T%5D%7D%20Y_t%20%5C,%20dt%5D%20=%202/%5Clambda">. The drift term is given by</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AI(x)%20&amp;=%20%5Cint%20f(x)%20%5Cpartial_x%20%5CPhi(x,y)%20%5C,%20%5Crho(dy)%5C%5C%0A&amp;=%20%5Clambda%5E%7B-1%7D%20%5Cint%20f(x)%20f'(x)%20y%5E2%20%5C,%20%5Crho(dy)%5C%5C%0A&amp;=%20%5Clambda%5E%7B-1%7D%20f(x)%20f'(x).%0A%5Cend%7Balign%7D%0A"></p>
-<p>Putting everything together gives that the effective slow dynamics reads</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0AdX%20&amp;=%20%20%5Ctextcolor%7Bblue%7D%7B%20%5Clambda%5E%7B-1%7D%20f'(X)%20f(X)%20%5C,%20dt%20%7D%20+%20%5Csqrt%7B2/%5Clambda%7D%20%5C,%20f(X)%20%5C,%20dW%5C%5C%0A&amp;=%20%5Csqrt%7B2/%5Clambda%7D%20%5C,%20f(X)%20%20%5Ctextcolor%7Bred%7D%7B%5Ccirc%7D%20dW%0A%5Cend%7Balign%7D%0A"></p>
-<p>where <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bred%7D%7B%5Ccirc%7D"> denotes <a href="https://en.wikipedia.org/wiki/Stratonovich_integral">Stratonovich integration</a>.</p>
-</section>
-<section id="readings" class="level3">
-<h3 class="anchored" data-anchor-id="readings">Readings</h3>
-<p>The book <span class="citation" data-cites="pavliotis2008multiscale">(Pavliotis and Stuart 2008)</span> is beautiful, and I quite like the section on multiscale expansion in <span class="citation" data-cites="weinan2011principles">(Weinan 2011)</span>. For proving this type of results with the “martingale problem” approach <span class="citation" data-cites="stroock1997multidimensional">(Stroock and Varadhan 1997)</span>, the lectures <span class="citation" data-cites="papanicolaou1977martingale">(Papanicolaou 1977)</span> are nicely done.</p>
-
-
-
-</section>
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
-<div id="ref-hinch_1991" class="csl-entry">
-Hinch, E. J. 1991. <em><span>Perturbation Methods</span></em>. Cambridge University Press.
-</div>
-<div id="ref-papanicolaou1977martingale" class="csl-entry">
-Papanicolaou, George. 1977. <span>“<span class="nocase">Martingale approach to some limit theorems</span>.”</span> In <em>Papers from the Duke Turbulence Conference, Duke Univ., Durham, NC, 1977</em>.
-</div>
-<div id="ref-pavliotis2008multiscale" class="csl-entry">
-Pavliotis, Grigoris, and Andrew Stuart. 2008. <em><span class="nocase">Multiscale methods: averaging and homogenization</span></em>. Springer Science &amp; Business Media.
-</div>
-<div id="ref-stroock1997multidimensional" class="csl-entry">
-Stroock, Daniel W, and SR Srinivasa Varadhan. 1997. <em><span class="nocase">Multidimensional diffusion processes</span></em>. Vol. 233. Springer Science &amp; Business Media. <a href="https://doi.org/10.1007/3-540-28999-2">https://doi.org/10.1007/3-540-28999-2</a>.
-</div>
-<div id="ref-weinan2011principles" class="csl-entry">
-Weinan, E. 2011. <em><span class="nocase">Principles of multiscale modeling</span></em>. Cambridge University Press.
-</div>
-</div></section></div> ]]></description>
-  <category>diffusion</category>
-  <guid>https://alexxthiery.github.io/notes/averaging_homogenization/averaging_homogenization.html</guid>
-  <pubDate>Mon, 27 Nov 2023 16:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
