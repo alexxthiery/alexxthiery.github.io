@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Gaussian Processes – Alexandre Thiéry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../data/dice.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-dd2997b2949c233d158df50f22f12833.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HJ0JLEF802"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HJ0JLEF802', { 'anonymize_ip': true});
+</script>
+<link rel="alternate" type="application/rss+xml" title="Alexandre Thiéry — Notes" href="https://alexxthiery.github.io/notes/index_notes_as_list.xml">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Introduction to Gaussian Processes – Alexandre Thiéry">
+<meta property="og:description" content="Alex Thiery Notes">
+<meta property="og:image" content="https://alexxthiery.github.io/notes/GP_intro/figures/random-functions.png">
+<meta property="og:site_name" content="Alexandre Thiéry">
+<meta property="og:image:height" content="660">
+<meta property="og:image:width" content="2047">
+<meta name="twitter:title" content="Introduction to Gaussian Processes – Alexandre Thiéry">
+<meta name="twitter:description" content="Alex Thiery Notes">
+<meta name="twitter:image" content="https://alexxthiery.github.io/notes/GP_intro/figures/random-functions.png">
+<meta name="twitter:creator" content="@alexxthiery">
+<meta name="twitter:image-height" content="660">
+<meta name="twitter:image-width" content="2047">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alexandre Thiéry</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index_people.html"> 
+<span class="menu-text">Research Team</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index_pubs.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/teaching.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index_notes.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../notes/index_notes_as_list.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Introduction to Gaussian Processes</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Gaussian processes</div>
+                <div class="quarto-category">regression</div>
+                <div class="quarto-category">Bayesian optimization</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">29 10 2026</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">29 10 2026</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#random-functions" id="toc-random-functions" class="nav-link active" data-scroll-target="#random-functions">Random functions</a></li>
+  <li><a href="#gaussian-processes" id="toc-gaussian-processes" class="nav-link" data-scroll-target="#gaussian-processes">Gaussian processes</a></li>
+  <li><a href="#mean-functions-and-covariance-kernels" id="toc-mean-functions-and-covariance-kernels" class="nav-link" data-scroll-target="#mean-functions-and-covariance-kernels">Mean functions and covariance kernels</a></li>
+  <li><a href="#drawing-functions-from-a-kernel" id="toc-drawing-functions-from-a-kernel" class="nav-link" data-scroll-target="#drawing-functions-from-a-kernel">Drawing functions from a kernel</a></li>
+  <li><a href="#length-scales-and-smoothness" id="toc-length-scales-and-smoothness" class="nav-link" data-scroll-target="#length-scales-and-smoothness">Length scales and smoothness</a></li>
+  <li><a href="#conditioning-on-observations" id="toc-conditioning-on-observations" class="nav-link" data-scroll-target="#conditioning-on-observations">Conditioning on observations</a></li>
+  <li><a href="#noisy-observations" id="toc-noisy-observations" class="nav-link" data-scroll-target="#noisy-observations">Noisy observations</a></li>
+  <li><a href="#choosing-the-kernel-parameters" id="toc-choosing-the-kernel-parameters" class="nav-link" data-scroll-target="#choosing-the-kernel-parameters">Choosing the kernel parameters</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>These are some introduction notes to <a href="https://en.wikipedia.org/wiki/Gaussian_process">Gaussian Processes</a> (GPs) for the optimization class DSA4212. I present the bare essentials needed to understand their use since GPs will be used extensively in the <a href="https://en.wikipedia.org/wiki/Bayesian_optimization">Bayesian Optimization</a> chapter.</p>
+<section id="random-functions" class="level2">
+<h2 class="anchored" data-anchor-id="random-functions">Random functions</h2>
+<p>Let’s start with a random function. For example, the following example was proposed in class: draw a frequency <span class="math inline">\(\omega\)</span> uniformly from <span class="math inline">\([-\pi,\pi]\)</span> and set</p>
+<p><span class="math display">\[
+f(x)=\sin(\omega x),\qquad x\in\mathbb{R}.
+\]</span></p>
+<p>Once <span class="math inline">\(\omega\)</span> has been sampled, the value of <span class="math inline">\(f\)</span> is determined at every input <span class="math inline">\(x\)</span>. Drawing another frequency gives another function: this defines a probability distribution over functions and the function values at different locations are related since the same draw of <span class="math inline">\(\omega\)</span> determines all of them. For example, every function in this family passes through zero and satisfies <span class="math inline">\(f(-x)=-f(x)\)</span>.</p>
+</section>
+<section id="gaussian-processes" class="level2">
+<h2 class="anchored" data-anchor-id="gaussian-processes">Gaussian processes</h2>
+<p>A <strong>Gaussian process</strong> (GP) is a random function <span class="math inline">\(f\)</span> such that, for any finite collection of inputs <span class="math inline">\(x_1,\ldots,x_n\)</span>, the vector</p>
+<p><span class="math display">\[
+\bigl(f(x_1),\ldots,f(x_n)\bigr)
+\]</span></p>
+<p>has a joint Gaussian distribution. In particular, each individual value <span class="math inline">\(f(x)\)</span> must be Gaussianly distributed. Note that the requirement on the joint distributions is much stronger than requiring Gaussian marginals alone. Our previous sine example indeed does not work: <span class="math inline">\(f(1)=\sin(\omega)\)</span> is random, nonconstant, and bounded between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>, so it cannot be Gaussian. In class, a student suggested another example:</p>
+<p><span class="math display">\[
+f(x)=a \, x,\qquad a\sim\mathcal{N}(0,1).
+\]</span></p>
+<p>This works as a GP! Indeed, one can readily check that the vector <span class="math inline">\((f(x_1),\ldots,f(x_n))=a(x_1,\ldots,x_n)\)</span> is <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution">jointly Gaussian</a> and we did this small calculation in class. In that example, every draw is a straight line with a random slope.</p>
+<div id="fig-random-functions" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-random-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/random-functions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-random-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Five draws of each random function. Random frequencies give the sine curves on the left; Gaussian slopes give the lines on the right. Only the second construction is a Gaussian process.
+</figcaption>
+</figure>
+</div>
+<p>Knowing one nonzero-input value of the random line determines its slope and hence the entire function. Its values at several inputs are therefore strongly constrained, and their covariance matrix is singular when there is more than one input.</p>
+</section>
+<section id="mean-functions-and-covariance-kernels" class="level2">
+<h2 class="anchored" data-anchor-id="mean-functions-and-covariance-kernels">Mean functions and covariance kernels</h2>
+<p>The mean function <span class="math inline">\(m\)</span> and covariance kernel <span class="math inline">\(k\)</span> of a random function are defined by</p>
+<p><span class="math display">\[
+\begin{aligned}
+m(x)&amp;=\mathbb{E}[f(x)],\\
+k(x,x')&amp;=\mathop{\mathrm{Cov}}\bigl(f(x),f(x')\bigr).
+\end{aligned}
+\]</span></p>
+<p>The value <span class="math inline">\(m(x)\)</span> is the average of the function values at <span class="math inline">\(x\)</span> over repeated draws. The diagonal <span class="math inline">\(k(x,x)=\mathop{\mathrm{Var}}(f(x))\)</span> describes their spread, while <span class="math inline">\(k(x,x')\)</span> describes how the values at <span class="math inline">\(x\)</span> and <span class="math inline">\(x'\)</span> vary together. For the random line example, <span class="math inline">\(\mathbb{E}[a]=0\)</span> and <span class="math inline">\(\mathbb{E}[a^2]=1\)</span> give</p>
+<p><span class="math display">\[
+m(x)=0,\qquad k(x_1,x_2)=x_1 \, x_2.
+\]</span></p>
+<p>More generally, fix <span class="math inline">\(p \geq 1\)</span> deterministic functions <span class="math inline">\(\varphi_1,\ldots,\varphi_p\)</span>, often called basis functions, and consider the random function defined by</p>
+<p><span class="math display">\[
+f(x)=\sum_{j=1}^p a_j\varphi_j(x)=\varphi(x)^\top a,
+\qquad a\sim\mathcal{N}(\mu,\Sigma),
+\]</span></p>
+<p>where <span class="math inline">\(\varphi(x)=(\varphi_1(x),\ldots,\varphi_p(x))^\top\)</span> and <span class="math inline">\(\mu\in\mathbb{R}^p\)</span>, <span class="math inline">\(\Sigma\in\mathbb{R}^{p\times p}\)</span> are the mean and covariance of the coefficients. A standard choice is <span class="math inline">\(\mu=0\)</span> and <span class="math inline">\(\Sigma=I_p\)</span>. Every finite vector of function values is again a linear transformation of the gaussian vector <span class="math inline">\(a \in \mathbb{R}^p\)</span>, and one readily checks that it is jointly Gaussian with:</p>
+<p><span class="math display">\[
+m(x)=\varphi(x)^\top\mu,
+\qquad
+k(x,x')=\varphi(x)^\top\Sigma\varphi(x').
+\]</span></p>
+<p>For example, independent standard Gaussian coefficients in <span class="math inline">\(f(x)=a_0+a_1x+a_2x^2\)</span> give random quadratic polynomials with <span class="math inline">\(m(x)=0\)</span> and <span class="math inline">\(k(x,x')=1+xx'+x^2{x'}^2\)</span>.</p>
+</section>
+<section id="drawing-functions-from-a-kernel" class="level2">
+<h2 class="anchored" data-anchor-id="drawing-functions-from-a-kernel">Drawing functions from a kernel</h2>
+<p>A Gaussian vector is determined by its mean and covariance. While above we have been constructing GPs from random coefficients and basis functions, it is usually customary to specify a GP directly via its mean function and covariance kernel. If the mean and covariance functions are given, it is straightforward to simulate the function values at any finite collection of inputs. For locations <span class="math inline">\(X=(x_1,\ldots,x_n)\)</span>, define the associated mean vector <span class="math inline">\(m_X\in\mathbb{R}^n\)</span> and covariance matrix <span class="math inline">\(K_X\in\mathbb{R}^{n\times n}\)</span> by</p>
+<p><span class="math display">\[
+(m_X)_i=m(x_i),\qquad (K_X)_{ij}=k(x_i,x_j).
+\]</span></p>
+<p>By definition, the associated GP values at the locations <span class="math inline">\(X\)</span> form a Gaussian vector, so <span class="math inline">\(f_X=(f(x_1),\ldots,f(x_n))^\top\)</span> then satisfy</p>
+<p><span id="eq-finite-gp"><span class="math display">\[
+f_X\sim\mathcal{N}(m_X,K_X).
+\tag{1}\]</span></span></p>
+<p>Note that, indeed, the kernel function <span class="math inline">\(k(x,x')\)</span> must be symmetric and give a positive semidefinite matrix <span class="math inline">\(K_X\)</span> for every choice of locations – this means that not all functions <span class="math inline">\(k(x,x')\)</span> are valid covariance kernels. These conditions ensure that the prescribed covariance matrices are valid. We write <span class="math inline">\(f\sim\mathrm{GP}(m,k)\)</span> for the resulting Gaussian process.</p>
+<p>A very common choice is the <a href="https://en.wikipedia.org/wiki/Radial_basis_function_kernel"><strong>radial basis function</strong></a> (RBF), also called the squared-exponential kernel:</p>
+<p><span id="eq-rbf"><span class="math display">\[
+k(x,x')=\sigma^2\exp\left(-\frac{\|x-x'\|^2}{2\ell^2}\right),
+\qquad \sigma^2&gt;0,\quad \ell&gt;0.
+\tag{2}\]</span></span></p>
+<p>Take <span class="math inline">\(m(x)=0\)</span> for now. How can we generate and plot a function when we have specified only this kernel? In one dimension, choose a fine grid over an interval, construct <span class="math inline">\(m_X\)</span> and <span class="math inline">\(K_X\)</span>, and generate a Gaussian vector as in <a href="#eq-finite-gp" class="quarto-xref">Equation&nbsp;1</a>. Connecting its coordinates gives a discretized draw of the function. For example, for the RBF kernel with zero mean, this produces smooth random curves as shown in <a href="#fig-rbf-prior" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<p>For the multivariate Gaussian computations in this course, we will use <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.multivariate_normal.html">SciPy</a>. Once the grid mean <code>m_X</code> and covariance matrix <code>K_X</code> have been constructed, five draws require only:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> multivariate_normal</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>draws <span class="op">=</span> multivariate_normal(m_X, K_X, allow_singular<span class="op">=</span><span class="va">True</span>).rvs(size<span class="op">=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Each row of <code>draws</code> contains the values of one function on the grid.</p>
+<div id="fig-rbf-prior" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rbf-prior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/rbf-prior.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rbf-prior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Five draws from a zero-mean RBF Gaussian process with marginal variance one and length scale 0.8. Each curve is a single jointly sampled vector of values on a fine grid.
+</figcaption>
+</figure>
+</div>
+<p>For an RBF kernel, nearby values are highly correlated, and connecting the jointly sampled points produces smooth curves. The same computation works for functions on <span class="math inline">\(\mathbb{R}^2\)</span>. Choose a two-dimensional grid, list its locations as <span class="math inline">\(x_1,\ldots,x_n\in\mathbb{R}^2\)</span>, and use their Euclidean distances in <a href="#eq-rbf" class="quarto-xref">Equation&nbsp;2</a>. The covariance matrix still has size <span class="math inline">\(n\times n\)</span>; the resulting Gaussian vector can be reshaped and plotted as a surface.</p>
+<div id="fig-rbf-surfaces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rbf-surfaces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/rbf-surfaces.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rbf-surfaces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Three independent random surfaces from the same zero-mean RBF Gaussian process on two-dimensional inputs. The marginal variance is one and the length scale is 0.8. The vertical axes and color scale agree across panels.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="length-scales-and-smoothness" class="level2">
+<h2 class="anchored" data-anchor-id="length-scales-and-smoothness">Length scales and smoothness</h2>
+<p>The RBF kernel has two parameters with different effects. Since <span class="math inline">\(\sqrt{k(x,x)}=\sigma\)</span>, the parameter <span class="math inline">\(\sigma\)</span> is the marginal standard deviation of the function. Increasing it produces a larger vertical spread of function values. The length scale <span class="math inline">\(\ell\)</span> describes how quickly the correlation decreases with distance. At distance <span class="math inline">\(\ell\)</span>, the correlation is <span class="math inline">\(e^{-1/2} \approx 61\%\)</span>; at distances much larger than <span class="math inline">\(\ell\)</span>, it is close to zero so that function values are nearly uncorrelated. A small length scale allows rapid changes over short distances. A large length scale produces functions that vary more slowly across the same interval.</p>
+<div id="fig-rbf-parameters" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rbf-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/rbf-parameters.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rbf-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Effects of the RBF parameters. Top row: varying the length scale with marginal variance fixed at one. Bottom row: rescaling the same four functions to vary the marginal variance with length scale fixed at 0.8. All panels use the same axes.
+</figcaption>
+</figure>
+</div>
+<p>Changing the RBF length scale does not change its differentiability properties: even a rapidly varying RBF draw is very smooth. The <a href="https://en.wikipedia.org/wiki/Matérn_covariance_function"><strong>Matérn</strong></a> family allows less smooth functions, with an additional parameter <span class="math inline">\(\nu\)</span> controlling their regularity, which can be very useful for more robust modeling of functions with unknown smoothness. Two common choices are <span class="math inline">\(\nu=3/2\)</span> and <span class="math inline">\(\nu=5/2\)</span>; the latter gives smoother functions. The parameters <span class="math inline">\(\sigma^2\)</span> and <span class="math inline">\(\ell\)</span> retain their roles as marginal variance and length scale.</p>
+<div id="fig-rbf-matern" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rbf-matern-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/rbf-matern.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rbf-matern-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: RBF and Matérn draws with marginal variance one and length scale 0.8. The Matérn process with smoothness parameter 3/2 allows less smooth variation. Each panel shows four independent functions.
+</figcaption>
+</figure>
+</div>
+<p>For an unknown objective in an optimization problem, assuming the regularity of an RBF process can be stronger than we wish and for this reason, Matérn kernels with finite smoothness are often preferred when used within Bayesian optimization.</p>
+</section>
+<section id="conditioning-on-observations" class="level2">
+<h2 class="anchored" data-anchor-id="conditioning-on-observations">Conditioning on observations</h2>
+<p>Suppose we now know two values of the function. We would like to draw functions that agree with these observations. Conditioning a jointly Gaussian vector gives another Gaussian vector, so conditioning a GP on observed function values gives another GP. Its updated mean function <span class="math inline">\(m_y\)</span> and covariance kernel <span class="math inline">\(k_y\)</span> describe the functions compatible with the observations. The process before observing the data is called the <strong>prior</strong>, and the conditional process is called the <strong>posterior</strong>.</p>
+<div id="fig-conditioning" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-conditioning-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/conditioning.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-conditioning-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Prior and posterior RBF draws, using the same kernel parameters in both panels. The posterior functions all pass through the two black observation points. The thick black curves are the prior and posterior means.
+</figcaption>
+</figure>
+</div>
+<p>In <a href="#fig-conditioning" class="quarto-xref">Figure&nbsp;6</a>, all posterior draws pass through the two observed values, while still differing elsewhere. The kernel determines how information about an observed value extends to other locations. For the RBF kernel, this influence decreases as the distance becomes large relative to <span class="math inline">\(\ell\)</span>.</p>
+<details>
+<summary>
+The Gaussian conditioning formula
+</summary>
+<p>For jointly Gaussian vectors <span class="math inline">\(U\in\mathbb{R}^p\)</span> and <span class="math inline">\(V\in\mathbb{R}^q\)</span>, write their means as <span class="math inline">\(\mu_U,\mu_V\)</span> and covariance blocks as <span class="math inline">\(\Sigma_{UU},\Sigma_{VV},\Sigma_{UV}=\Sigma_{VU}^\top\)</span>. If <span class="math inline">\(\Sigma_{VV}\)</span> is invertible, the conditional distribution of <span class="math inline">\(U\)</span> given <span class="math inline">\(V=v\)</span> is Gaussian with</p>
+<p><span id="eq-gaussian-conditioning"><span class="math display">\[
+\begin{aligned}
+\mathbb{E}[U\mid V=v]
+&amp;=\mu_U+\Sigma_{UV}\Sigma_{VV}^{-1}(v-\mu_V),\\
+\mathop{\mathrm{Cov}}(U\mid V=v)
+&amp;=\Sigma_{UU}-\Sigma_{UV}\Sigma_{VV}^{-1}\Sigma_{VU}.
+\end{aligned}
+\tag{3}\]</span></span></p>
+</details>
+<p>For GP regression, we will use scikit-learn’s <a href="https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html">GaussianProcessRegressor</a> and its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.kernels.RBF.html">RBF</a> kernel. Here <code>X_obs</code> contains the observed inputs, <code>y_obs</code> their values, and <code>X_grid</code> the inputs where we want predictions. Input arrays have one row per location: for scalar inputs, their shapes are <code>(n, 1)</code> and <code>(n_grid, 1)</code>. This is because the scipy library is quite general and the second argument is the dimensionality of the input space, which in this case is 1. The values <code>y_obs</code> form a one-dimensional array of length <code>n</code>. With zero prior mean, marginal variance one, and length scale <span class="math inline">\(0.8\)</span>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the GP with RBF kernel and zero observation noise</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># optimizer=None keeps the kernel parameters fixed during fitting</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>gp <span class="op">=</span> GaussianProcessRegressor(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  kernel<span class="op">=</span>RBF(<span class="fl">0.8</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  alpha<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  optimizer<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># condition the GP on the observed data</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>gp.fit(X_obs, y_obs)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># extract posterior mean &amp; variance</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>mean, std <span class="op">=</span> gp.predict(X_grid, return_std<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>variance <span class="op">=</span> std<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># generate samples from the posterior</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>draws <span class="op">=</span> gp.sample_y(X_grid, n_samples<span class="op">=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The call to <code>fit</code> conditions the GP on the observations. Setting <code>optimizer=None</code> keeps the kernel parameters fixed during this computation. The arrays <code>mean</code> and <code>variance</code> give the posterior mean and variance at each grid point, while each column of <code>draws</code> is a posterior function on the grid. Use <code>return_cov=True</code> instead of <code>return_std=True</code> if the full posterior covariance matrix is needed.</p>
+</section>
+<section id="noisy-observations" class="level2">
+<h2 class="anchored" data-anchor-id="noisy-observations">Noisy observations</h2>
+<p>Often we observe a noisy version of the function value:</p>
+<p><span id="eq-observation-noise"><span class="math display">\[
+y_i=f(x_i)+\varepsilon_i,
+\qquad \varepsilon_i\sim\mathcal{N}(0,\tau^2),
+\tag{4}\]</span></span></p>
+<p>where the noise terms are independent of each other and of the function. For example, in Bayesian Optimization, the observed objective values may include measurement noise, as is almost always the case for example when evaluating real-world experiments or simulations. The parameter <span class="math inline">\(\tau^2\)</span> describes this observation noise; <span class="math inline">\(\sigma^2\)</span> in the kernel describes the prior variation of the underlying function.</p>
+<p>The observation vector now has covariance <span class="math inline">\(K_X+\tau^2I\)</span>. We can still condition using Gaussian formulas, but we no longer know the exact function values at the observed inputs. The posterior mean and draws therefore need not interpolate the observations. In <a href="#fig-noise" class="quarto-xref">Figure&nbsp;7</a>, the same eight observed values are treated either as exact measurements or as measurements with noise standard deviation <span class="math inline">\(\tau=0.15\)</span>.</p>
+<div id="fig-noise" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-noise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/noisy-observations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Regression on the same eight observations, with RBF marginal variance one and length scale 0.8. Left: treating the observations as exact forces interpolation. Right: allowing noise smooths the fit and leaves uncertainty at observed inputs. Shading shows two posterior standard deviations for the underlying function (blue) and a future noisy measurement (tan).
+</figcaption>
+</figure>
+</div>
+<p>In the code, specify the observation-noise <strong>variance</strong> through <code>alpha</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>gp <span class="op">=</span> GaussianProcessRegressor(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        kernel<span class="op">=</span>RBF(<span class="fl">0.8</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span>tau<span class="op">**</span><span class="dv">2</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>gp.fit(X_obs, y_obs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The same <code>predict</code> and <code>sample_y</code> calls now give predictions and draws conditional on the noisy data. Setting <span class="math inline">\(\tau=0\)</span> recovers exact conditioning.</p>
+<p>The variance obtained from <code>std**2</code> describes uncertainty about the underlying function. For a new noisy measurement <span class="math inline">\(y_\star=f(x_\star)+\varepsilon_\star\)</span>, its mean is still <span class="math inline">\(m_y(x_\star)\)</span>, but its variance is</p>
+<p><span class="math display">\[
+\mathop{\mathrm{Var}}(y_\star\mid y)=k_y(x_\star,x_\star)+\tau^2.
+\]</span></p>
+<p>Even if we knew the function very accurately, a new noisy measurement would still fluctuate around it. This explains the two different shaded regions in the right panel of <a href="#fig-noise" class="quarto-xref">Figure&nbsp;7</a>.</p>
+</section>
+<section id="choosing-the-kernel-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-kernel-parameters">Choosing the kernel parameters</h2>
+<p>The kernel parameters affect the posterior as well as the prior. In <a href="#fig-length-fits" class="quarto-xref">Figure&nbsp;8</a>, the observations, marginal variance, and noise level are fixed; only the length scale changes.</p>
+<div id="fig-length-fits" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-length-fits-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/length-scale-fits.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-length-fits-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Posterior fits for three length scales, keeping the observations, marginal variance one, and noise standard deviation 0.15 fixed. The curves show posterior means and the bands show two posterior standard deviations for the latent function.
+</figcaption>
+</figure>
+</div>
+<p>A short length scale allows rapid variation between observations, while a long length scale assumes stronger dependence between distant locations and favors slower variation. These parameters can also be adjusted automatically from the data. For example, omitting <code>optimizer=None</code> lets scikit-learn adjust the RBF length scale when fitting:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gp <span class="op">=</span> GaussianProcessRegressor(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        kernel<span class="op">=</span>RBF(<span class="fl">0.8</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span>tau<span class="op">**</span><span class="dv">2</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>gp.fit(X_obs, y_obs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The fitted kernel, including its updated length scale, is available as <code>gp.kernel_</code>. To use a Matérn kernel, replace <code>RBF(0.8)</code> with <code>Matern(length_scale=0.8, nu=2.5)</code> from the same kernels module. Given a small number of evaluations, the GP supplies predictions and uncertainty at locations where the objective has not been evaluated.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/alexxthiery\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="alexxthiery/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

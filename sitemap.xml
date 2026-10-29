@@ -94,7 +94,7 @@
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/index_notes.html</loc>
-    <lastmod>2026-10-26T15:29:07.751Z</lastmod>
+    <lastmod>2026-10-29T15:12:15.247Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/fisher-rao/distance.html</loc>
@@ -125,36 +125,40 @@
     <lastmod>2026-09-26T16:49:25.072Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/DiscreteDiff/DiscreteDiff.html</loc>
-    <lastmod>2026-09-26T16:49:25.081Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/GP_intro/GP_intro.html</loc>
+    <lastmod>2026-10-29T15:11:36.286Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
-    <lastmod>2026-09-26T16:49:25.085Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_control/2024_controlled.html</loc>
-    <lastmod>2024-05-14T02:14:06.000Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/index.html</loc>
-    <lastmod>2025-10-12T08:19:24.383Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/about/about.html</loc>
-    <lastmod>2026-09-26T16:33:00.378Z</lastmod>
-  </url>
-  <url>
-    <loc>https://alexxthiery.github.io/jobs/2024_diffusion/2024_diffusion.html</loc>
-    <lastmod>2025-04-08T08:53:54.000Z</lastmod>
+    <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
+    <lastmod>2026-09-26T16:49:25.069Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_koopman.html</loc>
     <lastmod>2025-02-28T02:16:17.000Z</lastmod>
   </url>
   <url>
-    <loc>https://alexxthiery.github.io/notes/DDPM_deterministic/DDPM_deterministic.html</loc>
-    <lastmod>2026-09-26T16:49:25.069Z</lastmod>
+    <loc>https://alexxthiery.github.io/jobs/2024_diffusion/2024_diffusion.html</loc>
+    <lastmod>2025-04-08T08:53:54.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/about/about.html</loc>
+    <lastmod>2026-09-26T16:33:00.378Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/index.html</loc>
+    <lastmod>2025-10-12T08:19:24.383Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/jobs/2024_koopman/2024_control/2024_controlled.html</loc>
+    <lastmod>2024-05-14T02:14:06.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/DDPM/DDPM.html</loc>
+    <lastmod>2026-09-26T16:49:25.085Z</lastmod>
+  </url>
+  <url>
+    <loc>https://alexxthiery.github.io/notes/DiscreteDiff/DiscreteDiff.html</loc>
+    <lastmod>2026-09-26T16:49:25.081Z</lastmod>
   </url>
   <url>
     <loc>https://alexxthiery.github.io/notes/Gaussian_Assimilation/gaussian_assimilation.html</loc>
