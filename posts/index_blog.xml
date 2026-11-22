@@ -10,7 +10,300 @@
 <atom:link href="https://alexxthiery.github.io/posts/index_blog.xml" rel="self" type="application/rss+xml"/>
 <description>The former blog now shares the published Notes collection and RSS entries.</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Sun, 25 Oct 2026 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 28 Oct 2026 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Introduction to Gaussian Processes</title>
+  <link>https://alexxthiery.github.io/notes/GP_intro/GP_intro.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>These are some introduction notes to <a href="https://en.wikipedia.org/wiki/Gaussian_process">Gaussian Processes</a> (GPs) for the optimization class DSA4212. I present the bare essentials needed to understand their use since GPs will be used extensively in the <a href="https://en.wikipedia.org/wiki/Bayesian_optimization">Bayesian Optimization</a> chapter.</p>
+<section id="random-functions" class="level2">
+<h2 class="anchored" data-anchor-id="random-functions">Random functions</h2>
+<p>Let’s start with a random function. For example, the following example was proposed in class: draw a frequency <img src="https://latex.codecogs.com/png.latex?%5Comega"> uniformly from <img src="https://latex.codecogs.com/png.latex?%5B-%5Cpi,%5Cpi%5D"> and set</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Af(x)=%5Csin(%5Comega%20x),%5Cqquad%20x%5Cin%5Cmathbb%7BR%7D.%0A"></p>
+<p>Once <img src="https://latex.codecogs.com/png.latex?%5Comega"> has been sampled, the value of <img src="https://latex.codecogs.com/png.latex?f"> is determined at every input <img src="https://latex.codecogs.com/png.latex?x">. Drawing another frequency gives another function: this defines a probability distribution over functions and the function values at different locations are related since the same draw of <img src="https://latex.codecogs.com/png.latex?%5Comega"> determines all of them. For example, every function in this family passes through zero and satisfies <img src="https://latex.codecogs.com/png.latex?f(-x)=-f(x)">.</p>
+</section>
+<section id="gaussian-processes" class="level2">
+<h2 class="anchored" data-anchor-id="gaussian-processes">Gaussian processes</h2>
+<p>A <strong>Gaussian process</strong> (GP) is a random function <img src="https://latex.codecogs.com/png.latex?f"> such that, for any finite collection of inputs <img src="https://latex.codecogs.com/png.latex?x_1,%5Cldots,x_n">, the vector</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbigl(f(x_1),%5Cldots,f(x_n)%5Cbigr)%0A"></p>
+<p>has a joint Gaussian distribution. In particular, each individual value <img src="https://latex.codecogs.com/png.latex?f(x)"> must be Gaussianly distributed. Note that the requirement on the joint distributions is much stronger than requiring Gaussian marginals alone. Our previous sine example indeed does not work: <img src="https://latex.codecogs.com/png.latex?f(1)=%5Csin(%5Comega)"> is random, nonconstant, and bounded between <img src="https://latex.codecogs.com/png.latex?-1"> and <img src="https://latex.codecogs.com/png.latex?1">, so it cannot be Gaussian. In class, a student suggested another example:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Af(x)=a%20%5C,%20x,%5Cqquad%20a%5Csim%5Cmathcal%7BN%7D(0,1).%0A"></p>
+<p>This works as a GP! Indeed, one can readily check that the vector <img src="https://latex.codecogs.com/png.latex?(f(x_1),%5Cldots,f(x_n))=a(x_1,%5Cldots,x_n)"> is <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution">jointly Gaussian</a> and we did this small calculation in class. In that example, every draw is a straight line with a random slope.</p>
+<div id="fig-random-functions" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-random-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/GP_intro/figures/random-functions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-random-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Five draws of each random function. Random frequencies give the sine curves on the left; Gaussian slopes give the lines on the right. Only the second construction is a Gaussian process.
+</figcaption>
+</figure>
+</div>
+<p>Knowing one nonzero-input value of the random line determines its slope and hence the entire function. Its values at several inputs are therefore strongly constrained, and their covariance matrix is singular when there is more than one input.</p>
+</section>
+<section id="mean-functions-and-covariance-kernels" class="level2">
+<h2 class="anchored" data-anchor-id="mean-functions-and-covariance-kernels">Mean functions and covariance kernels</h2>
+<p>The mean function <img src="https://latex.codecogs.com/png.latex?m"> and covariance kernel <img src="https://latex.codecogs.com/png.latex?k"> of a random function are defined by</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0Am(x)&amp;=%5Cmathbb%7BE%7D%5Bf(x)%5D,%5C%5C%0Ak(x,x')&amp;=%5Cmathop%7B%5Cmathrm%7BCov%7D%7D%5Cbigl(f(x),f(x')%5Cbigr).%0A%5Cend%7Baligned%7D%0A"></p>
+<p>The value <img src="https://latex.codecogs.com/png.latex?m(x)"> is the average of the function values at <img src="https://latex.codecogs.com/png.latex?x"> over repeated draws. The diagonal <img src="https://latex.codecogs.com/png.latex?k(x,x)=%5Cmathop%7B%5Cmathrm%7BVar%7D%7D(f(x))"> describes their spread, while <img src="https://latex.codecogs.com/png.latex?k(x,x')"> describes how the values at <img src="https://latex.codecogs.com/png.latex?x"> and <img src="https://latex.codecogs.com/png.latex?x'"> vary together. For the random line example, <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5Ba%5D=0"> and <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5Ba%5E2%5D=1"> give</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Am(x)=0,%5Cqquad%20k(x_1,x_2)=x_1%20%5C,%20x_2.%0A"></p>
+<p>More generally, fix <img src="https://latex.codecogs.com/png.latex?p%20%5Cgeq%201"> deterministic functions <img src="https://latex.codecogs.com/png.latex?%5Cvarphi_1,%5Cldots,%5Cvarphi_p">, often called basis functions, and consider the random function defined by</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Af(x)=%5Csum_%7Bj=1%7D%5Ep%20a_j%5Cvarphi_j(x)=%5Cvarphi(x)%5E%5Ctop%20a,%0A%5Cqquad%20a%5Csim%5Cmathcal%7BN%7D(%5Cmu,%5CSigma),%0A"></p>
+<p>where <img src="https://latex.codecogs.com/png.latex?%5Cvarphi(x)=(%5Cvarphi_1(x),%5Cldots,%5Cvarphi_p(x))%5E%5Ctop"> and <img src="https://latex.codecogs.com/png.latex?%5Cmu%5Cin%5Cmathbb%7BR%7D%5Ep">, <img src="https://latex.codecogs.com/png.latex?%5CSigma%5Cin%5Cmathbb%7BR%7D%5E%7Bp%5Ctimes%20p%7D"> are the mean and covariance of the coefficients. A standard choice is <img src="https://latex.codecogs.com/png.latex?%5Cmu=0"> and <img src="https://latex.codecogs.com/png.latex?%5CSigma=I_p">. Every finite vector of function values is again a linear transformation of the gaussian vector <img src="https://latex.codecogs.com/png.latex?a%20%5Cin%20%5Cmathbb%7BR%7D%5Ep">, and one readily checks that it is jointly Gaussian with:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Am(x)=%5Cvarphi(x)%5E%5Ctop%5Cmu,%0A%5Cqquad%0Ak(x,x')=%5Cvarphi(x)%5E%5Ctop%5CSigma%5Cvarphi(x').%0A"></p>
+<p>For example, independent standard Gaussian coefficients in <img src="https://latex.codecogs.com/png.latex?f(x)=a_0+a_1x+a_2x%5E2"> give random quadratic polynomials with <img src="https://latex.codecogs.com/png.latex?m(x)=0"> and <img src="https://latex.codecogs.com/png.latex?k(x,x')=1+xx'+x%5E2%7Bx'%7D%5E2">.</p>
+</section>
+<section id="drawing-functions-from-a-kernel" class="level2">
+<h2 class="anchored" data-anchor-id="drawing-functions-from-a-kernel">Drawing functions from a kernel</h2>
+<p>A Gaussian vector is determined by its mean and covariance. While above we have been constructing GPs from random coefficients and basis functions, it is usually customary to specify a GP directly via its mean function and covariance kernel. If the mean and covariance functions are given, it is straightforward to simulate the function values at any finite collection of inputs. For locations <img src="https://latex.codecogs.com/png.latex?X=(x_1,%5Cldots,x_n)">, define the associated mean vector <img src="https://latex.codecogs.com/png.latex?m_X%5Cin%5Cmathbb%7BR%7D%5En"> and covariance matrix <img src="https://latex.codecogs.com/png.latex?K_X%5Cin%5Cmathbb%7BR%7D%5E%7Bn%5Ctimes%20n%7D"> by</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A(m_X)_i=m(x_i),%5Cqquad%20(K_X)_%7Bij%7D=k(x_i,x_j).%0A"></p>
+<p>By definition, the associated GP values at the locations <img src="https://latex.codecogs.com/png.latex?X"> form a Gaussian vector, so <img src="https://latex.codecogs.com/png.latex?f_X=(f(x_1),%5Cldots,f(x_n))%5E%5Ctop"> then satisfy</p>
+<p><span id="eq-finite-gp"><img src="https://latex.codecogs.com/png.latex?%0Af_X%5Csim%5Cmathcal%7BN%7D(m_X,K_X).%0A%5Ctag%7B1%7D"></span></p>
+<p>Note that, indeed, the kernel function <img src="https://latex.codecogs.com/png.latex?k(x,x')"> must be symmetric and give a positive semidefinite matrix <img src="https://latex.codecogs.com/png.latex?K_X"> for every choice of locations – this means that not all functions <img src="https://latex.codecogs.com/png.latex?k(x,x')"> are valid covariance kernels. These conditions ensure that the prescribed covariance matrices are valid. We write <img src="https://latex.codecogs.com/png.latex?f%5Csim%5Cmathrm%7BGP%7D(m,k)"> for the resulting Gaussian process.</p>
+<p>A very common choice is the <a href="https://en.wikipedia.org/wiki/Radial_basis_function_kernel"><strong>radial basis function</strong></a> (RBF), also called the squared-exponential kernel:</p>
+<p><span id="eq-rbf"><img src="https://latex.codecogs.com/png.latex?%0Ak(x,x')=%5Csigma%5E2%5Cexp%5Cleft(-%5Cfrac%7B%5C%7Cx-x'%5C%7C%5E2%7D%7B2%5Cell%5E2%7D%5Cright),%0A%5Cqquad%20%5Csigma%5E2%3E0,%5Cquad%20%5Cell%3E0.%0A%5Ctag%7B2%7D"></span></p>
+<p>Take <img src="https://latex.codecogs.com/png.latex?m(x)=0"> for now. How can we generate and plot a function when we have specified only this kernel? In one dimension, choose a fine grid over an interval, construct <img src="https://latex.codecogs.com/png.latex?m_X"> and <img src="https://latex.codecogs.com/png.latex?K_X">, and generate a Gaussian vector as in Equation&nbsp;1. Connecting its coordinates gives a discretized draw of the function. For example, for the RBF kernel with zero mean, this produces smooth random curves as shown in Figure&nbsp;2.</p>
+<p>For the multivariate Gaussian computations in this course, we will use <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.multivariate_normal.html">SciPy</a>. Once the grid mean <code>m_X</code> and covariance matrix <code>K_X</code> have been constructed, five draws require only:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> scipy.stats <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> multivariate_normal</span>
+<span id="cb1-2"></span>
+<span id="cb1-3">draws <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> multivariate_normal(m_X, K_X, allow_singular<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>).rvs(size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)</span></code></pre></div>
+<p>Each row of <code>draws</code> contains the values of one function on the grid.</p>
+<div id="fig-rbf-prior" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rbf-prior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/GP_intro/figures/rbf-prior.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rbf-prior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Five draws from a zero-mean RBF Gaussian process with marginal variance one and length scale 0.8. Each curve is a single jointly sampled vector of values on a fine grid.
+</figcaption>
+</figure>
+</div>
+<p>For an RBF kernel, nearby values are highly correlated, and connecting the jointly sampled points produces smooth curves. The same computation works for functions on <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5E2">. Choose a two-dimensional grid, list its locations as <img src="https://latex.codecogs.com/png.latex?x_1,%5Cldots,x_n%5Cin%5Cmathbb%7BR%7D%5E2">, and use their Euclidean distances in Equation&nbsp;2. The covariance matrix still has size <img src="https://latex.codecogs.com/png.latex?n%5Ctimes%20n">; the resulting Gaussian vector can be reshaped and plotted as a surface.</p>
+<div id="fig-rbf-surfaces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rbf-surfaces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/GP_intro/figures/rbf-surfaces.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rbf-surfaces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Three independent random surfaces from the same zero-mean RBF Gaussian process on two-dimensional inputs. The marginal variance is one and the length scale is 0.8. The vertical axes and color scale agree across panels.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="length-scales-and-smoothness" class="level2">
+<h2 class="anchored" data-anchor-id="length-scales-and-smoothness">Length scales and smoothness</h2>
+<p>The RBF kernel has two parameters with different effects. Since <img src="https://latex.codecogs.com/png.latex?%5Csqrt%7Bk(x,x)%7D=%5Csigma">, the parameter <img src="https://latex.codecogs.com/png.latex?%5Csigma"> is the marginal standard deviation of the function. Increasing it produces a larger vertical spread of function values. The length scale <img src="https://latex.codecogs.com/png.latex?%5Cell"> describes how quickly the correlation decreases with distance. At distance <img src="https://latex.codecogs.com/png.latex?%5Cell">, the correlation is <img src="https://latex.codecogs.com/png.latex?e%5E%7B-1/2%7D%20%5Capprox%2061%5C%25">; at distances much larger than <img src="https://latex.codecogs.com/png.latex?%5Cell">, it is close to zero so that function values are nearly uncorrelated. A small length scale allows rapid changes over short distances. A large length scale produces functions that vary more slowly across the same interval.</p>
+<div id="fig-rbf-parameters" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rbf-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/GP_intro/figures/rbf-parameters.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rbf-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Effects of the RBF parameters. Top row: varying the length scale with marginal variance fixed at one. Bottom row: rescaling the same four functions to vary the marginal variance with length scale fixed at 0.8. All panels use the same axes.
+</figcaption>
+</figure>
+</div>
+<p>Changing the RBF length scale does not change its differentiability properties: even a rapidly varying RBF draw is very smooth. The <a href="https://en.wikipedia.org/wiki/Matérn_covariance_function"><strong>Matérn</strong></a> family allows less smooth functions, with an additional parameter <img src="https://latex.codecogs.com/png.latex?%5Cnu"> controlling their regularity, which can be very useful for more robust modeling of functions with unknown smoothness. Two common choices are <img src="https://latex.codecogs.com/png.latex?%5Cnu=3/2"> and <img src="https://latex.codecogs.com/png.latex?%5Cnu=5/2">; the latter gives smoother functions. The parameters <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2"> and <img src="https://latex.codecogs.com/png.latex?%5Cell"> retain their roles as marginal variance and length scale.</p>
+<div id="fig-rbf-matern" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rbf-matern-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/GP_intro/figures/rbf-matern.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rbf-matern-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: RBF and Matérn draws with marginal variance one and length scale 0.8. The Matérn process with smoothness parameter 3/2 allows less smooth variation. Each panel shows four independent functions.
+</figcaption>
+</figure>
+</div>
+<p>For an unknown objective in an optimization problem, assuming the regularity of an RBF process can be stronger than we wish and for this reason, Matérn kernels with finite smoothness are often preferred when used within Bayesian optimization.</p>
+</section>
+<section id="conditioning-on-observations" class="level2">
+<h2 class="anchored" data-anchor-id="conditioning-on-observations">Conditioning on observations</h2>
+<p>Suppose we now know two values of the function. We would like to draw functions that agree with these observations. Conditioning a jointly Gaussian vector gives another Gaussian vector, so conditioning a GP on observed function values gives another GP. Its updated mean function <img src="https://latex.codecogs.com/png.latex?m_y"> and covariance kernel <img src="https://latex.codecogs.com/png.latex?k_y"> describe the functions compatible with the observations. The process before observing the data is called the <strong>prior</strong>, and the conditional process is called the <strong>posterior</strong>.</p>
+<div id="fig-conditioning" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-conditioning-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/GP_intro/figures/conditioning.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-conditioning-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Prior and posterior RBF draws, using the same kernel parameters in both panels. The posterior functions all pass through the two black observation points. The thick black curves are the prior and posterior means.
+</figcaption>
+</figure>
+</div>
+<p>In Figure&nbsp;6, all posterior draws pass through the two observed values, while still differing elsewhere. The kernel determines how information about an observed value extends to other locations. For the RBF kernel, this influence decreases as the distance becomes large relative to <img src="https://latex.codecogs.com/png.latex?%5Cell">.</p>
+<details>
+<summary>
+The Gaussian conditioning formula
+</summary>
+<p>For jointly Gaussian vectors <img src="https://latex.codecogs.com/png.latex?U%5Cin%5Cmathbb%7BR%7D%5Ep"> and <img src="https://latex.codecogs.com/png.latex?V%5Cin%5Cmathbb%7BR%7D%5Eq">, write their means as <img src="https://latex.codecogs.com/png.latex?%5Cmu_U,%5Cmu_V"> and covariance blocks as <img src="https://latex.codecogs.com/png.latex?%5CSigma_%7BUU%7D,%5CSigma_%7BVV%7D,%5CSigma_%7BUV%7D=%5CSigma_%7BVU%7D%5E%5Ctop">. If <img src="https://latex.codecogs.com/png.latex?%5CSigma_%7BVV%7D"> is invertible, the conditional distribution of <img src="https://latex.codecogs.com/png.latex?U"> given <img src="https://latex.codecogs.com/png.latex?V=v"> is Gaussian with</p>
+<p><span id="eq-gaussian-conditioning"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Cmathbb%7BE%7D%5BU%5Cmid%20V=v%5D%0A&amp;=%5Cmu_U+%5CSigma_%7BUV%7D%5CSigma_%7BVV%7D%5E%7B-1%7D(v-%5Cmu_V),%5C%5C%0A%5Cmathop%7B%5Cmathrm%7BCov%7D%7D(U%5Cmid%20V=v)%0A&amp;=%5CSigma_%7BUU%7D-%5CSigma_%7BUV%7D%5CSigma_%7BVV%7D%5E%7B-1%7D%5CSigma_%7BVU%7D.%0A%5Cend%7Baligned%7D%0A%5Ctag%7B3%7D"></span></p>
+</details>
+<p>For GP regression, we will use scikit-learn’s <a href="https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html">GaussianProcessRegressor</a> and its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.kernels.RBF.html">RBF</a> kernel. Here <code>X_obs</code> contains the observed inputs, <code>y_obs</code> their values, and <code>X_grid</code> the inputs where we want predictions. Input arrays have one row per location: for scalar inputs, their shapes are <code>(n, 1)</code> and <code>(n_grid, 1)</code>. This is because the scipy library is quite general and the second argument is the dimensionality of the input space, which in this case is 1. The values <code>y_obs</code> form a one-dimensional array of length <code>n</code>. With zero prior mean, marginal variance one, and length scale <img src="https://latex.codecogs.com/png.latex?0.8">:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># define the GP with RBF kernel and zero observation noise</span></span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># optimizer=None keeps the kernel parameters fixed during fitting</span></span>
+<span id="cb2-3">gp <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> GaussianProcessRegressor(</span>
+<span id="cb2-4">  kernel<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>RBF(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>),</span>
+<span id="cb2-5">  alpha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,</span>
+<span id="cb2-6">  optimizer<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>)</span>
+<span id="cb2-7"></span>
+<span id="cb2-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># condition the GP on the observed data</span></span>
+<span id="cb2-9">gp.fit(X_obs, y_obs)</span>
+<span id="cb2-10"></span>
+<span id="cb2-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># extract posterior mean &amp; variance</span></span>
+<span id="cb2-12">mean, std <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> gp.predict(X_grid, return_std<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb2-13">variance <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> std<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb2-14"></span>
+<span id="cb2-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># generate samples from the posterior</span></span>
+<span id="cb2-16">draws <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> gp.sample_y(X_grid, n_samples<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)</span></code></pre></div>
+<p>The call to <code>fit</code> conditions the GP on the observations. Setting <code>optimizer=None</code> keeps the kernel parameters fixed during this computation. The arrays <code>mean</code> and <code>variance</code> give the posterior mean and variance at each grid point, while each column of <code>draws</code> is a posterior function on the grid. Use <code>return_cov=True</code> instead of <code>return_std=True</code> if the full posterior covariance matrix is needed.</p>
+</section>
+<section id="noisy-observations" class="level2">
+<h2 class="anchored" data-anchor-id="noisy-observations">Noisy observations</h2>
+<p>Often we observe a noisy version of the function value:</p>
+<p><span id="eq-observation-noise"><img src="https://latex.codecogs.com/png.latex?%0Ay_i=f(x_i)+%5Cvarepsilon_i,%0A%5Cqquad%20%5Cvarepsilon_i%5Csim%5Cmathcal%7BN%7D(0,%5Ctau%5E2),%0A%5Ctag%7B4%7D"></span></p>
+<p>where the noise terms are independent of each other and of the function. For example, in Bayesian Optimization, the observed objective values may include measurement noise, as is almost always the case for example when evaluating real-world experiments or simulations. The parameter <img src="https://latex.codecogs.com/png.latex?%5Ctau%5E2"> describes this observation noise; <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2"> in the kernel describes the prior variation of the underlying function.</p>
+<p>The observation vector now has covariance <img src="https://latex.codecogs.com/png.latex?K_X+%5Ctau%5E2I">. We can still condition using Gaussian formulas, but we no longer know the exact function values at the observed inputs. The posterior mean and draws therefore need not interpolate the observations. In Figure&nbsp;7, the same eight observed values are treated either as exact measurements or as measurements with noise standard deviation <img src="https://latex.codecogs.com/png.latex?%5Ctau=0.15">.</p>
+<div id="fig-noise" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-noise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/GP_intro/figures/noisy-observations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Regression on the same eight observations, with RBF marginal variance one and length scale 0.8. Left: treating the observations as exact forces interpolation. Right: allowing noise smooths the fit and leaves uncertainty at observed inputs. Shading shows two posterior standard deviations for the underlying function (blue) and a future noisy measurement (tan).
+</figcaption>
+</figure>
+</div>
+<p>In the code, specify the observation-noise <strong>variance</strong> through <code>alpha</code>:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">gp <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> GaussianProcessRegressor(</span>
+<span id="cb3-2">        kernel<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>RBF(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>),</span>
+<span id="cb3-3">        alpha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>tau<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb3-4">        optimizer<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>,</span>
+<span id="cb3-5">      )</span>
+<span id="cb3-6">gp.fit(X_obs, y_obs)</span></code></pre></div>
+<p>The same <code>predict</code> and <code>sample_y</code> calls now give predictions and draws conditional on the noisy data. Setting <img src="https://latex.codecogs.com/png.latex?%5Ctau=0"> recovers exact conditioning.</p>
+<p>The variance obtained from <code>std**2</code> describes uncertainty about the underlying function. For a new noisy measurement <img src="https://latex.codecogs.com/png.latex?y_%5Cstar=f(x_%5Cstar)+%5Cvarepsilon_%5Cstar">, its mean is still <img src="https://latex.codecogs.com/png.latex?m_y(x_%5Cstar)">, but its variance is</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathop%7B%5Cmathrm%7BVar%7D%7D(y_%5Cstar%5Cmid%20y)=k_y(x_%5Cstar,x_%5Cstar)+%5Ctau%5E2.%0A"></p>
+<p>Even if we knew the function very accurately, a new noisy measurement would still fluctuate around it. This explains the two different shaded regions in the right panel of Figure&nbsp;7.</p>
+</section>
+<section id="choosing-the-kernel-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-kernel-parameters">Choosing the kernel parameters</h2>
+<p>The kernel parameters affect the posterior as well as the prior. In Figure&nbsp;8, the observations, marginal variance, and noise level are fixed; only the length scale changes.</p>
+<div id="fig-length-fits" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-length-fits-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://alexxthiery.github.io/notes/GP_intro/figures/length-scale-fits.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" loading="lazy">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-length-fits-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Posterior fits for three length scales, keeping the observations, marginal variance one, and noise standard deviation 0.15 fixed. The curves show posterior means and the bands show two posterior standard deviations for the latent function.
+</figcaption>
+</figure>
+</div>
+<p>A short length scale allows rapid variation between observations, while a long length scale assumes stronger dependence between distant locations and favors slower variation. These parameters can also be adjusted automatically from the data. For example, omitting <code>optimizer=None</code> lets scikit-learn adjust the RBF length scale when fitting:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">gp <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> GaussianProcessRegressor(</span>
+<span id="cb4-2">        kernel<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>RBF(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>),</span>
+<span id="cb4-3">        alpha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>tau<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb4-4">      )</span>
+<span id="cb4-5">gp.fit(X_obs, y_obs)</span></code></pre></div>
+<p>The fitted kernel, including its updated length scale, is available as <code>gp.kernel_</code>. To use a Matérn kernel, replace <code>RBF(0.8)</code> with <code>Matern(length_scale=0.8, nu=2.5)</code> from the same kernels module. Given a small number of evaluations, the GP supplies predictions and uncertainty at locations where the objective has not been evaluated.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>Gaussian processes</category>
+  <category>regression</category>
+  <category>Bayesian optimization</category>
+  <guid>https://alexxthiery.github.io/notes/GP_intro/GP_intro.html</guid>
+  <pubDate>Wed, 28 Oct 2026 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Bellman, Hopf–Lax and Cole–Hopf</title>
   <link>https://alexxthiery.github.io/notes/lax/lax.html</link>
@@ -59,7 +352,7 @@
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Csup_%7Bu%5Cin%5Cmathcal%7BU%7D%7D%20%7B%5Cleft%5C%7B%20%5Cint_t%5ET%20-%5Cfrac%2012%5C%7Cu_s%5C%7C%5E2%5C,ds%20+%20g(X_T%5Eu)%20%20%5Cright%5C%7D%7D%0A%5Cquad%5Ctext%7Bsubject%20to%7D%5Cquad%20%5Cdot%20X_s%5Eu=u_s,%20%5Cquad%20X_t%5Eu=x,%0A"></p>
 <p>has a value given by the supremum over endpoints as in Equation&nbsp;7. Interestingly, this can also be derived very simply from the Cauchy-Schwarz inequality since <img src="https://latex.codecogs.com/png.latex?%5Cint_t%5ET%20%5C%7Cu_s%5C%7C%5E2%5C,ds%20%5Cgeq%20%5C%7CX_T%5Eu-x%5C%7C%5E2%20/%20(T-t)">, from which the conclusion follows readily. The limiting HJB equation is <img src="https://latex.codecogs.com/png.latex?%0A%5Cpartial_tV_0+%5Ctfrac12%5C%7C%5Cnabla%20V_0%5C%7C%5E2=0%0A"></p>
 <p>and has to be interpreted in the <a href="https://en.wikipedia.org/wiki/Viscosity_solution">viscosity sense</a> when <img src="https://latex.codecogs.com/png.latex?V_0"> develops corners. For example, with <img src="https://latex.codecogs.com/png.latex?g(y)=-%5Ctfrac14(y%5E2-1)%5E2"> and <img src="https://latex.codecogs.com/png.latex?T-t=2">, the stochastic values converge to a Hopf–Lax value with a corner at <img src="https://latex.codecogs.com/png.latex?x=0"> (Figure&nbsp;1).</p>
-<div id="fig-noise-limit" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Smooth stochastic value functions approach the deterministic Hopf–Lax value, which has a corner at the origin." data-fig-align="center">
+<div id="fig-noise-limit" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Smooth stochastic value functions approach the deterministic Hopf–Lax value, which has a corner at the origin.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-noise-limit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://alexxthiery.github.io/notes/lax/lax_files/noise-limit.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%" loading="lazy" alt="Smooth stochastic value functions approach the deterministic Hopf–Lax value, which has a corner at the origin.">
@@ -2111,124 +2404,6 @@ $$ -->
   <category>markov</category>
   <guid>https://alexxthiery.github.io/notes/girsanov/girsanov.html</guid>
   <pubDate>Sun, 02 Jun 2024 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Joe Doob &amp; Change of measures on path-space</title>
-  <link>https://alexxthiery.github.io/notes/doob_transforms/doob.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/doob_transforms/joseph_doob.jpg" class="img-fluid figure-img" style="width:35.0%" loading="lazy" alt="Joseph Doob (1910 – 2004)"></p>
-<figcaption><a href="https://en.wikipedia.org/wiki/Joseph_L._Doob">Joseph Doob</a> (1910 – 2004)</figcaption>
-</figure>
-</div>
-</div>
-<p>Consider a continuous time Markov process <img src="https://latex.codecogs.com/png.latex?X_t"> on the time interval <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D"> and with value in the state space <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D">. This defines a probability <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D"> on the set of <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BX%7D">-valued paths. Now, it is often the case that one has to consider a perturbed, also sometimes called “twisted”, probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> defined as</p>
-<p><span id="eq-change-pb"><img src="https://latex.codecogs.com/png.latex?%0A%5Cfrac%7Bd%5Cmathbb%7BQ%7D%7D%7Bd%5Cmathbb%7BP%7D%7D(x_%7B%5B0,T%5D%7D)%20=%20%5Cfrac%7B1%7D%7B%5Cmathcal%7BZ%7D%7D%20%5C,%20%5Cexp%5Bg(X_T)%5D%0A%5Ctag%7B1%7D"></span></p>
-<p>for a normalization constant <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BZ%7D"> and some function <img src="https://latex.codecogs.com/png.latex?g:%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D">. For example, collecting a noisy observation <img src="https://latex.codecogs.com/png.latex?y_T%20%5Csim%20%5Cmathcal%7BF%7D(X_T)%20+%20%5Ctextrm%7B(noise)%7D"> at time <img src="https://latex.codecogs.com/png.latex?T">, the distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> defined with the log-likelihood function <img src="https://latex.codecogs.com/png.latex?g(x)%20=%20%5Clog%20%5Cmathbb%7BP%7D(y_T%20%5Cmid%20X_T=x)"> describes the dynamics of the Markov process <img src="https://latex.codecogs.com/png.latex?X_t"> conditioned on the observation <img src="https://latex.codecogs.com/png.latex?y_T">; we will use this interpretation in the following since this is the most common use case and gives the most intuitive interpretation. With this interpretation, it is clear that the normalization constant <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BZ%7D"> is the model evidence <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(y_T)"> and that the initial distribution of the conditioned process <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D(x_0)"> is the conditional law <img src="https://latex.codecogs.com/png.latex?X_0%20%5Cmid%20y_T"> and is given by <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BP%7D(x_0)%20%5C,%20%5Cmathbb%7BP%7D(y_T%20%5Cmid%20x_0)%20/%20%5Cmathbb%7BP%7D(y_T)">. Doob h-transforms are a powerful tool to describe the dynamics of the conditioned process.</p>
-<p>For convenience, let us use the notation <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D_x%5B%5Cldots%5D%20%5Cequiv%20%5Cmathbb%7BE%7D%5B%5Cldots%20%5Cmid%20x_t=x%5D">. For a test function <img src="https://latex.codecogs.com/png.latex?%5Cvarphi:%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D"> and a time increment <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20%3E%200">, we have</p>
-<p><span id="eq-def"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign*%7D%0A%5Cmathbb%7BE%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20y_T%5D%20&amp;=%20%5Cmathbb%7BE%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20%5Cexp(g(x_T))%20%5D%20%5C,%20/%20%5C,%20%5Cmathbb%7BE%7D_%7Bx_t%7D%5B%5Cexp(g(x_T))%5D%5C%5C%0A&amp;=%20%5Cfrac%7B%20%5Cmathbb%7BE%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20h(t+%5Cdelta,%20x_%7Bt+%5Cdelta%7D)%5D%20%7D%7Bh(t,%20x)%7D.%0A%5Cend%7Balign*%7D%0A%5Ctag%7B2%7D"></span></p>
-<p>We have introduced the important function <img src="https://latex.codecogs.com/png.latex?h:%5B0,T%5D%20%5Ctimes%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D"> defined as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ah(t,%20x)%20%5C;%20=%20%5C;%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20%5Cexp%5Bg(x_T)%5D%20%5Cmid%20x_t%20=%20x%20%5Cright%5D%7D%20%20%5C;%20=%20%5C;%20%5Cmathbb%7BP%7D(y_T%20%5Cmid%20x_t%20=%20x).%0A"></p>
-<p>One can readily check that the function <img src="https://latex.codecogs.com/png.latex?h"> satisfies the <a href="https://en.wikipedia.org/wiki/Kolmogorov_equations">Kolmogorov equation</a></p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%20%5C,%20h%20=%200%0A"></p>
-<p>with boundary condition <img src="https://latex.codecogs.com/png.latex?h(T,x)%20=%20%5Cexp%5Bg(x)%5D">. Furthermore, denoting by <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D"> the infinitesimal generator of the Markov process <img src="https://latex.codecogs.com/png.latex?X_t">, we have:</p>
-<p><span id="eq-kolmogorov"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign*%7D%0A%5Cmathbb%7BE%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20&amp;%20h(t+%5Cdelta,%20x_%7Bt+%5Cdelta%7D)%20%5D%0A%5C;%20=%20%5C;%0A%5Cvarphi(x_t)%20h(t,%20x_t)%20%5C%5C%0A&amp;+%20%5C;%20%5Cdelta%20%5C,%20(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%5Bh%20%5C,%20%5Cvarphi%5D%20%5C,%20(t,%20x_t)%0A%5C;%20+%20%5C;%20o(%5Cdelta).%0A%5Cend%7Balign*%7D%0A%5Ctag%7B3%7D"></span></p>
-<p>The infinitesimal generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D"> of the conditioned process is</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi(t,%20x_t)%20=%20%5Clim_%7B%5Cdelta%20%5Cto%200%5E+%7D%20%5C;%20%5Cfrac%7B%5Cmathbb%7BE%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20y_T%5D%20-%20%5Cvarphi(x_t)%7D%7B%5Cdelta%7D.%0A"></p>
-<p>Plugging Equation&nbsp;3 within Equation&nbsp;2 directly gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi%0A%5C;%20=%20%5C;%0A%5Cfrac%7B(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%5Bh%20%5C,%20%5Cvarphi%5D%7D%7Bh%7D%0A%5C;%20=%20%5C;%0A%5Cfrac%7B%5Cmathcal%7BL%7D%5B%5Cvarphi%5C,%20h%5D%7D%7Bh%7D%20+%20%5Cvarphi%5Cfrac%7B%5Cpartial_t%20h%7D%7Bh%7D.%0A"></p>
-<details>
-<summary>
-Some details:
-</summary>
-<p style="color: blue;">
-<img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign*%7D%0A%5Cmathbb%7BE%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20y_T%5D%0A&amp;=%0A%5Cfrac%7B%20%5Cmathbb%7BE%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20h(t+%5Cdelta,%20x_%7Bt+%5Cdelta%7D)%5D%20%7D%7Bh(t,%20x)%7D%5C%5C%0A&amp;=%0A%5Cfrac%7B%20%5Cvarphi(x_t)%20h(t,%20x_t)%20+%20%5Cdelta%20(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%5Bh%20%5C,%20%5Cvarphi%5D%20%5C,%20(t,%20x_t)%7D%7Bh(t,%20x_t)%7D%20%20+%20o(%5Cdelta)%5C%5C%0A&amp;=%0A%5Cvarphi(x_t)%20+%20%5Cdelta%20%5C,%20%5Cfrac%7B(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%5Bh%20%5C,%20%5Cvarphi%5D%20%5C,%20(t,%20x_t)%7D%7Bh(t,%20x_t)%7D%20+%20o(%5Cdelta).%0A%5Cend%7Balign*%7D%0A"> Since <img src="https://latex.codecogs.com/png.latex?%5Cvarphi"> does not depend on time, we have <img src="https://latex.codecogs.com/png.latex?(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D)%5Bh%20%5C,%20%5Cvarphi%5D%20=%20%5Cvarphi%5C,%20%5Cpartial_t%20h%20+%20%5Cmathcal%7BL%7D%5Bh%20%5C,%20%5Cvarphi%5D"> and this gives the announced result.
-</p>
-</details>
-<p>The generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D"> describes the dynamics of the conditioned process. In fact, the same computation holds with a more general change of measure of the type <span id="eq-change-gen"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Cfrac%7Bd%5Cmathbb%7BQ%7D%7D%7Bd%5Cmathbb%7BP%7D%7D(x_%7B%5B0,T%5D%7D)%20=%20%5Cfrac%7B1%7D%7B%5Cmathcal%7BZ%7D%7D%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7B0%7D%5ET%20f(s,%20X_s)%20%5C,%20ds%20+%20g(x_T)%20%5Cright%5C%7D%7D%20%20%7D%0A%5Ctag%7B4%7D"></span></p>
-<p>for some function <img src="https://latex.codecogs.com/png.latex?f:%5B0,T%5D%20%5Ctimes%20%5Cmathcal%7BX%7D%5Cto%20%5Cmathbb%7BR%7D">. One can define the function <img src="https://latex.codecogs.com/png.latex?h"> similarly as</p>
-<p><span id="eq-h-gen"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%20h(t,%20x_t)%20%5C;%20=%20%5C;%20%5Cmathbb%7BE%7D%20%7B%5Cleft%5B%20%20%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7Bt%7D%5ET%20f(X_s)%20%5C,%20ds%20+%20g(x_T)%20%5Cright%5C%7D%7D%20%20%5Cmid%20x_t%20%5Cright%5D%7D%20%7D.%0A%5Ctag%7B5%7D"></span></p>
-<p>This function satisfies the <a href="https://en.wikipedia.org/wiki/Feynman–Kac_formula">Feynman-Kac formula</a> <img src="https://latex.codecogs.com/png.latex?(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%20%5C,%20h%20=%200"> and one obtains entirely similarly that the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> describes a Markov process with infinitesimal generator</p>
-<p><span id="eq-doob-transforms"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bgreen%7D%7B%5Cmathcal%7BL%7D%5E%7B%5Cstar%7D%20%5Cvarphi%0A%5C;%20=%20%5C;%0A%5Cfrac%7B(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%5Bh%20%5C,%20%5Cvarphi%5D%7D%7Bh%7D%0A%5C;%20=%20%5C;%0A%5Cfrac%7B%5Cmathcal%7BL%7D%5Bh%20%5C,%20%5Cvarphi%5D%7D%7Bh%7D%20+%20%20%7B%5Cleft(%20%20%5Cfrac%7B%5Cpartial_t%20h%7D%20%7Bh%7D%20+%20f%20%5Cright)%7D%20%20%5C,%20%5Cvarphi.%7D%0A%5Ctag%7B6%7D"></span></p>
-<details>
-<summary>
-Some details:
-</summary>
-<p style="color: blue;">
-An interpretation of the conditioned process is as follows. Suppose for example that every <img src="https://latex.codecogs.com/png.latex?%5Cdelta"> units of time, one observes a noisy measurement <img src="https://latex.codecogs.com/png.latex?y_t"> of the state <img src="https://latex.codecogs.com/png.latex?x_t"> with log-likelihood <img src="https://latex.codecogs.com/png.latex?f(t,%20x_t)%20%5C,%20%5Cdelta">, as well as a final observation at time <img src="https://latex.codecogs.com/png.latex?T"> with log-likelihood <img src="https://latex.codecogs.com/png.latex?g(x_T)">. For example, this could be a stream of noisy measurements with Gaussian noise of variance proportional to <img src="https://latex.codecogs.com/png.latex?1/%5Cdelta"> concluded at time <img src="https://latex.codecogs.com/png.latex?T"> with a final measurement; in other words, one very frequently observes the state with very noisy measurements and finally makes a more precise observation at time <img src="https://latex.codecogs.com/png.latex?T">. In the regime <img src="https://latex.codecogs.com/png.latex?%5Cdelta%20%5Cto%200">, the log-likelihood of that stream <img src="https://latex.codecogs.com/png.latex?y_%7B0:T%7D"> of observations is precisely: <img src="https://latex.codecogs.com/png.latex?%0A%5Cint_0%5ET%20f(s,%20X_s)%20%5C,%20ds%20+%20g(X_T).%0A"> Conditioning on these frequent observations then leads to the change of measure in Equation&nbsp;4. The computations of the conditioned generator then follow similarly as before. We have: <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign*%7D%0A%5Cmathbb%7BE%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20y_%7B0:T%7D%5D%20&amp;=%20%5Cmathbb%7BE%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20y_%7Bt:T%7D%5D%5C%5C%0A&amp;=%0A%5Cfrac%7B%20%5Cmathbb%7BE%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7Bt%7D%5ET%20f(s,%20X_s)%20%5C,%20ds%20+%20g(x_T)%20%5Cright%5C%7D%7D%20%5D%20%7D%7Bh(t,%20x)%7D%0A%5Cend%7Balign*%7D%0A"> where <img src="https://latex.codecogs.com/png.latex?h"> is defined in Equation&nbsp;5. The rest of the computation follows similarly as before. First, express <img src="https://latex.codecogs.com/png.latex?%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7Bt%7D%5ET%20f(s,%20X_s)%20%5C,%20ds%20+%20g(x_T)%20%5Cright%5C%7D%7D%20"> as <img src="https://latex.codecogs.com/png.latex?%0A%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7Bt%7D%5E%7Bt+%5Cdelta%7D%20f(s,%20X_s)%20%5C,%20ds%20%5Cright%5C%7D%7D%20%20%5C,%20%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7Bt+%5Cdelta%7D%5ET%20f(s,%20X_s)%20%5C,%20ds%20+%20g(x_T)%20%5Cright%5C%7D%7D%20,%0A"> and write that <img src="https://latex.codecogs.com/png.latex?%5Cexp%20%7B%5Cleft%5C%7B%20%5Cint_%7Bt%7D%5E%7Bt+%5Cdelta%7D%20f(s,%20X_s)%20%5C,%20ds%20%5Cright%5C%7D%7D%20%20=%201%20+%20f(t,%20x_t)%20%5C,%20%5Cdelta%20+%20o(%5Cdelta)"> for small <img src="https://latex.codecogs.com/png.latex?%5Cdelta">. Then conditioned on <img src="https://latex.codecogs.com/png.latex?x_%7Bt+%5Cdelta%7D"> to obtain: <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign*%7D%0A%5Cmathbb%7BE%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%7C%20x_t,%20y_%7Bt:T%7D%5D%0A&amp;=%0A%5Cfrac%7B%20%5Cmathbb%7BE%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20(1%20+%20f(t,%20x_t)%20%5C,%20%5Cdelta)%20%5C,%20h(t+%5Cdelta,%20x_%7Bt+%5Cdelta%7D)%5D%20%7D%7Bh(t,%20x)%7D%20+%20o(%5Cdelta)%5C%5C%0A&amp;=%0A%5Cfrac%7B%20%5Cmathbb%7BE%7D_%7Bx_t%7D%5B%5Cvarphi(x_%7Bt+%5Cdelta%7D)%20%5C,%20h(t+%5Cdelta,%20x_%7Bt+%5Cdelta%7D)%5D%20%7D%7Bh(t,%20x)%7D%20+%20%5Cdelta%20%5C,%20%5Cvarphi(x_t)%20%5C,%20f(t,%20x_t)%20+%20o(%5Cdelta).%0A%5Cend%7Balign*%7D%0A"> The rest of the computations are then identical to before.
-</p>
-</details>
-<p>To see how this works, let us see a few examples:</p>
-<section id="general-diffusions" class="level3">
-<h3 class="anchored" data-anchor-id="general-diffusions">General diffusions</h3>
-<p>Consider a diffusion process</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%20=%20b(X)%20%5C,%20dt%20+%20%5Csigma(X)%20%5C,%20dW%0A"></p>
-<p>with generator <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BL%7D%5Cvarphi=%20b%20%5Cnabla%20%5Cvarphi+%20%5Ctfrac12%20%5C,%20%5Csigma%20%5Csigma%5E%5Ctop%20:%20%5Cnabla%5E2%20%5Cvarphi"> and initial distribution <img src="https://latex.codecogs.com/png.latex?%5Cmu_0(dx)">. We are interested in describing the dynamics of the “conditioned” process given by the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> defined in Equation&nbsp;4. Algebra applied to Equation&nbsp;6 then shows that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmathcal%7BL%7D%5E%5Cstar%20%5Cvarphi%5C;%20=%20%5C;%20%5Cmathcal%7BL%7D%5Cvarphi+%20%5Cunderbrace%7B%5Cfrac%7B%5Cvarphi%5C,%20(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%5Bh%5D%7D%7Bh%7D%7D_%7B=0%7D%0A+%20%5Csigma%20%5C,%20%5Csigma%5E%5Ctop%20%5C,%20(%5Cnabla%20%5Clog%20h)%20%5C,%20%5Cnabla%20%5Cvarphi%0A"></p>
-<p>where the function <img src="https://latex.codecogs.com/png.latex?h"> is described in Equation&nbsp;5. Since <img src="https://latex.codecogs.com/png.latex?(%5Cpartial_t%20+%20%5Cmathcal%7BL%7D+%20f)%20%5C,%20h%20=%200">, this reveals that the probability distribution <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BQ%7D"> describes a diffusion process <img src="https://latex.codecogs.com/png.latex?X%5E%5Cstar"> with dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%5E%5Cstar%20=%20b(X%5E%5Cstar)%20%5C,%20dt%20+%20%5Csigma(X%5E%5Cstar)%20%5C,%20%20%7B%5Cleft%5C%7B%20%20dW%20+%20%20%5Ctextcolor%7Bblue%7D%7Bu%5E%5Cstar(t,%20X%5E%5Cstar)%7D%20%5C,%20dt%20%5Cright%5C%7D%7D%20.%0A"></p>
-<p>The additional drift term <img src="https://latex.codecogs.com/png.latex?%5Csigma(X%5E%5Cstar)%20%5C,%20%20%5Ctextcolor%7Bblue%7D%7Bu%5E%5Cstar(t,%20X%5E%5Cstar)%7D%20%5C,%20dt"> is involves a “control” <img src="https://latex.codecogs.com/png.latex?%20%5Ctextcolor%7Bblue%7D%7Bu%5E%5Cstar(t,%20X%5E%5Cstar)%7D"> with <span id="eq-diffusion-doob"><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextcolor%7Bblue%7D%7Bu%5E%5Cstar(t,%20x)%20=%20%5Csigma%5E%5Ctop(x)%20%5C,%20%5Cnabla%20%5Clog%20h(t,%20x)%7D.%0A%5Ctag%7B7%7D"></span></p>
-<p>Note that the initial distribution of the conditioned process is</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cmu_0%5E%5Cstar(dx)%20=%20%5Cfrac%7B1%7D%7B%5Cmathcal%7BZ%7D%7D%20%5C,%20%5Cmu_0(dx)%20%5C,%20h(0,x).%0A"></p>
-<p>Unfortunately, apart from a few straightforward cases such as a Brownian motion or an Ornstein-Uhlenbeck process, the function <img src="https://latex.codecogs.com/png.latex?h"> is generally intractable. However, there are indeed several numerical methods available to approximate it effectively.</p>
-</section>
-<section id="brownian-bridge" class="level3">
-<h3 class="anchored" data-anchor-id="brownian-bridge">Brownian bridge</h3>
-<p>What about a Brownian motion in <img src="https://latex.codecogs.com/png.latex?%5Cmathbb%7BR%7D%5ED"> conditioned to hit the state <img src="https://latex.codecogs.com/png.latex?x_%5Cstar%20%5Cin%20%5Cmathbb%7BR%7D%5ED"> at time <img src="https://latex.codecogs.com/png.latex?t=T">, i.e.&nbsp;a <a href="https://en.wikipedia.org/wiki/Brownian_bridge">Brownian bridge</a>? In that case, the function <img src="https://latex.codecogs.com/png.latex?h"> is given by</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ah(t,x)%20=%20%5Cmathbb%7BP%7D(B_T%20=%20x_%5Cstar%20%5Cmid%20B_t%20=%20x)%0A=%0A%5Cexp%20%7B%5Cleft%5C%7B%20-%5Cfrac%7B%5C%7Cx-x_%5Cstar%5C%7C%5E2%7D%7B2%20%5C,%20(T-t)%7D%20%5Cright%5C%7D%7D%20%20/%20%5Cmathcal%7BZ%7D_%7BT-t%7D%0A"></p>
-<p>for some irrelevant normalization constant <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BZ%7D_%7BT-t%7D"> that only depends on <img src="https://latex.codecogs.com/png.latex?T-t">. Plugging this into Equation&nbsp;7 gives that the conditioned Brownian <img src="https://latex.codecogs.com/png.latex?X%5E%7B%5Cstar%7D"> motion has dynamics</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%5E%5Cstar%20%5C;=%5C;%20%20%5Ctextcolor%7Bblue%7D%7B-%20%5Cfrac%7BX%5E%5Cstar%20-%20x_%5Cstar%7D%7BT-t%7D%20%5C,%20dt%7D%20+%20dB.%0A"></p>
-<p>The additional drift term <img src="https://latex.codecogs.com/png.latex?-(X%5E%5Cstar%20-%20x_%5Cstar)/(T-t)"> is intuitive: it points in the direction of <img src="https://latex.codecogs.com/png.latex?x%5E%5Cstar"> and gets increasingly large as <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%20T">.</p>
-</section>
-<section id="positive-brownian-motion" class="level3">
-<h3 class="anchored" data-anchor-id="positive-brownian-motion">Positive Brownian motion</h3>
-<p>What about a scalar Brownian conditioned to stay positive at all times? Let us consider <img src="https://latex.codecogs.com/png.latex?T"> and let us condition first on the event that the Brownian motion stays positive within <img src="https://latex.codecogs.com/png.latex?%5B0,T%5D"> and later consider the limit <img src="https://latex.codecogs.com/png.latex?T%20%5Cto%20%5Cinfty">. The function <img src="https://latex.codecogs.com/png.latex?h"> reads</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ah(t,x)%20=%20%5Cmathbb%7BP%7D%20%7B%5Cleft(%20%5Ctext%7B$B_t$%20stays%20$%3E0$%20on%20$%5Bt,T%5D$%7D%20%5Cmid%20B_t=x%20%5Cright)%7D%20.%0A"></p>
-<p>This can easily be calculated with the <a href="https://en.wikipedia.org/wiki/Reflection_principle_(Wiener_process)">reflection principle</a>. It equals</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ah(t,x)%20=%201%20-%202%20%5C,%20%5Cmathbb%7BP%7D(B_T%20%3C%200%20%5Cmid%20B_T%20=%20x)%0A=%0A%5Cmathbb%7BP%7D(%5Csqrt%7BT-t%7D%20%5C,%20%5C%7C%20%5Cxi%20%5C%7C%20%3C%20x)%0A"></p>
-<p>for a standard Gaussian <img src="https://latex.codecogs.com/png.latex?%5Cxi%20%5Csim%20%5Cmathcal%7BN%7D(0,1)">. Plugging this into Equation&nbsp;7 gives that the additional drift term is</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla%20%5Clog%20h(t,x)%20=%20%5Cfrac%7B%5Cexp%20%7B%5Cleft(%20-x%5E2%20/%20(2%20%5C,%20(T-t))%20%5Cright)%7D%20%7D%7Bx%7D%20%5Cquad%20%5Cto%20%5Cquad%20%5Cfrac%7B1%7D%7Bx%7D%0A"></p>
-<p>as <img src="https://latex.codecogs.com/png.latex?T%20%5Cto%20%5Cinfty">. This shows that a Brownian motion conditioned to stay positive at all times has a upward drift of size <img src="https://latex.codecogs.com/png.latex?1/x">,</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%5E%5Cstar%20%5C;=%5C;%20%5Cfrac%7B1%7D%7BX%5E%7B%5Cstar%7D%7D%20+%20dB.%0A"></p>
-<p>Incidentally, it is the dynamics of a <a href="https://en.wikipedia.org/wiki/Bessel_process">Bessel process</a> of dimension <img src="https://latex.codecogs.com/png.latex?d=3">, i.e.&nbsp;the law of the modulus of a three-dimensional Brownian motion. More generally, if one conditions a Brownian motion to stay within a closed domain <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D">, the conditioned dynamics exhibit a repulsive drift term of size about <img src="https://latex.codecogs.com/png.latex?1/%5Ctextrm%7Bdist%7D(x,%20%5Cpartial%20%5Cmathcal%7BD%7D)"> near the boundary <img src="https://latex.codecogs.com/png.latex?%5Cpartial%20%5Cmathcal%7BD%7D"> of the domain, as described below.</p>
-</section>
-<section id="brownian-motion-staying-in-a-domain" class="level3">
-<h3 class="anchored" data-anchor-id="brownian-motion-staying-in-a-domain">Brownian motion staying in a domain</h3>
-<p>What about a Brownian motion conditioned to stay within a domain <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D"> forever? As before, consider an time horizon <img src="https://latex.codecogs.com/png.latex?T"> and define the function <img src="https://latex.codecogs.com/png.latex?h"> as</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ah(t,x)%20=%20%5Cmathbb%7BP%7D%20%7B%5Cleft(%20%5Ctext%7B$B_t$%20stays%20in%20$%5Cmathcal%7BD%7D$%20on%20$%5Bt,T%5D$%7D%20%5Cmid%20B_t=x%20%5Cright)%7D%20.%0A"></p>
-<p>One can see that the function <img src="https://latex.codecogs.com/png.latex?h"> satisfies the PDE</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A(%5Cpartial_t%20+%20%5CDelta)%20%5C,%20h%20=%200%0A"></p>
-<p>and equals zero on the boundary <img src="https://latex.codecogs.com/png.latex?%5Cpartial%20%5Cmathcal%7BD%7D"> of the domain. Furthermore <img src="https://latex.codecogs.com/png.latex?h(t,x)%20%5Cto%201"> as <img src="https://latex.codecogs.com/png.latex?t%20%5Cto%20T"> for all <img src="https://latex.codecogs.com/png.latex?x%20%5Cin%20%5Cmathcal%7BD%7D">. Consider the eigenfunctions <img src="https://latex.codecogs.com/png.latex?%5Cpsi_k"> of the negative Laplacian <img src="https://latex.codecogs.com/png.latex?-%5CDelta"> with Dirichlet boundary conditions on <img src="https://latex.codecogs.com/png.latex?%5Cpartial%20%5Cmathcal%7BD%7D">. Recall that <img src="https://latex.codecogs.com/png.latex?-%5CDelta"> is a positive operator with a discrete spectrum <img src="https://latex.codecogs.com/png.latex?%5Clambda_1%20%5Cleq%20%5Clambda_2%20%5Cleq%20%5Cldots"> of non-negative eigenvalues. The eigenfunction corresponding to the smallest eigenvalue <img src="https://latex.codecogs.com/png.latex?%5Clambda_1"> is the principal eigenfunction <img src="https://latex.codecogs.com/png.latex?%5Cpsi_1"> and it is standard that it is a positive function within the domain <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D">, as a “slight” generalization of the <a href="https://en.wikipedia.org/wiki/Perron–Frobenius_theorem">Perron-Frobenius</a> in linear algebra shows it. Expanding <img src="https://latex.codecogs.com/png.latex?h"> in the basis of eigenfunctions <img src="https://latex.codecogs.com/png.latex?%5Cpsi_k"> gives that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0Ah(t,x)%20=%20%5Cunderbrace%7Bc_1%20%5C,%20e%5E%7B-%5Clambda_1%20%5C,%20(T-t)%7D%20%5C,%20%5Cpsi_1(x)%7D_%7B%5Ctextrm%7Bdominant%20contribution%7D%7D%20+%20%5Csum_%7Bk%20%5Cgeq%202%7D%20c_k%20%5C,%20e%5E%7B-%5Clambda_k%20%5C,%20(T-t)%7D%20%5C,%20%5Cpsi_k(x).%0A"></p>
-<div style="text-align:center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://alexxthiery.github.io/notes/doob_transforms/eigenfunctions.jpg" class="img-fluid figure-img" style="width:90.0%" loading="lazy" alt="Eigenfunctions of the Laplacian"></p>
-<figcaption>Eigenfunctions of the Laplacian</figcaption>
-</figure>
-</div>
-</div>
-<p>Since we are interested in the regime <img src="https://latex.codecogs.com/png.latex?T%20%5Cto%20%5Cinfty">, it holds that</p>
-<p><img src="https://latex.codecogs.com/png.latex?%20%5Cnabla_x%20%5Clog%20h(t,x)%20%5C;%20%5Cto%20%5C;%20%5Cnabla%20%5Clog%20%5Cpsi_1(x)."></p>
-<p>This shows that the conditioned Brownian motion has a drift term expressed in terms of the principal eigenfunction <img src="https://latex.codecogs.com/png.latex?%5Cpsi_1"> of the Laplacian:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0AdX%5E%5Cstar%20%5C;=%5C;%20%20%5Ctextcolor%7Bblue%7D%7B%20%5Cnabla%20%5Clog%20%5Cpsi_1(X%5E%5Cstar)%20%5C,%20dt%7D%20+%20dB.%0A"></p>
-<p>For example, if <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D%5Cequiv%20%5B0,L%5D"> for a 1D Brownian motion, the principal eigenfunction is <img src="https://latex.codecogs.com/png.latex?%5Cpsi_1(x)%20=%20%5Csin(%5Cpi%20%5C,%20x%20/L)">. This shows that there is a upward drift of size <img src="https://latex.codecogs.com/png.latex?%5Csim%201/x"> near <img src="https://latex.codecogs.com/png.latex?x%20%5Capprox%200"> and a downward drift of size <img src="https://latex.codecogs.com/png.latex?%5Csim%201/(L-x)"> near <img src="https://latex.codecogs.com/png.latex?x%20%5Capprox%20L">.</p>
-
-
-</section>
-
- ]]></description>
-  <category>SDE</category>
-  <category>markov</category>
-  <guid>https://alexxthiery.github.io/notes/doob_transforms/doob.html</guid>
-  <pubDate>Mon, 13 May 2024 16:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
